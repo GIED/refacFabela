@@ -1,0 +1,15 @@
+build
+dist
+node_modules
+.DS_Store
+sassdoc
+
+/idea
+/.idea
+
+package-lock.json
+
+/src/assets/layout/css/*/layout-*.css
+/src/assets/theme/*/theme-*.css
+/src/assets/theme/designer
+/src/assets/theme/_vendor_extensions.scss
