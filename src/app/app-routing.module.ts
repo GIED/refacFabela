@@ -1,22 +1,33 @@
-import {RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import { AppMainComponent } from './app.main.component';
+import { CalendarModule } from 'primeng/calendar';
+import { ClienteComponent } from './administracion/cliente/cliente.component';
+import { Children } from 'preact/compat';
 
 
 
 
-@NgModule({
-    imports: [
-        RouterModule.forRoot([
-            {
-                path: '', component: AppMainComponent,
-                children: [
-                   
-                ]
-            }
-        ], {scrollPositionRestoration: 'enabled'})
-    ],
-    exports: [RouterModule]
-})
+const routes: Routes = [
+    {
+     path:'administracion', component: AppMainComponent,
+     loadChildren:() => import('./administracion/administracion.module').then(m => m.AdministracionModule)
+     
+   },
+   
+   {
+     path:'**',
+     redirectTo:'administracion'
+   }
+   
+   
+   
+   
+   ];
+   
+   @NgModule({
+     imports: [RouterModule.forRoot(routes)],
+     exports: [RouterModule]
+   })
 export class AppRoutingModule {
 }

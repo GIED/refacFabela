@@ -11,10 +11,8 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { CalendarModule } from 'primeng/calendar';
 import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
-import { AppConfigComponent } from './app.config.component';
 import { AppRightPanelComponent } from './app.rightpanel.component';
-import { AppBreadcrumbComponent } from './app.breadcrumb.component';
-import { BreadcrumbService } from './breadcrumb.service';
+
 
 describe('AppComponent', () => {
     beforeEach(() => {
@@ -24,13 +22,12 @@ describe('AppComponent', () => {
                 AppComponent,
                 AppMainComponent,
                 AppMenuComponent,
-                AppTopBarComponent,
-                AppConfigComponent,
+                AppTopBarComponent,              
                 AppRightPanelComponent,
-                AppFooterComponent,
-                AppBreadcrumbComponent
+                AppFooterComponent
+                
             ],
-            providers: [BreadcrumbService]
+            providers: []
         });
         TestBed.compileComponents();
     });
