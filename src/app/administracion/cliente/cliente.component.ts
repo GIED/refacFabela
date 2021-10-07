@@ -9,7 +9,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-cliente',
   templateUrl: './cliente.component.html',
-  styleUrls: ['./tabledemo.scss'],
+  styleUrls: ['../../tabledemo.scss'],
   styles: [`
   :host ::ng-deep .p-dialog .product-image {
       width: 150px;
@@ -53,11 +53,11 @@ export class ClienteComponent implements OnInit {
       this.productService.getProducts().then(data => this.products = data);
 
       this.cols = [
-          { field: 'name', header: 'Name' },
-          { field: 'price', header: 'Price' },
-          { field: 'category', header: 'Category' },
-          { field: 'rating', header: 'Reviews' },
-          { field: 'inventoryStatus', header: 'Status' }
+          { field: 'rfc', header: 'rfc' },
+          { field: 'razon_social', header: 'razon_social' },
+          { field: 'direccion', header: 'direccion' },
+          { field: 'telefono', header: 'telefono' },
+          { field: 'correo', header: 'correo' }
       ];
   }
 
@@ -69,13 +69,13 @@ export class ClienteComponent implements OnInit {
 
   deleteSelectedProducts() {
       this.confirmationService.confirm({
-          message: 'Are you sure you want to delete the selected products?',
-          header: 'Confirm',
+          message: 'Deseas borrar los clientes seleccionandos?',
+          header: 'Confirmar',
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
               this.products = this.products.filter(val => !this.selectedProducts.includes(val));
               this.selectedProducts = null;
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Operación confirmda', detail: 'Clientes borrados', life: 3000});
           }
       });
   }
@@ -87,13 +87,13 @@ export class ClienteComponent implements OnInit {
 
   deleteProduct(product: Product) {
       this.confirmationService.confirm({
-          message: 'Are you sure you want to delete ' + product.name + '?',
-          header: 'Confirm',
+          message: 'Realmente quieres borrar el cliente ' + product.name + '?',
+          header: 'Confirmar',
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
               this.products = this.products.filter(val => val.id !== product.id);
               this.product = {};
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente eliminado', life: 3000});
           }
       });
   }
@@ -109,13 +109,13 @@ export class ClienteComponent implements OnInit {
       if (this.product.name.trim()) {
           if (this.product.id) {
               this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000});
           }
           else {
               this.product.id = this.createId();
               this.product.image = 'product-placeholder.svg';
               this.products.push(this.product);
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente guardado', life: 10000});
           }
 
           this.products = [...this.products];

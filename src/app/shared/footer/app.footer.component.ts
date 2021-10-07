@@ -5,10 +5,10 @@ import {Component} from '@angular/core';
     template: `
         <div class="layout-footer">
 			<div class="logo-text">
-				<img src="assets/layout/images/logo-mirage@2x.png" alt="mirage-layout" />
+				<img src="assets/layout/images/LOGO.png" alt="mirage-layout" />
 				<div class="text">
-					<h1>Mirage</h1>
-					<span>Premium Application Template</span>
+					<h1>Refacciones Fabela</h1>
+					<span>Todo en maquinaria pesada</span>
 				</div>
 			</div>
 			<div class="icons">
