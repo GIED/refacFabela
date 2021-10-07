@@ -8,6 +8,7 @@ import { InventarioComponent } from './inventario/inventario.component';
 import { EntregaDeMercanciaComponent } from './entrega-de-mercancia/entrega-de-mercancia.component';
 import { StockMinimoComponent } from './stock-minimo/stock-minimo.component';
 import { PrimeModule } from '../shared/prime/prime.module';
+import { CountryService } from '../demo/service/countryservice';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { PrimeModule } from '../shared/prime/prime.module';
    
     AlmacenRoutingModule,
     PrimeModule
-  ]
+  ], 
+  providers:[CountryService]
 })
 export class AlmacenModule { }
