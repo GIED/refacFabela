@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
-import { CountryService } from '../../demo/service/countryservice';
+import { CountryService } from '../../../demo/service/countryservice';
 
 @Component({
   selector: 'app-ventas',

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import { Product } from '../../demo/domain/product';
-import { ProductService } from '../../demo/service/productservice';
+import { Product } from '../../../demo/domain/product';
+import { ProductService } from '../../../demo/service/productservice';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 
@@ -9,7 +9,7 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-cliente',
   templateUrl: './cliente.component.html',
-  styleUrls: ['../../tabledemo.scss'],
+  styleUrls: ['../../../tabledemo.scss'],
   styles: [`
   :host ::ng-deep .p-dialog .product-image {
       width: 150px;

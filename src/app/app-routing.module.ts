@@ -1,13 +1,6 @@
-import { TableModule } from 'primeng/table';
-import { VentasycotizacionesModule } from './ventasycotizaciones/ventasycotizaciones.module';
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import { AppMainComponent } from './app.main.component';
-import { CalendarModule } from 'primeng/calendar';
-import { ClienteComponent } from './administracion/cliente/cliente.component';
-import { Children } from 'preact/compat';
-import { TableroComponent } from './inicio/tablero/tablero.component';
-import { InicioModule } from './inicio/inicio.module';
 import { AccesoComponent } from './login/acceso/acceso.component';
 
 

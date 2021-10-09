@@ -1,39 +1,42 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { IngresoMercanciaComponent } from './ingreso-mercancia/ingreso-mercancia.component';
-import { TraspasosComponent } from './traspasos/traspasos.component';
-import { InventarioComponent } from './inventario/inventario.component';
-import { EntregaDeMercanciaComponent } from './entrega-de-mercancia/entrega-de-mercancia.component';
-import { StockMinimoComponent } from './stock-minimo/stock-minimo.component';
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+
+import { EntregaDeMercanciaComponent } from "./pages/entrega-de-mercancia/entrega-de-mercancia.component";
+import { IngresoMercanciaComponent } from "./pages/ingreso-mercancia/ingreso-mercancia.component";
+import { InventarioComponent } from "./pages/inventario/inventario.component";
+import { StockMinimoComponent } from "./pages/stock-minimo/stock-minimo.component";
+import { TraspasosComponent } from "./pages/traspasos/traspasos.component";
 
 const routes: Routes = [
   {
-    path:'',
-    children:[
-    {
-    path:'ingreso-mercancia',   component:IngresoMercanciaComponent,
-    },
-    {
-      path:'traspasos',   component:TraspasosComponent,
+    path: "",
+    children: [
+      {
+        path: "ingreso-mercancia",
+        component: IngresoMercanciaComponent,
       },
       {
-        path:'inventario',   component:InventarioComponent,
-        },
-        {
-          path:'entrega-de-mercancia',   component:EntregaDeMercanciaComponent,
-          },
-          {
-            path:'stock-minimo',   component:StockMinimoComponent,
-            },
-           
-    ]
-    
-  }
-  
+        path: "traspasos",
+        component: TraspasosComponent,
+      },
+      {
+        path: "inventario",
+        component: InventarioComponent,
+      },
+      {
+        path: "entrega-de-mercancia",
+        component: EntregaDeMercanciaComponent,
+      },
+      {
+        path: "stock-minimo",
+        component: StockMinimoComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AlmacenRoutingModule { }
+export class AlmacenRoutingModule {}
