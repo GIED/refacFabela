@@ -14,9 +14,12 @@ export class VentasComponent implements OnInit {
   paymentOptions: any[];
   productDialog: boolean;
 
-  products: Product[];
+  products: Product[]=[];
+
+  listaProductos: Product[]=[];
 
   product: Product;
+  
 
   selectedProducts: Product[];
 
@@ -61,6 +64,35 @@ editProduct(product: Product) {
   this.product = {...product};
   this.productDialog = true;
 }
+
+agregarProduct(producto: Product) {
+  console.log(producto);
+
+
+  if (this.listaProductos[this.findIndexById(producto.id)] != -1) {
+    this.listaProductos[this.findIndexById(producto.id)] = producto;
+  }else{
+    this.listaProductos.push(producto);
+  }
+
+
+  
+ 
+  producto.quantity= producto.quantity-producto.cantidad;
+ 
+ 
+
+  this.product[this.findIndexById(producto.id)] = producto;
+  
+
+  
+  
+  console.log(this.listaProductos)
+  
+  
+
+}
+
 filterCountry(event) {
   const filtered: any[] = [];
   const query = event.query;
@@ -72,6 +104,18 @@ filterCountry(event) {
   }
 
   this.filteredCountries = filtered;
+}
+
+findIndexById(id: string): number {
+  let index = -1;
+  for (let i = 0; i < this.products.length; i++) {
+      if (this.products[i].id === id) {
+          index = i;
+          break;
+      }
+  }
+
+  return index;
 }
 
 }
