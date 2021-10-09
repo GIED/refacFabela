@@ -46,8 +46,8 @@
 			<h5>Textarea</h5>
 			<textarea rows="5" cols="30" placeholder="Your Message" pInputTextarea></textarea>
 
-			<h5>AutoComplete</h5>
-			<p-autoComplete [(ngModel)]="selectedCountryAdvanced" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name" [dropdown]="true">
+			<h5>Favor de escribir la razon social del cliente</h5>
+			<p-autoComplete [(ngModel)]="selectedCountryAdvanced" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name" [dropdown]="true" placeholder="Escribe la razón social del cliente">
 			</p-autoComplete>
 
 			<h5>Calendar</h5>

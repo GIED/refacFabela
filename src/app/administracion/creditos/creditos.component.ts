@@ -24,9 +24,7 @@ import { MessageService } from 'primeng/api';
           display: flex;
       }
   }
-  .colorFondo{
-      backgraund: blue;
-  }
+ 
 
 `],
 })

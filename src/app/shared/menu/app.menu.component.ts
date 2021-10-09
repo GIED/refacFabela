@@ -40,14 +40,12 @@ export class AppMenuComponent implements OnInit {
                 label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-compass',
                 items: [
                     {
-                        label: 'Ventas', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/ventas']
+                        label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/ventas']
                     },
                     {
                         label: 'Ventas por Pedido', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/ventas-por-pedido']
                     },
-                    {
-                        label: 'Cotizaciones', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/cotizaciones']
-                    },
+                   
                     {
                         label: 'Consulta Venta', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/consulta-venta']
                     },

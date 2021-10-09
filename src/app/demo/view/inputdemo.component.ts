@@ -87,11 +87,8 @@ export class InputDemoComponent implements OnInit{
 
     valueKnob = 20;
 
-    constructor(private countryService: CountryService, private breadcrumbService: BreadcrumbService) {
-        this.breadcrumbService.setItems([
-            { label: 'UI Kit' },
-            { label: 'Input', routerLink: ['/uikit/input'] }
-        ]);
+    constructor(private countryService: CountryService,) {
+       
     }
 
     ngOnInit() {

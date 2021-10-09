@@ -10,7 +10,7 @@ import { StockMinimoComponent } from './stock-minimo/stock-minimo.component';
 import { PrimeModule } from '../shared/prime/prime.module';
 import { CountryService } from '../demo/service/countryservice';
 import { ProductService } from '../demo/service/productservice';
-import { RegistroProductoComponent } from '../productos/registro-producto/registro-producto.component';
+import { RegistroProductoComponent } from '../productos/pages/registro-producto/registro-producto.component';
 
 
 @NgModule({
