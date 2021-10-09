@@ -9,6 +9,8 @@ import { EntregaDeMercanciaComponent } from './entrega-de-mercancia/entrega-de-m
 import { StockMinimoComponent } from './stock-minimo/stock-minimo.component';
 import { PrimeModule } from '../shared/prime/prime.module';
 import { CountryService } from '../demo/service/countryservice';
+import { ProductService } from '../demo/service/productservice';
+import { RegistroProductoComponent } from '../productos/registro-producto/registro-producto.component';
 
 
 @NgModule({
@@ -17,13 +19,14 @@ import { CountryService } from '../demo/service/countryservice';
     TraspasosComponent,
     InventarioComponent,
     EntregaDeMercanciaComponent,
-    StockMinimoComponent
+ 
+   
   ],
   imports: [
    
     AlmacenRoutingModule,
     PrimeModule
   ], 
-  providers:[CountryService]
+  providers:[CountryService, ProductService]
 })
 export class AlmacenModule { }

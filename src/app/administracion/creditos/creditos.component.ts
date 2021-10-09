@@ -24,6 +24,9 @@ import { MessageService } from 'primeng/api';
           display: flex;
       }
   }
+  .colorFondo{
+      backgraund: blue;
+  }
 
 `],
 })
@@ -40,6 +43,26 @@ export class CreditosComponent implements OnInit {
   submitted: boolean;
 
   cols: any[];
+ 
+  pieData: any;
+
+  polarData: any;
+
+  radarData: any;
+
+  lineOptions: any;
+
+  barOptions: any;
+
+  pieOptions: any;
+
+  polarOptions: any;
+
+  radarOptions: any;
+  
+  cars:any;
+
+  car:any
 
   constructor(private productService: ProductService, private messageService: MessageService,
               private confirmationService: ConfirmationService) {
@@ -56,6 +79,40 @@ export class CreditosComponent implements OnInit {
           { field: 'telefono', header: 'telefono' },
           { field: 'correo', header: 'correo' }
       ];
+
+      this.pieData = {
+        labels: ['Abonos', 'Saldos'],
+        datasets: [
+            {
+                data: [50000, 180000,],
+                backgroundColor: [
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 99, 132)',
+                   
+                ]
+            }]
+    };
+
+   
+    this.car = [
+        { total: '145,000'
+     },
+     { abono: '105,000'
+    },
+    { saldo: '40,000'
+},
+       
+    ];
+
+    this.pieOptions = {
+        plugins: {
+            legend: {
+                labels: {
+                    fontColor: '#A0A7B5'
+                }
+            }
+        }
+    };
   }
 
   openNew() {
@@ -141,6 +198,8 @@ export class CreditosComponent implements OnInit {
       }
       return id;
   }
+
+  
 
   
 

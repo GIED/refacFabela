@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 @Component({
     selector: 'app-footer',
     template: `
-        <div class="layout-footer">
+        <div class="layout-footer" style="background: #ebd282">
 			<div class="logo-text">
 				<img src="assets/layout/images/LOGO.png" alt="mirage-layout" />
 				<div class="text">
