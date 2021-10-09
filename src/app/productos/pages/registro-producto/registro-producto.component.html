@@ -1,0 +1,47 @@
+<div class="p-grid p-fluid">
+	<div class="p-col-12">
+	
+	</div>
+	<div class="p-col-12 ">
+		<div class="card">
+			<h2 class="p-mb-3 p-text-center">Inventario</h2>
+
+			<br>
+
+            <div class="p-grid p-formgrid">
+            <div class="p-col-12 p-md-12">
+				<div class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
+					<input type="text" pInputText placeholder="Default">
+				</div>
+				<div class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
+					<input type="text" pInputText placeholder="Disabled" [disabled]="true"/>
+				</div>
+				<div class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
+					<input type="text" pInputText placeholder="Invalid" class="ng-dirty ng-invalid"/>
+				</div>
+            </div>
+			</div>
+			<div _ngcontent-iho-c213="" class="p-grid p-formgrid">
+				<div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
+						<p-dropdown [options]="cities" [(ngModel)]="paymentOptions" placeholder="Selecciona una Bodega"
+							[showClear]="true">
+						</p-dropdown>
+			
+				</div>
+				<div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0"><p-dropdown [options]="cities" [(ngModel)]="paymentOptions" placeholder="Selecciona un Anaquel"
+						[showClear]="true"></p-dropdown>
+				</div>
+				<div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0"><p-dropdown [options]="cities" [(ngModel)]="paymentOptions" placeholder="Selecciona una Nivel"
+							[showClear]="true"></p-dropdown>
+		</div>
+			</div>
+
+
+		</div>
+
+
+
+	</div>
+
+
+</div>
