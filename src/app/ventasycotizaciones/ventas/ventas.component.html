@@ -12,33 +12,24 @@
             <br>
             <p-panel header="Datos del cliente">
                 <div class="p-grid">
-                    <div class="p-col-7">
-                        <div class="p-grid">
-                            <div class="p-col-12 p-md-6 p-lg-2">RFC: 12345678 </div>
-                            <div class="p-col-12 p-md-6 p-lg-4">Razon social: Maquinaria Xddddd </div>
-                            <div class="p-col-12 p-md-6 p-lg-5">Domicilio: Lago Peipus 1100 col. Seminario, Toluca EdoMex.</div>
-                            <div class="p-col-12 p-md-6 p-lg-3">Teléfono: 123456789</div>
-                            <div class="p-col-12 p-md-6 p-lg-3">Email: gmail@gmail.com</div>
-
-                        </div>
+                    <div class="p-col-12">
+                        <h5 class="p-text-center" style="background: #ebd282;">Linea de credito</h5>
+                        <hr>
                     </div>
-                    <div class="p-col-5">
-                        <div class="p-grid">
-                            <div class="p-col-12">
-                                <h5 class="p-text-center" style="background: #ebd282;">Linea de credito</h5>
-                                <hr>
-                            </div>
-                            <div class="p-col-12 p-md-6 p-lg-4">Limite de credito: {{60000 | currency: '$'}}</div>
-                            <div class="p-col-12 p-md-6 p-lg-4">Saldo total: {{20000 | currency: '$'}}</div>
-                            <div class="p-col-12 p-md-6 p-lg-4">Credito Disponible: {{40000 | currency: '$'}}</div>
+                    <div class="p-col-12 p-md-6 p-lg-2">RFC: 12345678 </div>
+                    <div class="p-col-12 p-md-6 p-lg-2">Razon social: Maquinaria Xddddd </div>
+                    <div class="p-col-12 p-md-6 p-lg-2">Limite de credito: {{60000 | currency: '$'}}</div>
+                    <div class="p-col-12 p-md-6 p-lg-2">Saldo total: {{20000 | currency: '$'}}</div>
+                    <div class="p-col-12 p-md-6 p-lg-2">Credito Disponible: {{40000 | currency: '$'}}</div>
 
-                        </div>
-
-                    </div>
                 </div>
-            </p-panel>
 
+
+
+            </p-panel>
+            <br>
             <div class="p-grid">
+
                 <div class="p-col-12 p-lg-6 p-md-6 ">
                     <div class="p-grid p-dir-col p-nogutter">
                         <div class="p-col-12 ">
@@ -102,6 +93,11 @@
                 </div>
 
                 <div class="p-col-12 p-lg-6 p-md-6 ">
+                    <div class="p-col-12">
+                        <span class="p-input-icon-left">
+							<h5 class="p-text-center" >Carrito de compras <i class="pi pi-shopping-cart"></i></h5>
+						</span>
+                    </div>
                     <div class="p-grid p-dir-col p-nogutter">
                         <div class="p-col-12 ">
                             <p-table [value]="listaProductos" [rows]="10" [paginator]="true" responsiveLayout="scroll" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
