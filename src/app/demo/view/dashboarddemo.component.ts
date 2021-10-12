@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SelectItem} from 'primeng/api';
-import {BreadcrumbService} from '../../breadcrumb.service';
+
 import {ProductService} from '../service/productservice';
 import {Product} from '../domain/product';
 
@@ -26,10 +26,8 @@ export class DashboardDemoComponent implements OnInit {
 
     events: any[];
 
-    constructor(private productService: ProductService, private breadcrumbService: BreadcrumbService) {
-      this.breadcrumbService.setItems([
-          {label: 'Dashboard', routerLink: ['/']}
-      ]); }
+    constructor(private productService: ProductService, ) {
+      }
 
     ngOnInit() {
         this.productService.getProducts().then(data => this.products = data);

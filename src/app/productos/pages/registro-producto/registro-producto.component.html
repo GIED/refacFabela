@@ -6,63 +6,75 @@
         <div class="card">
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="left">
-                    <button pButton pRipple label="nuevo" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
+                    <button pButton pRipple label="Nuevo Producto" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
+                        (click)="openNew()"></button>
 
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            <p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true"
+                [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true"
+                dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
                         <h5 class="p-m-0">Administración de Productos</h5>
                         <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar producto..." />
-                    </span>
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar producto..." />
+                        </span>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-
+                        <th>Código Producto</th>
                         <th>No de parte</th>
-                        <th>Producto</th>
-                        <th>Descripcion</th>
+                        <th>Nombre parte</th>
+                        <th>Marca</th>
+                        <th>Stock</th>
                         <th>Precio</th>
-                        <th>Status</th>
-                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
                     <tr>
-
-                        <td><span class="p-column-title">No de parte</span> {{product.name}}
+                        <td><span class="p-column-title">No de parte</span> {{product.id}}
                         </td>
-                        <td><span class="p-column-title">producto</span> {{product.price | currency:'USD'}}
+                        <td><span class="p-column-title">No de parte</span> {{product.id}}
+                        </td>
+                        <td><span class="p-column-title">producto</span> {{product.name}}
                         </td>
                         <td><span class="p-column-title">Descipcion</span> {{product.category}}
                         </td>
                         <td><span class="p-column-title">Reviews</span>
-                            <p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating>
+                            {{product.quantity}}
                         </td>
                         <td><span class="p-column-title">Status</span>
-                            <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
+                            {{product.price | currency:'USD'}}
                         </td>
                         <td>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(product)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
+                                (click)="detalleProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning"
+                                (click)="alternativosProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="editProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                (click)="deleteProduct(product)"></button>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
                     <div class="p-d-flex p-ai-center p-jc-between">
-                        In total there are {{products ? products.length : 0 }} products.
+                        Total de Productos: {{products ? products.length : 0 }} 
                     </div>
                 </ng-template>
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" header="Registro de Productos" [modal]="true" styleClass="p-fluid">
+        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [modal]="true"
+            styleClass="p-fluid">
             <ng-template pTemplate="content">
                 <div class="p-grid">
                     <div class="p-field p-col-6">
@@ -77,48 +89,201 @@
                     </div>
                     <div class="p-field p-col-12">
                         <label for="description">Descripcion</label>
-                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="2" cols="20"></textarea>
+                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="2"
+                            cols="20"></textarea>
                     </div>
                     <div class="p-field p-col-6">
                         <label for="marca">Marca</label>
-                        <p-dropdown [options]="marca" [(ngModel)]="selectedDrop" placeholder="Seleccine una marca" [showClear]="true"></p-dropdown>
+                        <p-dropdown [options]="marca" [(ngModel)]="selectedDrop" placeholder="Seleccine una marca"
+                            [showClear]="true"></p-dropdown>
                     </div>
                     <div class="p-field p-col-6">
                         <label for="marca">Categoria General</label>
-                        <p-dropdown [options]="ListaCategoriaGeneral" [(ngModel)]="selectedDrop" placeholder="Seleccine una categoria general" [showClear]="true"></p-dropdown>
+                        <p-dropdown [options]="ListaCategoriaGeneral" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine una categoria general" [showClear]="true"></p-dropdown>
                     </div>
                     <div class="p-field p-col-6">
                         <label for="marca">Categoria </label>
-                        <p-dropdown [options]="ListaCategoria" [(ngModel)]="selectedDrop" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
+                        <p-dropdown [options]="ListaCategoria" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
                     </div>
                     <div class="p-field p-col-6">
                         <label for="moneda">Moneda</label>
-                        <p-dropdown [options]="ListaMoneda" [(ngModel)]="selectedDrop" placeholder="Seleccine una moneda" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="price">Precio</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="ganancia">Ganancia</label>
-                        <p-dropdown [options]="ListaGanancias" [(ngModel)]="selectedDrop" placeholder="Seleccine una Ganancia" [showClear]="true"></p-dropdown>
+                        <p-dropdown [options]="ListaMoneda" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine una moneda" [showClear]="true"></p-dropdown>
                     </div>
                     <div class="p-field p-col-6">
                         <label for="estatus">Estatus</label>
-                        <p-dropdown [options]="ListaEstatus" [(ngModel)]="selectedDrop" placeholder="Seleccine el estatus" [showClear]="true"></p-dropdown>
+                        <p-dropdown [options]="ListaEstatus" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine el estatus" [showClear]="true"></p-dropdown>
                     </div>
                     <div class="p-field p-col-6">
                         <label for="price">clave SAT</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
+                            locale="en-US"></p-inputNumber>
                     </div>
+                    <div class="p-field p-col-6">
+                        <label for="price">Precio</label>
+                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
+                            locale="en-US"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="ganancia">Ganancia</label>
+                        <p-dropdown [options]="ListaGanancias" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine una Ganancia" [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="price">Precio Final</label>
+                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
+                            locale="en-US" [disabled]="true"></p-inputNumber>
+                    </div>
+
                 </div>
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveProduct()"></button>
             </ng-template>
         </p-dialog>
+
+        <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Detalle del Producto" [modal]="true"
+            styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card">
+
+                    <div class="p-text-center">
+                        <h3>Historia de precios del Producto</h3>
+                    </div>
+                    <div class="p-col-12 p-lg-12">
+
+
+                        <div class="card">
+
+                            <div class=" p-justify-center">
+                                <p-chart id="dashboard-chart" type="line" [data]="lineData" [options]="lineOptions">
+                                </p-chart>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                    <p-table [value]="products" responsiveLayout="scroll" scrollHeight="400px"
+                        styleClass="p-datatable-sm">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>No Parte</th>
+                                <th>Nombre Parte</th>
+                                <th>Moneda</th>
+                                <th>Precio</th>
+                                <th>Fecha Registro</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product>
+                            <tr>
+                                <td>{{product.code}}</td>
+                                <td>{{product.name}}</td>
+                                <td>PESO</td>
+                                <td>{{product.price}}</td>
+                                <td>10/10/2021</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+
+                <div class="card">
+                    <div class="p-text-center">
+                        <h3>Historia de ingreso del Producto</h3>
+                    </div>
+                    <p-table [value]="products" responsiveLayout="scroll" scrollHeight="400px"
+                        styleClass="p-datatable-sm">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>No Parte</th>
+                                <th>Nombre Parte</th>
+                                <th>Bodega</th>
+                                <th>Ubicación</th>
+                                <th>Total_ingreso</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product>
+                            <tr>
+                                <td>{{product.code}}</td>
+                                <td>{{product.name}}</td>
+                                <td>LOCAL</td>
+                                <td>100 A</td>
+                                <td>28</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="alternativosDialog" [style]="{width: '700px'}" header="Detalle del Producto" [modal]="true"
+        styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="card">
+
+                <p-toolbar styleClass="p-mb-4">
+                    <ng-template pTemplate="left">
+                        <button pButton pRipple label="nuevo" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
+                            (click)="registroAlternativos()"></button>
+    
+                    </ng-template>
+                </p-toolbar>
+
+                <div class="p-text-center">
+                    <h3>Alternativos del Producto</h3>
+                </div>         
+
+                <p-table [value]="products" responsiveLayout="scroll" scrollHeight="400px"
+                    styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>No Parte</th>
+                            <th>Nombre Parte</th>
+                            <th>Moneda</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product>
+                        <tr>
+                            <td>{{product.code}}</td>
+                            <td>{{product.name}}</td>
+                            <td>PESO</td>
+                            <td>{{product.price}}</td>
+                            <td>26</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+
+            
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="hideDialog()"></button>
+
+        </ng-template>
+    </p-dialog>
 
         <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
     </div>

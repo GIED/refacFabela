@@ -1,5 +1,6 @@
 export interface producto{
 n_id: number, 
+n_codigoProducto:number,
 s_noParte: string, 
 s_producto :string, 
 s_descripcion: string, 

@@ -7,7 +7,7 @@ import { ProductService } from 'src/app/demo/service/productservice';
 
 @Component({
   selector: 'app-registro-producto',
-  templateUrl: './registro-producto.component.html',
+  templateUrl:'./registro-producto.component.html',
   styleUrls: ['./registro-producto.component.scss']
 })
 export class RegistroProductoComponent implements OnInit {
@@ -23,6 +23,11 @@ export class RegistroProductoComponent implements OnInit {
     submitted: boolean;
 
     cols: any[];
+    detalleDialog: boolean;
+    lineOptions:any;
+    lineData: any;
+    alternativosDialog: boolean;
+    titulo:string;
 
 
     constructor(private productService: ProductService, private messageService: MessageService,
@@ -32,7 +37,7 @@ export class RegistroProductoComponent implements OnInit {
 
 ngOnInit() {
     this.productService.getProducts().then(data => this.products = data);
-
+   
     
 }
 
@@ -41,6 +46,7 @@ openNew() {
     this.product = {};
     this.submitted = false;
     this.productDialog = true;
+    this.titulo="Registro de Productos"
 }
 
 deleteSelectedProducts() {
@@ -59,17 +65,82 @@ deleteSelectedProducts() {
 editProduct(product: Product) {
     this.product = {...product};
     this.productDialog = true;
+    this.titulo="Actualización de Producto"
+}
+alternativosProduct(product: Product) {
+    this.product = {...product};
+    this.alternativosDialog = true;
+   
+}
+registroAlternativos(){
+    this.product = {};
+    this.submitted = false;
+    this.productDialog = true;
+    this.titulo="Registro de Productos Alternativos"
+}
+detalleProduct(product: Product) {
+    this.product = {...product};
+    this.detalleDialog = true;
+    this.lineData = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [
+            {
+                label: 'First Dataset',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                fill: false,
+                backgroundColor: 'rgb(255, 205, 86)',
+                borderColor: 'rgb(255, 205, 86)',
+                tension: .4
+            },
+            {
+                label: 'Second Dataset',
+                data: [28, 48, 40, 19, 86, 27, 90],
+                fill: false,
+                backgroundColor: 'rgb(75, 192, 192)',
+                borderColor: 'rgb(75, 192, 192)',
+                tension: .4
+            }
+        ]
+    };
+
+    this.lineOptions = {
+        plugins: {
+            legend: {
+                labels: {
+                    fontColor: '#A0A7B5'
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: '#A0A7B5'
+                },
+                grid: {
+                    color:  'rgba(160, 167, 181, .3)',
+                }
+            },
+            y: {
+                ticks: {
+                    color: '#A0A7B5'
+                },
+                grid: {
+                    color:  'rgba(160, 167, 181, .3)',
+                }
+            },
+        }
+    };
 }
 
 deleteProduct(product: Product) {
     this.confirmationService.confirm({
-        message: 'Are you sure you want to delete ' + product.name + '?',
-        header: 'Confirm',
+        message: 'Desea borrar el producto ' + product.name + '?',
+        header: 'Confirmar',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
             this.products = this.products.filter(val => val.id !== product.id);
             this.product = {};
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
+            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
         }
     });
 }
@@ -85,13 +156,13 @@ saveProduct() {
     if (this.product.name.trim()) {
         if (this.product.id) {
             this.products[this.findIndexById(this.product.id)] = this.product;
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
+            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto actualizado', life: 3000});
         }
         else {
             this.product.id = this.createId();
             this.product.image = 'product-placeholder.svg';
             this.products.push(this.product);
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000});
+            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Guardado', life: 3000});
         }
 
         this.products = [...this.products];
