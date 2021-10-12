@@ -8,7 +8,7 @@ import { BodegasService } from 'src/app/shared/service/bodegas.service';
 @Component({
   selector: 'app-inventario',
   templateUrl: './inventario.component.html',
-  styleUrls: ['../../tabledemo.scss']
+  styleUrls: ['./inventario.component.scss']
   
 })
 export class InventarioComponent implements OnInit {
