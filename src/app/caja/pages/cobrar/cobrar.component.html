@@ -1,1 +1,239 @@
-<p>cobrar works!</p>
+<div class="p-grid">
+    <div class="p-col-12">
+
+        <p-toast></p-toast>
+
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-1" >Total Efectivo: <strong>10,000.00</strong></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-2" >Total Tarjeta-Cheque-trasferencia: <strong>1,000.00</strong></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-3" >Total Cancelado: <strong>800.00</strong></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-4 " >Total General:<strong>10,200</strong></div>
+            </p-toolbar>
+
+            <p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true"
+                [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true"
+                dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <h5 class="p-m-0">Ventas por cobrar</h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar Nota..." />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>No. venta</th>
+                        <th>RFC</th>
+                        <th>Razón Social</th>
+                        <th>Vendedor</th>
+                        <th>Fecha Venta</th>
+                        <th>Estatus</th>
+                        <th>Total</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td><span class="p-column-title"></span> {{product.id}}
+                        </td>
+                        <td><span class="p-column-title"></span> {{product.id}}
+                        </td>
+                        <td><span class="p-column-title"></span> {{product.name}}
+                        </td>
+                        <td><span class="p-column-title"></span> Mabiel
+                        </td>
+                        <td><span class="p-column-title"></span>
+                            01/10/2021:12:20:26 pm
+                        </td>
+                        <td><span class="p-column-title"></span>
+                            POR COBRAR
+                        </td>
+                        <td><span class="p-column-title">Status</span>
+                            {{product.price | currency:'USD'}}
+                        </td>
+                        <td>
+                            <button pButton pRipple icon="pi pi-dollar" class="p-button-rounded p-button-info p-mr-2"
+                                (click)="detalleProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-file-o" class="p-button-rounded p-button-warning"
+                                (click)="alternativosProduct(product)"></button>
+                          <!--  <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="editProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                (click)="deleteProduct(product)"></button>-->
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        Total de Ventas: {{products ? products.length : 0 }} 
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [modal]="true"
+            styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="p-grid">
+                    <div class="p-field p-col-6">
+                        <label for="name">No. de parte</label>
+                        <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
+                        <small class="p-invalid" *ngIf="submitted && !product.name">Name is required.</small>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="name">Nombre del producto</label>
+                        <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
+                        <small class="p-invalid" *ngIf="submitted && !product.name">Name is required.</small>
+                    </div>
+                    <div class="p-field p-col-12">
+                        <label for="description">Descripcion</label>
+                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="2"
+                            cols="20"></textarea>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="marca">Marca</label>
+                        <p-dropdown [options]="marca" [(ngModel)]="selectedDrop" placeholder="Seleccine una marca"
+                            [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="marca">Categoria General</label>
+                        <p-dropdown [options]="ListaCategoriaGeneral" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine una categoria general" [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="marca">Categoria </label>
+                        <p-dropdown [options]="ListaCategoria" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="moneda">Moneda</label>
+                        <p-dropdown [options]="ListaMoneda" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine una moneda" [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="estatus">Estatus</label>
+                        <p-dropdown [options]="ListaEstatus" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine el estatus" [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="price">clave SAT</label>
+                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
+                            locale="en-US"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="price">Precio</label>
+                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
+                            locale="en-US"></p-inputNumber>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="ganancia">Ganancia</label>
+                        <p-dropdown [options]="ListaGanancias" [(ngModel)]="selectedDrop"
+                            placeholder="Seleccine una Ganancia" [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="p-field p-col-6">
+                        <label for="price">Precio Final</label>
+                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
+                            locale="en-US" [disabled]="true"></p-inputNumber>
+                    </div>
+
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveProduct()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Cobre de Nota" [modal]="true"
+            styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card">
+
+                   
+                    <div class="p-col-12 p-lg-12">
+
+
+                        <div class="card">
+
+                         
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+                </div>
+
+               
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="alternativosDialog" [style]="{width: '700px'}" header="Cobro de Nota" [modal]="true"
+        styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="card">
+
+                <p-toolbar styleClass="p-mb-4">
+                    <ng-template pTemplate="left">
+                        <button pButton pRipple label="nuevo" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
+                            (click)="registroAlternativos()"></button>
+    
+                    </ng-template>
+                </p-toolbar>
+
+                    
+
+                <p-table [value]="products" responsiveLayout="scroll" scrollHeight="400px"
+                    styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>No Parte</th>
+                            <th>Nombre Parte</th>
+                            <th>Moneda</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product>
+                        <tr>
+                            <td>{{product.code}}</td>
+                            <td>{{product.name}}</td>
+                            <td>PESO</td>
+                            <td>{{product.price}}</td>
+                            <td>26</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+            </div>
+
+            
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="hideDialog()"></button>
+
+        </ng-template>
+    </p-dialog>
+
+        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    </div>
+</div>

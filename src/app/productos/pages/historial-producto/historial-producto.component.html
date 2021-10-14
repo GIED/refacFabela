@@ -1,14 +1,41 @@
 <div class="p-grid layout-dashboard">
-    
+    <div class="p-col-12 p-xl-12 p-md-12">
+        <div class="card">
+            
+          
+            <p-panel header="Datos del Producto">
+               
+            <div class="p-col-12 p-mb-4 p-lg-4 p-mb-lg-0">
+             <input class="p-mr-2 p-d-inline p-inputtext p-component" type="text" pInputText placeholder="No.Parte del producto"> <button class="p-mr-2 p-d-inline p-inputtext p-component" pButton pRipple type="button" label="Buscar" class="p-button-success p-mr-2 p-mb-2"></button>
+            </div>
+                <div class="p-grid">
+                    <div class="p-col-12">                       
+                    
+                    <div class="p-col-12 p-md-6 p-lg-2 p-d-inline"><strong> Parte:</strong> 12345678 </div>
+                    <div class="p-col-12 p-md-6 p-lg-4 p-d-inline"><strong>Producto:</strong> Maquinaria Xddddd </div>
+                    <div class="p-col-12 p-md-6 p-lg-2 p-d-inline"><strong>Marca</strong>CTP</div>
+                    <div class="p-col-12 p-md-6 p-lg-2 p-d-inline"><strong>Precio:</strong> {{20000 | currency: '$'}}</div>
+                    <div class="p-col-12 p-md-6 p-lg-2 p-d-inline"><strong>Stock:</strong> 10</div>
+                 </div>
+
+                </div>
+
+
+
+            </p-panel>
+            </div>
+    </div>
+
 
     <div class="p-col-12 p-lg-6 p-md-6 ">
         <div class="p-grid p-dir-col p-nogutter">
             <div class="p-col-12 ">
                 <div class="card widget-statistics">
+                    <div class="p-text-center">
+                        <h3>Ventas del Producto por mes </h3>
+                    </div>
                     <div class="p-grid">
-                        <div class="p-col-6 p-md-8">
-                            <h5>Ventas del Producto por mes</h5>
-                        </div>
+                        
                        
                     </div>
                     <p-chart id="dashboard-chart" type="line" [data]="lineData" [options]="lineOptions"></p-chart>
@@ -20,14 +47,11 @@
 
     <div class="p-col-12 p-lg-6 p-md-6">
         <div class="card widget-tasks">
-            <div class="card-header">
-                <div class="title">
-                    <h5>Ventas por Cliente</h5>
-                </div>
-
+            <div class="p-text-center">
+                <h3>Historial de ventas del producto</h3>
             </div>
             
-            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="454px">
+            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="430px">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>RFC</th>
@@ -50,179 +74,112 @@
 
         </div>
     </div>
- <!--  <div class="p-col-12 p-lg-6 p-md-6 ">
-        <div class="p-grid p-dir-col p-nogutter">
-            <div class="p-col-12 ">
-                <div class="card widget-statistics">
-                    <div class="p-grid">
-                        <div class="p-col-6 p-md-8">
-                            <h5>Ventas Empleados</h5>
-                        </div>
-                        <div class="p-col-6 p-md-4 dropdown">
-                            <p-dropdown [options]="dropdownYears" [(ngModel)]="selectedYear"></p-dropdown>
-                        </div>
+    <div class="p-col-12 p-lg-6 p-md-6">
+        <div class="card">
+            <div class="p-text-center">
+                <h3>Historia de precios del Producto</h3>
+            </div>
+
+            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="450px"
+                styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>No Parte</th>
+                        <th>Nombre Parte</th>
+                        <th>Moneda</th>
+                        <th>Precio</th>
+                        <th>Fecha Registro</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td>{{product.code}}</td>
+                        <td>{{product.name}}</td>
+                        <td>PESO</td>
+                        <td>{{product.price}}</td>
+                        <td>10/10/2021</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+        </div>
+    </div>
+
+    <div class="p-col-12 p-lg-6 p-md-6">
+        <div class="card">
+
+            <div class="p-text-center">
+                <h3>Historia de precios del Producto</h3>
+            </div>
+            <div class="p-col-12 p-lg-12">
+
+
+                <div class="card">
+
+                    <div class=" p-justify-center">
+                        <p-chart id="dashboard-chart" type="line" [data]="lineData" [options]="lineOptions">
+                        </p-chart>
                     </div>
-                    <p-chart id="dashboard-chart" type="line" [data]="lineChartData2" [options]="lineChartOptions"></p-chart>
                 </div>
+
+
             </div>
 
         </div>
-    </div> --> 
+    </div>
+    
+    <div class="p-col-12 p-lg-6 p-md-6">
+        <div class="card">
+
+            <div class="p-text-center">
+                <h3>Historia de ingreso del Producto</h3>
+            </div>
+            <div class="p-col-12 p-lg-12">
 
 
-   <!-- <div class="p-col-12 p-lg-6 p-md-6">
-        <div class="card widget-team">
-            <h5>Ventas por empleado</h5>
-            <ul>
-                <li>
-                    <div class="p-grid member">
-                        <div class="p-col-6 team-box">
-                            <div class="profile-image">
-                                <img src="assets/layout/images/dashboard/avatar-carmelita.png" alt="mirage-layout" />
-                            </div>
-                            <div>
-                                <h6 class="team-member">Mabiel Terron</h6>
-                                <span class="team-member-role">Ventas</span>
-                            </div>
-                        </div>
-                        <div class="p-col-6 icons">
-                            <div class=" color-icono1">
-                                50
-                            </div>
-                            <div class="color-icono2">
-                                10
-                            </div>
-                            <div class=" color-icono3">
-                                5
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="p-grid member">
-                        <div class="p-col-6 team-box">
-                            <div class="profile-image">
-                                <img src="assets/layout/images/dashboard/avatar-govzden.png" alt="mirage-layout" />
-                            </div>
-                            <div>
-                                <h6 class="team-member">Gvozden Boskovsky</h6>
-                                <span class="team-member-role">Marketing</span>
-                            </div>
-                        </div>
-                        <div class="p-col-6 icons">
-                            <div class=" color-icono1">
-                                50
-                            </div>
-                            <div class="color-icono2">
-                                9
-                            </div>
-                            <div class=" color-icono3">
-                                5
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="p-grid member">
-                        <div class="p-col-6 team-box">
-                            <div class="profile-image">
-                                <img src="assets/layout/images/dashboard/avatar-athar.png" alt="mirage-layout" />
-                            </div>
-                            <div>
-                                <h6 class="team-member">Athar Makakooti</h6>
-                                <span class="team-member-role">Marketing</span>
-                            </div>
-                        </div>
-                        <div class="p-col-6 icons">
-                            <div class=" color-icono1">
-                                50
-                            </div>
-                            <div class="color-icono2">
-                                8
-                            </div>
-                            <div class=" color-icono3">
-                                5
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="p-grid member">
-                        <div class="p-col-6 team-box">
-                            <div class="profile-image">
-                                <img src="assets/layout/images/dashboard/avatar-tokunaga.png" alt="mirage-layout" />
-                            </div>
-                            <div>
-                                <h6 class="team-member">Tokunaga Yae</h6>
-                                <span class="team-member-role">Unknown</span>
-                            </div>
-                        </div>
-                        <div class="p-col-6 icons">
-                            <div class=" color-icono1">
-                                50
-                            </div>
-                            <div class="color-icono2">
-                                7
-                            </div>
-                            <div class=" color-icono3">
-                                5
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="p-grid member">
-                        <div class="p-col-6 team-box">
-                            <div class="profile-image">
-                                <img src="assets/layout/images/dashboard/avatar-olisha.png" alt="mirage-layout" />
-                            </div>
-                            <div>
-                                <h6 class="team-member">Olisha Farmer</h6>
-                                <span class="team-member-role">Design</span>
-                            </div>
-                        </div>
-                        <div class="p-col-6 icons">
-                            <div class=" color-icono1">
-                                50
-                            </div>
-                            <div class="color-icono2">
-                                6
-                            </div>
-                            <div class=" color-icono3">
-                                5
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                <div class="card">
 
-                <li>
-                    <div class="p-grid member">
-                        <div class="p-col-6 team-box">
-                            <div class="profile-image">
-                                <img src="assets/layout/images/dashboard/avatar-athar.png" alt="mirage-layout" />
-                            </div>
-                            <div>
-                                <h6 class="team-member">Athar Makakooti</h6>
-                                <span class="team-member-role">Marketing</span>
-                            </div>
-                        </div>
-                        <div class="p-col-6 icons">
-                            <div class=" color-icono1">
-                                50
-                            </div>
-                            <div class="color-icono2">
-                                8
-                            </div>
-                            <div class=" color-icono3">
-                                5
-                            </div>
-                        </div>
+                    <div class=" p-justify-center">
+                        <p-chart id="dashboard-chart" type="line" [data]="lineData" [options]="lineOptions">
+                        </p-chart>
                     </div>
-                </li>
-            </ul>
+                </div>
+
+
+            </div>
+
         </div>
     </div>
--->
+
+    <div class="p-col-12 p-lg-6 p-md-6">
+        <div class="card">
+            <div class="p-text-center">
+                <h3>Historia de ingreso del Producto</h3>
+            </div>
+            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="450px"
+                styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>No Parte</th>
+                        <th>Nombre Parte</th>
+                        <th>Bodega</th>
+                        <th>Ubicación</th>
+                        <th>Total_ingreso</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td>{{product.code}}</td>
+                        <td>{{product.name}}</td>
+                        <td>LOCAL</td>
+                        <td>100 A</td>
+                        <td>28</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+        </div>
+    </div>
 
     
 

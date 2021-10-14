@@ -6,6 +6,7 @@ import { CobrarComponent } from './pages/cobrar/cobrar.component';
 import { FacturacionComponent } from './pages/facturacion/facturacion.component';
 import { CierreDeCajaComponent } from './pages/cierre-de-caja/cierre-de-caja.component';
 import { AbonosComponent } from './pages/abonos/abonos.component';
+import { PrimeModule } from '../shared/prime/prime.module';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { AbonosComponent } from './pages/abonos/abonos.component';
   ],
   imports: [
     CommonModule,
+    PrimeModule,
     CajaRoutingModule
   ]
 })
