@@ -25,3 +25,12 @@
 .color-fondo-4{
     background:   #aa7ea2;
 }
+:host ::ng-deep .floatlabel-demo {
+    .p-field {
+        margin-top: 2rem;
+    }
+
+    .p-multiselect-panel .p-multiselect-header {
+        padding-bottom: 0;
+    }
+}

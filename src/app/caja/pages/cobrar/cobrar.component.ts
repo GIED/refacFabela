@@ -25,12 +25,29 @@ export class CobrarComponent implements OnInit {
     lineData: any;
     alternativosDialog: boolean;
     titulo:string;
+    formaPago:any;
+    usoCfdi:any;
 
   constructor(private productService: ProductService, private messageService: MessageService,
     private confirmationService: ConfirmationService) { }
 
   ngOnInit(){
     this.productService.getProducts().then(data => this.products = data);
+    this.formaPago = [
+        {label: 'Efectivo'},
+        {label: 'Tarjeta de Crédito'},
+        {label: 'Tarjeta de Débito'},
+        {label: 'Transferencia'},
+        {label: 'Cheque'},
+        {label: 'Depósito'},
+
+    ];
+    this.usoCfdi = [
+        {label: 'Gastos en general'},
+        {label: 'Adquisisción de Mercancias'},
+       
+
+    ];
   }
   openNew() {
     this.product = {};

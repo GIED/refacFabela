@@ -4,12 +4,28 @@
         <p-toast></p-toast>
 
         <div class="card">
+            <div class="p-text-center"><h3>Control de Caja</h3></div>
             <p-toolbar styleClass="p-mb-4">
-                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-1" >Total Efectivo: <strong>10,000.00</strong></div>
-                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-2" >Total Tarjeta-Cheque-trasferencia: <strong>1,000.00</strong></div>
-                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-3" >Total Cancelado: <strong>800.00</strong></div>
-                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-4 " >Total General:<strong>10,200</strong></div>
+                
+                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center ">
+                    <p-calendar [showIcon]="true" inputId="icon" placeholder="Fecha de Inicio"></p-calendar></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center ">
+                    <p-calendar [showIcon]="true" inputId="icon" placeholder="Fecha de Termino"></p-calendar></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center">	<button pButton pRipple type="button" label="Consultar" class="p-button-success p-mr-2 p-mb-2"></button></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center "><button pButton pRipple icon="pi pi-file-pdf"
+                    class="p-button-rounded p-button-danger p-mr-2" (click)="dt.exportCSV()"></button></div>
             </p-toolbar>
+            <p-toolbar styleClass="p-mb-4">
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-1">Total Efectivo:
+                    <strong>10,000.00</strong></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-2">Total
+                    Tarjeta-Cheque-trasferencia: <strong>1,000.00</strong></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-3">Total Cancelado:
+                    <strong>800.00</strong></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-4 ">Total
+                    General:<strong>10,200</strong></div>
+            </p-toolbar>
+          
 
             <p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true"
                 [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true"
@@ -18,7 +34,7 @@
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                        <h5 class="p-m-0">Ventas por cobrar</h5>
+                        <h5 class="p-m-0">Ventas por cobrar del: 01/10/2021 al 10/10/2021</h5>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
@@ -61,16 +77,16 @@
                                 (click)="detalleProduct(product)"></button>
                             <button pButton pRipple icon="pi pi-file-o" class="p-button-rounded p-button-warning"
                                 (click)="alternativosProduct(product)"></button>
-                          <!--  <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-                                (click)="editProduct(product)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                (click)="deleteProduct(product)"></button>-->
+                            <button pButton pRipple icon="pi pi-file-pdf"
+                                class="p-button-rounded p-button-danger p-mr-2" (click)="dt.exportCSV()"></button>
+                            <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                (click)="deleteProduct(product)"></button> -->
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
                     <div class="p-d-flex p-ai-center p-jc-between">
-                        Total de Ventas: {{products ? products.length : 0 }} 
+                        Total de Ventas: {{products ? products.length : 0 }}
                     </div>
                 </ng-template>
             </p-table>
@@ -152,18 +168,24 @@
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Cobre de Nota" [modal]="true"
+        <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Cobro de Nota" [modal]="true"
             styleClass="p-fluid">
             <ng-template pTemplate="content">
                 <div class="card">
 
-                   
+
                     <div class="p-col-12 p-lg-12">
 
 
                         <div class="card">
 
-                         
+                            <h5>El número de Nota a cobrar es de: <strong>1520</strong></h5>
+                            <p-dropdown [options]="formaPago" [(ngModel)]="selectedDrop"
+                                placeholder="Selecciona la forma de pago" [showClear]="true"></p-dropdown>
+                            <h5>El monto a cobrar es de: <strong> 5,555.00</strong></h5>
+
+
+
                         </div>
 
 
@@ -175,64 +197,56 @@
 
                 </div>
 
-               
+
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
                     (click)="hideDialog()"></button>
-
+                <button pButton pRipple label="Cobrar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveProduct()"></button>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="alternativosDialog" [style]="{width: '700px'}" header="Cobro de Nota" [modal]="true"
-        styleClass="p-fluid">
-        <ng-template pTemplate="content">
-            <div class="card">
+        <p-dialog [(visible)]="alternativosDialog" [style]="{width: '700px'}" header="Facturación de la Nota"
+            [modal]="true" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card">
 
-                <p-toolbar styleClass="p-mb-4">
-                    <ng-template pTemplate="left">
-                        <button pButton pRipple label="nuevo" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
-                            (click)="registroAlternativos()"></button>
-    
-                    </ng-template>
-                </p-toolbar>
 
-                    
+                    <div class="p-col-12 p-lg-12">
 
-                <p-table [value]="products" responsiveLayout="scroll" scrollHeight="400px"
-                    styleClass="p-datatable-sm">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>No Parte</th>
-                            <th>Nombre Parte</th>
-                            <th>Moneda</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product>
-                        <tr>
-                            <td>{{product.code}}</td>
-                            <td>{{product.name}}</td>
-                            <td>PESO</td>
-                            <td>{{product.price}}</td>
-                            <td>26</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
 
-            </div>
+                        <div class="card">
 
-            
-        </ng-template>
+                            <h5>El número de Nota a Facturar es: <strong>1520</strong></h5>
+                            <p-dropdown [options]="usoCfdi" [(ngModel)]="selectedDrop" placeholder="Selecciona uso CFDI"
+                                [showClear]="true"></p-dropdown>
+                            <h5>El monto a Facturar es: <strong> 5,555.00</strong></h5>
 
-        <ng-template pTemplate="footer">
-            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-                (click)="hideDialog()"></button>
 
-        </ng-template>
-    </p-dialog>
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+                </div>
+
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-text"
+                    (click)="saveProduct()"></button>
+            </ng-template>
+        </p-dialog>
 
         <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
     </div>
