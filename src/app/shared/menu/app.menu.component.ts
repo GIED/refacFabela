@@ -73,9 +73,9 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Enterega de mercancia', icon: 'pi pi-fwpi-amazon', routerLink: ['../almacen/entrega-de-mercancia']
                     },
-                    {
+                  /*  {
                         label: 'Stock mínimo', icon: 'pi pi-fw pi-spinner', routerLink: ['../almacen/stock-minimo']
-                    },
+                    },*/
                    
                 ]
             },
@@ -102,9 +102,9 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Facturación', icon: 'pi pi-fw pi-ticket', routerLink: ['../caja/facturacion']
                     },
-                    {
+                 /*   {
                         label: 'Cierre de caja', icon: 'pi pi-fw pi-users', routerLink: ['../caja/cierre-de-caja']
-                    },
+                    },*/
                     
                     {
                         label: 'Abonos', icon: 'pi pi-fw pi-sort-numeric-down', routerLink: ['../caja/abonos']
@@ -112,7 +112,7 @@ export class AppMenuComponent implements OnInit {
                     
                 ]
             },
-            {
+           /* {
                 label: 'Reportes', icon: 'pi pi-fw pi-chart-bar',
                 items: [
                     {
@@ -124,7 +124,7 @@ export class AppMenuComponent implements OnInit {
                     
                     
                 ]
-            },
+            },*/
         ];
     }
 
