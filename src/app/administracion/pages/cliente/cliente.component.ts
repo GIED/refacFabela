@@ -33,7 +33,7 @@ export class ClienteComponent implements OnInit {
 
 
   productDialog: boolean;
-
+  
   products: Product[];
 
   product: Product;
@@ -43,6 +43,8 @@ export class ClienteComponent implements OnInit {
   submitted: boolean;
 
   cols: any[];
+  credito: boolean;
+    valRadio: boolean;
 
   constructor(private productService: ProductService, private messageService: MessageService,
               private confirmationService: ConfirmationService) {
@@ -65,6 +67,13 @@ export class ClienteComponent implements OnInit {
       this.product = {};
       this.submitted = false;
       this.productDialog = true;
+  }
+  lineaCredito(){
+    this.product = {};
+    this.submitted = false;
+    this.credito = true;
+    this.valRadio=true;
+
   }
 
   deleteSelectedProducts() {

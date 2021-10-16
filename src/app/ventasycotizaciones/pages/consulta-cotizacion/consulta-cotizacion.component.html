@@ -1,1 +1,119 @@
-<p>consulta-cotizacion works!</p>
+
+<div class="p-grid">
+    <div class="p-col-12">
+        <p-toast></p-toast>
+        <div class="card">
+            <div class="p-text-center">
+                <h3>Consulta de Cotizaciones</h3>
+            </div>
+            <p-toolbar styleClass="p-mb-4">
+                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center ">
+                    <input type="text" pInputText placeholder="Número de Cotización">
+                </div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center ">
+                    <input type="text" pInputText placeholder="RFC del Cliente">
+                </div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center"> <button pButton pRipple type="button"
+                        label="Consultar" class="p-button-success p-mr-2 p-mb-2"></button></div>
+               
+            </p-toolbar>
+        </div>
+
+        <p-table #dt [value]="products" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+               
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                        placeholder="Buscar Cotización..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th></th>
+                <th>No. Cotización</th>
+                <th>RFC</th>
+                <th>Razón Social</th>
+                <th>Total</th>
+                <th>Estatus General</th>
+                <th>Fecha Venta</th>
+               
+               
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product let-expanded="expanded">
+            <tr>
+                <td>
+                    <button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                </td>
+                <td><span class="p-column-title"></span> {{product.id}}
+                </td>
+                <td><span class="p-column-title"></span> FAMP871204FI6
+                </td>
+                <td><span class="p-column-title"></span>Pedro Manuel Fabela Martínez
+                </td>
+                <td><span class="p-column-title"></span> {{product.price | currency:'USD'}}
+                </td>
+                <td><span class="p-column-title"></span> Cotización
+                </td>
+               
+                <td>
+                    <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
+                    <button pButton pRipple icon="pi pi-dollar" class="p-button-rounded p-button-success" (click)="deleteProduct(product)"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="rowexpansion" let-product>
+            <tr  style="background: #aa7ea2;">
+                <td colspan="7">
+                    <div class="p-p-3" >
+                        <p-table [value]="product.orders" dataKey="id">
+                            <ng-template pTemplate="caption">
+                                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                                    <h5 class="p-text-center">Productos de la Cotización: {{product.name}}</h5>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>No. Parte</th>
+                                    <th>Parte</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Precio Partida</th>
+                                    <th>Estatus</th>
+                                  
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-order>
+                                <tr>
+                                    <td>{{order.id}}</td>
+                                    <td>{{order.productCode}}</td>
+                                    <td>PESO</td>
+                                    <td>{{product.price}}</td>
+                                    <td>26</td>
+                                    <td>
+                                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="6">No hay Abonos registrados para la Vernta de Crédito</td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    </div>
+
+    
+
+   
+                    
+</div>

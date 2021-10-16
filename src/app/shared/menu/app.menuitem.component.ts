@@ -11,7 +11,7 @@ import { AppMainComponent } from '../../app.main.component';
     selector: '[app-menuitem]',
     /* tslint:enable:component-selector */
     template: `
-          <ng-container>
+          <ng-container >
               <a [attr.href]="item.url" (click)="itemClick($event)" *ngIf="(!item.routerLink || item.items) && item.visible !== false"
                  (mouseenter)="onMouseEnter()" (keydown.enter)="itemClick($event)"
                 [attr.target]="item.target" [attr.tabindex]="0" [ngClass]="item.class">

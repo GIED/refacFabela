@@ -15,7 +15,7 @@ export class AppMenuComponent implements OnInit {
         this.model = [
             {label: 'Inicio', icon: 'pi pi-fw pi-home', routerLink: ['/inicio/tablero']},
             {
-                label: 'Administración', icon: 'pi pi-fw pi-slack',
+                label: 'Administración', icon: 'pi pi-fw pi-cog',
                 items: [
                     {
                         label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['../administracion/usuario']
@@ -30,90 +30,90 @@ export class AppMenuComponent implements OnInit {
                         label: 'Tipo de Cambio', icon: 'pi pi-fw pi-dollar', routerLink: ['../administracion/tipo-cambio']
                     },
                     {
-                        label: 'Créditos', icon: 'pi pi-fw pi-users', routerLink: ['../administracion/creditos']
+                        label: 'Créditos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/creditos']
                     },
                    
 
                 ]
             },
             {
-                label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-compass',
+                label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-dollar',
                 items: [
                     {
-                        label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/ventas']
+                        label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['../ventasycotizaciones/ventas']
                     },
                     {
-                        label: 'Ventas por Pedido', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/ventas-por-pedido']
+                        label: 'Ventas por Pedido', icon: 'pi pi-fw pi-wallet', routerLink: ['../ventasycotizaciones/ventas-por-pedido']
                     },
                    
                     {
-                        label: 'Consulta Venta', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/consulta-venta']
+                        label: 'Consulta Venta', icon: 'pi pi-fw pi-search', routerLink: ['../ventasycotizaciones/consulta-venta']
                     },
                     {
-                        label: 'Consulta Cotización', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/consulta-cotizacion']
+                        label: 'Consulta Cotización', icon: 'pi pi-fw pi-search-plus', routerLink: ['../ventasycotizaciones/consulta-cotizacion']
                     },
                     {
-                        label: 'Cancela Venta', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/cancela-venta']
+                        label: 'Cancela Venta', icon: 'pi pi-fw pi-search-minus', routerLink: ['../ventasycotizaciones/cancela-venta']
                     },
 
                 ]
             },
             {
-                label: 'Almacen', icon: 'pi pi-fw pi-copy',
+                label: 'Almacen', icon: 'pi pi-fw pi-slack',
                 items: [
                     {
-                        label: 'Ingreso mercancia', icon: 'pi pi-fw pi-users', routerLink: ['../almacen/ingreso-mercancia']
+                        label: 'Ingreso mercancia', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/ingreso-mercancia']
                     },
                     {
-                        label: 'Traspasos', icon: 'pi pi-fw pi-users', routerLink: ['../almacen/traspasos']
+                        label: 'Traspasos', icon: 'pi pi-fw pi-sort-alt', routerLink: ['../almacen/traspasos']
                     },
                     {
-                        label: 'Inventario', icon: 'pi pi-fw pi-users', routerLink: ['../almacen/inventario']
+                        label: 'Inventario', icon: 'pi pi-fw pi-book', routerLink: ['../almacen/inventario']
                     },
                     {
-                        label: 'Enterega de mercancia', icon: 'pi pi-fw pi-users', routerLink: ['../almacen/entrega-de-mercancia']
+                        label: 'Enterega de mercancia', icon: 'pi pi-fwpi-amazon', routerLink: ['../almacen/entrega-de-mercancia']
                     },
                     {
-                        label: 'Stock mínimo', icon: 'pi pi-fw pi-users', routerLink: ['../almacen/stock-minimo']
+                        label: 'Stock mínimo', icon: 'pi pi-fw pi-spinner', routerLink: ['../almacen/stock-minimo']
                     },
                    
                 ]
             },
             {
-                label: 'Productos', icon: 'pi pi-fw pi-sitemap',
+                label: 'Productos', icon: 'pi pi-fw pi-briefcase',
                 items: [
                     {
-                        label: 'Registro', icon: 'pi pi-fw pi-users', routerLink: ['../productos/registro-producto']
+                        label: 'Registro', icon: 'pi pi-fw pi-external-link', routerLink: ['../productos/registro-producto']
                     },
                     {
-                        label: 'Historial', icon: 'pi pi-fw pi-users', routerLink: ['../productos/historial-producto']
+                        label: 'Historial', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/historial-producto']
                     },
                     {
-                        label: 'Alternativos', icon: 'pi pi-fw pi-users', routerLink: ['../productos/alternativo-producto']
+                        label: 'Alternativos', icon: 'pi pi-fw pi-clone', routerLink: ['../productos/alternativo-producto']
                     },
                 ]
             },
             {
-                label: 'Caja', icon: 'pi pi-fw pi-sitemap',
+                label: 'Caja', icon: 'pi pi-fw pi-id-card',
                 items: [
                     {
-                        label: 'Cobrar', icon: 'pi pi-fw pi-users', routerLink: ['../caja/cobrar']
+                        label: 'Cobrar', icon: 'pi pi-fw pi-dollar', routerLink: ['../caja/cobrar']
                     },
                     {
-                        label: 'Facturación', icon: 'pi pi-fw pi-users', routerLink: ['../caja/facturacion']
+                        label: 'Facturación', icon: 'pi pi-fw pi-ticket', routerLink: ['../caja/facturacion']
                     },
                     {
                         label: 'Cierre de caja', icon: 'pi pi-fw pi-users', routerLink: ['../caja/cierre-de-caja']
                     },
                     
                     {
-                        label: 'Abonos', icon: 'pi pi-fw pi-users', routerLink: ['../caja/abonos']
+                        label: 'Abonos', icon: 'pi pi-fw pi-sort-numeric-down', routerLink: ['../caja/abonos']
                     },
                     
                 ]
             },
             {
-                label: 'Reportes', icon: 'pi pi-fw pi-sitemap',
+                label: 'Reportes', icon: 'pi pi-fw pi-chart-bar',
                 items: [
                     {
                         label: 'Ventas', icon: 'pi pi-fw pi-users', routerLink: ['/reportes/reporte-ventas']
