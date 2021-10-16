@@ -1,1 +1,104 @@
-<p>ingreso-mercancia works!</p>
+<div class="p-grid">
+    <div class="p-col-12">
+        <p-toast></p-toast>
+        <div class="card">
+            <div class="p-text-center">
+                <h3>Ingreso de mercancia</h3>
+            </div>
+
+        </div>
+
+        <p-table [value]="products" dataKey="name" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem"></th>
+                    <th pSortableColumn="name">No. de pedido
+                        <p-sortIcon field="name"></p-sortIcon>
+                    </th>
+
+                    <th pSortableColumn="price">Proveedor
+                        <p-sortIcon field="price"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="category">Fecha de solicitud
+                        <p-sortIcon field="category"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="rating">Total de productos a recibir
+                        <p-sortIcon field="rating"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="inventoryStatus">Estatus
+                        <p-sortIcon field="inventoryStatus"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-expanded="expanded">
+                <tr>
+                    <td>
+                        <button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                    </td>
+                    <td>{{product.code}}</td>
+
+                    <td>{{product.name}}</td>
+                    <td>15/10/2021</td>
+                    <td>
+                        {{product.quantity}}
+                    </td>
+                    <td><span>completa</span></td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-product>
+                <tr>
+                    <td colspan="7">
+                        <div class="p-p-3">
+                            <p-table [value]="product.orders" dataKey="id">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th colspan="6" class="p-text-center">
+                                            <h4>Mercancia Recibida del No. de Pedido {{product.code}}</h4>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th pSortableColumn="id">No. de parte
+                                            <p-sortIcon field="price"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="customer">Nombre Producto
+                                            <p-sortIcon field="customer"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="amount">Cantidad Solicitada
+                                            <p-sortIcon field="amount"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="amount">Cantidad Recibida
+                                            <p-sortIcon field="amount"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="status">Estatus
+                                            <p-sortIcon field="status"></p-sortIcon>
+                                        </th>
+                                        <th style="width: 4rem"></th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-order>
+                                    <tr>
+                                        <td>{{order.id}}</td>
+                                        <td>{{order.customer}}</td>
+                                        <td>{{order.amount}}</td>
+                                        <td>
+                                            <p-inputNumber [(ngModel)]="order.quantity" [min]="0" [max]="100" [showButtons]="true"></p-inputNumber>
+                                        </td>
+                                        <td><span [class]="'order-badge order-' + order.status.toLowerCase()">{{order.status}}</span></td>
+                                        <td>
+                                            <p-checkbox name="groupname" value="val1" [(ngModel)]="order.quantity"></p-checkbox>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="6">There are no order for this product yet.</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
