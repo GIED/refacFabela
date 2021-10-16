@@ -145,13 +145,17 @@ deleteProduct(product: Product) {
     });
 }
 
-hideDialog() {
-    this.productDialog = false;
-    this.submitted = false;
+hideDialog(valor: boolean) {
+    this.productDialog = valor;
+    this.submitted = valor;
 }
 
-saveProduct() {
-    this.submitted = true;
+saveProduct(product: Product) {
+
+    console.log(product);
+
+    this.product= product;
+   
 
     if (this.product.name.trim()) {
         if (this.product.id) {

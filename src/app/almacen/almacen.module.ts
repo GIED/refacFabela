@@ -23,7 +23,6 @@ import { ProductService } from '../demo/service/productservice';
    
   ],
   imports: [
-   
     AlmacenRoutingModule,
     PrimeModule
   ], 

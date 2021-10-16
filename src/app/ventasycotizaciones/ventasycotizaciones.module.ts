@@ -7,6 +7,8 @@ import { ConsultaCotizacionComponent } from './pages/consulta-cotizacion/consult
 import { ConsultaVentaComponent } from './pages/consulta-venta/consulta-venta.component';
 import { VentasComponent } from './pages/ventas/ventas.component';
 import { VentasPorPedidoComponent } from './pages/ventas-por-pedido/ventas-por-pedido.component';
+import { ModalProductoComponent } from '../productos/components/modal-producto/modal-producto.component';
+import { ProductosModule } from '../productos/productos.module';
 
 
 
@@ -14,7 +16,8 @@ import { VentasPorPedidoComponent } from './pages/ventas-por-pedido/ventas-por-p
   declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,ConsultaCotizacionComponent, CancelaVentaComponent],
   imports: [
     VentasycotizacionesRoutingModule,
-    PrimeModule
+    PrimeModule,
+    ProductosModule
   ]
 })
 export class VentasycotizacionesModule { }

@@ -6,14 +6,18 @@ import { RegistroProductoComponent } from './pages/registro-producto/registro-pr
 import { HistorialProductoComponent } from './pages/historial-producto/historial-producto.component';
 import { AlternativosProductoComponent } from './pages/alternativos-producto/alternativos-producto.component';
 import { PrimeModule } from '../shared/prime/prime.module';
+import { ModalProductoComponent } from './components/modal-producto/modal-producto.component';
 
 
 @NgModule({
-  declarations: [RegistroProductoComponent, HistorialProductoComponent, AlternativosProductoComponent],
+  declarations: [RegistroProductoComponent, HistorialProductoComponent, AlternativosProductoComponent, ModalProductoComponent],
   imports: [
     CommonModule,
     ProductosRoutingModule,
     PrimeModule
+  ],
+  exports:[
+    ModalProductoComponent
   ]
 })
 export class ProductosModule { }

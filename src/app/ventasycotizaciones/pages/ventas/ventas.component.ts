@@ -1,8 +1,10 @@
+
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
 import { CountryService } from '../../../demo/service/countryservice';
+
 
 @Component({
   selector: 'app-ventas',
@@ -15,6 +17,7 @@ export class VentasComponent implements OnInit {
   productDialog: boolean;
 
   products: Product[]=[];
+  productsFiltrado: Product[]=[];
 
   listaProductos: Product[]=[];
 
@@ -27,10 +30,15 @@ export class VentasComponent implements OnInit {
 
   cols: any[];
 
-  selectedList: SelectItem;
+  total: number = 0;
+
+  
   selectedCountryAdvanced: any[];
   countries: any[];
   filteredCountries: any[];
+
+  productosFiltrados: Product[];
+  productoSeleccionado: Product [] ;
 
   constructor(private productService: ProductService, private messageService: MessageService,
     private confirmationService: ConfirmationService, private countryService: CountryService) { 
@@ -66,30 +74,69 @@ editProduct(product: Product) {
 }
 
 agregarProduct(producto: Product) {
-  console.log(producto);
+  //console.log(producto);
+
+  if (producto.cantidad === 0 || producto.cantidad === undefined || producto.cantidad === null) {
+    //console.log("entro a if");
+    
+    this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar una cantidad', life: 3000});
+
+  }else{ 
+
+   // if (this.products[this.findIndexById(producto.id, this.products)].quantity < producto.cantidad) {
+
+      //this.messageService.add({severity: 'error', summary: 'Atención', detail: 'Stock insuficiente para realizar la venta', life: 3000});
+      //producto.cantidad=0;
+      //this.products[this.findIndexById(producto.id, this.products)]=producto;
+    //}else{ 
 
 
-  if (this.listaProductos[this.findIndexById(producto.id)] != -1) {
-    this.listaProductos[this.findIndexById(producto.id)] = producto;
+  if (this.listaProductos.length> 0) {
+    if (this.findIndexById(producto.id, this.listaProductos) === -1 ) {
+
+      //console.log("entro a else");
+      producto.cantidadVenta=producto.cantidad;
+      this.listaProductos.push(producto);
+
+      
+    }else{
+      
+      producto.cantidadVenta=this.listaProductos[this.findIndexById(producto.id, this.listaProductos)].cantidadVenta +producto.cantidad;
+      this.listaProductos[this.findIndexById(producto.id, this.listaProductos)]=producto;
+    }
   }else{
+    producto.cantidadVenta=producto.cantidad;
     this.listaProductos.push(producto);
   }
+  this.total += producto.price*producto.cantidad
+  producto.quantity=producto.quantity-producto.cantidad;
+  producto.cantidad=0;
+  
+  this.products[this.findIndexById(producto.id, this.products)]=producto;
+  this.productsFiltrado=[];
+  this.productoSeleccionado=[];
+  this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Producto Agregado Correctamente', life: 3000});
+
+//}
+}
+
+}
+
+quitarProducto(producto: Product){
+  console.log(producto);
+  
+  producto.quantity= producto.quantity + producto.cantidadVenta;
+  this.total = this.total - producto.price*producto.cantidadVenta;
+  console.log("total: ",this.total);
+  this.products[this.findIndexById(producto.id, this.products)]=producto;
+  this.listaProductos.splice(this.findIndexById(producto.id, this.listaProductos),1);
+}
 
 
-  
- 
-  producto.quantity= producto.quantity-producto.cantidad;
- 
- 
+onSelect(event: any){
+  //console.log( event );
 
-  this.product[this.findIndexById(producto.id)] = producto;
-  
-
-  
-  
-  console.log(this.listaProductos)
-  
-  
+  this.productsFiltrado.push(event)
 
 }
 
@@ -106,15 +153,27 @@ filterCountry(event) {
   this.filteredCountries = filtered;
 }
 
-findIndexById(id: string): number {
-  let index = -1;
+filtrarProducto(event) {
+  const filtered: Product[] = [];
+  const query = event.query;
   for (let i = 0; i < this.products.length; i++) {
-      if (this.products[i].id === id) {
+      const producto = this.products[i];
+      if (producto.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+          filtered.push(producto);
+      }
+  }
+
+  this.productosFiltrados = filtered;
+}
+
+findIndexById(id: string, arreglo:Product[]): number {
+  let index = -1;
+  for (let i = 0; i < arreglo.length; i++) {
+      if (arreglo[i].id === id) {
           index = i;
           break;
       }
   }
-
   return index;
 }
 

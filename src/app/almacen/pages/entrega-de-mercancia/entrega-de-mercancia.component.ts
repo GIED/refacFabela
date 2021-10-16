@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Product } from 'src/app/demo/domain/product';
+import { ProductService } from 'src/app/demo/service/productservice';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-entrega-de-mercancia',
@@ -7,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EntregaDeMercanciaComponent implements OnInit {
 
+ 
+
   constructor() { }
 
   ngOnInit(): void {
+   
+   
+    
   }
+
+  
+
+
 
 }
