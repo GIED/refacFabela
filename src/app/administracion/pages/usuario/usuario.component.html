@@ -34,12 +34,12 @@
 						<th style="width: 3rem">
 							<p-tableHeaderCheckbox></p-tableHeaderCheckbox>
 						</th>
-						<th pSortableColumn="name">RFC <p-sortIcon field="name"></p-sortIcon></th>
+						<th pSortableColumn="name">Nombre Complero <p-sortIcon field="name"></p-sortIcon></th>
 						<!--<th>Image</th>-->
-						<th pSortableColumn="price">Razón social <p-sortIcon field="price"></p-sortIcon></th>
-						<th pSortableColumn="category">Dirección <p-sortIcon field="category"></p-sortIcon></th>
-						<th pSortableColumn="rating">Correo <p-sortIcon field="rating"></p-sortIcon></th>
-						<th pSortableColumn="inventoryStatus">Telénono <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+						<th pSortableColumn="price">Perfil <p-sortIcon field="price"></p-sortIcon></th>
+						<th pSortableColumn="category">Usuario <p-sortIcon field="category"></p-sortIcon></th>
+						<th pSortableColumn="rating">Contraseña <p-sortIcon field="rating"></p-sortIcon></th>
+						<th pSortableColumn="inventoryStatus">Estatus <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
 						<th></th>
 					</tr>
 				</ng-template>
@@ -55,13 +55,13 @@
 							<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
 						</td>-->
 						<td><span class="p-column-title">Price</span>
-							{{product.price | currency:'USD'}}
+							Ventas
 						</td>
 						<td><span class="p-column-title">Category</span>
-							{{product.category}}
+							Prueba 1
 						</td>
 						<td><span class="p-column-title">Reviews</span>
-							<p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating>
+						 15ghtyerft#$
 						</td>
 						<td><span class="p-column-title">Status</span>
 							<span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
@@ -80,58 +80,95 @@
 			</p-table>
 		</div>
 
-		<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Datos del usuario" [modal]="true" styleClass="p-fluid">
-			<ng-template pTemplate="content">
-				<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.image" class="product-image" *ngIf="product.image">
-				<div class="p-field">
-					<label for="name">RFC</label>
-					<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-					<small class="p-invalid" *ngIf="submitted && !product.name">RFC requerido.</small>
-				</div>
-				<div class="p-field">
-					<label for="description">Razón social</label>
-					<textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3" cols="20"></textarea>
-				</div>
+		<p-dialog [(visible)]="productDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true"
+		styleClass="p-fluid">
+		<ng-template pTemplate="content">
+			<div class="p-field">
+				<label for="name">Nombre(s)</label>
+				<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
+				<small class="p-invalid" *ngIf="submitted && !product.name">RFC requerido.</small>
+			</div>
+			<div class="p-field">
+				<label for="name">Apellido Paterno</label>
+				<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
+				<small class="p-invalid" *ngIf="submitted && !product.name">RFC requerido.</small>
+			</div>
+			<div class="p-field">
+				<label for="name">Apellido Materno</label>
+				<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
+				<small class="p-invalid" *ngIf="submitted && !product.name">Razón Social requerida.</small>
+			</div>
 
-				<div class="p-field">
-					<label class="p-mb-3">Category</label>
-					<div class="p-formgrid p-grid">
-						<div class="p-field-radiobutton p-col-6">
-							<p-radioButton id="category1" name="category" value="Accessories" [(ngModel)]="product.category"></p-radioButton>
-							<label for="category1">Accessories</label>
-						</div>
-						<div class="p-field-radiobutton p-col-6">
-							<p-radioButton id="category2" name="category" value="Clothing" [(ngModel)]="product.category"></p-radioButton>
-							<label for="category2">Clothing</label>
-						</div>
-						<div class="p-field-radiobutton p-col-6">
-							<p-radioButton id="category3" name="category" value="Electronics" [(ngModel)]="product.category"></p-radioButton>
-							<label for="category3">Electronics</label>
-						</div>
-						<div class="p-field-radiobutton p-col-6">
-							<p-radioButton id="category4" name="category" value="Fitness" [(ngModel)]="product.category"></p-radioButton>
-							<label for="category4">Fitness</label>
-						</div>
+			
+			<div class="p-formgrid p-grid">
+				<div class="p-field p-col">
+					<label for="price">Correo</label>
+					<p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
+						locale="en-US"></p-inputNumber>
+				</div>
+				<div class="p-field p-col">
+					<label for="quantity">Telefóno</label>
+					<p-inputNumber id="quantity" [(ngModel)]="product.quantity"></p-inputNumber>
+				</div>
+			</div>
+
+
+			<div class="p-field p-col">
+				<label for="state">State</label>
+				<p-dropdown inputId="state" [options]="states" [(ngModel)]="selectedState" placeholder="Rol/Perfil" optionLabel="name"></p-dropdown>
+			</div>
+
+			<div class="p-field p-col">
+				<label for="quantity">Usuario</label>
+				<input id="username" pInputText  placeholder="Type your username..." />
+			</div>
+
+			<div class="p-formgrid p-grid">
+				<div class="p-field p-col">
+					<label for="price">Password</label>
+					<input type="password" id="password" placeholder="Escribe contraseña" pPassword [feedback]="false"/>
+				</div>
+				<div class="p-field p-col">
+					<label for="quantity">Confirma constraseña</label>
+					<input type="password" id="password" placeholder="Confirma contraseña" pPassword [feedback]="false"/>
+				</div>
+			</div>
+
+			<div class="p-grid">
+				<div class="p-col-12 p-md-4">
+					<div class="p-field-radiobutton">
+						<p-radioButton name="city" value="Chicago" [(ngModel)]="valRadio" id="city1" valu>
+						</p-radioButton>
+						<label for="city1">Activar</label>
 					</div>
 				</div>
-
-				<div class="p-formgrid p-grid">
-					<div class="p-field p-col">
-						<label for="price">Price</label>
-						<p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+				<div class="p-col-12 p-md-4">
+					<div class="p-field-radiobutton">
+						<p-radioButton name="city" value="Los Angeles" [(ngModel)]="valRadio" id="city2">
+						</p-radioButton>
+						<label for="city2">Desactivar</label>
 					</div>
-					<div class="p-field p-col">
-						<label for="quantity">Quantity</label>
-						<p-inputNumber id="quantity" [(ngModel)]="product.quantity"></p-inputNumber>
-					</div>
-				</div>
-			</ng-template>
+				</div>					
+			</div>
+		</ng-template>
+		
+		
+			
+		
+			
 
-			<ng-template pTemplate="footer">
-				<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-				<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
-			</ng-template>
-		</p-dialog>
+		
+			
+		
+	
+
+		<ng-template pTemplate="footer">
+			<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+				(click)="hideDialog()"></button>
+			<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+				(click)="saveProduct()"></button>
+		</ng-template>
+	</p-dialog>
 
 		<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 	</div>

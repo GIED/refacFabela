@@ -1,5 +1,5 @@
-<div class="layout-sidebar " [ngClass]="{'layout-sidebar-active': appMain.sidebarActive}" (click)="appMain.onSidebarClick($event)"
-     (mouseover)="appMain.sidebarActive=true" (mouseleave)="appMain.sidebarActive=false" style="background: #ebd282">
+<div class="layout-sidebar" [ngClass]="{'layout-sidebar-active': appMain.sidebarActive}" (click)="appMain.onSidebarClick($event)"
+     (mouseover)="appMain.sidebarActive=true" (mouseleave)="appMain.sidebarActive=false" style="background: rgb(223, 221, 221);" >
     <div class="sidebar-logo">
         <a href="#" class="sidebar-pin" title="Toggle Menu" (click)="appMain.onToggleMenuClick($event)">
             <i class="pi pi-lock" *ngIf="appMain.staticMenuActive"></i>

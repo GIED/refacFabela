@@ -43,6 +43,7 @@ export class UsuarioComponent implements OnInit {
     submitted: boolean;
   
     cols: any[];
+    states:any[];
   
     constructor(private productService: ProductService, private messageService: MessageService,
                 private confirmationService: ConfirmationService) {
@@ -59,12 +60,21 @@ export class UsuarioComponent implements OnInit {
             { field: 'rating', header: 'Reviews' },
             { field: 'inventoryStatus', header: 'Status' }
         ];
+        this.states = [
+            {name: 'Administrador', code: '1'},
+            {name: 'Ventas', value: '2'},
+            {name: 'Almacen', code: '3'},
+            {name: 'Ventas Mayoristas', code: '4'},
+            {name: 'Entrega de Mercancia', code: '5'},
+            {name: 'Cobranza', code: '6'}
+        ];
     }
   
     openNew() {
         this.product = {};
         this.submitted = false;
         this.productDialog = true;
+       
     }
   
     deleteSelectedProducts() {
