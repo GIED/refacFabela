@@ -19,6 +19,7 @@ import { PrimeModule } from './shared/prime/prime.module';
 import { ProductService } from './demo/service/productservice';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -27,7 +28,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
         AppMenuitemComponent,
         AppTopBarComponent,
         AppFooterComponent,
-        AppRightPanelComponent,
+        AppRightPanelComponent,       
        
         
        
