@@ -73,9 +73,9 @@
 					</td>
 					<td>
 						<button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-							(click)="editar(cliente)"></button>
+							(click)="editar(proveedor)"></button>
 						<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-							(click)="eliminar(cliente)"></button>
+							(click)="eliminar(proveedor)"></button>
 						
 					</td>
 				</tr>
@@ -94,7 +94,7 @@
 		<ng-template pTemplate="content">
 			<form [formGroup]="formulario">
 				<input type="text" pInputText  formControlName="nId" hidden  />
-				<input type="text" pInputText  formControlName="sClave" hidden  />
+				
 				
 			<div class="p-field">
 				<label for="name">RFC</label>

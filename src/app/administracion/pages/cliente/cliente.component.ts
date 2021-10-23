@@ -103,7 +103,26 @@ export class ClienteComponent implements OnInit {
       this.cliente = {};
       this.submitted = false;
       this.clienteDialog = true;
+
+      this.limpiarFormulario();
+
+    
+    
   }
+
+  limpiarFormulario(){
+
+    this.fclientes.nId.setValue("");
+    this.fclientes.sCorreo.setValue("");
+    this.fclientes.sTelefono.setValue("");
+    this.fclientes.sDireccion.setValue("");
+    this.fclientes.sRazonSocial.setValue("");
+    this.fclientes.sRfc.setValue("");
+    this.fclientes.sClave.setValue("");
+
+  }
+
+
   lineaCredito(){
     this.cliente = {};
     this.submitted = false;
@@ -114,6 +133,7 @@ export class ClienteComponent implements OnInit {
  
 //edita los daros del cliente
   editar(cliente: Clientes) {
+    this.clienteDialog = true;
      this.fclientes.nId.setValue(cliente.nId);
      this.fclientes.sCorreo.setValue(cliente.sCorreo);
      this.fclientes.sTelefono.setValue(cliente.sTelefono);
@@ -127,7 +147,7 @@ export class ClienteComponent implements OnInit {
 
 
 
-      this.clienteDialog = true;
+     
   }
 
   get fclientes(){

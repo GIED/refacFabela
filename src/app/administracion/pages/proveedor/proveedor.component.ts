@@ -98,6 +98,7 @@ export class ProveedorComponent implements OnInit {
         this.proveedor = {};
         this.submitted = false;
         this.proveedorDialog = true;
+        this.limpiarFormulario();
     }
     lineaCredito(){
       this.proveedor = {};
@@ -106,16 +107,27 @@ export class ProveedorComponent implements OnInit {
       
   
     }
+    limpiarFormulario(){
+      this.fproveedor.nId.setValue("");    
+    this.fproveedor.sTelefono.setValue("");
+    this.fproveedor.sDireccion.setValue("");
+    this.fproveedor.sRazonSocial.setValue("");
+    this.fproveedor.sRfc.setValue("");
+   
+
+    }
    
   //edita los daros del cliente
     editar(proveedor: Proveedores) {
+     
+      this.proveedorDialog = true;
        this.fproveedor.nId.setValue(proveedor.nId);     
        this.fproveedor.sTelefono.setValue(proveedor.sTelefono);
        this.fproveedor.sDireccion.setValue(proveedor.sDireccion);
        this.fproveedor.sRazonSocial.setValue(proveedor.sRazonSocial);
        this.fproveedor.sRfc.setValue(proveedor.sRfc);
   
-        this.proveedorDialog = true;
+       
     }
   
     get fproveedor(){
@@ -141,8 +153,10 @@ export class ProveedorComponent implements OnInit {
     }
   
     hideDialog() {
+      this.limpiarFormulario();
         this.proveedorDialog = false;
         this.submitted = false;
+  
     }
   
    //Guardar nuevo cliente 
