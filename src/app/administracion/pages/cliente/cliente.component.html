@@ -21,7 +21,7 @@
 				</ng-template>
 			</p-toolbar>
 
-			<p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true"
+			<p-table #dt [value]="listaClientes"  [rows]="10" [paginator]="true"
 				[globalFilterFields]="['name','country.name','representative.name','status']"
 				[(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
 				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
@@ -54,34 +54,34 @@
 						<th></th>
 					</tr>
 				</ng-template>
-				<ng-template pTemplate="body" let-product>
+				<ng-template pTemplate="body" let-cliente>
 					<tr>
 						<td>
 
 						</td>
 						<td><span class="p-column-title">Name</span>
-							{{product.name}}
+							{{cliente.sRfc}}
 						</td>
 						<!--	<td><span class="p-column-title">Image</span>
 							<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
 						</td>-->
 						<td><span class="p-column-title">Price</span>
-							PEDRO MANUEL FABELA MARTINEZ
+							{{cliente.sRazonSocial}}
 						</td>
 						<td><span class="p-column-title">Category</span>
-							ANTONIO PLIEGO VITTALBA 118
+							{{cliente.sDireccion}}
 						</td>
 						<td><span class="p-column-title">Reviews</span>
-							gmail@gmail.com
+							{{cliente.sCorreo}}
 						</td>
 						<td><span class="p-column-title">Status</span>
-							72216165463
+							{{cliente.sTelefono}}
 						</td>
 						<td>
 							<button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
 								(click)="openNew()"></button>
 							<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-								(click)="deleteProduct(product)"></button>
+								(click)="eliminar(cliente)"></button>
 							<button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
 								(click)="lineaCredito()"></button>
 						</td>
@@ -89,7 +89,7 @@
 				</ng-template>
 				<ng-template pTemplate="summary">
 					<div class="p-d-flex p-ai-center p-jc-between">
-						En total hay {{products ? products.length : 0 }} clientes.
+						En total hay {{listaClientes ? listaClientes.length : 0 }} clientes.
 					</div>
 				</ng-template>
 			</p-table>
@@ -130,15 +130,26 @@
 			</ng-template>
 		</p-dialog>
 
-		<p-dialog [(visible)]="productDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true"
-			styleClass="p-fluid">
+		<p-dialog [(visible)]="clienteDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true" styleClass="p-fluid">
+		
 			<ng-template pTemplate="content">
+				<form [formGroup]="formulario">
 				<div class="p-field">
 					<label for="name">RFC</label>
-					<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-					<small class="p-invalid" *ngIf="submitted && !product.name">RFC requerido.</small>
+					<input type="text" pInputText  formControlName="sRfc" [class.is-invalid]="validaRfc"  />
+					<small *ngIf="validaRfc" class="form-text text-danger">Rfc invalido favor de verificar.</small>
+
 				</div>
+
 				<div class="p-field">
+					<label for="name">Razón Social</label>
+					<input type="text" pInputText  formControlName="sRazonSocial" [class.is-invalid]="validaRS"  />
+					<small *ngIf="validaRS" class="form-text text-danger">Razón social invalido, favor de verificar.</small>
+
+				</div>
+			</form>
+				
+		<!--	<div class="p-field">
 					<label for="name">Razón Social</label>
 					<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
 					<small class="p-invalid" *ngIf="submitted && !product.name">Razón Social requerida.</small>
@@ -175,6 +186,18 @@
 						</div>
 					</div>					
 				</div>
+			-->
+
+	
+<hr>
+<pre>
+  estado del formulario: {{formulario.valid}}
+  <br>
+  status: {{formulario.status}}
+</pre>
+<pre>
+  {{formulario.value | json}}
+</pre> 
 			</ng-template>
 
 
@@ -182,10 +205,12 @@
 				<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
 					(click)="hideDialog()"></button>
 				<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-					(click)="saveProduct()"></button>
+					(click)="guardar()"></button>
 			</ng-template>
-		</p-dialog>
 
+		</p-dialog>
+		
 		<p-confirmDialog [style]="{width: '600px'}"></p-confirmDialog>
+
 	</div>
 </div>

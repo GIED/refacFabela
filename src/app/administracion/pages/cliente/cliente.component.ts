@@ -3,6 +3,10 @@ import { Product } from '../../../demo/domain/product';
 import { ProductService } from '../../../demo/service/productservice';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { ClienteService } from '../../service/cliente.service';
+import { Clientes } from '../../interfaces/clientes';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
 
 
 
@@ -32,111 +36,146 @@ import { MessageService } from 'primeng/api';
 export class ClienteComponent implements OnInit {
 
 
-  productDialog: boolean;
-  
-  products: Product[];
+  listaClientes:Clientes[]=[];  
 
-  product: Product;
+  clienteDialog: boolean;
 
   selectedProducts: Product[];
 
   submitted: boolean;
 
-  cols: any[];
   credito: boolean;
-    valRadio: boolean;
+  cliente:Clientes;
 
-  constructor(private productService: ProductService, private messageService: MessageService,
-              private confirmationService: ConfirmationService) {
-     
+  formulario:FormGroup;
+  
+
+  constructor( private messageService: MessageService,
+              private confirmationService: ConfirmationService, private clienteService:ClienteService, private fb: FormBuilder,) {
+                this.crearFormulario();
   }
 
-  ngOnInit() {
-      this.productService.getProducts().then(data => this.products = data);
+  ngOnInit() {      
+     
+      this.obtenerClientes();
+  }
 
-      this.cols = [
-          { field: 'rfc', header: 'rfc' },
-          { field: 'razon_social', header: 'razon_social' },
-          { field: 'direccion', header: 'direccion' },
-          { field: 'telefono', header: 'telefono' },
-          { field: 'correo', header: 'correo' }
-      ];
+  
+  crearFormulario() {
+
+    this.formulario = this.fb.group({
+      sRfc: ['', []],
+      sRazonSocial:['',[Validators.required]]
+
+    })
+
+  }
+  get validaRfc() {
+    return this.formulario.get('sRfc').invalid && this.formulario.get('sRfc').touched;
+  }
+  get validaRS() {
+    return this.formulario.get('sRazonSocial').invalid && this.formulario.get('sRazonSocial').touched;
+  }
+
+
+  obtenerClientes(){
+
+    this.clienteService.getClientes().subscribe(clientes=>{
+        this.listaClientes=clientes;
+    })
   }
 
   openNew() {
-      this.product = {};
+      this.cliente = {};
       this.submitted = false;
-      this.productDialog = true;
+      this.clienteDialog = true;
   }
   lineaCredito(){
-    this.product = {};
+    this.cliente = {};
     this.submitted = false;
     this.credito = true;
-    this.valRadio=true;
+    
 
   }
+ 
 
-  deleteSelectedProducts() {
+  editar(cliente: Clientes) {
+      this.cliente = {...cliente};
+      this.clienteDialog = true;
+  }
+
+  eliminar(cliente: Clientes) {
       this.confirmationService.confirm({
-          message: 'Deseas borrar los clientes seleccionandos?',
+          message: 'Realmente quieres borrar el cliente ' + cliente.sRazonSocial + '?',
           header: 'Confirmar',
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
-              this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-              this.selectedProducts = null;
-              this.messageService.add({severity: 'success', summary: 'Operación confirmda', detail: 'Clientes borrados', life: 3000});
-          }
-      });
-  }
 
-  editProduct(product: Product) {
-      this.product = {...product};
-      this.productDialog = true;
-  }
-
-  deleteProduct(product: Product) {
-      this.confirmationService.confirm({
-          message: 'Realmente quieres borrar el cliente ' + product.name + '?',
-          header: 'Confirmar',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter(val => val.id !== product.id);
-              this.product = {};
+              this.listaClientes = this.listaClientes.filter(val => val.nId !== cliente.nId);
+              this.cliente = {};
               this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente eliminado', life: 3000});
           }
       });
   }
 
   hideDialog() {
-      this.productDialog = false;
+      this.clienteDialog = false;
       this.submitted = false;
   }
 
-  saveProduct() {
-      this.submitted = true;
+guardar() {
 
-      if (this.product.name.trim()) {
-          if (this.product.id) {
-              this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000});
-          }
-          else {
-              this.product.id = this.createId();
-              this.product.image = 'product-placeholder.svg';
-              this.products.push(this.product);
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente guardado', life: 10000});
-          }
+   
+    if (this.formulario.invalid) {
 
-          this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {};
-      }
+        return Object.values(this.formulario.controls).forEach(control => {
+  
+          if (control instanceof FormGroup) {
+            // tslint:disable-next-line: no-shadowed-variable
+            
+            Object.values(control.controls).forEach(control => control.markAsTouched());
+          } else {
+            control.markAsTouched();
+          }
+  
+        });
+    }
+    else{
+        this.cliente=this.formulario.value;
+        console.log(this.cliente);
+
+
+       
+            if (this.cliente.nId) {
+                this.listaClientes[this.findIndexById(this.cliente.nId.toString())] = this.cliente;
+                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000});
+            }
+            else {
+                this.cliente.sClave = this.crearId();
+                this.cliente.nEstatus=1;  
+                this.clienteService.guardaCliente(this.cliente).subscribe(respuesta=>{
+
+                    this.listaClientes.push(respuesta);
+                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente guardado', life: 10000});
+
+                })          
+                
+            }
+  
+            this.listaClientes = [...this.listaClientes];
+            this.clienteDialog = false;
+            this.cliente = {};
+        
+
+    }
+
+    
   }
 
   findIndexById(id: string): number {
       let index = -1;
-      for (let i = 0; i < this.products.length; i++) {
-          if (this.products[i].id === id) {
+      for (let i = 0; i < this.listaClientes.length; i++) {
+          if (this.listaClientes[i].nId ===parseInt(id) ) {
               index = i;
               break;
           }
@@ -145,7 +184,7 @@ export class ClienteComponent implements OnInit {
       return index;
   }
 
-  createId(): string {
+  crearId(): string {
       let id = '';
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       for ( let i = 0; i < 5; i++ ) {

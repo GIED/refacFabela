@@ -1,3 +1,11 @@
+
 export const environment = {
-  production: true
+  production: true,
+  desactivarcors: true,
+  preurl: '',
+  servicios: {
+     preurl: '',
+     apiRefacFabela: 'api/refacFabela'
+  },
+
 };

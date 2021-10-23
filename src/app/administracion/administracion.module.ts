@@ -7,6 +7,7 @@ import { CreditosComponent } from './pages/creditos/creditos.component';
 import { ProveedorComponent } from './pages/proveedor/proveedor.component';
 import { UsuarioComponent } from './pages/usuario/usuario.component';
 import { TipoCambioComponent } from './pages/tipo-cambio/tipo-cambio.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -15,7 +16,9 @@ import { TipoCambioComponent } from './pages/tipo-cambio/tipo-cambio.component';
   declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent ],
   imports: [
     AdministracionRoutingModule,   
-    PrimeModule
+    PrimeModule,
+    FormsModule, 
+    ReactiveFormsModule
   ]
 })
 export class AdministracionModule {
