@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import { Product } from '../../../demo/domain/product';
-import { ProductService } from '../../../demo/service/productservice';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { ClienteService } from '../../service/cliente.service';
@@ -122,6 +121,8 @@ export class ClienteComponent implements OnInit {
      this.fclientes.sRazonSocial.setValue(cliente.sRazonSocial);
      this.fclientes.sRfc.setValue(cliente.sRfc);
      this.fclientes.sClave.setValue(cliente.sClave);
+
+     
     
 
 

@@ -3,6 +3,9 @@ import { Product } from '../../../demo/domain/product';
 import { ProductService } from '../../../demo/service/productservice';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { UsuarioService } from '../../service/usuario.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Usuarios } from '../../interfaces/usuarios';
 
 @Component({
   selector: 'app-usuario',
@@ -30,72 +33,69 @@ import { MessageService } from 'primeng/api';
 export class UsuarioComponent implements OnInit {
 
   
+    listaUsuarios: Usuarios[];
 
+    formulario:FormGroup;
 
-    productDialog: boolean;
+    usuarioDialog: boolean;
   
-    products: Product[];
+    
+    usuario: Usuarios;
   
-    product: Product;
-  
-    selectedProducts: Product[];
-  
-    submitted: boolean;
-  
-    cols: any[];
-    states:any[];
-  
-    constructor(private productService: ProductService, private messageService: MessageService,
+    
+
+    constructor(private usuarioService: UsuarioService, private fb: FormBuilder, private messageService: MessageService,
                 private confirmationService: ConfirmationService) {
+                    this.crearFormulario()
        
     }
   
     ngOnInit() {
-        this.productService.getProducts().then(data => this.products = data);
-  
-        this.cols = [
-            { field: 'name', header: 'Name' },
-            { field: 'price', header: 'Price' },
-            { field: 'category', header: 'Category' },
-            { field: 'rating', header: 'Reviews' },
-            { field: 'inventoryStatus', header: 'Status' }
-        ];
-        this.states = [
-            {name: 'Administrador', code: '1'},
-            {name: 'Ventas', value: '2'},
-            {name: 'Almacen', code: '3'},
-            {name: 'Ventas Mayoristas', code: '4'},
-            {name: 'Entrega de Mercancia', code: '5'},
-            {name: 'Cobranza', code: '6'}
-        ];
+        this.obtenerUsuarios();
+    
     }
+
+    obtenerUsuarios(){
+        this.usuarioService.getUsuarios().subscribe(usuarios => {
+            this.listaUsuarios=usuarios;
+        })
+    }
+    get validaNomUsu() {
+        return this.formulario.get('sNombreUsuario').invalid && this.formulario.get('sNombreUsuario').touched;
+      }
+    get validaUsuario() {
+        return this.formulario.get('sUsuario').invalid && this.formulario.get('sUsuario').touched;
+      }
+    get validaPassword() {
+        return this.formulario.get('sPassword').invalid && this.formulario.get('sPassword').touched;
+      }
+
+    // Crear formulario con sus validaciones de clientes
+    crearFormulario() {
+  
+        this.formulario = this.fb.group({
+            sNombreUsuario: ['', [Validators.required]],
+            sUsuario:['',[Validators.required]],
+            sPassword:['',[Validators.required]],
+            
+    
+        })
+    
+      }
   
     openNew() {
-        this.product = {};
-        this.submitted = false;
-        this.productDialog = true;
+        this.usuario = {};
+        this.usuarioDialog = true;
        
     }
   
-    deleteSelectedProducts() {
-        this.confirmationService.confirm({
-            message: 'Deseas borrar los usuarios seleccionandos?',
-            header: 'Confirmar',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-                this.selectedProducts = null;
-                this.messageService.add({severity: 'success', summary: 'Operación confirmda', detail: 'usuarios borrados', life: 3000});
-            }
-        });
+   
+    editProduct(usuario: Usuarios) {
+        this.usuario = {...usuario};
+        this.usuarioDialog = true;
     }
   
-    editProduct(product: Product) {
-        this.product = {...product};
-        this.productDialog = true;
-    }
-  
-    deleteProduct(product: Product) {
+    /*deleteProduct(product: Product) {
         this.confirmationService.confirm({
             message: 'Realmente quieres borrar el usuario ' + product.name + '?',
             header: 'Confirmar',
@@ -106,38 +106,58 @@ export class UsuarioComponent implements OnInit {
                 this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario eliminado', life: 3000});
             }
         });
-    }
+    }*/
   
     hideDialog() {
-        this.productDialog = false;
-        this.submitted = false;
+        this.usuarioDialog = false;
     }
   
-    saveProduct() {
-        this.submitted = true;
+    guardarUsuario() {
+        if (this.formulario.invalid) {
   
-        if (this.product.name.trim()) {
-            if (this.product.id) {
-                this.products[this.findIndexById(this.product.id)] = this.product;
-                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario actualizado', life: 10000});
-            }
-            else {
-                this.product.id = this.createId();
-                this.product.image = 'product-placeholder.svg';
-                this.products.push(this.product);
-                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario guardado', life: 10000});
-            }
-  
-            this.products = [...this.products];
-            this.productDialog = false;
-            this.product = {};
+            return Object.values(this.formulario.controls).forEach(control => {
+      
+              if (control instanceof FormGroup) {
+                // tslint:disable-next-line: no-shadowed-variable
+                
+                Object.values(control.controls).forEach(control => control.markAsTouched());
+              } else {
+                control.markAsTouched();
+              }
+      
+            });
+        }else{
+                this.usuario = this.formulario.value;  
+            
+                if (this.usuario.nId) {
+
+                    this.usuarioService.guardaCliente(this.usuario).subscribe(usuarioActualizado =>{
+                        this.listaUsuarios[this.findIndexById(this.usuario.nId.toString())] = usuarioActualizado;
+                    this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario actualizado', life: 10000});
+                    })
+
+                }
+                else {
+                    this.usuario.sClaveuser = this.createId();
+                    this.usuarioService.guardaCliente(this.usuario).subscribe(usuarioNuevo =>{
+                        this.listaUsuarios.push(usuarioNuevo);
+                        this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario guardado', life: 10000});
+                    })
+                }
+      
+                this.listaUsuarios = [...this.listaUsuarios];
+                this.usuarioDialog = false;
+                this.usuario = {};
+            
+
         }
+  
     }
   
     findIndexById(id: string): number {
         let index = -1;
-        for (let i = 0; i < this.products.length; i++) {
-            if (this.products[i].id === id) {
+        for (let i = 0; i < this.listaUsuarios.length; i++) {
+            if (this.listaUsuarios[i].nId.toString() === id) {
                 index = i;
                 break;
             }

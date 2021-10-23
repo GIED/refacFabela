@@ -17,18 +17,18 @@ import { AppMainComponent } from '../../app.main.component';
                 [attr.target]="item.target" [attr.tabindex]="0" [ngClass]="item.class">
                   <span class="menuitem-text">{{item.label}}</span>
                   <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
-                  <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
+                  <i [ngClass]="item.icon" class="layout-menuitem-icon" ></i>
               </a>
               <a (click)="itemClick($event)" (mouseenter)="onMouseEnter()" *ngIf="(item.routerLink && !item.items) && item.visible !== false"
                   [routerLink]="item.routerLink" routerLinkActive="active-menuitem-routerlink" [ngClass]="item.class"
-                  [routerLinkActiveOptions]="{exact: true}" [attr.target]="item.target" [attr.tabindex]="0">
+                  [routerLinkActiveOptions]="{exact: true}" [attr.target]="item.target" [attr.tabindex]="0" >
                   <span class="menuitem-text">{{item.label}}</span>
                   <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
-                  <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
+                  <i [ngClass]="item.icon" class="layout-menuitem-icon" ></i>
               </a>
               <ul *ngIf="(item.items && active) && item.visible !== false" [@children]="(appMain.isHorizontal() && root) ? (active ? 'visible' : 'hidden') :
-              (active ? 'visibleAnimated' : 'hiddenAnimated')">
-                  <ng-template ngFor let-child let-i="index" [ngForOf]="item.items">
+              (active ? 'visibleAnimated' : 'hiddenAnimated')" >
+                  <ng-template ngFor let-child let-i="index" [ngForOf]="item.items" >
                       <li app-menuitem [item]="child" [index]="i" [parentKey]="key" [class]="child.badgeClass"></li>
                   </ng-template>
               </ul>

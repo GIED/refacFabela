@@ -1,176 +1,122 @@
 <div class="p-grid">
-	<div class="p-col-12">
+    <div class="p-col-12">
 
-		<p-toast></p-toast>
+        <p-toast></p-toast>
 
-		<div class="card">
-			<p-toolbar styleClass="p-mb-4">
-				<ng-template pTemplate="left">
-					<button pButton pRipple label="Nuevo usuario" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
-					<button pButton pRipple label="Borrar usuario" icon="pi pi-trash" class="p-button-danger p-mb-2" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
-				</ng-template>
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Nuevo usuario" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
 
-				<ng-template pTemplate="right">
-					<p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Importar usuarios" class="p-mr-2 p-mb-2 p-d-inline-block"></p-fileUpload>
-					<button pButton pRipple label="Exportar usuarios" icon="pi pi-upload" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
-				</ng-template>
-			</p-toolbar>
+                </ng-template>
 
-			<p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']"
-					 [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
-					 styleClass="p-datatable-customers"
-					 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true">
-				<ng-template pTemplate="caption">
-					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-						<h5 class="p-m-0">Administración de usuarios</h5>
-						<span class="p-input-icon-left">
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Importar usuarios" class="p-mr-2 p-mb-2 p-d-inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Exportar usuarios" icon="pi pi-upload" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="listaUsuarios" [rows]="10" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <h5 class="p-m-0">Administración de usuarios</h5>
+                        <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar usuario" />
                     </span>
-					</div>
-				</ng-template>
-				<ng-template pTemplate="header">
-					<tr>
-						<th style="width: 3rem">
-							<p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-						</th>
-						<th pSortableColumn="name">Nombre Complero <p-sortIcon field="name"></p-sortIcon></th>
-						<!--<th>Image</th>-->
-						<th pSortableColumn="price">Perfil <p-sortIcon field="price"></p-sortIcon></th>
-						<th pSortableColumn="category">Usuario <p-sortIcon field="category"></p-sortIcon></th>
-						<th pSortableColumn="rating">Contraseña <p-sortIcon field="rating"></p-sortIcon></th>
-						<th pSortableColumn="inventoryStatus">Estatus <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
-						<th></th>
-					</tr>
-				</ng-template>
-				<ng-template pTemplate="body" let-product>
-					<tr>
-						<td>
-							<p-tableCheckbox [value]="product"></p-tableCheckbox>
-						</td>
-						<td><span class="p-column-title">Name</span>
-							{{product.name}}
-						</td>
-					<!--	<td><span class="p-column-title">Image</span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="name">Nombre Complero
+                            <p-sortIcon field="name"></p-sortIcon>
+                        </th>
+                        <!--<th>Image</th>-->
+                        <th pSortableColumn="price">Perfil
+                            <p-sortIcon field="price"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="category">Usuario
+                            <p-sortIcon field="category"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="rating">Contraseña
+                            <p-sortIcon field="rating"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="inventoryStatus">Estatus
+                            <p-sortIcon field="inventoryStatus"></p-sortIcon>
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                        </td>
+                        <td><span class="p-column-title">Name</span> {{product.name}}
+                        </td>
+                        <!--	<td><span class="p-column-title">Image</span>
 							<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
 						</td>-->
-						<td><span class="p-column-title">Price</span>
-							Ventas
-						</td>
-						<td><span class="p-column-title">Category</span>
-							Prueba 1
-						</td>
-						<td><span class="p-column-title">Reviews</span>
-						 15ghtyerft#$
-						</td>
-						<td><span class="p-column-title">Status</span>
-							<span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
-						</td>
-						<td>
-							<button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(product)"></button>
-							<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
-						</td>
-					</tr>
-				</ng-template>
-				<ng-template pTemplate="summary">
-					<div class="p-d-flex p-ai-center p-jc-between">
-						En total hay {{products ? products.length : 0 }} usuarios.
-					</div>
-				</ng-template>
-			</p-table>
-		</div>
+                        <td><span class="p-column-title">Price</span> Ventas
+                        </td>
+                        <td><span class="p-column-title">Category</span> Prueba 1
+                        </td>
+                        <td><span class="p-column-title">Reviews</span> 15ghtyerft#$
+                        </td>
+                        <td><span class="p-column-title">Status</span>
+                            <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
+                        </td>
+                        <td>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{products ? products.length : 0 }} usuarios.
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
 
-		<p-dialog [(visible)]="productDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true"
-		styleClass="p-fluid">
-		<ng-template pTemplate="content">
-			<div class="p-field">
-				<label for="name">Nombre(s)</label>
-				<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-				<small class="p-invalid" *ngIf="submitted && !product.name">RFC requerido.</small>
-			</div>
-			<div class="p-field">
-				<label for="name">Apellido Paterno</label>
-				<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-				<small class="p-invalid" *ngIf="submitted && !product.name">RFC requerido.</small>
-			</div>
-			<div class="p-field">
-				<label for="name">Apellido Materno</label>
-				<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-				<small class="p-invalid" *ngIf="submitted && !product.name">Razón Social requerida.</small>
-			</div>
+        <p-dialog [(visible)]="usuarioDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true" styleClass="p-fluid">
 
-			
-			<div class="p-formgrid p-grid">
-				<div class="p-field p-col">
-					<label for="price">Correo</label>
-					<p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
-						locale="en-US"></p-inputNumber>
-				</div>
-				<div class="p-field p-col">
-					<label for="quantity">Telefóno</label>
-					<p-inputNumber id="quantity" [(ngModel)]="product.quantity"></p-inputNumber>
-				</div>
-			</div>
+            <ng-template pTemplate="content">
+                <form [formGroup]="formulario">
+                    <div class="p-field">
+                        <label for="name">Nombre del usuario</label>
+                        <input type="text" pInputText id="name" formControlName="sNombreUsuario" [class.is-invalid]="validaNomUsu" />
+                        <small class="p-error" *ngIf="validaNomUsu">*nombre de usuario requerido</small>
+                    </div>
 
+                    <div class="p-field">
+                        <label for="quantity">Usuario</label>
+                        <input id="username" pInputText formControlName="sUsuario" [class.is-invalid]="validaUsuario" placeholder="" />
+                        <small class="p-error" *ngIf="validaUsuario">*usuario requerido</small>
+                    </div>
 
-			<div class="p-field p-col">
-				<label for="state">State</label>
-				<p-dropdown inputId="state" [options]="states" [(ngModel)]="selectedState" placeholder="Rol/Perfil" optionLabel="name"></p-dropdown>
-			</div>
+                    <div class="p-formgrid p-grid">
+                        <div class="p-field p-col">
+                            <label for="price">Password</label>
+                            <input type="password" id="password" formControlName="sPassword" [class.is-invalid]="validaPassword" placeholder="Escribe contraseña" pPassword [feedback]="false" />
+                            <small class="p-error" *ngIf="validaPassword">*password requerido</small>
+                        </div>
+                    </div>
+                </form>
+            </ng-template>
 
-			<div class="p-field p-col">
-				<label for="quantity">Usuario</label>
-				<input id="username" pInputText  placeholder="Type your username..." />
-			</div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarUsuario()"></button>
+            </ng-template>
 
-			<div class="p-formgrid p-grid">
-				<div class="p-field p-col">
-					<label for="price">Password</label>
-					<input type="password" id="password" placeholder="Escribe contraseña" pPassword [feedback]="false"/>
-				</div>
-				<div class="p-field p-col">
-					<label for="quantity">Confirma constraseña</label>
-					<input type="password" id="password" placeholder="Confirma contraseña" pPassword [feedback]="false"/>
-				</div>
-			</div>
+        </p-dialog>
 
-			<div class="p-grid">
-				<div class="p-col-12 p-md-4">
-					<div class="p-field-radiobutton">
-						<p-radioButton name="city" value="Chicago" [(ngModel)]="valRadio" id="city1" valu>
-						</p-radioButton>
-						<label for="city1">Activar</label>
-					</div>
-				</div>
-				<div class="p-col-12 p-md-4">
-					<div class="p-field-radiobutton">
-						<p-radioButton name="city" value="Los Angeles" [(ngModel)]="valRadio" id="city2">
-						</p-radioButton>
-						<label for="city2">Desactivar</label>
-					</div>
-				</div>					
-			</div>
-		</ng-template>
-		
-		
-			
-		
-			
-
-		
-			
-		
-	
-
-		<ng-template pTemplate="footer">
-			<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-				(click)="hideDialog()"></button>
-			<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-				(click)="saveProduct()"></button>
-		</ng-template>
-	</p-dialog>
-
-		<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
-	</div>
+        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    </div>
 </div>
-
