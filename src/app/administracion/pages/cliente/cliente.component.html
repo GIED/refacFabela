@@ -140,77 +140,41 @@
 				<div class="p-field">
 					<label for="name">RFC</label>
 					<input type="text" pInputText  formControlName="sRfc" [class.is-invalid]="validaRfc"  />
-					<small *ngIf="validaRfc" class="form-text text-danger">Rfc invalido favor de verificar.</small>
+					<small *ngIf="validaRfc" class="p-error">Rfc invalido favor de verificar.</small>
 
 				</div>
 
 				<div class="p-field">
 					<label for="name">Razón Social</label>
 					<input type="text" pInputText  formControlName="sRazonSocial" [class.is-invalid]="validaRS"  />
-					<small *ngIf="validaRS" class="form-text text-danger">Razón social invalido, favor de verificar.</small>
+					<small *ngIf="validaRS" class="p-error">Razón social invalido, favor de verificar.</small>
 
 				</div>
 				<div class="p-field">
 					<label for="name">Dirección</label>
 					<input type="text" pInputText  formControlName="sDireccion" [class.is-invalid]="validaDireccion"  />
-					<small *ngIf="validaDireccion" class="form-text text-danger">Dirección invalida, favor de verificar.</small>
+					<small *ngIf="validaDireccion" class="p-error">Dirección invalida, favor de verificar.</small>
 
 				</div>
 				<div class="p-field">
 					<label for="name">Teléfono</label>
 					<input type="tel" pInputText  formControlName="sTelefono" [class.is-invalid]="validaTelefono"  />
-					<small *ngIf="validaTelefono" class="form-text text-danger">Teléfomno invalidlo, favor de verificar.</small>
+					<small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>
 
 				</div>
 				<div class="p-field">
 					<label for="name">Correo</label>
 					<input type="email" pInputText  formControlName="sCorreo" [class.is-invalid]="validaCorreo"  />
-					<small *ngIf="validaCorreo" class="form-text text-danger">Dirección invalida, favor de verificar.</small>
+					<small *ngIf="validaCorreo" class="p-error">Dirección invalida, favor de verificar.</small>
 
 				</div>
 			</form>
 				
-		<!--	<div class="p-field">
-					<label for="name">Razón Social</label>
-					<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-					<small class="p-invalid" *ngIf="submitted && !product.name">Razón Social requerida.</small>
-				</div>
-				<div class="p-field">
-					<label for="description">Dirección</label>
-					<textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3"
-						cols="20"></textarea>
-				</div>
-				<div class="p-formgrid p-grid">
-					<div class="p-field p-col">
-						<label for="price">Correo</label>
-						<p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
-							locale="en-US"></p-inputNumber>
-					</div>
-					<div class="p-field p-col">
-						<label for="quantity">Telefóno</label>
-						<p-inputNumber id="quantity" [(ngModel)]="product.quantity"></p-inputNumber>
-					</div>
-				</div>
-				<div class="p-grid">
-					<div class="p-col-12 p-md-4">
-						<div class="p-field-radiobutton">
-							<p-radioButton name="city" value="Chicago" [(ngModel)]="valRadio" id="city1" valu>
-							</p-radioButton>
-							<label for="city1">Activar</label>
-						</div>
-					</div>
-					<div class="p-col-12 p-md-4">
-						<div class="p-field-radiobutton">
-							<p-radioButton name="city" value="Los Angeles" [(ngModel)]="valRadio" id="city2">
-							</p-radioButton>
-							<label for="city2">Desactivar</label>
-						</div>
-					</div>					
-				</div>
-			-->
+	
 
 	
 <hr>
+
 <!--
 <pre>
   estado del formulario: {{formulario.valid}}
@@ -219,7 +183,7 @@
 </pre>
 <pre>
   {{formulario.value | json}}
-</pre> -->
+</pre>-->
 			</ng-template>
 
 
