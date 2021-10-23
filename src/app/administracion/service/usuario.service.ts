@@ -16,7 +16,7 @@ export class UsuarioService {
     let url = environment.servicios.apiRefacFabela + locator.obtenerUsuarios;
     return this.http.get<Usuarios[]>(url);
   }
-  guardaCliente(usuario:Usuarios){
+  guardaUsuario(usuario:Usuarios){
     let url = environment.servicios.apiRefacFabela+locator.guardarUsuario;
     return this.http.post<Usuarios>(url,usuario);
   }

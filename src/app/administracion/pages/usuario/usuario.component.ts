@@ -61,7 +61,7 @@ export class UsuarioComponent implements OnInit {
         })
     }
     get validaNomUsu() {
-        return this.formulario.get('sNombreUsuario').invalid && this.formulario.get('sNombreUsuario').touched;
+        return this.formulario.get('sNombreusuario').invalid && this.formulario.get('sNombreusuario').touched;
       }
     get validaUsuario() {
         return this.formulario.get('sUsuario').invalid && this.formulario.get('sUsuario').touched;
@@ -74,7 +74,11 @@ export class UsuarioComponent implements OnInit {
     crearFormulario() {
   
         this.formulario = this.fb.group({
-            sNombreUsuario: ['', [Validators.required]],
+            nId: ['',[]],
+            nPerfil: ['',[]],
+            nEstatus: ['',[]],
+            sClaveuser: ['',[]],
+            sNombreusuario: ['', [Validators.required]],
             sUsuario:['',[Validators.required]],
             sPassword:['',[Validators.required]],
             
@@ -84,32 +88,53 @@ export class UsuarioComponent implements OnInit {
       }
   
     openNew() {
-        this.usuario = {};
+        this.limpiarFormulario();
         this.usuarioDialog = true;
        
     }
   
    
-    editProduct(usuario: Usuarios) {
-        this.usuario = {...usuario};
+    editUsuario(usuario: Usuarios) {
         this.usuarioDialog = true;
+        this.fUsuario.nId.setValue(usuario.nId);
+        this.fUsuario.nPerfil.setValue(usuario.nPerfil);
+        this.fUsuario.nEstatus.setValue(usuario.nEstatus);
+        this.fUsuario.sClaveuser.setValue(usuario.sClaveuser);
+        this.fUsuario.sNombreusuario.setValue(usuario.sNombreusuario);
+        this.fUsuario.sUsuario.setValue(usuario.sUsuario);
+        this.fUsuario.sPassword.setValue(usuario.sPassword);
+        
     }
-  
-    /*deleteProduct(product: Product) {
+
+    limpiarFormulario(){
+        this.fUsuario.nId.setValue("");
+        this.fUsuario.nPerfil.setValue("");
+        this.fUsuario.nEstatus.setValue("");
+        this.fUsuario.sClaveuser.setValue("");
+        this.fUsuario.sNombreusuario.setValue("");
+        this.fUsuario.sUsuario.setValue("");
+        this.fUsuario.sPassword.setValue("");
+    }
+
+    deleteUsuario(usuario: Usuarios) {
         this.confirmationService.confirm({
-            message: 'Realmente quieres borrar el usuario ' + product.name + '?',
+            message: 'Estas seguro que deseas desactivar al usuario ' + usuario.sNombreusuario + '?',
             header: 'Confirmar',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.products = this.products.filter(val => val.id !== product.id);
-                this.product = {};
-                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario eliminado', life: 3000});
+                usuario.nEstatus=0;
+                this.usuarioService.guardaUsuario(usuario).subscribe(usuarioDesactivado =>{
+                    this.listaUsuarios[this.findIndexById(usuarioDesactivado.nId.toString())] = usuarioDesactivado;
+                    this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario desactivado', life: 3000});
+                })
+               
             }
         });
-    }*/
+    }
   
     hideDialog() {
         this.usuarioDialog = false;
+        this.limpiarFormulario();
     }
   
     guardarUsuario() {
@@ -131,15 +156,17 @@ export class UsuarioComponent implements OnInit {
             
                 if (this.usuario.nId) {
 
-                    this.usuarioService.guardaCliente(this.usuario).subscribe(usuarioActualizado =>{
-                        this.listaUsuarios[this.findIndexById(this.usuario.nId.toString())] = usuarioActualizado;
+                    this.usuarioService.guardaUsuario(this.usuario).subscribe(usuarioActualizado =>{
+                        this.listaUsuarios[this.findIndexById(usuarioActualizado.nId.toString())] = usuarioActualizado;
                     this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario actualizado', life: 10000});
                     })
 
                 }
                 else {
                     this.usuario.sClaveuser = this.createId();
-                    this.usuarioService.guardaCliente(this.usuario).subscribe(usuarioNuevo =>{
+                    this.usuario.nPerfil=1;
+                    this.usuario.nEstatus=1;
+                    this.usuarioService.guardaUsuario(this.usuario).subscribe(usuarioNuevo =>{
                         this.listaUsuarios.push(usuarioNuevo);
                         this.messageService.add({severity: 'success', summary: 'Successful', detail: 'usuario guardado', life: 10000});
                     })
@@ -174,7 +201,10 @@ export class UsuarioComponent implements OnInit {
         }
         return id;
     }
-  
+    
+    get fUsuario(){
+        return this.formulario.controls;
+    }
     
   
     

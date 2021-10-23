@@ -29,10 +29,8 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 3rem">
-                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                        </th>
-                        <th pSortableColumn="name">Nombre Complero
+
+                        <th pSortableColumn="name">Nombre Completo
                             <p-sortIcon field="name"></p-sortIcon>
                         </th>
                         <!--<th>Image</th>-->
@@ -51,59 +49,51 @@
                         <th></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product>
+                <ng-template pTemplate="body" let-usuario>
                     <tr>
+                        <td>{{usuario.sNombreusuario}}</td>
+                        <td>{{usuario.nPerfil}}</td>
+                        <td>{{usuario.sUsuario}}</td>
+                        <td>{{usuario.sPassword}}</td>
+                        <td>{{usuario.nEstatus === 1 ? 'Activo': 'Inactivo'}}</td>
                         <td>
-                            <p-tableCheckbox [value]="product"></p-tableCheckbox>
-                        </td>
-                        <td><span class="p-column-title">Name</span> {{product.name}}
-                        </td>
-                        <!--	<td><span class="p-column-title">Image</span>
-							<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
-						</td>-->
-                        <td><span class="p-column-title">Price</span> Ventas
-                        </td>
-                        <td><span class="p-column-title">Category</span> Prueba 1
-                        </td>
-                        <td><span class="p-column-title">Reviews</span> 15ghtyerft#$
-                        </td>
-                        <td><span class="p-column-title">Status</span>
-                            <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span>
-                        </td>
-                        <td>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(product)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editUsuario(usuario)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteUsuario(usuario)"></button>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
                     <div class="p-d-flex p-ai-center p-jc-between">
-                        En total hay {{products ? products.length : 0 }} usuarios.
+                        En total hay {{listaUsuarios ? listaUsuarios.length : 0 }} usuarios.
                     </div>
                 </ng-template>
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="usuarioDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true" styleClass="p-fluid">
+        <p-dialog [(visible)]="usuarioDialog" [style]="{width: '600px'}" header="Datos del Usuario" [modal]="true" styleClass="p-fluid">
 
             <ng-template pTemplate="content">
                 <form [formGroup]="formulario">
+                    <input type="text" pInputText formControlName="nId" hidden />
+                    <input type="text" pInputText formControlName="nPerfil" hidden />
+                    <input type="text" pInputText formControlName="nEstatus" hidden />
+                    <input type="text" pInputText formControlName="sClaveuser" hidden />
                     <div class="p-field">
                         <label for="name">Nombre del usuario</label>
-                        <input type="text" pInputText id="name" formControlName="sNombreUsuario" [class.is-invalid]="validaNomUsu" />
+                        <input type="text" pInputText name="sNombreUsuario" formControlName="sNombreusuario" [class.is-invalid]="validaNomUsu" />
                         <small class="p-error" *ngIf="validaNomUsu">*nombre de usuario requerido</small>
                     </div>
 
                     <div class="p-field">
                         <label for="quantity">Usuario</label>
-                        <input id="username" pInputText formControlName="sUsuario" [class.is-invalid]="validaUsuario" placeholder="" />
+                        <input name="sUsuario" pInputText formControlName="sUsuario" [class.is-invalid]="validaUsuario" placeholder="" />
                         <small class="p-error" *ngIf="validaUsuario">*usuario requerido</small>
                     </div>
 
                     <div class="p-formgrid p-grid">
                         <div class="p-field p-col">
                             <label for="price">Password</label>
-                            <input type="password" id="password" formControlName="sPassword" [class.is-invalid]="validaPassword" placeholder="Escribe contraseña" pPassword [feedback]="false" />
+                            <input type="password" name="sPassword" formControlName="sPassword" [class.is-invalid]="validaPassword" placeholder="Escribe contraseña" pPassword [feedback]="false" />
                             <small class="p-error" *ngIf="validaPassword">*password requerido</small>
                         </div>
                     </div>
