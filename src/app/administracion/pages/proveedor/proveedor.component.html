@@ -99,26 +99,26 @@
 			<div class="p-field">
 				<label for="name">RFC</label>
 				<input type="text" pInputText  formControlName="sRfc" [class.is-invalid]="validaRfc"  />
-				<small *ngIf="validaRfc" class="form-text text-danger">Rfc invalido favor de verificar.</small>
+				<small *ngIf="validaRfc" class="p-error">Rfc invalido favor de verificar.</small>
 
 			</div>
 
 			<div class="p-field">
 				<label for="name">Razón Social</label>
 				<input type="text" pInputText  formControlName="sRazonSocial" [class.is-invalid]="validaRS"  />
-				<small *ngIf="validaRS" class="form-text text-danger">Razón social invalido, favor de verificar.</small>
+				<small *ngIf="validaRS" class="p-error">Razón social invalido, favor de verificar.</small>
 
 			</div>
 			<div class="p-field">
 				<label for="name">Dirección</label>
 				<input type="text" pInputText  formControlName="sDireccion" [class.is-invalid]="validaDireccion"  />
-				<small *ngIf="validaDireccion" class="form-text text-danger">Dirección invalida, favor de verificar.</small>
+				<small *ngIf="validaDireccion" class="p-error">Dirección invalida, favor de verificar.</small>
 
 			</div>
 			<div class="p-field">
 				<label for="name">Teléfono</label>
 				<input type="tel" pInputText  formControlName="sTelefono" [class.is-invalid]="validaTelefono"  />
-				<small *ngIf="validaTelefono" class="form-text text-danger">Teléfomno invalidlo, favor de verificar.</small>
+				<small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>
 
 			</div>
 		<!--	<div class="p-field">

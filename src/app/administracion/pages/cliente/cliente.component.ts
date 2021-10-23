@@ -62,7 +62,7 @@ export class ClienteComponent implements OnInit {
   crearFormulario() {
 
     this.formulario = this.fb.group({
-      sRfc: ['', [Validators.required, Validators.minLength(13),  Validators.maxLength(14)]],
+      sRfc: ['', [Validators.required, Validators.minLength(12),  Validators.maxLength(14)]],
       sRazonSocial:['',[Validators.required]],
       sDireccion:['',[Validators.required]],
       sTelefono:['',[Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
@@ -75,7 +75,7 @@ export class ClienteComponent implements OnInit {
 
   // Validación de campos Guardar Cliente
   get validaRfc() {
-    return this.formulario.get('sRfc').invalid && this.formulario.get('sRfc').touched;
+    return this.formulario.get('sRfc').invalid ;
   }
   get validaRS() {
     return this.formulario.get('sRazonSocial').invalid && this.formulario.get('sRazonSocial').touched;
@@ -87,7 +87,7 @@ export class ClienteComponent implements OnInit {
     return this.formulario.get('sTelefono').invalid && this.formulario.get('sTelefono').touched;
   }
   get validaCorreo() {
-    return this.formulario.get('sDireccion').invalid && this.formulario.get('sDireccion').touched;
+    return this.formulario.get('sCorreo').invalid && this.formulario.get('sCorreo').touched;
   }
 
 
