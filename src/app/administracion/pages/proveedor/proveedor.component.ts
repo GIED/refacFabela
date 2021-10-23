@@ -1,8 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import { Product } from '../../../demo/domain/product';
-import { ProductService } from '../../../demo/service/productservice';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { Clientes } from '../../interfaces/clientes';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ProveedorService } from '../../service/proveedor.service';
+import { Proveedores } from '../../interfaces/proveedores';
 
 @Component({
   selector: 'app-proveedor',
@@ -30,119 +33,192 @@ import { MessageService } from 'primeng/api';
 export class ProveedorComponent implements OnInit {
 
   
-  productDialog: boolean;
-
-  products: Product[];
-
-  product: Product;
-
-  selectedProducts: Product[];
-
-  submitted: boolean;
-
-  cols: any[];
-
-  constructor(private productService: ProductService, private messageService: MessageService,
-              private confirmationService: ConfirmationService) {
+    listaProveedores:Proveedores[]=[];  
+    proveedorDialog: boolean;
+    selectedProducts: Product[];
+  
+    submitted: boolean;
+  
+    credito: boolean;
+    proveedor:Proveedores;
+  
+    formulario:FormGroup;
+    
+  
+    constructor( private messageService: MessageService,
+                private confirmationService: ConfirmationService, private proveedorService:ProveedorService, private fb: FormBuilder,) {
+                  this.crearFormulario();
+    }
+  
+    ngOnInit() {      
+       
+        this.obtenerProveedores();
+    }
+  
+    // Crear formulario con sus validaciones de clientes
+    crearFormulario() {
+  
+      this.formulario = this.fb.group({
+        sRfc: ['', [Validators.required, Validators.minLength(13),  Validators.maxLength(14)]],
+        sRazonSocial:['',[Validators.required]],
+        sDireccion:['',[Validators.required]],
+        sTelefono:['',[Validators.required, Validators.minLength(10), Validators.maxLength(10)]],     
+        nId:['',[]]
+  
+      })
+  
+    }
+  
+    // Validación de campos Guardar Cliente
+    get validaRfc() {
+      return this.formulario.get('sRfc').invalid && this.formulario.get('sRfc').touched;
+    }
+    get validaRS() {
+      return this.formulario.get('sRazonSocial').invalid && this.formulario.get('sRazonSocial').touched;
+    }
+    get validaDireccion() {
+      return this.formulario.get('sDireccion').invalid && this.formulario.get('sDireccion').touched;
+    }
+    get validaTelefono() {
+      return this.formulario.get('sTelefono').invalid && this.formulario.get('sTelefono').touched;
+    }
+    
+  
+  
+  
+  // Carga de clientes inicial(Todos)
+    obtenerProveedores(){
+  
+      this.proveedorService.getProveedores().subscribe(provedores=>{
+          this.listaProveedores=provedores;
+      })
+    }
+  
+    openNew() {
+        this.proveedor = {};
+        this.submitted = false;
+        this.proveedorDialog = true;
+    }
+    lineaCredito(){
+      this.proveedor = {};
+      this.submitted = false;
+      this.credito = true;
+      
+  
+    }
+   
+  //edita los daros del cliente
+    editar(proveedor: Proveedores) {
+       this.fproveedor.nId.setValue(proveedor.nId);     
+       this.fproveedor.sTelefono.setValue(proveedor.sTelefono);
+       this.fproveedor.sDireccion.setValue(proveedor.sDireccion);
+       this.fproveedor.sRazonSocial.setValue(proveedor.sRazonSocial);
+       this.fproveedor.sRfc.setValue(proveedor.sRfc);
+  
+        this.proveedorDialog = true;
+    }
+  
+    get fproveedor(){
+        return this.formulario.controls
+    }
+  
+    //Elimina (cambia estatus de clieente como eliminación logica del registro)
+    eliminar(proveedor: Proveedores) {
+        this.confirmationService.confirm({
+            message: 'Realmente quieres borrar al Proveedor ' + proveedor.sRazonSocial + '?',
+            header: 'Confirmar',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+  
+                proveedor.nEstatus=0;  
+              this.proveedorService.guardaProveedores(proveedor).subscribe(respuesta=>{
+  
+                this.listaProveedores = this.listaProveedores.filter(val => val.nId !== proveedor.nId);
+                this.proveedor = {};
+                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Proveedor eliminado', life: 3000});})
+            }
+        });
+    }
+  
+    hideDialog() {
+        this.proveedorDialog = false;
+        this.submitted = false;
+    }
+  
+   //Guardar nuevo cliente 
+  guardar() {
+  
      
-  }
-
-  ngOnInit() {
-      this.productService.getProducts().then(data => this.products = data);
-
-      this.cols = [
-          { field: 'name', header: 'Name' },
-          { field: 'price', header: 'Price' },
-          { field: 'category', header: 'Category' },
-          { field: 'rating', header: 'Reviews' },
-          { field: 'inventoryStatus', header: 'Status' }
-      ];
-  }
-
-  openNew() {
-      this.product = {};
-      this.submitted = false;
-      this.productDialog = true;
-  }
-
-  deleteSelectedProducts() {
-      this.confirmationService.confirm({
-          message: 'Deseas borrar los proveedors seleccionandos?',
-          header: 'Confirmar',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-              this.selectedProducts = null;
-              this.messageService.add({severity: 'success', summary: 'Operación confirmda', detail: 'proveedors borrados', life: 3000});
-          }
-      });
-  }
-
-  editProduct(product: Product) {
-      this.product = {...product};
-      this.productDialog = true;
-  }
-
-  deleteProduct(product: Product) {
-      this.confirmationService.confirm({
-          message: 'Realmente quieres borrar el proveedor ' + product.name + '?',
-          header: 'Confirmar',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.products = this.products.filter(val => val.id !== product.id);
-              this.product = {};
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'proveedor eliminado', life: 3000});
-          }
-      });
-  }
-
-  hideDialog() {
-      this.productDialog = false;
-      this.submitted = false;
-  }
-
-  saveProduct() {
-      this.submitted = true;
-
-      if (this.product.name.trim()) {
-          if (this.product.id) {
-              this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'proveedor actualizado', life: 10000});
-          }
-          else {
-              this.product.id = this.createId();
-              this.product.image = 'product-placeholder.svg';
-              this.products.push(this.product);
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'proveedor guardado', life: 10000});
-          }
-
-          this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {};
+      if (this.formulario.invalid) {
+  
+          return Object.values(this.formulario.controls).forEach(control => {
+    
+            if (control instanceof FormGroup) {
+              // tslint:disable-next-line: no-shadowed-variable
+              
+              Object.values(control.controls).forEach(control => control.markAsTouched());
+            } else {
+              control.markAsTouched();
+            }
+    
+          });
       }
-  }
-
-  findIndexById(id: string): number {
-      let index = -1;
-      for (let i = 0; i < this.products.length; i++) {
-          if (this.products[i].id === id) {
-              index = i;
-              break;
-          }
+      else{
+          this.proveedor=this.formulario.value;
+          console.log(this.proveedor);
+  
+  
+         
+              if (this.proveedor.nId) {
+                  this.proveedor.nEstatus=1;  
+  
+                  this.proveedorService.guardaProveedores(this.proveedor).subscribe(respuesta=>{
+  
+                      this.listaProveedores[this.findIndexById(respuesta.nId.toString())] = respuesta;
+                      this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Proveedor actualizado', life: 10000});
+  
+                  })          
+                  
+                  
+              }
+              else {
+                this.proveedor.nEstatus=1;  
+                 
+                  this.proveedorService.guardaProveedores(this.proveedor).subscribe(respuesta=>{
+  
+                      this.listaProveedores.push(respuesta);
+                  this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Proveedor guardado', life: 10000});
+  
+                  })          
+                  
+              }
+    
+              this.listaProveedores = [...this.listaProveedores];
+              this.proveedorDialog = false;
+              this.proveedor = {};
+          
+  
       }
-
-      return index;
-  }
-
-  createId(): string {
-      let id = '';
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      for ( let i = 0; i < 5; i++ ) {
-          id += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return id;
-  }
-
+  
+      
+    }
+  
+  
+   //busqueda por id del cliente y regresa el index
+    findIndexById(id: string): number {
+        let index = -1;
+        for (let i = 0; i < this.listaProveedores.length; i++) {
+            if (this.listaProveedores[i].nId ===parseInt(id) ) {
+                index = i;
+                break;
+            }
+        }
+  
+        return index;
+    }
+  
+   
+  
   
 
 }
