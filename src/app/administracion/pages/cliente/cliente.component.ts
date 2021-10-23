@@ -10,6 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 
 
+
 @Component({
   selector: 'app-cliente',
   templateUrl: './cliente.component.html',
@@ -35,11 +36,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class ClienteComponent implements OnInit {
 
-
   listaClientes:Clientes[]=[];  
-
   clienteDialog: boolean;
-
   selectedProducts: Product[];
 
   submitted: boolean;
@@ -60,24 +58,41 @@ export class ClienteComponent implements OnInit {
       this.obtenerClientes();
   }
 
-  
+  // Crear formulario con sus validaciones de clientes
   crearFormulario() {
 
     this.formulario = this.fb.group({
-      sRfc: ['', []],
-      sRazonSocial:['',[Validators.required]]
+      sRfc: ['', [Validators.required, Validators.minLength(13),  Validators.maxLength(14)]],
+      sRazonSocial:['',[Validators.required]],
+      sDireccion:['',[Validators.required]],
+      sTelefono:['',[Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+      sCorreo:['',[Validators.required, Validators.email]],
+      nId:['',[]]
 
     })
 
   }
+
+  // Validación de campos Guardar Cliente
   get validaRfc() {
     return this.formulario.get('sRfc').invalid && this.formulario.get('sRfc').touched;
   }
   get validaRS() {
     return this.formulario.get('sRazonSocial').invalid && this.formulario.get('sRazonSocial').touched;
   }
+  get validaDireccion() {
+    return this.formulario.get('sDireccion').invalid && this.formulario.get('sDireccion').touched;
+  }
+  get validaTelefono() {
+    return this.formulario.get('sTelefono').invalid && this.formulario.get('sTelefono').touched;
+  }
+  get validaCorreo() {
+    return this.formulario.get('sDireccion').invalid && this.formulario.get('sDireccion').touched;
+  }
 
 
+
+// Carga de clientes inicial(Todos)
   obtenerClientes(){
 
     this.clienteService.getClientes().subscribe(clientes=>{
@@ -98,12 +113,27 @@ export class ClienteComponent implements OnInit {
 
   }
  
-
+//edita los daros del cliente
   editar(cliente: Clientes) {
-      this.cliente = {...cliente};
+     this.fclientes.nId.setValue(cliente.nId);
+     this.fclientes.sCorreo.setValue(cliente.sCorreo);
+     this.fclientes.sTelefono.setValue(cliente.sTelefono);
+     this.fclientes.sDireccion.setValue(cliente.sDireccion);
+     this.fclientes.sRazonSocial.setValue(cliente.sRazonSocial);
+     this.fclientes.sRfc.setValue(cliente.sRfc);
+     this.fclientes.sClave.setValue(cliente.sClave);
+    
+
+
+
       this.clienteDialog = true;
   }
 
+  get fclientes(){
+      return this.formulario.controls
+  }
+
+  //Elimina (cambia estatus de clieente como eliminación logica del registro)
   eliminar(cliente: Clientes) {
       this.confirmationService.confirm({
           message: 'Realmente quieres borrar el cliente ' + cliente.sRazonSocial + '?',
@@ -111,9 +141,12 @@ export class ClienteComponent implements OnInit {
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
 
+            cliente.nEstatus=0;  
+            this.clienteService.guardaCliente(cliente).subscribe(respuesta=>{
+
               this.listaClientes = this.listaClientes.filter(val => val.nId !== cliente.nId);
               this.cliente = {};
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente eliminado', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente eliminado', life: 3000});})
           }
       });
   }
@@ -123,6 +156,7 @@ export class ClienteComponent implements OnInit {
       this.submitted = false;
   }
 
+ //Guardar nuevo cliente 
 guardar() {
 
    
@@ -147,8 +181,16 @@ guardar() {
 
        
             if (this.cliente.nId) {
-                this.listaClientes[this.findIndexById(this.cliente.nId.toString())] = this.cliente;
-                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000});
+                this.cliente.nEstatus=1;  
+
+                this.clienteService.guardaCliente(this.cliente).subscribe(respuesta=>{
+
+                    this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
+                    this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000});
+
+                })          
+                
+                
             }
             else {
                 this.cliente.sClave = this.crearId();
@@ -172,6 +214,8 @@ guardar() {
     
   }
 
+
+ //busqueda por id del cliente y regresa el index
   findIndexById(id: string): number {
       let index = -1;
       for (let i = 0; i < this.listaClientes.length; i++) {
@@ -184,6 +228,7 @@ guardar() {
       return index;
   }
 
+  //Crear una nueva clave de cliente
   crearId(): string {
       let id = '';
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

@@ -79,7 +79,7 @@
 						</td>
 						<td>
 							<button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-								(click)="openNew()"></button>
+								(click)="editar(cliente)"></button>
 							<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
 								(click)="eliminar(cliente)"></button>
 							<button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
@@ -134,6 +134,9 @@
 		
 			<ng-template pTemplate="content">
 				<form [formGroup]="formulario">
+					<input type="text" pInputText  formControlName="nId" hidden  />
+					<input type="text" pInputText  formControlName="sClave" hidden  />
+					
 				<div class="p-field">
 					<label for="name">RFC</label>
 					<input type="text" pInputText  formControlName="sRfc" [class.is-invalid]="validaRfc"  />
@@ -145,6 +148,24 @@
 					<label for="name">Razón Social</label>
 					<input type="text" pInputText  formControlName="sRazonSocial" [class.is-invalid]="validaRS"  />
 					<small *ngIf="validaRS" class="form-text text-danger">Razón social invalido, favor de verificar.</small>
+
+				</div>
+				<div class="p-field">
+					<label for="name">Dirección</label>
+					<input type="text" pInputText  formControlName="sDireccion" [class.is-invalid]="validaDireccion"  />
+					<small *ngIf="validaDireccion" class="form-text text-danger">Dirección invalida, favor de verificar.</small>
+
+				</div>
+				<div class="p-field">
+					<label for="name">Teléfono</label>
+					<input type="tel" pInputText  formControlName="sTelefono" [class.is-invalid]="validaTelefono"  />
+					<small *ngIf="validaTelefono" class="form-text text-danger">Teléfomno invalidlo, favor de verificar.</small>
+
+				</div>
+				<div class="p-field">
+					<label for="name">Correo</label>
+					<input type="email" pInputText  formControlName="sCorreo" [class.is-invalid]="validaCorreo"  />
+					<small *ngIf="validaCorreo" class="form-text text-danger">Dirección invalida, favor de verificar.</small>
 
 				</div>
 			</form>
@@ -190,6 +211,7 @@
 
 	
 <hr>
+<!--
 <pre>
   estado del formulario: {{formulario.valid}}
   <br>
@@ -197,7 +219,7 @@
 </pre>
 <pre>
   {{formulario.value | json}}
-</pre> 
+</pre> -->
 			</ng-template>
 
 
