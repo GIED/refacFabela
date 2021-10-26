@@ -5,6 +5,8 @@ import { MessageService } from 'primeng/api';
 import { ClienteService } from '../../service/cliente.service';
 import { Clientes } from '../../interfaces/clientes';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 
 
@@ -48,13 +50,15 @@ export class ClienteComponent implements OnInit {
   
 
   constructor( private messageService: MessageService,
-              private confirmationService: ConfirmationService, private clienteService:ClienteService, private fb: FormBuilder,) {
+              private confirmationService: ConfirmationService, private clienteService:ClienteService, private fb: FormBuilder, private spinner: NgxSpinnerService,  ) {
                 this.crearFormulario();
   }
 
   ngOnInit() {      
-     
+    
       this.obtenerClientes();
+     
+      
   }
 
   // Crear formulario con sus validaciones de clientes
@@ -94,9 +98,14 @@ export class ClienteComponent implements OnInit {
 // Carga de clientes inicial(Todos)
   obtenerClientes(){
 
+    this.spinner.show();
+
     this.clienteService.getClientes().subscribe(clientes=>{
         this.listaClientes=clientes;
-    })
+        this.spinner.hide();
+        
+    });
+  ;
   }
 
   openNew() {

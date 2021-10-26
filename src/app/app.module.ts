@@ -18,6 +18,9 @@ import {AppCodeModule} from './app.code.component';
 import { PrimeModule } from './shared/prime/prime.module';
 import { ProductService } from './demo/service/productservice';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { SpinnerComponent } from './shared/spinner/spinner.component';
+
 
 
 @NgModule({
@@ -28,7 +31,9 @@ import { MessageService, ConfirmationService } from 'primeng/api';
         AppMenuitemComponent,
         AppTopBarComponent,
         AppFooterComponent,
-        AppRightPanelComponent,       
+        AppRightPanelComponent,
+        SpinnerComponent,  
+        
        
         
        
@@ -40,14 +45,16 @@ import { MessageService, ConfirmationService } from 'primeng/api';
         AppCodeModule,
         HttpClientModule,
         BrowserAnimationsModule,  
-        PrimeModule     
+        PrimeModule,
+         NgxSpinnerModule,
+              
      
         
     ],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
        
-         ProductService,MessageService, ConfirmationService
+         ProductService,MessageService, ConfirmationService,
     ],
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA ]
