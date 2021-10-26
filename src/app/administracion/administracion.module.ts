@@ -8,17 +8,22 @@ import { ProveedorComponent } from './pages/proveedor/proveedor.component';
 import { UsuarioComponent } from './pages/usuario/usuario.component';
 import { TipoCambioComponent } from './pages/tipo-cambio/tipo-cambio.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSpinnerModule } from 'ngx-spinner';
+
 
 
 
 @NgModule({
     
-  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent ],
+  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent],
   imports: [
     AdministracionRoutingModule,   
     PrimeModule,
     FormsModule, 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSpinnerModule,
+    
+    
   ]
 })
 export class AdministracionModule {
