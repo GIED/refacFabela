@@ -23,6 +23,7 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 
 
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -32,7 +33,8 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
         AppTopBarComponent,
         AppFooterComponent,
         AppRightPanelComponent,
-        SpinnerComponent,  
+        SpinnerComponent,
+        
         
        
         

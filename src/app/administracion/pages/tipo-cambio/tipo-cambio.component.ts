@@ -4,6 +4,7 @@ import { CountryService } from 'src/app/demo/service/countryservice';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TipoCambioService } from '../../service/tipo-cambio.service';
 import { TipoCambio } from '../../interfaces/tipoCambio';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-tipo-cambio',
@@ -64,7 +65,8 @@ export class TipoCambioComponent implements OnInit {
 
 
   
-  constructor(private fb: FormBuilder, private tipoCambioService: TipoCambioService, private messageService: MessageService ) {
+  constructor(private fb: FormBuilder, private tipoCambioService: TipoCambioService, private messageService: MessageService,
+	private spinner: NgxSpinnerService ) {
      this.crearFormulario();
   }
 
@@ -88,6 +90,7 @@ export class TipoCambioComponent implements OnInit {
   }
 
   obtenerTipoCambio(){
+	  this.spinner.show();
 	  this.tipoCambio=this.formulario.value;
 	  this.tipoCambio.sclave='ValorCambio';
 	  this.tipoCambioService.obtenerTipoCambio(this.tipoCambio).subscribe(tipoCambio =>{
@@ -99,6 +102,7 @@ export class TipoCambioComponent implements OnInit {
 			  this.fTipoCambio.sclave.setValue(tipoCambio.sclave);
 			  this.fTipoCambio.sdescripcion.setValue(tipoCambio.sdescripcion);
 		}
+		this.spinner.hide();
 	})
 }
 
@@ -117,6 +121,7 @@ guardarTipoCambio(){
   
 		});
 	}else{
+		this.spinner.show()
 		this.tipoCambio= this.formulario.value;
 		this.tipoCambioService.guardarTipoCambio(this.tipoCambio).subscribe(tipoCambio => {
 
@@ -124,6 +129,8 @@ guardarTipoCambio(){
 			  this.fTipoCambio.nvalor.setValue(tipoCambio.nvalor);
 			  this.fTipoCambio.sclave.setValue(tipoCambio.sclave);
 			  this.fTipoCambio.sdescripcion.setValue(tipoCambio.sdescripcion);
+			  
+			  this.spinner.hide();
 			  this.messageService.add({severity: 'success', summary: 'Successful', detail: 'tipo cambio actualizado', life: 10000});
 		})
 	}
