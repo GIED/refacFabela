@@ -1,15 +1,21 @@
 <div class="p-grid p-fluid">
-	<div class="p-col-12 p-md-12">
-		<div class="card">
-			<h5>Favor de registrar el tipo de cambio</h5>
-			<div class="p-col-6">
-				<p-inputNumber mode="decimal" [showButtons]="true" [min]="0" [max]="100" placeholder="Valor de cambio">
-				</p-inputNumber>
-			</div>
-			<p></p>
-			<div class="p-button-label ng-star-inserted p-col-3">
-				<button pButton type="button" [routerLink]="['/inicio/tablero']" label="Guardar"></button>
-			</div>
-		</div>
-	</div>
+    <div class="p-col-12 p-md-12">
+        <div class="card">
+            <h5>Favor de registrar el tipo de cambio</h5>
+            <form [formGroup]="formulario">
+                <input type="text" pInputText formControlName="nid" hidden />
+                <input type="text" pInputText formControlName="sclave" hidden />
+                <input type="text" pInputText formControlName="sdescripcion" hidden />
+                <div class="p-col-6">
+                    <p-inputNumber mode="decimal" name="nvalor" formControlName="nvalor" [showButtons]="true" [min]="0" [max]="100" placeholder="Valor de cambio">
+                    </p-inputNumber>
+                    <small class="p-error" *ngIf="validaValor">*el tipo de cambio es requerido</small>
+                </div>
+                <p></p>
+                <div class="p-button-label ng-star-inserted p-col-3">
+                    <button pButton type="button" (click)="guardarTipoCambio()" label="Guardar"></button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
