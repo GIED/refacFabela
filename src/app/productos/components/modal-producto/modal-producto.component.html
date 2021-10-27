@@ -1,62 +1,81 @@
 <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <div class="p-grid">
-            <div class="p-field p-col-6">
-                <label for="name">No. de parte</label>
-                <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-                <small class="p-invalid" *ngIf="submitted && !product.name">Name is required.</small>
+        <form [formGroup]="formulario">
+            <input type="text" pInputText formControlName="nId" hidden />
+            <input type="text" pInputText formControlName="nIdUsuario" hidden />
+            <input type="text" pInputText formControlName="nEstatus" hidden />
+            <input type="text" pInputText formControlName="dFecha" hidden />
+            <div class="p-grid">
+                <div class="p-field p-col-6">
+                    <label for="name">No. de parte</label>
+                    <input type="text" pInputText name="sNoParte" formControlName="sNoParte" [class.is-invalid]="validaNoParte" />
+                    <small class="p-error" *ngIf="validaNoParte">*Número de Parte requerido.</small>
+                </div>
+                <div class="p-field p-col-6">
+                    <label for="name">Nombre del producto</label>
+                    <input type="text" pInputText name="sProducto" formControlName="sProducto" [class.is-invalid]="validaProducto" />
+                    <small class="p-error" *ngIf="validaProducto">*nombre del producto requerido.</small>
+                </div>
+                <div class="p-field p-col-12">
+                    <label for="description">Descripcion</label>
+                    <textarea id="description" pInputTextarea name="sDescripcion" formControlName="sDescripcion" rows="2" cols="20"></textarea>
+                </div>
+                <div class="p-field p-col-6">
+                    <label for="marca">Marca</label>
+                    <input type="text" pInputText name="sMarca" formControlName="sMarca" [class.is-invalid]="validaMarca" />
+                    <small class="p-error" *ngIf="validaMarca">*marca del producto requerida.</small>
+                </div>
+                <div class="p-field p-col-6">
+                    <label for="marca">Categoria General</label>
+                    <p-dropdown [options]="listaCategoriaGeneral" formControlName="nIdCategoriaGeneral" optionLabel="sCategoriaGeneral" optionValue="nId" (onChange)="obtenerCategoria()" [class.is-invalid]="validaCategoriaGeneral" placeholder="Seleccine una categoria general"
+                        [showClear]="true"></p-dropdown>
+                    <small class="p-error" *ngIf="validaCategoriaGeneral">*Categoria General requerida.</small>
+                </div>
+                <div class="p-field p-col-6">
+                    <label for="marca">Categoria </label>
+                    <p-dropdown [options]="listaCategoria" formControlName="nIdCategoria" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaCategoria" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
+                    <small class="p-error" *ngIf="validaCategoria">*Categoria requerida.</small>
+                </div>
+                <div class="p-field p-col-6">
+                    <label for="price">clave SAT</label>
+                    <p-dropdown [options]="listaClaveSat" formControlName="nIdClaveSat" [class.is-invalid]="validaClaveSat" optionLabel="sDescripcion" optionValue="nId" placeholder="Seleccine una clave sat " [showClear]="true"></p-dropdown>
+                    <small class="p-error" *ngIf="validaClaveSat">*Clave Sat requerida.</small>
+                </div>
+                <div class="p-field p-col-6">
+                    <label for="moneda">Moneda</label>
+                    <p-dropdown [options]="listaMoneda" formControlName="sMoneda" placeholder="Seleccine una moneda" optionLabel="name" optionValue="code" [class.is-invalid]="validaMoneda" [showClear]="true"></p-dropdown>
+                    <small class="p-error" *ngIf="validaMoneda">*Moneda requerida.</small>
+                </div>
+                <div class="p-field p-col-6">
+                    <label for="price">Precio</label>
+                    <p-inputMask mask="99.99" placeholder="99.99" name="nPrecio" formControlName="nPrecio" [class.is-invalid]="validaPrecio"></p-inputMask>
+                    <small class="p-error" *ngIf="validaPrecio">*Precio Requerido</small>
+                </div>
+                <div class="p-field p-col-6">
+                    <label for="ganancia">Ganancia</label>
+                    <p-dropdown [options]="listaGanancia" formControlName="nIdGanancia" optionLabel="nGanancia" optionValue="nId" [class.is-invalid]="validaGanancia" placeholder="Seleccine una Ganancia" [showClear]="true">
+                        <ng-template let-ganancia pTemplate="item">
+                            {{ganancia.nGanancia | percent}}
+                        </ng-template>
+                    </p-dropdown>
+                    <small class="p-error" *ngIf="validaGanancia">*Ganancia requerida</small>
+                </div>
             </div>
-            <div class="p-field p-col-6">
-                <label for="name">Nombre del producto</label>
-                <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-                <small class="p-invalid" *ngIf="submitted && !product.name">Name is required.</small>
-            </div>
-            <div class="p-field p-col-12">
-                <label for="description">Descripcion</label>
-                <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="2" cols="20"></textarea>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="marca">Marca</label>
-                <p-dropdown [options]="marca" [(ngModel)]="selectedDrop" placeholder="Seleccine una marca" [showClear]="true"></p-dropdown>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="marca">Categoria General</label>
-                <p-dropdown [options]="ListaCategoriaGeneral" [(ngModel)]="selectedDrop" placeholder="Seleccine una categoria general" [showClear]="true"></p-dropdown>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="marca">Categoria </label>
-                <p-dropdown [options]="ListaCategoria" [(ngModel)]="selectedDrop" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="moneda">Moneda</label>
-                <p-dropdown [options]="ListaMoneda" [(ngModel)]="selectedDrop" placeholder="Seleccine una moneda" [showClear]="true"></p-dropdown>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="estatus">Estatus</label>
-                <p-dropdown [options]="ListaEstatus" [(ngModel)]="selectedDrop" placeholder="Seleccine el estatus" [showClear]="true"></p-dropdown>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="price">clave SAT</label>
-                <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="price">Precio</label>
-                <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="ganancia">Ganancia</label>
-                <p-dropdown [options]="ListaGanancias" [(ngModel)]="selectedDrop" placeholder="Seleccine una Ganancia" [showClear]="true"></p-dropdown>
-            </div>
-            <div class="p-field p-col-6">
-                <label for="price">Precio Final</label>
-                <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US" [disabled]="true"></p-inputNumber>
-            </div>
-
-        </div>
+        </form>
     </ng-template>
 
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
         <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
     </ng-template>
+
+
+    <pre>
+  estado del formulario: {{formulario.valid}}
+  <br>
+  status: {{formulario.status}}
+</pre>
+    <pre>
+  {{formulario.value | json}}
+</pre>
 </p-dialog>

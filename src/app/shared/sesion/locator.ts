@@ -12,6 +12,11 @@ static guardarUsuario='/guardarUsuario';
 //api para tipoCambio
 static consultaTipoCambioId='/consultaTipoCambioId';
 static actualizarTipoCambio='/actualizarTipoCambio';
+//api para catalogos
+static consultaClaveSat='/catalogosClaveSat';
+static consultaCategoriaGeneral='/catalogoCategoriaGeneral';
+static consultaCategoria= '/catalogoCategoriaId?';
+static consultaGanancia= '/catalogoGanancia';
 
 
 

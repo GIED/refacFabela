@@ -7,6 +7,7 @@ import { HistorialProductoComponent } from './pages/historial-producto/historial
 import { AlternativosProductoComponent } from './pages/alternativos-producto/alternativos-producto.component';
 import { PrimeModule } from '../shared/prime/prime.module';
 import { ModalProductoComponent } from './components/modal-producto/modal-producto.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { ModalProductoComponent } from './components/modal-producto/modal-produc
   imports: [
     CommonModule,
     ProductosRoutingModule,
-    PrimeModule
+    PrimeModule,
+    ReactiveFormsModule
   ],
   exports:[
     ModalProductoComponent

@@ -1,3 +1,4 @@
+import { TcProducto } from './../../model/TcProducto';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
@@ -150,14 +151,14 @@ hideDialog(valor: boolean) {
     this.submitted = valor;
 }
 
-saveProduct(product: Product) {
+saveProduct(product: TcProducto) {
 
     console.log(product);
 
-    this.product= product;
+    
    
 
-    if (this.product.name.trim()) {
+  /*  if (this.product.name.trim()) {
         if (this.product.id) {
             this.products[this.findIndexById(this.product.id)] = this.product;
             this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto actualizado', life: 3000});
@@ -172,7 +173,7 @@ saveProduct(product: Product) {
         this.products = [...this.products];
         this.productDialog = false;
         this.product = {};
-    }
+    }*/
 }
 
 findIndexById(id: string): number {
