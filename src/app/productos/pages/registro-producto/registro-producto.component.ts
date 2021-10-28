@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
+import { ProductoService } from '../../../shared/service/producto.service';
+import { producto } from '../../interfaces/producto.interfaces';
 
 
 
@@ -31,8 +33,10 @@ export class RegistroProductoComponent implements OnInit {
     titulo:string;
 
 
-    constructor(private productService: ProductService, private messageService: MessageService,
-        private confirmationService: ConfirmationService) {
+    constructor(private productService: ProductService, 
+                private productosService: ProductoService, 
+                private messageService: MessageService,
+                private confirmationService: ConfirmationService) {
 
 }
 
@@ -151,29 +155,28 @@ hideDialog(valor: boolean) {
     this.submitted = valor;
 }
 
-saveProduct(product: TcProducto) {
+saveProduct(producto: TcProducto) {
 
-    console.log(product);
+    console.log(producto);
 
-    
-   
-
-  /*  if (this.product.name.trim()) {
-        if (this.product.id) {
-            this.products[this.findIndexById(this.product.id)] = this.product;
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto actualizado', life: 3000});
+        if (producto.nId) {
+            this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
+                //this.products[this.findIndexById(this.product.id)] = this.product;
+                this.messageService.add({severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000});
+            })
         }
         else {
-            this.product.id = this.createId();
-            this.product.image = 'product-placeholder.svg';
-            this.products.push(this.product);
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Guardado', life: 3000});
+            
+            this.productosService.guardaProducto(producto).subscribe(productoNuevo =>{
+                //this.products.push(this.product);
+                this.messageService.add({severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000});
+            })
         }
 
-        this.products = [...this.products];
+        //this.products = [...this.products];
         this.productDialog = false;
-        this.product = {};
-    }*/
+        //this.product = {};
+    
 }
 
 findIndexById(id: string): number {

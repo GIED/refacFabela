@@ -17,6 +17,9 @@ static consultaClaveSat='/catalogosClaveSat';
 static consultaCategoriaGeneral='/catalogoCategoriaGeneral';
 static consultaCategoria= '/catalogoCategoriaId?';
 static consultaGanancia= '/catalogoGanancia';
+//api productos
+static consultaNoParte= '/obtenerProductosNoParteLike?';
+static guardarProducto= '/guardarProducto';
 
 
 

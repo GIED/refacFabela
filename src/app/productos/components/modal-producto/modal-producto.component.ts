@@ -8,6 +8,10 @@ import { MessageService } from 'primeng/api';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TcCategoria } from '../../model/TcCategoria';
 import { TcClavesat } from '../../model/TcClavesat';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { ProductoService } from '../../../shared/service/producto.service';
+import { producto } from '../../interfaces/producto.interfaces';
 
 interface Moneda {
   name: string,
@@ -39,12 +43,19 @@ export class ModalProductoComponent implements OnInit {
   listaCategoria:TcCategoria[];
   listaClaveSat:TcClavesat[];
   listaGanancia:TcGanancia[];
+  listaNoParte:TcProducto[];
+  debuncer: Subject<string> = new Subject();
+  mostrarSugerencias:boolean=false;
 
-  constructor(private fb: FormBuilder, private catalogoService: CatalogoService, private messageService: MessageService, private spinner: NgxSpinnerService) { 
+  constructor(private fb: FormBuilder, 
+              private catalogoService: CatalogoService, 
+              private productosService: ProductoService, 
+              private messageService: MessageService, 
+              private spinner: NgxSpinnerService) { 
     this.crearFormulario();
     this.listaMoneda =[
-      {name: 'Dolar', code:'Dolar'},
-      {name: 'Peso', code:'Peso'},
+      {name: 'DOLAR', code:'DOLAR'},
+      {name: 'PESO', code:'PESO'},
     ]
   }
 
@@ -52,6 +63,7 @@ export class ModalProductoComponent implements OnInit {
     this.obtenerCategoriaGeneral();
     this.obtenerClaveSat();
     this.obtenerGanancia();
+    this.buscaPorNoParte();
   }
 
   obtenerCategoriaGeneral(){
@@ -134,7 +146,7 @@ export class ModalProductoComponent implements OnInit {
         nPrecio:['',[Validators.required]],
         sMoneda:['',[Validators.required]],
         nIdGanancia:['',[Validators.required]],
-        nIdUsuario:['',[]],
+        nIdusuario:['',[]],
         nEstatus:['',[]],
         dFecha:['',[]],
         nIdClaveSat:['',[Validators.required]],
@@ -161,32 +173,115 @@ export class ModalProductoComponent implements OnInit {
 
       });
     }else{
-      this.tcProducto = this.formulario.value; 
+      this.tcProducto = this.formulario.value;
+      this.tcProducto.nEstatus=1;
+      this.tcProducto.nIdusuario=1; 
       this.guardarProducto.emit(this.tcProducto);
+      this.formulario.reset();
     }
   
   }
 
-  editUsuario() {
+  editProducto() {
     this.productDialog = true;
     this.fProducto.nId.setValue(this.productoEditar.nId);
     this.fProducto.sNoParte.setValue(this.productoEditar.sNoParte);
     this.fProducto.sProducto.setValue(this.productoEditar.sProducto);
     this.fProducto.sDescripcion.setValue(this.productoEditar.sDescripcion);
     this.fProducto.sMarca.setValue(this.productoEditar.sMarca);
-    this.fProducto.nIdCategoria.setValue(this.productoEditar.tcCategoria.nId);
-    this.fProducto.nIdCategoriaGeneral.setValue(this.productoEditar.tcCategoriaGeneral.nId);
+    this.fProducto.nIdCategoria.setValue(this.productoEditar.n_idCategoria);
+    this.fProducto.nIdCategoriaGeneral.setValue(this.productoEditar.n_idCategoriaGeneral);
     this.fProducto.nPrecio.setValue(this.productoEditar.nPrecio);
     this.fProducto.sMoneda.setValue(this.productoEditar.sMoneda);
-    this.fProducto.nIdGanancia.setValue(this.productoEditar.tcGanancia.nId);
-    this.fProducto.nIdUsuario.setValue(this.productoEditar.tcUsuario.nId);
+    this.fProducto.nIdGanancia.setValue(this.productoEditar.nIdGanancia);
+    this.fProducto.nIdusuario.setValue(this.productoEditar.nIdusuario);
     this.fProducto.nEstatus.setValue(this.productoEditar.nEstatus);
-    this.fProducto.dFecha.setValue(this.productoEditar.nEstatus);
-    this.fProducto.nIdClaveSat.setValue(this.productoEditar.tcClavesat.nId);
+    this.fProducto.dFecha.setValue(this.productoEditar.dFecha);
+    this.fProducto.nIdClaveSat.setValue(this.productoEditar.nIdclavesat);
+    this.obtenerCategoria();
+    this.formulario.get('nIdCategoria').enable();
+
 
 
     
 }
+
+limpiaFormulario() {
+  this.fProducto.nId.setValue("");
+  this.fProducto.sProducto.setValue("");
+  this.fProducto.sDescripcion.setValue("");
+  this.fProducto.sMarca.setValue("");
+  this.fProducto.nIdCategoria.setValue("");
+  this.fProducto.nIdCategoriaGeneral.setValue("");
+  this.fProducto.nPrecio.setValue("");
+  this.fProducto.sMoneda.setValue("");
+  this.fProducto.nIdGanancia.setValue("");
+  this.fProducto.nIdusuario.setValue("");
+  this.fProducto.nEstatus.setValue("");
+  this.fProducto.dFecha.setValue("");
+  this.fProducto.nIdClaveSat.setValue("");
+  
+
+
+
+  
+}
+
+teclaPresionada(){
+  
+  if (this.fProducto.sNoParte.value.length >=3) {
+
+    this.debuncer.next(this.fProducto.sNoParte.value);
+  }else{
+    this.limpiaFormulario();
+  }
+
+  
+}
+
+buscaPorNoParte(){
+
+  
+    this.debuncer
+      .pipe(debounceTime(300))
+      .subscribe(valor => {
+        this.spinner.show();
+        this.productosService.obtenerNoParte(valor).subscribe(noParte => {
+          console.log(noParte.length);
+          if (noParte.length != 0) {
+            this.listaNoParte=noParte;
+            this.mostrarSugerencias=true;
+            this.messageService.add({severity: 'info', summary: 'coincidencias', detail: 'hay números de parte que coinciden', life: 3000});
+           
+  
+          }else{
+            this.fProducto.sNoParte.setValue(valor);
+            this.mostrarSugerencias=false;
+            this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'el número de parte no existe en la base de datos.', life: 3000});
+          }
+
+          this.spinner.hide()
+        })
+      })
+  
+  
+}
+
+valorSeleccionado(){
+  console.log(this.fProducto.sNoParte.value);
+  let noparte =this.fProducto.sNoParte.value;
+  for (let i = 0; i < this.listaNoParte.length; i++) {
+    const producto = this.listaNoParte[i];
+    if (producto.sNoParte.indexOf(noparte) == 0) {
+      console.log(producto);
+        this.productoEditar=producto;
+        this.editProducto();
+        this.mostrarSugerencias=false;
+    }
+}
+}
+
+
 
   get fProducto(){
     return this.formulario.controls;

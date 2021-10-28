@@ -5,17 +5,22 @@ import { Usuarios } from '../../administracion/interfaces/usuarios';
 import { TcClavesat } from './TcClavesat';
 export class TcProducto{
 nId: number;
-sNoParte: string;
-sProducto :string;
+dFecha: Date;
+nEstatus: number;
+n_idCategoriaGeneral:number;
+n_idCategoria:number;
+nPrecio: number;
 sDescripcion: string; 
 sMarca: string;
+sMoneda: string;
+sNoParte: string;
+sProducto :string;
+nIdusuario:number;
+nIdGanancia:number;
+nIdclavesat:number;
 tcCategoria: TcCategoria; 
 tcCategoriaGeneral: TcCategoriaGeneral; 
-nPrecio: number;
-sMoneda: string;
 tcGanancia: TcGanancia;
 tcUsuario: Usuarios;
-nEstatus: number; 
-dFecha: Date;
 tcClavesat: TcClavesat;
 }

@@ -1,14 +1,16 @@
 <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <form [formGroup]="formulario">
+        <p-toast></p-toast>
+        <form [formGroup]="formulario" autocomplete="off">
             <input type="text" pInputText formControlName="nId" hidden />
-            <input type="text" pInputText formControlName="nIdUsuario" hidden />
+            <input type="text" pInputText formControlName="nIdusuario" hidden />
             <input type="text" pInputText formControlName="nEstatus" hidden />
             <input type="text" pInputText formControlName="dFecha" hidden />
             <div class="p-grid">
                 <div class="p-field p-col-6">
                     <label for="name">No. de parte</label>
-                    <input type="text" pInputText name="sNoParte" formControlName="sNoParte" [class.is-invalid]="validaNoParte" />
+                    <input type="text" pInputText name="sNoParte" formControlName="sNoParte" (input)="teclaPresionada()" [class.is-invalid]="validaNoParte" />
+                    <p-listbox *ngIf="mostrarSugerencias" [options]="listaNoParte" formControlName="sNoParte" optionLabel="sNoParte" (onClick)="valorSeleccionado()" optionValue="sNoParte"></p-listbox>
                     <small class="p-error" *ngIf="validaNoParte">*Número de Parte requerido.</small>
                 </div>
                 <div class="p-field p-col-6">
@@ -70,7 +72,7 @@
     </ng-template>
 
 
-    <pre>
+    <!--   <pre>
   estado del formulario: {{formulario.valid}}
   <br>
   status: {{formulario.status}}
@@ -78,4 +80,5 @@
     <pre>
   {{formulario.value | json}}
 </pre>
+-->
 </p-dialog>
