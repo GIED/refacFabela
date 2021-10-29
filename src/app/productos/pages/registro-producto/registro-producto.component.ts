@@ -1,7 +1,12 @@
+import { TcProducto } from './../../model/TcProducto';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
+import { ProductoService } from '../../../shared/service/producto.service';
+import { producto } from '../../interfaces/producto.interfaces';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 
 
@@ -29,44 +34,40 @@ export class RegistroProductoComponent implements OnInit {
     alternativosDialog: boolean;
     titulo:string;
 
+    listaProductos: TcProducto[];
+    producto:TcProducto;
 
-    constructor(private productService: ProductService, private messageService: MessageService,
-        private confirmationService: ConfirmationService) {
+
+    constructor( 
+                private productosService: ProductoService, 
+                private messageService: MessageService,
+                private confirmationService: ConfirmationService,
+                private spinner: NgxSpinnerService) {
 
 }
 
 ngOnInit() {
-    this.productService.getProducts().then(data => this.products = data);
-   
+    this.spinner.show();
+    this.obtenerProductos();
+    this.spinner.hide();    
+}
+
+obtenerProductos(){ 
+    this.productosService.obtenerProductos().subscribe(productos => {
+        this.listaProductos=productos;
+       
+    });
     
+
 }
 
   
 openNew() {
-    this.product = {};
-    this.submitted = false;
     this.productDialog = true;
     this.titulo="Registro de Productos"
 }
 
-deleteSelectedProducts() {
-    this.confirmationService.confirm({
-        message: 'Are you sure you want to delete the selected products?',
-        header: 'Confirm',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-            this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-            this.selectedProducts = null;
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
-        }
-    });
-}
 
-editProduct(product: Product) {
-    this.product = {...product};
-    this.productDialog = true;
-    this.titulo="Actualización de Producto"
-}
 alternativosProduct(product: Product) {
     this.product = {...product};
     this.alternativosDialog = true;
@@ -132,53 +133,56 @@ detalleProduct(product: Product) {
     };
 }
 
-deleteProduct(product: Product) {
+
+
+hideDialog(valor: boolean) {
+    this.productDialog = valor;
+}
+
+saveProduct(producto: TcProducto) {
+
+    console.log(producto);
+
+        if (producto.nId) {
+            this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
+                this.listaProductos[this.findIndexById(productoActualizado.nId)] = productoActualizado;
+                this.messageService.add({severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000});
+            });
+        }
+        else {
+            
+            this.productosService.guardaProducto(producto).subscribe(productoNuevo =>{
+                this.listaProductos.push(productoNuevo);
+                this.messageService.add({severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000});
+            });
+        }
+        this.productDialog = false;
+        this.listaProductos = [...this.listaProductos];
+        
+    
+}
+
+deleteProduct(product: TcProducto) {
     this.confirmationService.confirm({
-        message: 'Desea borrar el producto ' + product.name + '?',
+        message: 'Desea borrar el producto ' + product.sProducto + '?',
         header: 'Confirmar',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.products = this.products.filter(val => val.id !== product.id);
-            this.product = {};
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
+
+            product.nEstatus=0;
+
+            this.productosService.guardaProducto(product).subscribe(productoEliminado =>{
+                this.listaProductos = this.listaProductos.filter(val => val.nId !== product.nId);
+                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
+            })
         }
     });
 }
 
-hideDialog(valor: boolean) {
-    this.productDialog = valor;
-    this.submitted = valor;
-}
-
-saveProduct(product: Product) {
-
-    console.log(product);
-
-    this.product= product;
-   
-
-    if (this.product.name.trim()) {
-        if (this.product.id) {
-            this.products[this.findIndexById(this.product.id)] = this.product;
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto actualizado', life: 3000});
-        }
-        else {
-            this.product.id = this.createId();
-            this.product.image = 'product-placeholder.svg';
-            this.products.push(this.product);
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Guardado', life: 3000});
-        }
-
-        this.products = [...this.products];
-        this.productDialog = false;
-        this.product = {};
-    }
-}
-
-findIndexById(id: string): number {
+findIndexById(id: number): number {
     let index = -1;
-    for (let i = 0; i < this.products.length; i++) {
-        if (this.products[i].id === id) {
+    for (let i = 0; i < this.listaProductos.length; i++) {
+        if (this.listaProductos[i].nId === id) {
             index = i;
             break;
         }

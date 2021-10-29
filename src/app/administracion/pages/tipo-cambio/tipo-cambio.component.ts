@@ -1,6 +1,10 @@
-import { SelectItem } from 'primeng/api';
+import { MessageService, SelectItem } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
 import { CountryService } from 'src/app/demo/service/countryservice';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { TipoCambioService } from '../../service/tipo-cambio.service';
+import { TipoCambio } from '../../interfaces/tipoCambio';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-tipo-cambio',
@@ -54,47 +58,91 @@ import { CountryService } from 'src/app/demo/service/countryservice';
 })
 export class TipoCambioComponent implements OnInit {
 
-  countries: any[];
+	formulario:FormGroup;
 
-  filteredCountries: any[];
+	tipoCambio: TipoCambio;
 
-  selectedCountryAdvanced: any[];
 
-  valSlider = 50;
 
-  valColor = '#424242';
+  
+  constructor(private fb: FormBuilder, private tipoCambioService: TipoCambioService, private messageService: MessageService,
+	private spinner: NgxSpinnerService ) {
+     this.crearFormulario();
+  }
 
-  valRadio: string;
+  get validaValor() {
+	return this.formulario.get('nvalor').invalid && this.formulario.get('nvalor').touched;
+  }
 
-  valCheck: string[] = [];
+  crearFormulario() {
+  
+	this.formulario = this.fb.group({
+		nid: ['',[]],
+		nvalor: ['',[Validators.required]],
+		sclave: ['',[]],
+		sdescripcion: ['',[]],
+	});
 
-  valSwitch: boolean;
-
-  cities: SelectItem[];
-
-  selectedList: SelectItem;
-
-  selectedDrop: SelectItem;
-
-  selectedMulti: string[] = [];
-
-  valToggle = false;
-
-  paymentOptions: any[];
-
-  valSelect1: string;
-
-  valSelect2: string;
-
-  valueKnob = 20;
-
-  constructor( ) {
-     
   }
 
   ngOnInit() {
-      
+      this.obtenerTipoCambio();
   }
+
+  obtenerTipoCambio(){
+	  this.spinner.show();
+	  this.tipoCambio=this.formulario.value;
+	  this.tipoCambio.sclave='ValorCambio';
+	  this.tipoCambioService.obtenerTipoCambio(this.tipoCambio).subscribe(tipoCambio =>{
+		  if (tipoCambio == null ) {
+			  this.fTipoCambio.nvalor.setValue(0);
+		  }else{
+			  this.fTipoCambio.nid.setValue(tipoCambio.nid);
+			  this.fTipoCambio.nvalor.setValue(tipoCambio.nvalor);
+			  this.fTipoCambio.sclave.setValue(tipoCambio.sclave);
+			  this.fTipoCambio.sdescripcion.setValue(tipoCambio.sdescripcion);
+		}
+		this.spinner.hide();
+	})
+}
+
+guardarTipoCambio(){
+	if (this.formulario.invalid) {
+  
+		return Object.values(this.formulario.controls).forEach(control => {
+  
+		  if (control instanceof FormGroup) {
+			// tslint:disable-next-line: no-shadowed-variable
+			
+			Object.values(control.controls).forEach(control => control.markAsTouched());
+		  } else {
+			control.markAsTouched();
+		  }
+  
+		});
+	}else{
+		this.spinner.show()
+		this.tipoCambio= this.formulario.value;
+		this.tipoCambioService.guardarTipoCambio(this.tipoCambio).subscribe(tipoCambio => {
+
+			this.fTipoCambio.nid.setValue(tipoCambio.nid);
+			  this.fTipoCambio.nvalor.setValue(tipoCambio.nvalor);
+			  this.fTipoCambio.sclave.setValue(tipoCambio.sclave);
+			  this.fTipoCambio.sdescripcion.setValue(tipoCambio.sdescripcion);
+			  
+			  this.spinner.hide();
+			  this.messageService.add({severity: 'success', summary: 'Successful', detail: 'tipo cambio actualizado', life: 10000});
+		})
+	}
+}
+
+
+
+  get fTipoCambio(){
+	return this.formulario.controls;
+}
+
+
 
   
 

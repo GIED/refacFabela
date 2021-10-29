@@ -4,7 +4,7 @@ import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { ClienteService } from '../../service/cliente.service';
 import { Clientes } from '../../interfaces/clientes';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 
@@ -65,7 +65,7 @@ export class ClienteComponent implements OnInit {
   crearFormulario() {
 
     this.formulario = this.fb.group({
-      sRfc: ['', [Validators.required, Validators.minLength(12),  Validators.maxLength(14)]],
+      sRfc:  ['', [Validators.required, Validators.minLength(12),  Validators.maxLength(14)]],
       sRazonSocial:['',[Validators.required]],
       sDireccion:['',[Validators.required]],
       sTelefono:['',[Validators.required, Validators.minLength(10), Validators.maxLength(10)]],

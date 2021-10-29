@@ -1,184 +1,163 @@
 <div class="p-grid">
-	<div class="p-col-12">
+    <div class="p-col-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Nuevo cliente" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
+                    <button pButton pRipple label="Borrar cliente" icon="pi pi-trash" class="p-button-danger p-mb-2" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
+                </ng-template>
 
-	
+                <ng-template pTemplate="right">
+                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Importar clientes" class="p-mr-2 p-mb-2 p-d-inline-block"></p-fileUpload>
+                    <button pButton pRipple label="Exportar clientes" icon="pi pi-upload" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
 
-		<p-toast></p-toast>
-		
-
-		<div class="card">
-			<p-toolbar styleClass="p-mb-4">
-				<ng-template pTemplate="left">
-					<button pButton pRipple label="Nuevo cliente" icon="pi pi-plus"
-						class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
-					<button pButton pRipple label="Borrar cliente" icon="pi pi-trash" class="p-button-danger p-mb-2"
-						(click)="deleteSelectedProducts()"
-						[disabled]="!selectedProducts || !selectedProducts.length"></button>
-				</ng-template>
-
-				<ng-template pTemplate="right">
-					<p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import"
-						chooseLabel="Importar clientes" class="p-mr-2 p-mb-2 p-d-inline-block"></p-fileUpload>
-					<button pButton pRipple label="Exportar clientes" icon="pi pi-upload" class="p-button-help p-mb-2"
-						(click)="dt.exportCSV()"></button>
-				</ng-template>
-			</p-toolbar>
-
-			<p-table #dt [value]="listaClientes"  [rows]="10" [paginator]="true"
-				[globalFilterFields]="['name','country.name','representative.name','status']"
-				[(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
-				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-				[showCurrentPageReport]="true">
-				<ng-template pTemplate="caption">
-					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-						<h5 class="p-m-0">Administración de clientes</h5>
-						<span class="p-input-icon-left">
+            <p-table #dt [value]="listaClientes" [rows]="10" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <h5 class="p-m-0">Administración de clientes</h5>
+                        <span class="p-input-icon-left">
 							<i class="pi pi-search"></i>
 							<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
 								placeholder="Buscar cliente" />
 						</span>
-					</div>
-				</ng-template>
-				<ng-template pTemplate="header">
-					<tr>
-						<th style="width: 3rem">
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
 
-						</th>
-						<th pSortableColumn="name">RFC </th>
-						<!--<th>Image</th>-->
-						<th pSortableColumn="price">Razón social <p-sortIcon field="price"></p-sortIcon>
-						</th>
-						<th pSortableColumn="category">Dirección <p-sortIcon field="category"></p-sortIcon>
-						</th>
-						<th pSortableColumn="rating">Correo <p-sortIcon field="rating"></p-sortIcon>
-						</th>
-						<th pSortableColumn="inventoryStatus">Telénono <p-sortIcon field="inventoryStatus"></p-sortIcon>
-						</th>
-						<th></th>
-					</tr>
-				</ng-template>
-				<ng-template pTemplate="body" let-cliente>
-					<tr>
-						<td>
+                        </th>
+                        <th pSortableColumn="name">RFC </th>
+                        <!--<th>Image</th>-->
+                        <th pSortableColumn="price">Razón social
+                            <p-sortIcon field="price"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="category">Dirección
+                            <p-sortIcon field="category"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="rating">Correo
+                            <p-sortIcon field="rating"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="inventoryStatus">Telénono
+                            <p-sortIcon field="inventoryStatus"></p-sortIcon>
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-cliente>
+                    <tr>
+                        <td>
 
-						</td>
-						<td><span class="p-column-title">Name</span>
-							{{cliente.sRfc}}
-						</td>
-						<!--	<td><span class="p-column-title">Image</span>
+                        </td>
+                        <td><span class="p-column-title">Name</span> {{cliente.sRfc}}
+                        </td>
+                        <!--	<td><span class="p-column-title">Image</span>
 							<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
 						</td>-->
-						<td><span class="p-column-title">Price</span>
-							{{cliente.sRazonSocial}}
-						</td>
-						<td><span class="p-column-title">Category</span>
-							{{cliente.sDireccion}}
-						</td>
-						<td><span class="p-column-title">Reviews</span>
-							{{cliente.sCorreo}}
-						</td>
-						<td><span class="p-column-title">Status</span>
-							{{cliente.sTelefono}}
-						</td>
-						<td>
-							<button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-								(click)="editar(cliente)"></button>
-							<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-								(click)="eliminar(cliente)"></button>
-							<button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
-								(click)="lineaCredito()"></button>
-						</td>
-					</tr>
-				</ng-template>
-				<ng-template pTemplate="summary">
-					<div class="p-d-flex p-ai-center p-jc-between">
-						En total hay {{listaClientes ? listaClientes.length : 0 }} clientes.
-					</div>
-				</ng-template>
-			</p-table>
-		</div>
+                        <td><span class="p-column-title">Price</span> {{cliente.sRazonSocial}}
+                        </td>
+                        <td><span class="p-column-title">Category</span> {{cliente.sDireccion}}
+                        </td>
+                        <td><span class="p-column-title">Reviews</span> {{cliente.sCorreo}}
+                        </td>
+                        <td><span class="p-column-title">Status</span> {{cliente.sTelefono}}
+                        </td>
+                        <td>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editar(cliente)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="eliminar(cliente)"></button>
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help" (click)="lineaCredito()"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{listaClientes ? listaClientes.length : 0 }} clientes.
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
 
-		<p-dialog [(visible)]="credito" [style]="{width: '600px'}" header="Línea de crédito " [modal]="true"
-			styleClass="p-fluid">
-			<ng-template pTemplate="content">
-				<div class="p-field">
-					<label for="name">Monto del crédito</label>
-					<input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-					<small class="p-invalid" *ngIf="submitted && !product.name">Monto requerido.</small>
-				</div>
-				<div class="p-grid">
-					<div class="p-col-12 p-md-4">
-						<div class="p-field-radiobutton">
-							<p-radioButton name="city" value="Chicago" [(ngModel)]="valRadio" id="city1" valu>
-							</p-radioButton>
-							<label for="city1">Activar Crédito</label>
-						</div>
-					</div>
-					<div class="p-col-12 p-md-4">
-						<div class="p-field-radiobutton">
-							<p-radioButton name="city" value="Los Angeles" [(ngModel)]="valRadio" id="city2">
-							</p-radioButton>
-							<label for="city2">Desactivar Crédito</label>
-						</div>
-					</div>					
-				</div>
+        <p-dialog [(visible)]="credito" [style]="{width: '600px'}" header="Línea de crédito " [modal]="true" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="p-field">
+                    <label for="name">Monto del crédito</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
+                    <small class="p-invalid" *ngIf="submitted && !product.name">Monto requerido.</small>
+                </div>
+                <div class="p-grid">
+                    <div class="p-col-12 p-md-4">
+                        <div class="p-field-radiobutton">
+                            <p-radioButton name="city" value="Chicago" [(ngModel)]="valRadio" id="city1" valu>
+                            </p-radioButton>
+                            <label for="city1">Activar Crédito</label>
+                        </div>
+                    </div>
+                    <div class="p-col-12 p-md-4">
+                        <div class="p-field-radiobutton">
+                            <p-radioButton name="city" value="Los Angeles" [(ngModel)]="valRadio" id="city2">
+                            </p-radioButton>
+                            <label for="city2">Desactivar Crédito</label>
+                        </div>
+                    </div>
+                </div>
 
-			</ng-template>
+            </ng-template>
 
-			<ng-template pTemplate="footer">
-				<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-					(click)="hideDialog()"></button>
-				<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-					(click)="saveProduct()"></button>
-			</ng-template>
-		</p-dialog>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+            </ng-template>
+        </p-dialog>
 
-		<p-dialog [(visible)]="clienteDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true" styleClass="p-fluid">
-		
-			<ng-template pTemplate="content">
-				<form [formGroup]="formulario">
-					<input type="text" pInputText  formControlName="nId" hidden  />
-					<input type="text" pInputText  formControlName="sClave" hidden  />
-					
-				<div class="p-field">
-					<label for="name">RFC</label>
-					<input type="text" pInputText  formControlName="sRfc" [class.is-invalid]="validaRfc"  />
-					<small *ngIf="validaRfc" class="p-error">Rfc invalido favor de verificar.</small>
+        <p-dialog [(visible)]="clienteDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true" styleClass="p-fluid">
 
-				</div>
+            <ng-template pTemplate="content">
+                <form [formGroup]="formulario">
+                    <input type="text" pInputText formControlName="nId" hidden />
+                    <input type="text" pInputText formControlName="sClave" hidden />
 
-				<div class="p-field">
-					<label for="name">Razón Social</label>
-					<input type="text" pInputText  formControlName="sRazonSocial" [class.is-invalid]="validaRS"  />
-					<small *ngIf="validaRS" class="p-error">Razón social invalido, favor de verificar.</small>
+                    <div class="p-field">
+                        <label for="name">RFC</label>
+                        <input type="text" pInputText formControlName="sRfc" [class.is-invalid]="validaRfc" />
+                        <small *ngIf="validaRfc" class="p-error">Rfc invalido favor de verificar.</small>
 
-				</div>
-				<div class="p-field">
-					<label for="name">Dirección</label>
-					<input type="text" pInputText  formControlName="sDireccion" [class.is-invalid]="validaDireccion"  />
-					<small *ngIf="validaDireccion" class="p-error">Dirección invalida, favor de verificar.</small>
+                    </div>
 
-				</div>
-				<div class="p-field">
-					<label for="name">Teléfono</label>
-					<input type="tel" pInputText  formControlName="sTelefono" [class.is-invalid]="validaTelefono"  />
-					<small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>
+                    <div class="p-field">
+                        <label for="name">Razón Social</label>
+                        <input type="text" pInputText formControlName="sRazonSocial" [class.is-invalid]="validaRS" />
+                        <small *ngIf="validaRS" class="p-error">Razón social invalido, favor de verificar.</small>
 
-				</div>
-				<div class="p-field">
-					<label for="name">Correo</label>
-					<input type="email" pInputText  formControlName="sCorreo" [class.is-invalid]="validaCorreo"  />
-					<small *ngIf="validaCorreo" class="p-error">Dirección invalida, favor de verificar.</small>
+                    </div>
+                    <div class="p-field">
+                        <label for="name">Dirección</label>
+                        <input type="text" pInputText formControlName="sDireccion" [class.is-invalid]="validaDireccion" />
+                        <small *ngIf="validaDireccion" class="p-error">Dirección invalida, favor de verificar.</small>
 
-				</div>
-			</form>
-				
-	
+                    </div>
+                    <div class="p-field">
+                        <label for="name">Teléfono</label>
+                        <input type="tel" pInputText formControlName="sTelefono" [class.is-invalid]="validaTelefono" />
+                        <small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>
 
-	
-<hr>
+                    </div>
+                    <div class="p-field">
+                        <label for="name">Correo</label>
+                        <input type="email" pInputText formControlName="sCorreo" [class.is-invalid]="validaCorreo" />
+                        <small *ngIf="validaCorreo" class="p-error">Dirección invalida, favor de verificar.</small>
 
-<!--
+                    </div>
+                </form>
+
+
+
+
+                <hr>
+
+                <!--
 <pre>
   estado del formulario: {{formulario.valid}}
   <br>
@@ -187,19 +166,17 @@
 <pre>
   {{formulario.value | json}}
 </pre>-->
-			</ng-template>
+            </ng-template>
 
 
-			<ng-template pTemplate="footer">
-				<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-					(click)="hideDialog()"></button>
-				<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-					(click)="guardar()"></button>
-			</ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardar()"></button>
+            </ng-template>
 
-		</p-dialog>
-		
-		<p-confirmDialog [style]="{width: '600px'}"></p-confirmDialog>
+        </p-dialog>
 
-	</div>
+        <p-confirmDialog [style]="{width: '600px'}"></p-confirmDialog>
+
+    </div>
 </div>
