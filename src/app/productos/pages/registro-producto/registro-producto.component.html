@@ -1,8 +1,5 @@
 <div class="p-grid">
     <div class="p-col-12">
-
-        <p-toast></p-toast>
-
         <div class="card">
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="left">
@@ -10,8 +7,7 @@
 
                 </ng-template>
             </p-toolbar>
-
-            <p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            <p-table #dt [value]="listaProductos" [rows]="10" [paginator]="true" [globalFilterFields]="['sNoParte', 'sProducto']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
@@ -29,41 +25,38 @@
                         <th>No de parte</th>
                         <th>Nombre parte</th>
                         <th>Marca</th>
-                        <th>Stock</th>
                         <th>Precio</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
                     <tr>
-                        <td><span class="p-column-title">No de parte</span> {{product.id}}
+                        <td><span class="p-column-title">id</span> {{product.nId}}
                         </td>
-                        <td><span class="p-column-title">No de parte</span> {{product.id}}
+                        <td><span class="p-column-title">No de parte</span> {{product.sNoParte}}
                         </td>
-                        <td><span class="p-column-title">producto</span> {{product.name}}
+                        <td><span class="p-column-title">producto</span> {{product.sProducto}}
                         </td>
-                        <td><span class="p-column-title">Descipcion</span> {{product.category}}
+                        <td><span class="p-column-title">Descipcion</span> {{product.sMarca}}
                         </td>
-                        <td><span class="p-column-title">Reviews</span> {{product.quantity}}
-                        </td>
-                        <td><span class="p-column-title">Status</span> {{product.price | currency:'USD'}}
+                        <td><span class="p-column-title">Status</span> {{product.nPrecio | currency:'USD'}}
                         </td>
                         <td>
                             <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2" (click)="detalleProduct(product)"></button>
                             <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning" (click)="alternativosProduct(product)"></button>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="ejecuta.editProducto(product,'Actualización de Producto')"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
                     <div class="p-d-flex p-ai-center p-jc-between">
-                        Total de Productos: {{products ? products.length : 0 }}
+                        Total de Productos: {{listaProductos ? listaProductos.length : 0 }}
                     </div>
                 </ng-template>
             </p-table>
         </div>
 
-        <app-modal-producto [productDialog]="productDialog" [titulo]="titulo" [submitted]="submitted" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
+        <app-modal-producto #ejecuta [productDialog]="productDialog" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
 
         <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Detalle del Producto" [modal]="true" styleClass="p-fluid">
             <ng-template pTemplate="content">

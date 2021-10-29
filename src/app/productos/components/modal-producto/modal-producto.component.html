@@ -29,18 +29,18 @@
                 </div>
                 <div class="p-field p-col-6">
                     <label for="marca">Categoria General</label>
-                    <p-dropdown [options]="listaCategoriaGeneral" formControlName="nIdCategoriaGeneral" optionLabel="sCategoriaGeneral" optionValue="nId" (onChange)="obtenerCategoria()" [class.is-invalid]="validaCategoriaGeneral" placeholder="Seleccine una categoria general"
+                    <p-dropdown [options]="listaCategoriaGeneral" formControlName="nidCategoriaGeneral" optionLabel="sCategoriaGeneral" optionValue="nId" (onChange)="obtenerCategoria()" [class.is-invalid]="validaCategoriaGeneral" placeholder="Seleccine una categoria general"
                         [showClear]="true"></p-dropdown>
                     <small class="p-error" *ngIf="validaCategoriaGeneral">*Categoria General requerida.</small>
                 </div>
                 <div class="p-field p-col-6">
                     <label for="marca">Categoria </label>
-                    <p-dropdown [options]="listaCategoria" formControlName="nIdCategoria" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaCategoria" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
+                    <p-dropdown [options]="listaCategoria" formControlName="nidCategoria" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaCategoria" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
                     <small class="p-error" *ngIf="validaCategoria">*Categoria requerida.</small>
                 </div>
                 <div class="p-field p-col-6">
                     <label for="price">clave SAT</label>
-                    <p-dropdown [options]="listaClaveSat" formControlName="nIdClaveSat" [class.is-invalid]="validaClaveSat" optionLabel="sDescripcion" optionValue="nId" placeholder="Seleccine una clave sat " [showClear]="true"></p-dropdown>
+                    <p-dropdown [options]="listaClaveSat" formControlName="nIdclavesat" [class.is-invalid]="validaClaveSat" optionLabel="sDescripcion" optionValue="nId" placeholder="Seleccine una clave sat " [showClear]="true"></p-dropdown>
                     <small class="p-error" *ngIf="validaClaveSat">*Clave Sat requerida.</small>
                 </div>
                 <div class="p-field p-col-6">
@@ -50,7 +50,7 @@
                 </div>
                 <div class="p-field p-col-6">
                     <label for="price">Precio</label>
-                    <p-inputMask mask="99.99" placeholder="99.99" name="nPrecio" formControlName="nPrecio" [class.is-invalid]="validaPrecio"></p-inputMask>
+                    <p-inputNumber inputId="currency-es" mode="currency" currency="MEX" locale="es-Mx" name="nPrecio" formControlName="nPrecio" [class.is-invalid]="validaPrecio"></p-inputNumber>
                     <small class="p-error" *ngIf="validaPrecio">*Precio Requerido</small>
                 </div>
                 <div class="p-field p-col-6">
@@ -67,7 +67,7 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="cerrarModal()"></button>
         <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
     </ng-template>
 

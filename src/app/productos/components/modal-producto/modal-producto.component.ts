@@ -27,9 +27,8 @@ interface Moneda {
 export class ModalProductoComponent implements OnInit {
 
   @Input() productDialog: boolean;
-  @Input() submitted: boolean;
   @Input() titulo:string;
-  @Input() productoEditar: TcProducto;
+  
 
   @Output() cerrar: EventEmitter<boolean>= new EventEmitter();
   @Output() guardarProducto: EventEmitter<TcProducto> = new EventEmitter();
@@ -76,13 +75,13 @@ export class ModalProductoComponent implements OnInit {
 
   obtenerCategoria(){
     this.spinner.show();
-    if (this.fProducto.nIdCategoriaGeneral.value == null) {
-      this.formulario.get('nIdCategoria').disable();
+    if (this.fProducto.nidCategoriaGeneral.value == null) {
+      this.formulario.get('nidCategoria').disable();
       this.spinner.hide();
     }else{
-      this.catalogoService.obtenerCategoria(this.fProducto.nIdCategoriaGeneral.value).subscribe(categoria =>{
+      this.catalogoService.obtenerCategoria(this.fProducto.nidCategoriaGeneral.value).subscribe(categoria =>{
         this.listaCategoria = categoria;
-        this.formulario.get('nIdCategoria').enable();
+        this.formulario.get('nidCategoria').enable();
         this.spinner.hide();
       });
 
@@ -115,10 +114,10 @@ export class ModalProductoComponent implements OnInit {
     return this.formulario.get('sMarca').invalid && this.formulario.get('sMarca').touched;
   }
   get validaCategoria() {
-    return this.formulario.get('nIdCategoria').invalid && this.formulario.get('nIdCategoria').touched;
+    return this.formulario.get('nidCategoria').invalid && this.formulario.get('nidCategoria').touched;
   }
   get validaCategoriaGeneral() {
-    return this.formulario.get('nIdCategoriaGeneral').invalid && this.formulario.get('nIdCategoriaGeneral').touched;
+    return this.formulario.get('nidCategoriaGeneral').invalid && this.formulario.get('nidCategoriaGeneral').touched;
   }
   get validaPrecio() {
     return this.formulario.get('nPrecio').invalid && this.formulario.get('nPrecio').touched;
@@ -130,7 +129,7 @@ export class ModalProductoComponent implements OnInit {
     return this.formulario.get('nIdGanancia').invalid && this.formulario.get('nIdGanancia').touched;
   }
   get validaClaveSat() {
-    return this.formulario.get('nIdClaveSat').invalid && this.formulario.get('nIdClaveSat').touched;
+    return this.formulario.get('nIdclavesat').invalid && this.formulario.get('nIdclavesat').touched;
   }
 
   crearFormulario() {
@@ -141,21 +140,25 @@ export class ModalProductoComponent implements OnInit {
         sProducto: ['',[Validators.required]],
         sDescripcion: ['',[]],
         sMarca: ['', [Validators.required]],
-        nIdCategoria:['',[Validators.required]],
-        nIdCategoriaGeneral:['',[Validators.required]],
+        nidCategoria:['',[Validators.required]],
+        nidCategoriaGeneral:['',[Validators.required]],
         nPrecio:['',[Validators.required]],
         sMoneda:['',[Validators.required]],
         nIdGanancia:['',[Validators.required]],
         nIdusuario:['',[]],
         nEstatus:['',[]],
         dFecha:['',[]],
-        nIdClaveSat:['',[Validators.required]],
+        nIdclavesat:['',[Validators.required]],
     })
-    this.formulario.get('nIdCategoria').disable();
+    this.formulario.get('nidCategoria').disable();
   }
 
-  hideDialog() {
-    this.cerrar.emit(false);
+  cerrarModal() {
+    this.productDialog=false;
+    this.cerrar.emit(this.productDialog);
+    this.fProducto.sNoParte.setValue("");
+    this.limpiaFormulario();
+    
   }
 
   saveProduct(){
@@ -182,24 +185,27 @@ export class ModalProductoComponent implements OnInit {
   
   }
 
-  editProducto() {
+  editProducto(productoEditar: TcProducto, titulo?:string) {
+    console.log('llego a editar');
+    console.log(productoEditar);
+    this.titulo=titulo;
     this.productDialog = true;
-    this.fProducto.nId.setValue(this.productoEditar.nId);
-    this.fProducto.sNoParte.setValue(this.productoEditar.sNoParte);
-    this.fProducto.sProducto.setValue(this.productoEditar.sProducto);
-    this.fProducto.sDescripcion.setValue(this.productoEditar.sDescripcion);
-    this.fProducto.sMarca.setValue(this.productoEditar.sMarca);
-    this.fProducto.nIdCategoria.setValue(this.productoEditar.n_idCategoria);
-    this.fProducto.nIdCategoriaGeneral.setValue(this.productoEditar.n_idCategoriaGeneral);
-    this.fProducto.nPrecio.setValue(this.productoEditar.nPrecio);
-    this.fProducto.sMoneda.setValue(this.productoEditar.sMoneda);
-    this.fProducto.nIdGanancia.setValue(this.productoEditar.nIdGanancia);
-    this.fProducto.nIdusuario.setValue(this.productoEditar.nIdusuario);
-    this.fProducto.nEstatus.setValue(this.productoEditar.nEstatus);
-    this.fProducto.dFecha.setValue(this.productoEditar.dFecha);
-    this.fProducto.nIdClaveSat.setValue(this.productoEditar.nIdclavesat);
+    this.fProducto.nId.setValue(productoEditar.nId);
+    this.fProducto.sNoParte.setValue(productoEditar.sNoParte);
+    this.fProducto.sProducto.setValue(productoEditar.sProducto);
+    this.fProducto.sDescripcion.setValue(productoEditar.sDescripcion);
+    this.fProducto.sMarca.setValue(productoEditar.sMarca);
+    this.fProducto.nidCategoria.setValue(productoEditar.nidCategoria);
+    this.fProducto.nidCategoriaGeneral.setValue(productoEditar.nidCategoriaGeneral);
+    this.fProducto.nPrecio.setValue(productoEditar.nPrecio);
+    this.fProducto.sMoneda.setValue(productoEditar.sMoneda);
+    this.fProducto.nIdGanancia.setValue(productoEditar.nIdGanancia);
+    this.fProducto.nIdusuario.setValue(productoEditar.nIdusuario);
+    this.fProducto.nEstatus.setValue(productoEditar.nEstatus);
+    this.fProducto.dFecha.setValue(productoEditar.dFecha);
+    this.fProducto.nIdclavesat.setValue(productoEditar.nIdclavesat);
     this.obtenerCategoria();
-    this.formulario.get('nIdCategoria').enable();
+    this.formulario.get('nidCategoria').enable();
 
 
 
@@ -211,15 +217,15 @@ limpiaFormulario() {
   this.fProducto.sProducto.setValue("");
   this.fProducto.sDescripcion.setValue("");
   this.fProducto.sMarca.setValue("");
-  this.fProducto.nIdCategoria.setValue("");
-  this.fProducto.nIdCategoriaGeneral.setValue("");
+  this.fProducto.nidCategoria.setValue("");
+  this.fProducto.nidCategoriaGeneral.setValue("");
   this.fProducto.nPrecio.setValue("");
   this.fProducto.sMoneda.setValue("");
   this.fProducto.nIdGanancia.setValue("");
   this.fProducto.nIdusuario.setValue("");
   this.fProducto.nEstatus.setValue("");
   this.fProducto.dFecha.setValue("");
-  this.fProducto.nIdClaveSat.setValue("");
+  this.fProducto.nIdclavesat.setValue("");
   
 
 
@@ -274,8 +280,8 @@ valorSeleccionado(){
     const producto = this.listaNoParte[i];
     if (producto.sNoParte.indexOf(noparte) == 0) {
       console.log(producto);
-        this.productoEditar=producto;
-        this.editProducto();
+      
+        this.editProducto(producto);
         this.mostrarSugerencias=false;
     }
 }

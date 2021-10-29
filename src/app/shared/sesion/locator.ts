@@ -18,6 +18,7 @@ static consultaCategoriaGeneral='/catalogoCategoriaGeneral';
 static consultaCategoria= '/catalogoCategoriaId?';
 static consultaGanancia= '/catalogoGanancia';
 //api productos
+static obtenerProductos= '/obtenerProductos';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
 

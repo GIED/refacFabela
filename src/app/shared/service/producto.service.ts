@@ -11,6 +11,11 @@ export class ProductoService {
 
   constructor(private http: HttpClient) { }
 
+  obtenerProductos(){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerProductos;
+    return this.http.get<TcProducto[]>(url);
+  }
+
   obtenerNoParte(noParte: string){
     let url = environment.servicios.apiRefacFabela + locator.consultaNoParte+'No_Parte='+noParte;
     return this.http.get<TcProducto[]>(url);
