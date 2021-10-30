@@ -176,7 +176,6 @@ saveProduct(producto: TcProducto) {
                 this.messageService.add({severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000});
             });
         }
-        this.productDialog = false;
         this.listaProductos = [...this.listaProductos];
         
     

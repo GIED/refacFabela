@@ -180,7 +180,9 @@ export class ModalProductoComponent implements OnInit {
       this.tcProducto.nEstatus=1;
       this.tcProducto.nIdusuario=1; 
       this.guardarProducto.emit(this.tcProducto);
-      this.formulario.reset();
+      this.productDialog = false;
+      this.fProducto.sNoParte.setValue("");
+      this.limpiaFormulario();
     }
   
   }
@@ -205,7 +207,7 @@ export class ModalProductoComponent implements OnInit {
     this.fProducto.dFecha.setValue(productoEditar.dFecha);
     this.fProducto.nIdclavesat.setValue(productoEditar.nIdclavesat);
     this.obtenerCategoria();
-    this.formulario.get('nidCategoria').enable();
+    this.formulario.get('nIdCategoria').enable();
 
 
 
