@@ -71,16 +71,16 @@ export class TipoCambioComponent implements OnInit {
   }
 
   get validaValor() {
-	return this.formulario.get('nvalor').invalid && this.formulario.get('nvalor').touched;
+	return this.formulario.get('nValor').invalid && this.formulario.get('nValor').touched;
   }
 
   crearFormulario() {
   
 	this.formulario = this.fb.group({
-		nid: ['',[]],
-		nvalor: ['',[Validators.required]],
-		sclave: ['',[]],
-		sdescripcion: ['',[]],
+		nId: ['',[]],
+		nValor: ['',[Validators.required]],
+		sClave: ['',[]],
+		sDescripcion: ['',[]],
 	});
 
   }
@@ -90,18 +90,18 @@ export class TipoCambioComponent implements OnInit {
   }
 
   obtenerTipoCambio(){
+	  console.log("Entre a obtener el tipo de cambio")
 	  this.spinner.show();
 	  this.tipoCambio=this.formulario.value;
-	  this.tipoCambio.sclave='ValorCambio';
+	  this.tipoCambio.sClave='ValorCambio';
 	  this.tipoCambioService.obtenerTipoCambio(this.tipoCambio).subscribe(tipoCambio =>{
-		  if (tipoCambio == null ) {
-			  this.fTipoCambio.nvalor.setValue(0);
-		  }else{
-			  this.fTipoCambio.nid.setValue(tipoCambio.nid);
-			  this.fTipoCambio.nvalor.setValue(tipoCambio.nvalor);
-			  this.fTipoCambio.sclave.setValue(tipoCambio.sclave);
-			  this.fTipoCambio.sdescripcion.setValue(tipoCambio.sdescripcion);
-		}
+		 
+			  this.fTipoCambio.nId.setValue(tipoCambio.nId);
+			  this.fTipoCambio.nValor.setValue(tipoCambio.nValor);
+			  console.log("el valor del tipo de cambio es:"+this.tipoCambio.nValor);
+			  this.fTipoCambio.sClave.setValue(tipoCambio.sClave);
+			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);
+	
 		this.spinner.hide();
 	})
 }
@@ -125,10 +125,10 @@ guardarTipoCambio(){
 		this.tipoCambio= this.formulario.value;
 		this.tipoCambioService.guardarTipoCambio(this.tipoCambio).subscribe(tipoCambio => {
 
-			this.fTipoCambio.nid.setValue(tipoCambio.nid);
-			  this.fTipoCambio.nvalor.setValue(tipoCambio.nvalor);
-			  this.fTipoCambio.sclave.setValue(tipoCambio.sclave);
-			  this.fTipoCambio.sdescripcion.setValue(tipoCambio.sdescripcion);
+			this.fTipoCambio.nId.setValue(tipoCambio.nId);
+			  this.fTipoCambio.nValor.setValue(tipoCambio.nValor);
+			  this.fTipoCambio.sClave.setValue(tipoCambio.sClave);
+			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);
 			  
 			  this.spinner.hide();
 			  this.messageService.add({severity: 'success', summary: 'Successful', detail: 'tipo cambio actualizado', life: 10000});

@@ -1,6 +1,6 @@
 export interface TipoCambio{
-    nid?: number;
-    nvalor?:number;
-    sclave?:string;
-    sdescripcion?:string;
+    nId?: number;
+    nValor?:number;
+    sClave?:string;
+    sDescripcion?:string;
 }
