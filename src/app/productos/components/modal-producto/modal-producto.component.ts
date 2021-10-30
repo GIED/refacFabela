@@ -75,13 +75,13 @@ export class ModalProductoComponent implements OnInit {
 
   obtenerCategoria(){
     this.spinner.show();
-    if (this.fProducto.nidCategoriaGeneral.value == null) {
-      this.formulario.get('nidCategoria').disable();
+    if (this.fProducto.nIdCategoriaGeneral.value == null) {
+      this.formulario.get('nIdCategoria').disable();
       this.spinner.hide();
     }else{
-      this.catalogoService.obtenerCategoria(this.fProducto.nidCategoriaGeneral.value).subscribe(categoria =>{
+      this.catalogoService.obtenerCategoria(this.fProducto.nIdCategoriaGeneral.value).subscribe(categoria =>{
         this.listaCategoria = categoria;
-        this.formulario.get('nidCategoria').enable();
+        this.formulario.get('nIdCategoria').enable();
         this.spinner.hide();
       });
 
@@ -114,10 +114,10 @@ export class ModalProductoComponent implements OnInit {
     return this.formulario.get('sMarca').invalid && this.formulario.get('sMarca').touched;
   }
   get validaCategoria() {
-    return this.formulario.get('nidCategoria').invalid && this.formulario.get('nidCategoria').touched;
+    return this.formulario.get('nIdCategoria').invalid && this.formulario.get('nIdCategoria').touched;
   }
   get validaCategoriaGeneral() {
-    return this.formulario.get('nidCategoriaGeneral').invalid && this.formulario.get('nidCategoriaGeneral').touched;
+    return this.formulario.get('nIdCategoriaGeneral').invalid && this.formulario.get('nIdCategoriaGeneral').touched;
   }
   get validaPrecio() {
     return this.formulario.get('nPrecio').invalid && this.formulario.get('nPrecio').touched;
@@ -140,8 +140,8 @@ export class ModalProductoComponent implements OnInit {
         sProducto: ['',[Validators.required]],
         sDescripcion: ['',[]],
         sMarca: ['', [Validators.required]],
-        nidCategoria:['',[Validators.required]],
-        nidCategoriaGeneral:['',[Validators.required]],
+        nIdCategoria:['',[Validators.required]],
+        nIdCategoriaGeneral:['',[Validators.required]],
         nPrecio:['',[Validators.required]],
         sMoneda:['',[Validators.required]],
         nIdGanancia:['',[Validators.required]],
@@ -150,7 +150,7 @@ export class ModalProductoComponent implements OnInit {
         dFecha:['',[]],
         nIdclavesat:['',[Validators.required]],
     })
-    this.formulario.get('nidCategoria').disable();
+    this.formulario.get('nIdCategoria').disable();
   }
 
   cerrarModal() {
@@ -195,8 +195,8 @@ export class ModalProductoComponent implements OnInit {
     this.fProducto.sProducto.setValue(productoEditar.sProducto);
     this.fProducto.sDescripcion.setValue(productoEditar.sDescripcion);
     this.fProducto.sMarca.setValue(productoEditar.sMarca);
-    this.fProducto.nidCategoria.setValue(productoEditar.nidCategoria);
-    this.fProducto.nidCategoriaGeneral.setValue(productoEditar.nidCategoriaGeneral);
+    this.fProducto.nIdCategoria.setValue(productoEditar.nIdCategoria);
+    this.fProducto.nIdCategoriaGeneral.setValue(productoEditar.nIdCategoriaGeneral);
     this.fProducto.nPrecio.setValue(productoEditar.nPrecio);
     this.fProducto.sMoneda.setValue(productoEditar.sMoneda);
     this.fProducto.nIdGanancia.setValue(productoEditar.nIdGanancia);
@@ -217,8 +217,8 @@ limpiaFormulario() {
   this.fProducto.sProducto.setValue("");
   this.fProducto.sDescripcion.setValue("");
   this.fProducto.sMarca.setValue("");
-  this.fProducto.nidCategoria.setValue("");
-  this.fProducto.nidCategoriaGeneral.setValue("");
+  this.fProducto.nIdCategoria.setValue("");
+  this.fProducto.nIdCategoriaGeneral.setValue("");
   this.fProducto.nPrecio.setValue("");
   this.fProducto.sMoneda.setValue("");
   this.fProducto.nIdGanancia.setValue("");

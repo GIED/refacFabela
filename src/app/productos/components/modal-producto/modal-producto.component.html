@@ -29,13 +29,13 @@
                 </div>
                 <div class="p-field p-col-6">
                     <label for="marca">Categoria General</label>
-                    <p-dropdown [options]="listaCategoriaGeneral" formControlName="nidCategoriaGeneral" optionLabel="sCategoriaGeneral" optionValue="nId" (onChange)="obtenerCategoria()" [class.is-invalid]="validaCategoriaGeneral" placeholder="Seleccine una categoria general"
+                    <p-dropdown [options]="listaCategoriaGeneral" formControlName="nIdCategoriaGeneral" optionLabel="sCategoriaGeneral" optionValue="nId" (onChange)="obtenerCategoria()" [class.is-invalid]="validaCategoriaGeneral" placeholder="Seleccine una categoria general"
                         [showClear]="true"></p-dropdown>
                     <small class="p-error" *ngIf="validaCategoriaGeneral">*Categoria General requerida.</small>
                 </div>
                 <div class="p-field p-col-6">
                     <label for="marca">Categoria </label>
-                    <p-dropdown [options]="listaCategoria" formControlName="nidCategoria" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaCategoria" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
+                    <p-dropdown [options]="listaCategoria" formControlName="nIdCategoria" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaCategoria" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
                     <small class="p-error" *ngIf="validaCategoria">*Categoria requerida.</small>
                 </div>
                 <div class="p-field p-col-6">

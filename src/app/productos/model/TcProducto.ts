@@ -7,8 +7,8 @@ export class TcProducto{
 nId: number;
 dFecha: Date;
 nEstatus: number;
-nidCategoriaGeneral:number;
-nidCategoria:number;
+nIdCategoriaGeneral:number;
+nIdCategoria:number;
 nPrecio: number;
 sDescripcion: string; 
 sMarca: string;
