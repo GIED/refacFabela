@@ -44,17 +44,21 @@ export class RegistroProductoComponent implements OnInit {
                 private confirmationService: ConfirmationService,
                 private spinner: NgxSpinnerService) {
 
+                    this.productDialog=false;
+
 }
 
 ngOnInit() {
-    this.spinner.show();
+    
     this.obtenerProductos();
-    this.spinner.hide();    
+       
 }
 
 obtenerProductos(){ 
+    this.spinner.show();
     this.productosService.obtenerProductos().subscribe(productos => {
         this.listaProductos=productos;
+        
        
     });
     
