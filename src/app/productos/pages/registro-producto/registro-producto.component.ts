@@ -59,7 +59,7 @@ ngOnInit() {
 
 obtenerProductos(){ 
     console.log("entre a este metodo");
-    this.spinner.show;
+    this.spinner.show();
     this.productosService.obtenerProductos().subscribe(productos => {
         this.listaProductos=productos;
        this.spinner.hide();
