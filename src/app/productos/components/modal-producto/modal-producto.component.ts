@@ -49,8 +49,8 @@ export class ModalProductoComponent implements OnInit {
   constructor(private fb: FormBuilder, 
               private catalogoService: CatalogoService, 
               private productosService: ProductoService, 
-              private messageService: MessageService, 
-              private spinner: NgxSpinnerService) { 
+              private messageService: MessageService,
+              ) { 
     this.crearFormulario();
     this.listaMoneda =[
       {name: 'DOLAR', code:'DOLAR'},
@@ -115,41 +115,41 @@ export class ModalProductoComponent implements OnInit {
   }
 
   obtenerCategoriaGeneral(){
-    this.spinner.show();
+    //this.spinner2.show();
     this.catalogoService.obtenerCategoriaGeneral().subscribe(categoriaGeneral =>{
       this.listaCategoriaGeneral = categoriaGeneral;
-      this.spinner.hide();
+      //this.spinner2.hide();
     })
   }
 
   obtenerCategoria(){
-    this.spinner.show();
+    //this.spinner2.show();
     if (this.fProducto.nIdCategoriaGeneral.value == null) {
       this.formulario.get('nIdCategoria').disable();
-      this.spinner.hide();
+      //this.spinner2.hide();
     }else{
       this.catalogoService.obtenerCategoria(this.fProducto.nIdCategoriaGeneral.value).subscribe(categoria =>{
         this.listaCategoria = categoria;
         this.formulario.get('nIdCategoria').enable();
-        this.spinner.hide();
+        //this.spinner2.hide();
       });
 
     }
   }
 
   obtenerClaveSat(){
-    this.spinner.show();
+    //this.spinner2.show();
     this.catalogoService.obtenerClaveSat().subscribe(claveSat => {
       this.listaClaveSat = claveSat;
-      this.spinner.hide();
+      //this.spinner2.hide();
     })
   }
 
   obtenerGanancia(){
-    this.spinner.show();
+    //this.spinner2.show();
     this.catalogoService.obtenerGanancia().subscribe(ganancia =>{
       this.listaGanancia=ganancia;
-      this.spinner.hide();
+      //this.spinner2.hide();
     })
   }
 
@@ -253,7 +253,7 @@ buscaPorNoParte(){
     this.debuncer
       .pipe(debounceTime(300))
       .subscribe(valor => {
-        this.spinner.show();
+        //this.spinner2.show();
         this.productosService.obtenerNoParte(valor).subscribe(noParte => {
           console.log(noParte.length);
           if (noParte.length != 0) {
@@ -268,7 +268,7 @@ buscaPorNoParte(){
             this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'el número de parte no existe en la base de datos.', life: 3000});
           }
 
-          this.spinner.hide()
+          //this.spinner2.hide()
         })
       })
   

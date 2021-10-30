@@ -1,10 +1,10 @@
 <div class="p-grid">
+
     <div class="p-col-12">
         <div class="card">
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="left">
                     <button pButton pRipple label="Nuevo Producto" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
-
                 </ng-template>
             </p-toolbar>
             <p-table #dt [value]="listaProductos" [rows]="10" [paginator]="true" [globalFilterFields]="['sNoParte', 'sProducto']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
