@@ -21,6 +21,7 @@ static consultaGanancia= '/catalogoGanancia';
 static obtenerProductos= '/obtenerProductos';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
+static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 
 
 

@@ -1,0 +1,22 @@
+<h3>Historia de precios del Producto</h3>
+
+<p-table [value]="listaHistoriaPrecioProducto" responsiveLayout="scroll" scrollHeight="400px" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>No Parte</th>
+            <th>Producto</th>
+            <th>Moneda</th>
+            <th>Precio</th>
+            <th>Fecha Registro</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-historia>
+        <tr>
+            <td>{{historia.tcProducto.sNoParte}}</td>
+            <td>{{historia.tcProducto.sProducto}}</td>
+            <td>{{historia.sMoneda}}</td>
+            <td>{{historia.nPrecio}}</td>
+            <td>{{historia.dFecha}}</td>
+        </tr>
+    </ng-template>
+</p-table>

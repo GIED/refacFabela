@@ -6,6 +6,7 @@ import { ProductService } from 'src/app/demo/service/productservice';
 import { ProductoService } from '../../../shared/service/producto.service';
 import { producto } from '../../interfaces/producto.interfaces';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
 
 
 
@@ -36,6 +37,7 @@ export class RegistroProductoComponent implements OnInit {
 
     listaProductos: TcProducto[];
     producto:TcProducto;
+    listaHistoriaPrecioProducto: TcHistoriaPrecioProducto[];
 
 
     constructor( 
@@ -51,14 +53,14 @@ export class RegistroProductoComponent implements OnInit {
 ngOnInit() {
     
     this.obtenerProductos();
-       
+   
 }
 
 obtenerProductos(){ 
     this.spinner.show();
     this.productosService.obtenerProductos().subscribe(productos => {
         this.listaProductos=productos;
-        
+        this.spinner.hide();    
        
     });
     
@@ -83,8 +85,22 @@ registroAlternativos(){
     this.productDialog = true;
     this.titulo="Registro de Productos Alternativos"
 }
-detalleProduct(product: Product) {
-    this.product = {...product};
+detalleProduct(nId:number) {
+
+    this.spinner.show();
+    this.productosService.historiaPrecioProducto(nId).subscribe(productos => {
+        this.listaHistoriaPrecioProducto=productos;
+        this.spinner.hide();
+        console.log(productos);
+       
+    });
+  
+
+
+
+this.detalleDialog = true;
+  
+/*this.product = {...product};
     this.detalleDialog = true;
     this.lineData = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -134,7 +150,7 @@ detalleProduct(product: Product) {
                 }
             },
         }
-    };
+    };*/
 }
 
 
@@ -203,5 +219,8 @@ createId(): string {
     }
     return id;
 }
+
+
+
 
 }
