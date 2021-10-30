@@ -65,45 +65,6 @@ export class ModalProductoComponent implements OnInit {
     this.buscaPorNoParte();
   }
 
-  obtenerCategoriaGeneral(){
-    this.spinner.show();
-    this.catalogoService.obtenerCategoriaGeneral().subscribe(categoriaGeneral =>{
-      this.listaCategoriaGeneral = categoriaGeneral;
-      this.spinner.hide();
-    })
-  }
-
-  obtenerCategoria(){
-    this.spinner.show();
-    if (this.fProducto.nIdCategoriaGeneral.value == null) {
-      this.formulario.get('nIdCategoria').disable();
-      this.spinner.hide();
-    }else{
-      this.catalogoService.obtenerCategoria(this.fProducto.nIdCategoriaGeneral.value).subscribe(categoria =>{
-        this.listaCategoria = categoria;
-        this.formulario.get('nIdCategoria').enable();
-        this.spinner.hide();
-      });
-
-    }
-  }
-
-  obtenerClaveSat(){
-    this.spinner.show();
-    this.catalogoService.obtenerClaveSat().subscribe(claveSat => {
-      this.listaClaveSat = claveSat;
-      this.spinner.hide();
-    })
-  }
-
-  obtenerGanancia(){
-    this.spinner.show();
-    this.catalogoService.obtenerGanancia().subscribe(ganancia =>{
-      this.listaGanancia=ganancia;
-      this.spinner.hide();
-    })
-  }
-
   get validaNoParte() {
     return this.formulario.get('sNoParte').invalid && this.formulario.get('sNoParte').touched;
   }
@@ -151,6 +112,45 @@ export class ModalProductoComponent implements OnInit {
         nIdclavesat:['',[Validators.required]],
     })
     this.formulario.get('nIdCategoria').disable();
+  }
+
+  obtenerCategoriaGeneral(){
+    this.spinner.show();
+    this.catalogoService.obtenerCategoriaGeneral().subscribe(categoriaGeneral =>{
+      this.listaCategoriaGeneral = categoriaGeneral;
+      this.spinner.hide();
+    })
+  }
+
+  obtenerCategoria(){
+    this.spinner.show();
+    if (this.fProducto.nIdCategoriaGeneral.value == null) {
+      this.formulario.get('nIdCategoria').disable();
+      this.spinner.hide();
+    }else{
+      this.catalogoService.obtenerCategoria(this.fProducto.nIdCategoriaGeneral.value).subscribe(categoria =>{
+        this.listaCategoria = categoria;
+        this.formulario.get('nIdCategoria').enable();
+        this.spinner.hide();
+      });
+
+    }
+  }
+
+  obtenerClaveSat(){
+    this.spinner.show();
+    this.catalogoService.obtenerClaveSat().subscribe(claveSat => {
+      this.listaClaveSat = claveSat;
+      this.spinner.hide();
+    })
+  }
+
+  obtenerGanancia(){
+    this.spinner.show();
+    this.catalogoService.obtenerGanancia().subscribe(ganancia =>{
+      this.listaGanancia=ganancia;
+      this.spinner.hide();
+    })
   }
 
   cerrarModal() {

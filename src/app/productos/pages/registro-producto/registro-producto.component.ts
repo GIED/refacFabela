@@ -45,8 +45,7 @@ export class RegistroProductoComponent implements OnInit {
                 private messageService: MessageService,
                 private confirmationService: ConfirmationService,
                 private spinner: NgxSpinnerService) {
-
-                    this.productDialog=false;
+                this.productDialog=false;
 
 }
 
@@ -87,6 +86,8 @@ registroAlternativos(){
 }
 detalleProduct(nId:number) {
 
+    this.detalleDialog = true;
+
     this.spinner.show();
     this.productosService.historiaPrecioProducto(nId).subscribe(productos => {
         this.listaHistoriaPrecioProducto=productos;
@@ -94,11 +95,6 @@ detalleProduct(nId:number) {
         console.log(productos);
        
     });
-  
-
-
-
-this.detalleDialog = true;
   
 /*this.product = {...product};
     this.detalleDialog = true;
