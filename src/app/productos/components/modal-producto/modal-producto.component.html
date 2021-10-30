@@ -45,22 +45,28 @@
                 </div>
                 <div class="p-field p-col-6">
                     <label for="moneda">Moneda</label>
-                    <p-dropdown [options]="listaMoneda" formControlName="sMoneda" placeholder="Seleccine una moneda" optionLabel="name" optionValue="code" [class.is-invalid]="validaMoneda" [showClear]="true"></p-dropdown>
+                    <p-dropdown [options]="listaMoneda" formControlName="sMoneda" placeholder="Seleccine una moneda" (onChange)="calculaPrecioFinal()" optionLabel="name" optionValue="code" [class.is-invalid]="validaMoneda" [showClear]="true"></p-dropdown>
                     <small class="p-error" *ngIf="validaMoneda">*Moneda requerida.</small>
                 </div>
                 <div class="p-field p-col-6">
                     <label for="price">Precio</label>
-                    <p-inputNumber inputId="currency-es" mode="currency" currency="MEX" locale="es-Mx" name="nPrecio" formControlName="nPrecio" [class.is-invalid]="validaPrecio"></p-inputNumber>
+                    <p-inputNumber mode="currency" currency="USD" locale="en-US" name="nPrecio" (onBlur)="calculaPrecioFinal()" formControlName="nPrecio" [class.is-invalid]="validaPrecio"></p-inputNumber>
                     <small class="p-error" *ngIf="validaPrecio">*Precio Requerido</small>
                 </div>
                 <div class="p-field p-col-6">
                     <label for="ganancia">Ganancia</label>
-                    <p-dropdown [options]="listaGanancia" formControlName="nIdGanancia" optionLabel="nGanancia" optionValue="nId" [class.is-invalid]="validaGanancia" placeholder="Seleccine una Ganancia" [showClear]="true">
+                    <p-dropdown [options]="listaGanancia" formControlName="nIdGanancia" optionLabel="nGanancia" (onChange)="calculaPrecioFinal()" optionValue="nId" [class.is-invalid]="validaGanancia" placeholder="Seleccine una Ganancia" [showClear]="true">
                         <ng-template let-ganancia pTemplate="item">
                             {{ganancia.nGanancia | percent}}
                         </ng-template>
                     </p-dropdown>
                     <small class="p-error" *ngIf="validaGanancia">*Ganancia requerida</small>
+                </div>
+                <div class="p-field p-col-6 p-text-center">
+                    <label for="price">Precio Final</label>
+                    <br>
+                    <strong>{{precioFinal | currency}}</strong>
+
                 </div>
             </div>
         </form>

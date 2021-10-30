@@ -33,6 +33,11 @@ export class CatalogoService {
     return this.http.get<TcGanancia[]>(url);
   }
 
+  obtenerGananciaId(nId: number){
+    let url= environment.servicios.apiRefacFabela + locator.consultaGananciaId+'nId='+nId;
+    return this.http.get<TcGanancia>(url);
+  }
+
   obtenerClaveSat(){
     let url= environment.servicios.apiRefacFabela + locator.consultaClaveSat;
     return this.http.get<TcClavesat[]>(url);

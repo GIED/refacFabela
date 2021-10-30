@@ -45,6 +45,8 @@ export class ModalProductoComponent implements OnInit {
   listaNoParte:TcProducto[];
   debuncer: Subject<string> = new Subject();
   mostrarSugerencias:boolean=false;
+  ganancia:number;
+  precioFinal: number;
 
   constructor(private fb: FormBuilder, 
               private catalogoService: CatalogoService, 
@@ -110,6 +112,7 @@ export class ModalProductoComponent implements OnInit {
         nEstatus:['',[]],
         dFecha:['',[]],
         nIdclavesat:['',[Validators.required]],
+        
     })
     this.formulario.get('nIdCategoria').disable();
   }
@@ -287,6 +290,43 @@ valorSeleccionado(){
         this.mostrarSugerencias=false;
     }
 }
+}
+
+
+
+calculaPrecioFinal():void{
+ if (this.fProducto.nPrecio.valid  && this.fProducto.sMoneda.valid &&this.fProducto.nIdGanancia.valid) {
+
+   let precio: number; 
+   let precioFinalSinIva: number;
+   let iva: number;
+
+   
+
+
+   
+   this.catalogoService.obtenerGananciaId(this.fProducto.nIdGanancia.value).subscribe(resp => {this.ganancia=resp.nGanancia});
+  
+   
+
+     this.fProducto.sMoneda.value === 'DOLAR' ? precio = this.fProducto.nPrecio.value * 25: precio = this.fProducto.nPrecio.value;
+
+     precioFinalSinIva = (precio * this.ganancia) + precio;
+
+     iva=precioFinalSinIva * 0.16;
+
+     this.precioFinal=precioFinalSinIva + iva;
+
+     this.precioFinal.toFixed(2);
+
+     
+
+
+
+
+  
+   
+ } 
 }
 
 
