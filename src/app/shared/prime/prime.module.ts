@@ -174,6 +174,7 @@ FullCalendarModule.registerPlugins([
         TreeModule,
         TreeTableModule,
         VirtualScrollerModule,
+        
   ]
 })
 export class PrimeModule { }

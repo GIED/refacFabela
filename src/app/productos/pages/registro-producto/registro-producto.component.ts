@@ -50,16 +50,17 @@ export class RegistroProductoComponent implements OnInit {
 }
 
 ngOnInit() {
-    
+  
     this.obtenerProductos();
    
 }
 
 obtenerProductos(){ 
-    this.spinner.show();
+    console.log("entre a este metodo");
+    this.spinner.show;
     this.productosService.obtenerProductos().subscribe(productos => {
         this.listaProductos=productos;
-        this.spinner.hide();    
+       this.spinner.hide();
        
     });
     
