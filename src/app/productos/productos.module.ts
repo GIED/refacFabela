@@ -1,3 +1,4 @@
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -8,15 +9,18 @@ import { AlternativosProductoComponent } from './pages/alternativos-producto/alt
 import { PrimeModule } from '../shared/prime/prime.module';
 import { ModalProductoComponent } from './components/modal-producto/modal-producto.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HistoriaPrecioProductoComponent } from './components/historia-precio-producto/historia-precio-producto.component';
+import { InputBusquedaComponent } from './components/input-busqueda/input-busqueda.component';
 
 
 @NgModule({
-  declarations: [RegistroProductoComponent, HistorialProductoComponent, AlternativosProductoComponent, ModalProductoComponent],
+  declarations: [RegistroProductoComponent, HistorialProductoComponent, AlternativosProductoComponent, ModalProductoComponent, HistoriaPrecioProductoComponent, InputBusquedaComponent],
   imports: [
     CommonModule,
     ProductosRoutingModule,
     PrimeModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSpinnerModule
   ],
   exports:[
     ModalProductoComponent

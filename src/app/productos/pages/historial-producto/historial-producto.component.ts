@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
+import { ProductoService } from 'src/app/shared/service/producto.service';
 
 @Component({
   selector: 'app-historial-producto',
@@ -14,11 +17,14 @@ lineChartOptions:any;
   products: Product[];
   lineData:any;
   lineOptions:any;
+  listaHistoriaPrecioProducto: TcHistoriaPrecioProducto[];
 
   constructor(private productService: ProductService, private messageService: MessageService,
-    private confirmationService: ConfirmationService) { }
+    private confirmationService: ConfirmationService, private spinner: NgxSpinnerService, private productosService:ProductoService) { }
 
   ngOnInit() {
+
+       
     this.productService.getProducts().then(data => this.products = data);
 
     this.lineData = {
@@ -67,4 +73,18 @@ lineChartOptions:any;
 
   }
 
+//se obtine la hsitoria de ingreso del producto  
+historiaPrecioProducto(nId:number) {
+
+    console.log("llegue"+ nId);
+    
+
+    this.spinner.show();
+    this.productosService.historiaPrecioProducto(nId).subscribe(productos => {
+        this.listaHistoriaPrecioProducto=productos;
+        this.spinner.hide();
+        console.log(productos);
+       
+    });
+}
 }

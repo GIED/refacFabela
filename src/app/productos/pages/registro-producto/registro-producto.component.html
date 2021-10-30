@@ -41,7 +41,7 @@
                         <td><span class="p-column-title">Status</span> {{product.nPrecio | currency:'USD'}}
                         </td>
                         <td>
-                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2" (click)="detalleProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2" (click)="detalleProduct(product.nId)"></button>
                             <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning" (click)="alternativosProduct(product)"></button>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="ejecuta.editProducto(product,'Actualización de Producto')"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
@@ -82,26 +82,7 @@
 
 
 
-                    <p-table [value]="products" responsiveLayout="scroll" scrollHeight="400px" styleClass="p-datatable-sm">
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th>No Parte</th>
-                                <th>Nombre Parte</th>
-                                <th>Moneda</th>
-                                <th>Precio</th>
-                                <th>Fecha Registro</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-product>
-                            <tr>
-                                <td>{{product.code}}</td>
-                                <td>{{product.name}}</td>
-                                <td>PESO</td>
-                                <td>{{product.price}}</td>
-                                <td>10/10/2021</td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
+                    <app-historia-precio-producto [listaHistoriaPrecioProducto]= "listaHistoriaPrecioProducto" ></app-historia-precio-producto>
 
                 </div>
 

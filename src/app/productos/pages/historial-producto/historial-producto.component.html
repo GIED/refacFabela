@@ -6,7 +6,7 @@
             <p-panel header="Datos del Producto">
                
             <div class="p-col-12 p-mb-4 p-lg-4 p-mb-lg-0">
-             <input class="p-mr-2 p-d-inline p-inputtext p-component" type="text" pInputText placeholder="No.Parte del producto"> <button class="p-mr-2 p-d-inline p-inputtext p-component" pButton pRipple type="button" label="Buscar" class="p-button-success p-mr-2 p-mb-2"></button>
+                <app-input-busqueda (consultarPorId)="historiaPrecioProducto($event)"></app-input-busqueda>
             </div>
                 <div class="p-grid">
                     <div class="p-col-12">                       
@@ -47,28 +47,10 @@
 
     <div class="p-col-12 p-lg-6 p-md-6">
         <div class="card widget-tasks">
-            <div class="p-text-center">
-                <h3>Historial de ventas del producto</h3>
-            </div>
-            
-            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="430px">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>RFC</th>
-                        <th>Razón Social</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-product>
-                    <tr>
-                        <td>{{product.code}}</td>
-                        <td>{{product.name}}</td>
-                        <td>{{product.price | currency:'USD'  }}</td>
-                        <td>{{product.quantity}}</td>
-                    </tr>
-                </ng-template>
-            </p-table>
+           
+           
+            <app-historia-precio-producto [listaHistoriaPrecioProducto]= "listaHistoriaPrecioProducto" ></app-historia-precio-producto>
+
 
 
 
