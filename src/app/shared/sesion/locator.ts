@@ -23,6 +23,7 @@ static obtenerProductos= '/obtenerProductos';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
+static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
 
 
 

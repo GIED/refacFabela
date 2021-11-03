@@ -36,6 +36,7 @@ export class ModalProductoComponent implements OnInit {
   formulario:FormGroup;
 
   tcProducto:TcProducto;
+  tcProductoCalculo:TcProducto;
 
   listaMoneda: Moneda[];
   listaCategoriaGeneral:TcCategoriaGeneral[];
@@ -55,7 +56,7 @@ export class ModalProductoComponent implements OnInit {
               ) { 
     this.crearFormulario();
     this.listaMoneda =[
-      {name: 'DOLAR', code:'DOLAR'},
+      {name: 'USD', code:'USD'},
       {name: 'PESO', code:'PESO'},
     ]
   }
@@ -208,9 +209,10 @@ export class ModalProductoComponent implements OnInit {
     this.fProducto.nIdusuario.setValue(productoEditar.nIdusuario);
     this.fProducto.nEstatus.setValue(productoEditar.nEstatus);
     this.fProducto.dFecha.setValue(productoEditar.dFecha);
-    this.fProducto.nIdclavesat.setValue(productoEditar.nIdclavesat);
+    this.fProducto.nIdclavesat.setValue(productoEditar.nIdclavesat);    
     this.obtenerCategoria();
     this.formulario.get('nIdCategoria').enable();
+    this.precioFinal=productoEditar.nPrecioConIva;
 
 
 
@@ -301,23 +303,14 @@ calculaPrecioFinal():void{
    let precioFinalSinIva: number;
    let iva: number;
 
-   
-
-
-   
-   this.catalogoService.obtenerGananciaId(this.fProducto.nIdGanancia.value).subscribe(resp => {this.ganancia=resp.nGanancia});
-  
-   
-
-     this.fProducto.sMoneda.value === 'DOLAR' ? precio = this.fProducto.nPrecio.value * 25: precio = this.fProducto.nPrecio.value;
-
-     precioFinalSinIva = (precio * this.ganancia) + precio;
-
-     iva=precioFinalSinIva * 0.16;
-
-     this.precioFinal=precioFinalSinIva + iva;
+   this.productosService.simuladorPrecioProducto(this.tcProductoCalculo=this.formulario.value).subscribe(resp=>{
+    this.tcProductoCalculo=resp;
+    this.precioFinal=this.tcProductoCalculo.nPrecioConIva;
 
      this.precioFinal.toFixed(2);
+
+   });
+  
 
      
 

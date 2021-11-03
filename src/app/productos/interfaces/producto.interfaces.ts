@@ -13,5 +13,6 @@ n_ganancia: number,
 n_idusuario: number, 
 n_estatus: number, 
 d_fecha: Date, 
-n_idclavesat: number
+n_idclavesat: number,
+n_precioConIva:number
 }

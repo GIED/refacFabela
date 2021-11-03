@@ -23,4 +23,7 @@ tcCategoriaGeneral: TcCategoriaGeneral;
 tcGanancia: TcGanancia;
 tcUsuario: Usuarios;
 tcClavesat: TcClavesat;
+nPrecioPeso:number;
+nPrecioSinIva:number;
+nPrecioConIva:number;
 }

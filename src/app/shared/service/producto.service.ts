@@ -31,6 +31,11 @@ export class ProductoService {
     let url = environment.servicios.apiRefacFabela + locator.obtenerHistoriaPrecioProducto+'n_id='+nId;
     return this.http.get<TcHistoriaPrecioProducto[]>(url);
   }
+
+  simuladorPrecioProducto(producto: TcProducto){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerSimuladorPrecioProducto;
+    return this.http.post<TcProducto>(url,producto);
+  }
   
 
 
