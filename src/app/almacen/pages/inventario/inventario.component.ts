@@ -3,7 +3,17 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
+import { AnaquelService } from 'src/app/shared/service/anaquel.service';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
+import { NivelService } from 'src/app/shared/service/nivel.service';
+import { TcBodega } from '../../../productos/model/TcBodega';
+import { TcAnaquel } from '../../../productos/model/TcAnaquel';
+import { TcNivel } from 'src/app/productos/model/TcNivel';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { BodegaProductosService } from '../../../shared/service/bodega-productos.service';
+import { TwProductoBodega } from '../../../productos/model/TwProductoBodega';
+import { producto } from '../../../productos/interfaces/producto.interfaces';
 
 @Component({
   selector: 'app-inventario',
@@ -60,57 +70,58 @@ export class InventarioComponent implements OnInit {
   cols: any[];
 
 
-    constructor(private BodegasService: BodegasService, private productService: ProductService, private messageService: MessageService,
+  listaBodegas: TcBodega[];
+  listaAnaquel: TcAnaquel[];
+  listaNivel: TcNivel[];
+  listaProductos: TwProductoBodega[]=[];
+
+  bodega:number;
+  anaquel:number;
+  nivel:number;
+
+
+    constructor(private bodegasService: BodegasService, 
+                private anaquelService:AnaquelService,
+                private nivelService:NivelService,
+                private bodegasProductosService:BodegaProductosService, 
+                private spinner: NgxSpinnerService, private productService: ProductService, private messageService: MessageService,
         private confirmationService: ConfirmationService) {
         
     }
 
     ngOnInit() {
-
-
-        this.BodegasService.getCountries().then(countries => {
-            this.countries = countries;
-     this.productService.getProducts().then(data => this.products = data);
-
-      this.cols = [
-          { field: 'rfc', header: 'rfc' },
-          { field: 'razon_social', header: 'razon_social' },
-          { field: 'direccion', header: 'direccion' },
-          { field: 'telefono', header: 'telefono' },
-          { field: 'correo', header: 'correo' }
-      ];
-
-
-            
+        
+        
+        this.spinner.show()
+        this.bodegasService.obtenerBodegas().subscribe(bodegas=>{
+            this.listaBodegas=bodegas;
         });
 
-     
+        this.anaquelService.obtenerAnanquel().subscribe(anaquel =>{
+            this.listaAnaquel=anaquel;
+        });
 
-        this.cities = [
-            {label: 'New York', value: {id: 1, name: 'New York', code: 'NY'}},
-            {label: 'Rome', value: {id: 2, name: 'Rome', code: 'RM'}},
-            {label: 'London', value: {id: 3, name: 'London', code: 'LDN'}},
-            {label: 'Istanbul', value: {id: 4, name: 'Istanbul', code: 'IST'}},
-            {label: 'Paris', value: {id: 5, name: 'Paris', code: 'PRS'}}
-        ];
+        this.nivelService.obtenerNivel().subscribe(nivel =>{
+            this.listaNivel=nivel;
+        });
 
-        this.paymentOptions = [
-            {name: 'Option 1', value: 1},
-            {name: 'Option 2', value: 2},
-            {name: 'Option 3', value: 3}
-        ];
+        this.spinner.hide();
+      
+    }
 
+    consultaProducto(){
+       
 
+        if (this.bodega != undefined && this.anaquel != undefined && this.nivel != undefined) {
 
-        this.productService.getProducts().then(data => this.products = data);
+            console.log("entro al if");
 
-        this.cols = [
-            { field: 'rfc', header: 'rfc' },
-            { field: 'razon_social', header: 'razon_social' },
-            { field: 'direccion', header: 'direccion' },
-            { field: 'telefono', header: 'telefono' },
-            { field: 'correo', header: 'correo' }
-        ];
+            this.bodegasProductosService.consultaInventario(this.bodega, this.anaquel, this.nivel).subscribe(productos => {
+                this.listaProductos = productos;
+            });
+
+        }
+
     }
   
     

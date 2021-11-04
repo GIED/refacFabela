@@ -1,0 +1,27 @@
+<h3>Producto por bodega</h3>
+
+<p-table [value]="listaProductoBodega" responsiveLayout="scroll" scrollHeight="400px" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Producto</th>
+            <th>Bodega</th>
+            <th>Anaquel</th>
+            <th>Nivel</th>
+            <th>Stock</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-bodega>
+        <tr>
+            <td>{{bodega.tcProducto.sProducto}}</td>
+            <td>{{bodega.tcBodega.sBodega}}</td>
+            <td>{{bodega.tcAnaquel.sAnaquel}}</td>
+            <td>{{bodega.tcNivel.sNivel}}</td>
+            <td>{{bodega.nCantidad}}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+        <div class="p-col-12 p-text-right">
+            <strong>Stock Total: </strong> {{stockTotal}}
+        </div>
+    </ng-template>
+</p-table>

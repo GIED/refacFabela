@@ -11,10 +11,11 @@ import { ModalProductoComponent } from './components/modal-producto/modal-produc
 import { ReactiveFormsModule } from '@angular/forms';
 import { HistoriaPrecioProductoComponent } from './components/historia-precio-producto/historia-precio-producto.component';
 import { InputBusquedaComponent } from './components/input-busqueda/input-busqueda.component';
+import { ModalProductosBodegaComponent } from './components/modal-productos-bodega/modal-productos-bodega.component';
 
 
 @NgModule({
-  declarations: [RegistroProductoComponent, HistorialProductoComponent, AlternativosProductoComponent, ModalProductoComponent, HistoriaPrecioProductoComponent, InputBusquedaComponent],
+  declarations: [RegistroProductoComponent, HistorialProductoComponent, AlternativosProductoComponent, ModalProductoComponent, HistoriaPrecioProductoComponent, InputBusquedaComponent, ModalProductosBodegaComponent],
   imports: [
     CommonModule,
     ProductosRoutingModule,

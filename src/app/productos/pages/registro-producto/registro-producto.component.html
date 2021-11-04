@@ -61,29 +61,10 @@
         <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Detalle del Producto" [modal]="true" styleClass="p-fluid">
             <ng-template pTemplate="content">
                 <div class="card">
-
-                    <div class="p-text-center">
-                        <h3>Historia de precios del Producto</h3>
-                    </div>
-                    <div class="p-col-12 p-lg-12">
-
-
-                        <div class="card">
-
-                            <div class=" p-justify-center">
-                                <p-chart id="dashboard-chart" type="line" [data]="lineData" [options]="lineOptions">
-                                </p-chart>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-
-
-
+                    <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal"></app-modal-productos-bodega>
+                </div>
+                <div class="card">
                     <app-historia-precio-producto [listaHistoriaPrecioProducto]="listaHistoriaPrecioProducto"></app-historia-precio-producto>
-
                 </div>
 
                 <div class="card">
@@ -113,10 +94,8 @@
 
                 </div>
             </ng-template>
-
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-
             </ng-template>
         </p-dialog>
 

@@ -7,6 +7,8 @@ import { ProductoService } from '../../../shared/service/producto.service';
 import { producto } from '../../interfaces/producto.interfaces';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
+import { BodegasService } from '../../../shared/service/bodegas.service';
+import { TwProductoBodega } from '../../model/TwProductoBodega';
 
 
 
@@ -38,10 +40,13 @@ export class RegistroProductoComponent implements OnInit {
     listaProductos: TcProducto[];
     producto:TcProducto;
     listaHistoriaPrecioProducto: TcHistoriaPrecioProducto[];
+    listaProductoBodega:TwProductoBodega[];
+    stockTotal:number=0;
 
 
     constructor( 
                 private productosService: ProductoService, 
+                private bodegasService:BodegasService,
                 private messageService: MessageService,
                 private confirmationService: ConfirmationService,
                 private spinner: NgxSpinnerService,) {
@@ -92,8 +97,15 @@ detalleProduct(nId:number) {
     this.productosService.historiaPrecioProducto(nId).subscribe(productos => {
         this.listaHistoriaPrecioProducto=productos;
         this.spinner.hide();
-        console.log(productos);
        
+    });
+
+    this.bodegasService.obtenerProductoBodegas(nId).subscribe(productoBodega =>{
+        this.listaProductoBodega=productoBodega;
+        for (const key in productoBodega) {
+            this.stockTotal += this.listaProductoBodega[key].nCantidad;
+        }
+        this.spinner.hide();
     });
   
 /*this.product = {...product};

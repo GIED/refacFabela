@@ -1,5 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { locator } from '../sesion/locator';
+import { TwProductoBodega } from '../../productos/model/TwProductoBodega';
+import { TcBodega } from '../../productos/model/TcBodega';
 
 
 @Injectable({
@@ -9,10 +13,13 @@ export class BodegasService {
 
   constructor(private http: HttpClient) { }
 
-    getCountries() {
-    return this.http.get<any>('../data/bodegas.json')
-      .toPromise()
-      .then(res => res.data as any[])
-      .then(data => data);
+    obtenerBodegas(){
+      let url = environment.servicios.apiRefacFabela + locator.obtenerBodegas;
+      return this.http.get<TcBodega[]>(url);
+    }
+
+    obtenerProductoBodegas(id: number){
+      let url = environment.servicios.apiRefacFabela + locator.obtenerProductoBodegas+ 'id='+id;
+      return this.http.get<TwProductoBodega[]>(url);
     }
 }
