@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
+import { ThirdPartyDraggable } from '@fullcalendar/interaction';
 
 
 
@@ -92,6 +93,7 @@ registroAlternativos(){
 detalleProduct(nId:number) {
 
     this.detalleDialog = true;
+    this.stockTotal=0;
 
     this.spinner.show();
     this.productosService.historiaPrecioProducto(nId).subscribe(productos => {
