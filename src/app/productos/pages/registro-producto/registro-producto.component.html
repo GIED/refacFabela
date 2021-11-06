@@ -108,7 +108,9 @@
 
             </ng-template>
         </p-dialog>
+        <ng-template [ngIf]="muestraConfirmDialog">
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+        </ng-template>
 
-        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
     </div>
 </div>

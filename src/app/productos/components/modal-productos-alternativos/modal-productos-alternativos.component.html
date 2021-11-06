@@ -1,5 +1,4 @@
 <div class="card">
-
     <p-toolbar styleClass="p-mb-4">
         <ng-template pTemplate="left">
             <button pButton pRipple label="nuevo" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="registroAlternativos()"></button>
@@ -19,6 +18,7 @@
                 <th>Nombre parte</th>
                 <th>Marca</th>
                 <th>Precio</th>
+                <th></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-product>
@@ -28,11 +28,18 @@
                 <td>{{product.tcProductoAlternativo.sProducto}}</td>
                 <td>{{product.tcProductoAlternativo.sMarca}}</td>
                 <td>{{product.tcProductoAlternativo.nPrecioConIva}}</td>
+                <td><button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button></td>
 
             </tr>
         </ng-template>
     </p-table>
 
 </div>
+<ng-template [ngIf]="muestraConfirmDialogAlter">
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+</ng-template>
+
+
+
 
 <app-modal-producto #ejecuta [productDialog]="productDialog" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>

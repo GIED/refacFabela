@@ -18,18 +18,11 @@ import { TwProductoBodega } from '../../model/TwProductoBodega';
 })
 export class RegistroProductoComponent implements OnInit {
 
-    productDialog: boolean;
-    detalleDialog: boolean;
-    alternativosDialog: boolean;
-
-    
-
+    productDialog: boolean=false;
+    detalleDialog: boolean=false;
+    alternativosDialog: boolean=false;
+    muestraConfirmDialog:boolean=false;
     selectedProducts: TcProducto[];
-
-   
-
-
-
     cols: any[];
     lineOptions:any;
     lineData: any;
@@ -53,7 +46,6 @@ export class RegistroProductoComponent implements OnInit {
                 private confirmationService: ConfirmationService,
                 private spinner: NgxSpinnerService,) {
                 this.obtenerProductos();
-                this.productDialog=false;
 }
 
 ngOnInit() {
@@ -202,6 +194,7 @@ saveProduct(producto: TcProducto) {
 }
 
 deleteProduct(product: TcProducto) {
+    this.muestraConfirmDialog=true;
     this.confirmationService.confirm({
         message: 'Desea borrar el producto ' + product.sProducto + '?',
         header: 'Confirmar',
@@ -213,6 +206,7 @@ deleteProduct(product: TcProducto) {
             this.productosService.guardaProducto(product).subscribe(productoEliminado =>{
                 this.listaProductos = this.listaProductos.filter(val => val.nId !== product.nId);
                 this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
+                this.muestraConfirmDialog=false;
             })
         }
     });
