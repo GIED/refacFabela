@@ -65,9 +65,12 @@ export class InventarioComponent implements OnInit {
 
   selectedProducts: Product[];
 
+  productoSeleccion: TwProductoBodega[];
+
   submitted: boolean;
 
   cols: any[];
+  
 
 
   listaBodegas: TcBodega[];

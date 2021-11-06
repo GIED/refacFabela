@@ -10,6 +10,7 @@ import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
 import { ThirdPartyDraggable } from '@fullcalendar/interaction';
+import { Customer } from 'src/app/demo/domain/customer';
 
 
 
@@ -28,6 +29,8 @@ export class RegistroProductoComponent implements OnInit {
     product: Product;
 
     selectedProducts: Product[];
+    selectedCustomers1: Customer[];
+   
 
     submitted: boolean;
 

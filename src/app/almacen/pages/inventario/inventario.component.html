@@ -27,56 +27,78 @@
 
     </div>
     <div class="p-grid">
+        
+
+
         <div class="p-col-12">
-
-
-
             <div class="card">
+                <p-toolbar styleClass="p-mb-4">
+                    <ng-template pTemplate="right">
+                        <button pButton pRipple label="Exportar clientes" icon="pi pi-upload" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                     
 
-
-                <p-table #dt [value]="listaProductos" [rows]="10" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" [(selection)]="selectedProducts" [rowHover]="true" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-                    [showCurrentPageReport]="true">
+                    </ng-template>
+                </p-toolbar>
+               
+                <p-table #dt [value]="listaProductos"  dataKey="tcProducto.sNoParte"
+                         styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [paginator]="true"  [columns]="cols"  [(selection)]="productoSeleccion" [rowHover]="true"
+                         [filterDelay]="0" [globalFilterFields]="['tcProducto.sNoParte','producto.tcProducto.sProducto','tcProducto.sMarca', 'nCantidad']" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"  [showCurrentPageReport]="true" > 
                     <ng-template pTemplate="caption">
                         <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                            <h5 class="p-m-0">Productos Registrados</h5>
+                            Productos de la ubicación
                             <span class="p-input-icon-left">
-							<i class="pi pi-search"></i>
-							<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar cliente" />
-						</span>
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                               placeholder="Buscar Producto"/>
+                    </span>
                         </div>
                     </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width: 3rem">
-
+                            
+                            <th pSortableColumn="tcProducto.sNoParte">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    No Parte
+                                    <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon>
+                                    <p-columnFilter type="text" field="tcProducto.sNoParte" display="menu" class="p-ml-auto"></p-columnFilter>
+                                </div>
                             </th>
-                            <th pSortableColumn="name">NO.PARTE </th>
-                            <!--<th>Image</th>-->
-                            <th pSortableColumn="price">DESCRIPCION
-                                <p-sortIcon field="price"></p-sortIcon>
+                            <th pSortableColumn="tcProducto.sProducto">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Producto
+                                    <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
+                                    <p-columnFilter type="text" field="tcProducto.sProducto" display="menu" class="p-ml-auto"></p-columnFilter>
+                                </div>
                             </th>
-                            <th pSortableColumn="category">MARCA
-                                <p-sortIcon field="category"></p-sortIcon>
+                            <th pSortableColumn="tcProducto.sMarca">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Producto
+                                    <p-sortIcon field="tcProducto.sMarca"></p-sortIcon>
+                                    <p-columnFilter type="text" field="tcProducto.sMarca" display="menu" class="p-ml-auto"></p-columnFilter>
+                                </div>
                             </th>
-                            <th pSortableColumn="rating">UBICACION
-                                <p-sortIcon field="rating"></p-sortIcon>
+                            <th pSortableColumn="date">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Ubicación
+                                   
+                                </div>
                             </th>
-                            <th pSortableColumn="inventoryStatus">CANTIDAD
-                                <p-sortIcon field="inventoryStatus"></p-sortIcon>
+                            <th pSortableColumn="nCantidad">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Cantidad
+                                    <p-sortIcon field="nCantidad"></p-sortIcon>
+                                    <p-columnFilter type="text" field="nCantidad" display="menu" class="p-ml-auto"></p-columnFilter>
+                                </div>
                             </th>
-                            <th></th>
+                          
+                            <th style="width: 8rem"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-producto>
-                        <tr>
-                            <td>
-
-                            </td>
+                        <tr class="p-selectable-row">
                             <td><span class="p-column-title">Name</span> {{producto.tcProducto.sNoParte}}
                             </td>
-                            <!--	<td><span class="p-column-title">Image</span>
-								<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
-							</td>-->
+                          
                             <td><span class="p-column-title">Price</span> {{producto.tcProducto.sProducto}}
                             </td>
                             <td><span class="p-column-title">Category</span> {{producto.tcProducto.sMarca}}
@@ -85,35 +107,26 @@
                             </td>
                             <td><span class="p-column-title">Status</span> {{producto.nCantidad}}
                             </td>
-                            <td>
-                                <div class="p-col-12 p-md-4">
-                                    <div class="p-field-checkbox">
-                                        <p-checkbox name="group1" value="New York" [(ngModel)]="valCheck" id="ny" (click)="editProduct(product)"></p-checkbox>
-
-                                    </div>
-                                </div>
-                                <!--<button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(product)"></button>-->
-                                <!--<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>-->
-                            </td>
+                           
                         </tr>
                     </ng-template>
-
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6">No hay registros para mostrar.</td>
+                        </tr>
+                    </ng-template>
 
                     <ng-template pTemplate="summary">
                         <div class="p-d-flex p-ai-center p-jc-between">
                             En total hay {{listaProductos ? listaProductos.length : 0 }} productos.
                         </div>
                     </ng-template>
+               
+                    
                 </p-table>
-                <p-toolbar styleClass="p-mb-4">
-
-
-                    <ng-template pTemplate="right">
-                        <button pButton pRipple label="Exportar clientes" icon="pi pi-upload" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
-                    </ng-template>
-                </p-toolbar>
+                
+               
             </div>
-
             <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Datos del cliente" [modal]="true" styleClass="p-fluid">
                 <ng-template pTemplate="content">
                     <img [src]="'assets/demo/images/product/' + product.image" [alt]="product.image" class="product-image" *ngIf="product.image">
@@ -169,6 +182,11 @@
 
             <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
         </div>
+   
+   
+   
+   
+   
     </div>
 
 
