@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';

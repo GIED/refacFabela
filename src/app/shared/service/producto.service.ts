@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { locator } from '../sesion/locator';
 import { TcHistoriaPrecioProducto } from '../../productos/model/TcHistoriaPrecioProducto';
+import { TwProductoAlternativo } from 'src/app/productos/model/TwProductoAlternativo';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,11 @@ export class ProductoService {
   obtenerProductos(){
     let url = environment.servicios.apiRefacFabela + locator.obtenerProductos;
     return this.http.get<TcProducto[]>(url);
+  }
+
+  obtenerProductosAlternativos(nId:number){
+    let url =environment.servicios.apiRefacFabela + locator.obtenerProductosalternativosId+'nId='+nId;
+    return this.http.get<TwProductoAlternativo[]>(url);
   }
 
   obtenerNoParte(noParte: string){
@@ -35,6 +41,11 @@ export class ProductoService {
   simuladorPrecioProducto(producto: TcProducto){
     let url = environment.servicios.apiRefacFabela + locator.obtenerSimuladorPrecioProducto;
     return this.http.post<TcProducto>(url,producto);
+  }
+
+  guardaProductoAlternativo(productoAlternativo: TwProductoAlternativo){
+    let url = environment.servicios.apiRefacFabela + locator.guardarProductoAlternativo;
+    return this.http.post<TwProductoAlternativo>(url,productoAlternativo);
   }
   
 

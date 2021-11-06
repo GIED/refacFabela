@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
+import { TwProductoAlternativo } from '../../model/TwProductoAlternativo';
 
 
 
@@ -21,27 +22,31 @@ import { TwProductoBodega } from '../../model/TwProductoBodega';
 export class RegistroProductoComponent implements OnInit {
 
     productDialog: boolean;
+    detalleDialog: boolean;
+    alternativosDialog: boolean;
 
-    products: Product[];
+    //products: Product[];
 
-    product: Product;
+    //product: Product;
 
     selectedProducts: Product[];
 
-    submitted: boolean;
+
 
     cols: any[];
-    detalleDialog: boolean;
     lineOptions:any;
     lineData: any;
-    alternativosDialog: boolean;
-    titulo:string;
-
-    listaProductos: TcProducto[];
+    
     producto:TcProducto;
+    listaProductos: TcProducto[];
     listaHistoriaPrecioProducto: TcHistoriaPrecioProducto[];
     listaProductoBodega:TwProductoBodega[];
+    
+    
+    titulo:string;
     stockTotal:number=0;
+    nIdProducto:number;
+    sProducto:string;
 
 
     constructor( 
@@ -78,17 +83,20 @@ openNew() {
 }
 
 
-alternativosProduct(product: Product) {
-    this.product = {...product};
-    this.alternativosDialog = true;
+alternativosProduct(nId:number , sProducto:string) {
+
+    console.log(nId);
+    console.log(sProducto);
+
+    this.nIdProducto=nId;
+    this.sProducto=sProducto;
+
+    console.log(this.nIdProducto);
+    console.log(this.sProducto);
    
+    this.alternativosDialog = true;   
 }
-registroAlternativos(){
-    this.product = {};
-    this.submitted = false;
-    this.productDialog = true;
-    this.titulo="Registro de Productos Alternativos"
-}
+
 detalleProduct(nId:number) {
 
     this.detalleDialog = true;
@@ -165,6 +173,12 @@ detalleProduct(nId:number) {
 
 hideDialog(valor: boolean) {
     this.productDialog = valor;
+}
+hideDialogAlternativos() {
+    this.alternativosDialog = false;
+}
+hideDialogDetalle() {
+    this.detalleDialog = false;
 }
 
 saveProduct(producto: TcProducto) {

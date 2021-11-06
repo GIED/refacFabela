@@ -1,4 +1,4 @@
-<p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" closable="false" styleClass="p-fluid">
+<p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <p-toast></p-toast>
         <form [formGroup]="formulario" autocomplete="off">

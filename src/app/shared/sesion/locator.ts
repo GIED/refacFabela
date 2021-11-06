@@ -24,6 +24,9 @@ static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
+//productos alternativos
+static obtenerProductosalternativosId='/obtenerProductosAlternativos?';
+static guardarProductoAlternativo = '/guardarProductoAlternativo'
 //api Bodegas
 static obtenerBodegas= '/catalogoBodegas';
 static obtenerProductoBodegas = '/obtenerProductoBodegas?';
