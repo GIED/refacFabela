@@ -51,7 +51,8 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
         
     ],
     providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        //quita el # de la url
+        //{provide: LocationStrategy, useClass: HashLocationStrategy},
        
          ProductService,MessageService, ConfirmationService,
     ],
