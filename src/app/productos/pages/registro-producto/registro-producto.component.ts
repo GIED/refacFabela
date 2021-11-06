@@ -22,6 +22,12 @@ export class RegistroProductoComponent implements OnInit {
     detalleDialog: boolean;
     alternativosDialog: boolean;
 
+    
+
+    selectedProducts: TcProducto[];
+
+   
+
 
 
     cols: any[];
