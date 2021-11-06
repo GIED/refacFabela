@@ -88,9 +88,7 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Historial', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/historial-producto']
                     },
-                    {
-                        label: 'Alternativos', icon: 'pi pi-fw pi-clone', routerLink: ['../productos/alternativo-producto']
-                    },
+                   
                 ]
             },
             {

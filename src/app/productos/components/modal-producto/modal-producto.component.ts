@@ -264,7 +264,7 @@ buscaPorNoParte(){
           if (noParte.length != 0) {
             this.listaNoParte=noParte;
             this.mostrarSugerencias=true;
-            this.messageService.add({severity: 'info', summary: 'coincidencias', detail: 'hay números de parte que coinciden', life: 3000});
+            this.messageService.add({severity: 'info', summary: 'coincidencias', detail: 'hay números de parte que coincidan', life: 3000});
            
   
           }else{
