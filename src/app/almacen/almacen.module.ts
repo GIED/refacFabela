@@ -19,6 +19,7 @@ import { ProductService } from '../demo/service/productservice';
     TraspasosComponent,
     InventarioComponent,
     EntregaDeMercanciaComponent,
+
  
    
   ],

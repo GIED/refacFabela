@@ -2,14 +2,11 @@ import { TcProducto } from './../../model/TcProducto';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
-import { ProductService } from 'src/app/demo/service/productservice';
 import { ProductoService } from '../../../shared/service/producto.service';
-import { producto } from '../../interfaces/producto.interfaces';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
-import { TwProductoAlternativo } from '../../model/TwProductoAlternativo';
 
 
 
@@ -24,12 +21,6 @@ export class RegistroProductoComponent implements OnInit {
     productDialog: boolean;
     detalleDialog: boolean;
     alternativosDialog: boolean;
-
-    //products: Product[];
-
-    //product: Product;
-
-    selectedProducts: Product[];
 
 
 
@@ -100,6 +91,7 @@ alternativosProduct(nId:number , sProducto:string) {
 detalleProduct(nId:number) {
 
     this.detalleDialog = true;
+    this.stockTotal=0;
 
     this.spinner.show();
     this.productosService.historiaPrecioProducto(nId).subscribe(productos => {
