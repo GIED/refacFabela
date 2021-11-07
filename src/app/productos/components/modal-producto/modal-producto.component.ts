@@ -5,13 +5,11 @@ import { TcGanancia } from '../../model/TcGanancia';
 import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TcCategoriaGeneral } from '../../model/TcCategoriaGeneral';
 import { MessageService } from 'primeng/api';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { TcCategoria } from '../../model/TcCategoria';
 import { TcClavesat } from '../../model/TcClavesat';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ProductoService } from '../../../shared/service/producto.service';
-import { producto } from '../../interfaces/producto.interfaces';
 
 interface Moneda {
   name: string,

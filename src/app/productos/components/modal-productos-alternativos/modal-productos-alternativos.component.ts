@@ -1,7 +1,6 @@
 import { TwProductoAlternativo } from 'src/app/productos/model/TwProductoAlternativo';
 import { Component, Input, OnInit } from "@angular/core";
 import { ProductoService } from "src/app/shared/service/producto.service";
-import { NgxSpinnerService } from "ngx-spinner";
 import { TcProducto } from "../../model/TcProducto";
 import { ConfirmationService, ConfirmEventType, MessageService } from "primeng/api";
 

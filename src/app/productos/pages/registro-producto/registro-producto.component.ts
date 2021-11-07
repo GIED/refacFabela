@@ -2,7 +2,6 @@ import { TcProducto } from './../../model/TcProducto';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/api';
 import { ProductoService } from '../../../shared/service/producto.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
