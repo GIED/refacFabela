@@ -50,7 +50,7 @@ export class ClienteComponent implements OnInit {
   
 
   constructor( private messageService: MessageService,
-              private confirmationService: ConfirmationService, private clienteService:ClienteService, private fb: FormBuilder, private spinner: NgxSpinnerService,  ) {
+              private confirmationService: ConfirmationService, private clienteService:ClienteService, private fb: FormBuilder,  ) {
                 this.crearFormulario();
   }
 
@@ -98,11 +98,11 @@ export class ClienteComponent implements OnInit {
 // Carga de clientes inicial(Todos)
   obtenerClientes(){
 
-    this.spinner.show();
+    
 
     this.clienteService.getClientes().subscribe(clientes=>{
         this.listaClientes=clientes;
-        this.spinner.hide();
+        
         
     });
   ;

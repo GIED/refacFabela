@@ -1,7 +1,6 @@
 import { TcProducto } from './../../model/TcProducto';
 import { Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Product } from 'src/app/demo/domain/product';
+import { ConfirmationService, ConfirmEventType, MessageService } from 'primeng/api';
 import { ProductoService } from '../../../shared/service/producto.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
@@ -44,7 +43,7 @@ export class RegistroProductoComponent implements OnInit {
                 private bodegasService:BodegasService,
                 private messageService: MessageService,
                 private confirmationService: ConfirmationService,
-                private spinner: NgxSpinnerService,) {
+                ) {
                 this.obtenerProductos();
 }
 
@@ -53,35 +52,35 @@ ngOnInit() {
 }
 
 obtenerProductos(){ 
-    console.log("entre a este metodo");
-    this.spinner.show();
     this.productosService.obtenerProductos().subscribe(productos => {
         this.listaProductos=productos;
-       this.spinner.hide();
-
-       
+    },
+    error =>{
+        this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'Error de conexión con el servidor', life: 3000});
     });
+    
     
 
 }
 
   
 openNew() {
+    this.producto=null;
     this.productDialog = true;
     this.titulo="Registro de Productos"
+}
+
+editarProducto(producto: TcProducto) {
+    this.producto=producto;
+    this.productDialog = true;
+    this.titulo="Actualiza de Producto"
 }
 
 
 alternativosProduct(nId:number , sProducto:string) {
 
-    console.log(nId);
-    console.log(sProducto);
-
     this.nIdProducto=nId;
     this.sProducto=sProducto;
-
-    console.log(this.nIdProducto);
-    console.log(this.sProducto);
    
     this.alternativosDialog = true;   
 }
@@ -91,11 +90,10 @@ detalleProduct(nId:number) {
     this.detalleDialog = true;
     this.stockTotal=0;
 
-    this.spinner.show();
+    
     this.productosService.historiaPrecioProducto(nId).subscribe(productos => {
         this.listaHistoriaPrecioProducto=productos;
-        this.spinner.hide();
-       
+        
     });
 
     this.bodegasService.obtenerProductoBodegas(nId).subscribe(productoBodega =>{
@@ -103,7 +101,7 @@ detalleProduct(nId:number) {
         for (const key in productoBodega) {
             this.stockTotal += this.listaProductoBodega[key].nCantidad;
         }
-        this.spinner.hide();
+        
     });
   
 /*this.product = {...product};
@@ -173,8 +171,6 @@ hideDialogDetalle() {
 
 saveProduct(producto: TcProducto) {
 
-    console.log(producto);
-
         if (producto.nId) {
             this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
                 this.listaProductos[this.findIndexById(productoActualizado.nId)] = productoActualizado;
@@ -188,6 +184,7 @@ saveProduct(producto: TcProducto) {
                 this.messageService.add({severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000});
             });
         }
+        this.productDialog = false;
         this.listaProductos = [...this.listaProductos];
         
     
@@ -207,8 +204,21 @@ deleteProduct(product: TcProducto) {
                 this.listaProductos = this.listaProductos.filter(val => val.nId !== product.nId);
                 this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
                 this.muestraConfirmDialog=false;
-            })
+            });
+        },
+        reject: (type) => {
+            switch(type) {
+                case ConfirmEventType.REJECT:
+                    this.messageService.add({severity:'error', summary:'Rejected', detail:'no se borro el producto'});
+                    this.muestraConfirmDialog=false;
+                break;
+                case ConfirmEventType.CANCEL:
+                    this.messageService.add({severity:'warn', summary:'Cancelled', detail:'acción cancelada'});
+                    this.muestraConfirmDialog=false;
+                break;
+            }
         }
+        
     });
 }
 

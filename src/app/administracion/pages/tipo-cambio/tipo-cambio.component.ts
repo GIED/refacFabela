@@ -65,8 +65,7 @@ export class TipoCambioComponent implements OnInit {
 
 
   
-  constructor(private fb: FormBuilder, private tipoCambioService: TipoCambioService, private messageService: MessageService,
-	private spinner: NgxSpinnerService ) {
+  constructor(private fb: FormBuilder, private tipoCambioService: TipoCambioService, private messageService: MessageService ) {
      this.crearFormulario();
   }
 
@@ -91,7 +90,7 @@ export class TipoCambioComponent implements OnInit {
 
   obtenerTipoCambio(){
 	  console.log("Entre a obtener el tipo de cambio")
-	  this.spinner.show();
+	  
 	  this.tipoCambio=this.formulario.value;
 	  this.tipoCambio.sClave='ValorCambio';
 	  this.tipoCambioService.obtenerTipoCambio(this.tipoCambio).subscribe(tipoCambio =>{
@@ -102,7 +101,7 @@ export class TipoCambioComponent implements OnInit {
 			  this.fTipoCambio.sClave.setValue(tipoCambio.sClave);
 			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);
 	
-		this.spinner.hide();
+		
 	})
 }
 
@@ -121,7 +120,7 @@ guardarTipoCambio(){
   
 		});
 	}else{
-		this.spinner.show()
+		
 		this.tipoCambio= this.formulario.value;
 		this.tipoCambioService.guardarTipoCambio(this.tipoCambio).subscribe(tipoCambio => {
 
@@ -130,7 +129,7 @@ guardarTipoCambio(){
 			  this.fTipoCambio.sClave.setValue(tipoCambio.sClave);
 			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);
 			  
-			  this.spinner.hide();
+			  
 			  this.messageService.add({severity: 'success', summary: 'Successful', detail: 'tipo cambio actualizado', life: 10000});
 		})
 	}

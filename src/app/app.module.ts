@@ -1,6 +1,6 @@
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
@@ -20,6 +20,7 @@ import { ProductService } from './demo/service/productservice';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
+import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
 
 
 @NgModule({
@@ -45,7 +46,7 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
         HttpClientModule,
         BrowserAnimationsModule,  
         PrimeModule,
-         NgxSpinnerModule,
+        NgxSpinnerModule,
               
      
         
@@ -53,6 +54,8 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
     providers: [
         //quita el # de la url
         //{provide: LocationStrategy, useClass: HashLocationStrategy},
+        // INTERCEPTOR PARA SPINNER
+        {provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true},
        
          ProductService,MessageService, ConfirmationService,
     ],

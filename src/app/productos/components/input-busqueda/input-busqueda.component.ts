@@ -21,7 +21,7 @@ export class InputBusquedaComponent implements OnInit {
   nId:number;
   @Output() consultarPorId: EventEmitter<number> = new EventEmitter();
 
-  constructor(private spinner: NgxSpinnerService, private productosService:ProductoService, private messageService:MessageService) { }
+  constructor(private productosService:ProductoService, private messageService:MessageService) { }
 
   ngOnInit(): void {
 
@@ -44,7 +44,7 @@ export class InputBusquedaComponent implements OnInit {
     this.debuncer
       .pipe(debounceTime(300))
       .subscribe(valor => {
-        this.spinner.show();
+        
         this.productosService.obtenerNoParte(this.sNoParte).subscribe(noParte => {
           console.log(noParte.length);
           if (noParte.length != 0) {
@@ -59,7 +59,7 @@ export class InputBusquedaComponent implements OnInit {
             this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'el número de parte no existe en la base de datos.', life: 3000});
           }
 
-          this.spinner.hide()
+         
         })
       })
   

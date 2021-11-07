@@ -28,6 +28,7 @@ export class ModalProductoComponent implements OnInit {
 
   @Input() productDialog: boolean;
   @Input() titulo:string;
+  @Input() producto:TcProducto;
   
 
   @Output() cerrar: EventEmitter<boolean>= new EventEmitter();
@@ -62,6 +63,10 @@ export class ModalProductoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.producto);
+    if (this.producto != null) {
+      this.editProducto(this.producto);
+    }
     this.obtenerCategoriaGeneral();
     this.obtenerClaveSat();
     this.obtenerGanancia();
@@ -191,10 +196,7 @@ export class ModalProductoComponent implements OnInit {
   
   }
 
-  editProducto(productoEditar: TcProducto, titulo?:string) {
-    console.log('llego a editar');
-    console.log(productoEditar);
-    this.titulo=titulo;
+  editProducto(productoEditar: TcProducto) {
     this.productDialog = true;
     this.fProducto.nId.setValue(productoEditar.nId);
     this.fProducto.sNoParte.setValue(productoEditar.sNoParte);
@@ -214,9 +216,6 @@ export class ModalProductoComponent implements OnInit {
     this.formulario.get('nIdCategoria').enable();
     this.precioFinal=productoEditar.nPrecioConIva;
 
-
-
-    
 }
 
 limpiaFormulario() {
@@ -243,10 +242,10 @@ limpiaFormulario() {
 teclaPresionada(){
   
   if (this.fProducto.sNoParte.value.length >=3) {
-
     this.debuncer.next(this.fProducto.sNoParte.value);
   }else{
     this.limpiaFormulario();
+    this.mostrarSugerencias=false;
   }
 
   
@@ -258,7 +257,6 @@ buscaPorNoParte(){
     this.debuncer
       .pipe(debounceTime(300))
       .subscribe(valor => {
-        //this.spinner2.show();
         this.productosService.obtenerNoParte(valor).subscribe(noParte => {
           console.log(noParte.length);
           if (noParte.length != 0) {
@@ -272,8 +270,6 @@ buscaPorNoParte(){
             this.mostrarSugerencias=false;
             this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'el número de parte no existe en la base de datos.', life: 3000});
           }
-
-          //this.spinner2.hide()
         })
       })
   
@@ -287,7 +283,6 @@ valorSeleccionado(){
     const producto = this.listaNoParte[i];
     if (producto.sNoParte.indexOf(noparte) == 0) {
       console.log(producto);
-      
         this.editProducto(producto);
         this.mostrarSugerencias=false;
     }

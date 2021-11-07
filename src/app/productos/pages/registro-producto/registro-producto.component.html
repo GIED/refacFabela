@@ -43,7 +43,7 @@
                         <td>
                             <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2" (click)="detalleProduct(product.nId)"></button>
                             <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning" (click)="alternativosProduct(product.nId, product.sProducto)"></button>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="ejecuta.editProducto(product,'Actualización de Producto')"></button>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editarProducto(product)"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
                         </td>
                     </tr>
@@ -55,8 +55,11 @@
                 </ng-template>
             </p-table>
         </div>
-
-        <app-modal-producto #ejecuta [productDialog]="productDialog" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
+        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
+            </ng-template>
+        </p-dialog>
 
         <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Detalle del Producto" [modal]="true" styleClass="p-fluid" [closable]="false">
             <ng-template pTemplate="content">

@@ -86,7 +86,7 @@ export class InventarioComponent implements OnInit {
                 private anaquelService:AnaquelService,
                 private nivelService:NivelService,
                 private bodegasProductosService:BodegaProductosService, 
-                private spinner: NgxSpinnerService, private productService: ProductService, private messageService: MessageService,
+                private productService: ProductService, private messageService: MessageService,
         private confirmationService: ConfirmationService) {
         
     }
@@ -94,7 +94,7 @@ export class InventarioComponent implements OnInit {
     ngOnInit() {
         
         
-        this.spinner.show()
+        
         this.bodegasService.obtenerBodegas().subscribe(bodegas=>{
             this.listaBodegas=bodegas;
         });
@@ -107,7 +107,7 @@ export class InventarioComponent implements OnInit {
             this.listaNivel=nivel;
         });
 
-        this.spinner.hide();
+       
       
     }
 

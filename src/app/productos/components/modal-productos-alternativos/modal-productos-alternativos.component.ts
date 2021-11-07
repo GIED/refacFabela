@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { ProductoService } from "src/app/shared/service/producto.service";
 import { NgxSpinnerService } from "ngx-spinner";
 import { TcProducto } from "../../model/TcProducto";
-import { ConfirmationService, MessageService } from "primeng/api";
+import { ConfirmationService, ConfirmEventType, MessageService } from "primeng/api";
 
 
 @Component({
@@ -25,7 +25,6 @@ export class ModalProductosAlternativosComponent implements OnInit {
 
   constructor(
     private productosService: ProductoService,
-    private spinner: NgxSpinnerService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
   ) {}
@@ -35,12 +34,12 @@ export class ModalProductosAlternativosComponent implements OnInit {
   }
 
   obtenerProductosAlternativos() {
-    this.spinner.show();
+    
     this.productosService
       .obtenerProductosAlternativos(this.nIdProducto)
       .subscribe((productosAlter) => {
         this.listaProductoAlternativo = productosAlter;
-        this.spinner.hide();
+        
       });
   }
 
@@ -61,9 +60,8 @@ export class ModalProductosAlternativosComponent implements OnInit {
     
   }
 
-  deleteProduct(product: TwProductoAlternativo) {
+  deleteProductA(product: TwProductoAlternativo) {
 
-    console.log(product);
     this.muestraConfirmDialogAlter=true;
 
     this.confirmationService.confirm({
@@ -79,7 +77,18 @@ export class ModalProductosAlternativosComponent implements OnInit {
                 this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
                 this.muestraConfirmDialogAlter=false;
             })
-        }
+        },reject: (type) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({severity:'error', summary:'Rejected', detail:'no se borro el producto'});
+                  this.muestraConfirmDialogAlter=false;
+              break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({severity:'warn', summary:'Cancelled', detail:'acción cancelada'});
+                  this.muestraConfirmDialogAlter=false;
+              break;
+          }
+      }
     });
 }
 

@@ -28,18 +28,19 @@
                 <td>{{product.tcProductoAlternativo.sProducto}}</td>
                 <td>{{product.tcProductoAlternativo.sMarca}}</td>
                 <td>{{product.tcProductoAlternativo.nPrecioConIva}}</td>
-                <td><button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button></td>
+                <td><button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProductA(product)"></button></td>
 
             </tr>
         </ng-template>
     </p-table>
 
 </div>
-<ng-template [ngIf]="muestraConfirmDialogAlter">
+<div *ngIf="muestraConfirmDialogAlter">
     <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
-</ng-template>
+</div>
 
-
-
-
-<app-modal-producto #ejecuta [productDialog]="productDialog" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
+<p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
+    </ng-template>
+</p-dialog>
