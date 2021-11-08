@@ -59,11 +59,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class TipoCambioComponent implements OnInit {
 
 	formulario:FormGroup;
-
 	tipoCambio: TipoCambio;
-
-
-
   
   constructor(private fb: FormBuilder, private tipoCambioService: TipoCambioService, private messageService: MessageService ) {
      this.crearFormulario();
@@ -73,76 +69,56 @@ export class TipoCambioComponent implements OnInit {
 	return this.formulario.get('nValor').invalid && this.formulario.get('nValor').touched;
   }
 
-  crearFormulario() {
-  
+  crearFormulario() {  
 	this.formulario = this.fb.group({
 		nId: ['',[]],
 		nValor: ['',[Validators.required]],
 		sClave: ['',[]],
 		sDescripcion: ['',[]],
 	});
-
   }
 
   ngOnInit() {
       this.obtenerTipoCambio();
   }
 
-  obtenerTipoCambio(){
-	  console.log("Entre a obtener el tipo de cambio")
+  obtenerTipoCambio(){ 
 	  
 	  this.tipoCambio=this.formulario.value;
 	  this.tipoCambio.sClave='ValorCambio';
-	  this.tipoCambioService.obtenerTipoCambio(this.tipoCambio).subscribe(tipoCambio =>{
-		 
+	  this.tipoCambioService.obtenerTipoCambio(this.tipoCambio).subscribe(tipoCambio =>{		 
 			  this.fTipoCambio.nId.setValue(tipoCambio.nId);
 			  this.fTipoCambio.nValor.setValue(tipoCambio.nValor);
 			  console.log("el valor del tipo de cambio es:"+this.tipoCambio.nValor);
 			  this.fTipoCambio.sClave.setValue(tipoCambio.sClave);
-			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);
-	
-		
+			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);		
 	})
 }
 
 guardarTipoCambio(){
-	if (this.formulario.invalid) {
-  
-		return Object.values(this.formulario.controls).forEach(control => {
-  
+	if (this.formulario.invalid) {  
+		return Object.values(this.formulario.controls).forEach(control => {  
 		  if (control instanceof FormGroup) {
-			// tslint:disable-next-line: no-shadowed-variable
-			
+			// tslint:disable-next-line: no-shadowed-variable			
 			Object.values(control.controls).forEach(control => control.markAsTouched());
 		  } else {
 			control.markAsTouched();
-		  }
-  
+		  }  
 		});
 	}else{
 		
 		this.tipoCambio= this.formulario.value;
 		this.tipoCambioService.guardarTipoCambio(this.tipoCambio).subscribe(tipoCambio => {
-
 			this.fTipoCambio.nId.setValue(tipoCambio.nId);
 			  this.fTipoCambio.nValor.setValue(tipoCambio.nValor);
 			  this.fTipoCambio.sClave.setValue(tipoCambio.sClave);
-			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);
-			  
-			  
+			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);				  
 			  this.messageService.add({severity: 'success', summary: 'Successful', detail: 'tipo cambio actualizado', life: 10000});
 		})
 	}
 }
-
-
-
   get fTipoCambio(){
 	return this.formulario.controls;
 }
-
-
-
-  
 
 }

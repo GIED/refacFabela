@@ -4,10 +4,16 @@
         <div class="card">
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="left">
-                    <button pButton pRipple label="Nuevo Producto" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
+                    <button pButton pRipple label="Nuevo Producto" icon="pi pi-plus"
+                        class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
                 </ng-template>
             </p-toolbar>
-            <p-table #dt [value]="listaProductos" [rows]="10" [paginator]="true" [globalFilterFields]="['sNoParte', 'sProducto']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+
+               <!--Tabla de productos general-->
+            <p-table #dt [value]="listaProductos" [rows]="10" [paginator]="true"
+                [globalFilterFields]="['sNoParte', 'sProducto']" [(selection)]="selectedProducts" [rowHover]="true"
+                dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
@@ -41,10 +47,14 @@
                         <td><span class="p-column-title">Status</span> {{product.nPrecioConIva | number:'1.0-2'}}
                         </td>
                         <td>
-                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2" (click)="detalleProduct(product.nId)"></button>
-                            <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning" (click)="alternativosProduct(product.nId, product.sProducto)"></button>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editarProducto(product)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
+                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
+                                (click)="detalleProduct(product.nId)"></button>
+                            <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning"
+                                (click)="alternativosProduct(product.nId, product.sProducto)"></button>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="editarProducto(product)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                (click)="deleteProduct(product)"></button>
                         </td>
                     </tr>
                 </ng-template>
@@ -55,26 +65,34 @@
                 </ng-template>
             </p-table>
         </div>
-        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false" styleClass="p-fluid">
+        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+            styleClass="p-fluid">
             <ng-template pTemplate="content">
-                <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
+                <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
+                    (guardarProducto)="saveProduct($event)"></app-modal-producto>
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Detalle del Producto" [modal]="true" styleClass="p-fluid" [closable]="false">
+           <!--Lista de productos por bodega-->
+
+        <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Detalle del Producto" [modal]="true"
+            styleClass="p-fluid" [closable]="false">
             <ng-template pTemplate="content">
                 <div class="card">
-                    <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal"></app-modal-productos-bodega>
+                    <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal">
+                    </app-modal-productos-bodega>
                 </div>
                 <div class="card">
-                    <app-historia-precio-producto [listaHistoriaPrecioProducto]="listaHistoriaPrecioProducto"></app-historia-precio-producto>
+                    <app-historia-precio-producto [listaHistoriaPrecioProducto]="listaHistoriaPrecioProducto">
+                    </app-historia-precio-producto>
                 </div>
 
                 <div class="card">
                     <div class="p-text-center">
                         <h3>Historia de ingreso del Producto</h3>
                     </div>
-                    <p-table [value]="products" responsiveLayout="scroll" scrollHeight="400px" styleClass="p-datatable-sm">
+                    <p-table [value]="products" responsiveLayout="scroll" scrollHeight="400px"
+                        styleClass="p-datatable-sm">
                         <ng-template pTemplate="header">
                             <tr>
                                 <th>No Parte</th>
@@ -94,26 +112,32 @@
                             </tr>
                         </ng-template>
                     </p-table>
-
                 </div>
             </ng-template>
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialogDetalle()"></button>
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialogDetalle()"></button>
             </ng-template>
         </p-dialog>
+        <!--*******************************************************************************************+-->
 
-        <p-dialog [(visible)]="alternativosDialog" [style]="{width: '1000px'}" header="Productos Alternativos" [modal]="true" styleClass="p-fluid" [closable]="false">
+        <!--Formulario de registro de productos alternativos-->
+
+        <p-dialog [(visible)]="alternativosDialog" [style]="{width: '1000px'}" header="Productos Alternativos"
+            [modal]="true" styleClass="p-fluid" [closable]="false">
             <ng-template pTemplate="content">
-                <app-modal-productos-alternativos [nIdProducto]="nIdProducto" [sProducto]="sProducto"></app-modal-productos-alternativos>
+                <app-modal-productos-alternativos [nIdProducto]="nIdProducto" [sProducto]="sProducto">
+                </app-modal-productos-alternativos>
             </ng-template>
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlternativos()"></button>
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialogAlternativos()"></button>
 
             </ng-template>
         </p-dialog>
         <ng-template [ngIf]="muestraConfirmDialog">
             <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
         </ng-template>
-
+          <!--***************************************************************************************************-->
     </div>
 </div>

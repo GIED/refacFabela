@@ -8,13 +8,10 @@
 
                 </ng-template>
 
-                <ng-template pTemplate="right">
-                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Importar usuarios" class="p-mr-2 p-mb-2 p-d-inline-block"></p-fileUpload>
-                    <button pButton pRipple label="Exportar usuarios" icon="pi pi-upload" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
-                </ng-template>
+               
             </p-toolbar>
 
-            <p-table #dt [value]="listaUsuarios" [rows]="10" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+            <p-table #dt [value]="listaUsuarios" [rows]="10" [paginator]="true" [globalFilterFields]="['sNombreusuario','sUsuario']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
