@@ -10,6 +10,8 @@ import { TraspasosComponent } from './pages/traspasos/traspasos.component';
 
 import { CountryService } from '../demo/service/countryservice';
 import { ProductService } from '../demo/service/productservice';
+import { InputBusquedaComponent } from '../productos/components/input-busqueda/input-busqueda.component';
+import { ProductosModule } from '../productos/productos.module';
 
 
 
@@ -19,13 +21,15 @@ import { ProductService } from '../demo/service/productservice';
     TraspasosComponent,
     InventarioComponent,
     EntregaDeMercanciaComponent,
+   
 
  
    
   ],
   imports: [
     AlmacenRoutingModule,
-    PrimeModule
+    PrimeModule,
+    ProductosModule
   ], 
   providers:[CountryService, ProductService]
 })
