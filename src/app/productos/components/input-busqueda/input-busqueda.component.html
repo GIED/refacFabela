@@ -1,4 +1,20 @@
+<div class="p-grid p-fluid">
+   
+
+    <div class="p-col-12 p-xl-12 p-md-12">
+
 <label for="name">No. de parte</label>
 <input type="text" pInputText name="sNoParte" [(ngModel)]="sNoParte" (input)="teclaPresionada()"  />
-<p-listbox *ngIf="mostrarSugerencias" [options]="listaNoParte"  [(ngModel)]="nId" optionLabel="sNoParte" (onClick)="valorSeleccionado()" optionValue="nId" [listStyle]="{'max-height':'250px'}"></p-listbox>
+<p-listbox *ngIf="mostrarSugerencias" [options]="listaNoParte"  [(ngModel)]="nId" optionLabel="sNoParte" (onClick)="valorSeleccionado()" optionValue="nId" [listStyle]="{'max-height':'250px'}">
+    <ng-template let-producto pTemplate="item">
+        <div>
+            <div>{{producto.sNoParte}}-{{producto.sProducto}}</div>
+        </div>
+    </ng-template>
+
+
+</p-listbox>
+
+    </div>
+</div>
 

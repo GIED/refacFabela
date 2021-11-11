@@ -58,7 +58,7 @@ export class InputBusquedaComponent implements OnInit {
             this.mostrarSugerencias=false;
             this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'el número de parte no existe en la base de datos.', life: 3000});
           }
-
+          
          
         })
       })
@@ -70,6 +70,7 @@ valorSeleccionado(){
   console.log(this.nId);
  this.consultarPorId.emit(this.nId)
  this.mostrarSugerencias=false;
+ this.sNoParte='';
 
 }
 
