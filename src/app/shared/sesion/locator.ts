@@ -2,6 +2,8 @@ export class locator{
 
 // api para clientes
 static obtenerClientes='/obtenerClientes';
+static obtenerClienteLike='/consultaClienteLike?';
+static obtenerSaldoGeneral='/consultaClienteIdSaldo?'
 static guardarClientes='/guardarCliente';
 // api para proveedores
 static obtenerProveedores='/obtenerProveedores';
@@ -20,10 +22,12 @@ static consultaGanancia= '/catalogoGanancia';
 static consultaGananciaId= '/catalogoGananciaId?';
 //api productos
 static obtenerProductos= '/obtenerProductos';
+static obtenerProductosLike= '/obtenerProductosLike?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
+static obtenerProductoIdBodegas = '/obtenerProductoIdBodegas?';
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';
 static guardarProductoAlternativo = '/guardarProductoAlternativo'

@@ -6,43 +6,49 @@
 
     <div class="p-col-12 p-xl-12 p-md-12">
         <div class="card">
-            <h5>Favor de Elegir un cliente</h5>
-            <p-autoComplete [(ngModel)]="selectedCountryAdvanced" [suggestions]="filteredCountries" (completeMethod)="filterCountry($event)" field="name" [dropdown]="true" placeholder="Razón social del cliente" [forceSelection]="true">
-            </p-autoComplete>
-            <br>
-            <p-panel header="Datos del cliente">
-                <div class="p-grid">
-                    <div class="p-col-12">
-                        <h5 class="p-text-center" style="background: #aa7ea2; color: white;">Linea de credito</h5>
-                        <hr>
-                    </div>
-                    <div class="p-col-12 p-md-6 p-lg-2">RFC: 12345678 </div>
-                    <div class="p-col-12 p-md-6 p-lg-2">Razon social: Maquinaria Xddddd </div>
-                    <div class="p-col-12 p-md-6 p-lg-2">Limite de credito: {{60000 | currency: '$'}}</div>
-                    <div class="p-col-12 p-md-6 p-lg-2">Saldo total: {{20000 | currency: '$'}}</div>
-                    <div class="p-col-12 p-md-6 p-lg-2">Credito Disponible: {{40000 | currency: '$'}}</div>
-
-                </div>
-
-
-
-            </p-panel>
-            <br>
             <div class="p-grid">
 
+                <div class="p-col-12">
+                    <h5>Favor de Elegir un cliente</h5>
+                    <input type="text" pInputText name="cliente" [(ngModel)]="cliente" (input)="inputCliente()" />
+                    <p-listbox *ngIf="mostrarSugerenciasCliente" [options]="listaCliente" [(ngModel)]="clienteSeleccionado" optionLabel="sRazonSocial" (onClick)="valorSeleccionadoCliente()">
+                        <ng-template let-cliente pTemplate="item">
+                            <div>
+                                <div>{{cliente.sRfc}}-{{cliente.sRazonSocial}}</div>
+                            </div>
+                        </ng-template>
+                    </p-listbox>
+                </div>
+                <div class="p-col-12">
+                    <ng-template [ngIf]="mostrarDetalleCliente">
+                        <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>
+                    </ng-template>
+                </div>
+
+            </div>
+
+
+            <br>
+            <div class="p-grid">
                 <div class="p-col-12 p-lg-6 p-md-6 ">
                     <div class="p-grid p-dir-col">
                         <div class="p-col-12 ">
-                            <p-table [value]="productsFiltrado" [rows]="10" responsiveLayout="scroll" currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
+                            <p-table [value]="productosFiltrados" [rows]="10" responsiveLayout="scroll" currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
                                 <ng-template pTemplate="caption">
-                                    <div class="p-d-flex p-ai-center ">
-                                        <p-autoComplete class="p-col-12" [(ngModel)]="productoSeleccionado" [suggestions]="productosFiltrados" (completeMethod)="filtrarProducto($event)" (onSelect)="onSelect($event)" [dropdown]="true" field="name" placeholder="Ingrese el numero de parte o nombre del producto"
-                                            [forceSelection]="true">
-                                            <ng-template let-producto pTemplate="item">
-                                                <div>{{producto.id }}-{{producto.name }}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
+                                    <div class="p-col-12">
+                                        <label for="name">Producto</label>
+                                        <input type="text" pInputText name="producto" [(ngModel)]="producto" (input)="inputProducto()" />
                                     </div>
+                                    <div class="p-col-12">
+                                        <p-listbox *ngIf="mostrarSugerenciasProducto" [options]="listaProductoSugerencia" [(ngModel)]="nIdProducto" optionLabel="sNoParte" (onClick)="valorSeleccionadoProducto()" optionValue="nId" [listStyle]="{'max-height':'200px'}">
+                                            <ng-template let-producto pTemplate="item">
+                                                <div>
+                                                    <div>{{producto.sNoParte}}-{{producto.sProducto}}</div>
+                                                </div>
+                                            </ng-template>
+                                        </p-listbox>
+                                    </div>
+
                                     <p-toast></p-toast>
                                 </ng-template>
                                 <ng-template pTemplate="header">
@@ -67,20 +73,20 @@
                                         </th>
                                     </tr>
                                 </ng-template>
-                                <ng-template pTemplate="body" let-product>
+                                <ng-template pTemplate="body" let-producto>
                                     <tr>
 
-                                        <td>{{product.id}}</td>
-                                        <td>{{product.name}}</td>
-                                        <td>{{product.price | currency:'$'}}</td>
-                                        <td>{{product.category}}</td>
-                                        <td>{{product.quantity}}</td>
+                                        <td>{{producto.nIdProducto}}</td>
+                                        <td>{{producto.tcProducto.sProducto}}</td>
+                                        <td>{{producto.tcProducto.nPrecioConIva | currency:'$'}}</td>
+                                        <td>{{producto.tcProducto.tcCategoria.sDescripcion}}</td>
+                                        <td>{{producto.nCantidadTotal}}</td>
                                         <td>
-                                            <p-inputNumber [(ngModel)]="product.cantidad" inputId="minmax-buttons" [min]="0" [max]="100" placeholder="0">
+                                            <p-inputNumber [(ngModel)]="producto.ncantidad" inputId="minmax-buttons" [min]="0" [max]="100" placeholder="0">
                                             </p-inputNumber>
                                         </td>
                                         <td>
-                                            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(product)"></button>
+                                            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
                                         </td>
                                     </tr>
                                 </ng-template>

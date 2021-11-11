@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { locator } from '../sesion/locator';
 import { TcHistoriaPrecioProducto } from '../../productos/model/TcHistoriaPrecioProducto';
 import { TwProductoAlternativo } from 'src/app/productos/model/TwProductoAlternativo';
+import { TvStockProducto } from '../../productos/model/TvStockProducto';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,15 @@ export class ProductoService {
   obtenerProductos(){
     let url = environment.servicios.apiRefacFabela + locator.obtenerProductos;
     return this.http.get<TcProducto[]>(url);
+  }
+  obtenerProductosLike(producto:string){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerProductosLike +'producto='+producto;
+    return this.http.get<TcProducto[]>(url);
+  }
+
+  obtenerProductoIdBodegas(nId:number){
+    let url =environment.servicios.apiRefacFabela + locator.obtenerProductoIdBodegas+'id='+nId;
+    return this.http.get<TvStockProducto>(url);
   }
 
   obtenerProductosAlternativos(nId:number){

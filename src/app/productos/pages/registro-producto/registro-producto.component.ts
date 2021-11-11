@@ -27,6 +27,7 @@ export class RegistroProductoComponent implements OnInit {
     producto: TcProducto;
     listaProductos: TcProducto[];
     listaHistoriaPrecioProducto: TcHistoriaPrecioProducto[];
+
     listaProductoBodega: TwProductoBodega[];
     titulo: string;
     stockTotal: number = 0;
@@ -42,6 +43,7 @@ export class RegistroProductoComponent implements OnInit {
     ) {
         this.obtenerProductos();
     }
+
 
     ngOnInit() {
 
