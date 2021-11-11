@@ -25,7 +25,9 @@ import { ModalProductosAlternativosComponent } from './components/modal-producto
     NgxSpinnerModule
   ],
   exports:[
-    ModalProductoComponent
+    ModalProductoComponent,
+    InputBusquedaComponent
+   
   ]
 })
 export class ProductosModule { }
