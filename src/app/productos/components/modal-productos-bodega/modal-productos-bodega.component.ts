@@ -10,6 +10,7 @@ export class ModalProductosBodegaComponent implements OnInit {
 
   @Input() listaProductoBodega: TwProductoBodega[];
   @Input() stockTotal: number;
+  @Input() traspaso:boolean;
 
   constructor() { }
 

@@ -69,6 +69,8 @@ export class InputBusquedaComponent implements OnInit {
 valorSeleccionado(){
   console.log(this.nId);
  this.consultarPorId.emit(this.nId)
+ this.mostrarSugerencias=false;
+
 }
 
 }

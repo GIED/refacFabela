@@ -26,7 +26,9 @@ import { ModalProductosAlternativosComponent } from './components/modal-producto
   ],
   exports:[
     ModalProductoComponent,
-    InputBusquedaComponent
+    InputBusquedaComponent,
+    ModalProductosBodegaComponent
+
    
   ]
 })

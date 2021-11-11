@@ -8,6 +8,7 @@
             <th>Anaquel</th>
             <th>Nivel</th>
             <th>Stock</th>
+            <th *ngIf="traspaso" >Acciones</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-bodega>
@@ -17,6 +18,9 @@
             <td>{{bodega.tcAnaquel.sAnaquel}}</td>
             <td>{{bodega.tcNivel.sNivel}}</td>
             <td>{{bodega.nCantidad}}</td>
+       <td *ngIf="traspaso"><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+        (click)="editarProducto()"></button></td>
+
         </tr>
     </ng-template>
     <ng-template pTemplate="summary">

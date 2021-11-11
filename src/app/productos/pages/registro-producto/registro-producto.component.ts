@@ -32,7 +32,7 @@ export class RegistroProductoComponent implements OnInit {
     stockTotal: number = 0;
     nIdProducto: number;
     sProducto: string;
-
+    traspaso:boolean=false;
 
     constructor(
         private productosService: ProductoService,

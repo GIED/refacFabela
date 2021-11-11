@@ -1,2 +1,4 @@
 
-<app-input-busqueda></app-input-busqueda>
+<app-input-busqueda (consultarPorId)=obtenerBodegas($event)></app-input-busqueda>
+<app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>
+</app-modal-productos-bodega>
