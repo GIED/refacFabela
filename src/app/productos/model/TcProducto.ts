@@ -26,4 +26,6 @@ tcClavesat: TcClavesat;
 nPrecioPeso:number;
 nPrecioSinIva:number;
 nPrecioConIva:number;
+cantidadVenta?:number;
+cantidad?:number;
 }

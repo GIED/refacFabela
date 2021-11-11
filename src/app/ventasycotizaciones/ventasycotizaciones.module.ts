@@ -9,11 +9,12 @@ import { VentasComponent } from './pages/ventas/ventas.component';
 import { VentasPorPedidoComponent } from './pages/ventas-por-pedido/ventas-por-pedido.component';
 import { ModalProductoComponent } from '../productos/components/modal-producto/modal-producto.component';
 import { ProductosModule } from '../productos/productos.module';
+import { DetalleClienteComponent } from './components/detalle-cliente/detalle-cliente.component';
 
 
 
 @NgModule({
-  declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,ConsultaCotizacionComponent, CancelaVentaComponent],
+  declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent],
   imports: [
     VentasycotizacionesRoutingModule,
     PrimeModule,

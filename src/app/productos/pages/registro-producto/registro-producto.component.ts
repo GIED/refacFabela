@@ -53,13 +53,7 @@ ngOnInit() {
 obtenerProductos(){ 
     this.productosService.obtenerProductos().subscribe(productos => {
         this.listaProductos=productos;
-    },
-    error =>{
-        this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'Error de conexión con el servidor', life: 3000});
     });
-    
-    
-
 }
 
   

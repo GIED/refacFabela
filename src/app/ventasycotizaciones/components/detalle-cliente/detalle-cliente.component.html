@@ -1,0 +1,13 @@
+<p-panel class="mt-2" header="Datos del cliente">
+    <div class="p-grid">
+        <div class="p-col-12">
+            <h5 class="p-text-center" style="background: #aa7ea2; color: white;">Linea de credito</h5>
+            <hr>
+        </div>
+        <div class="p-col-12 p-md-6 p-lg-2 p-text-center">RFC: {{saldoGeneralCliente.tcCliente.sRfc}} </div>
+        <div class="p-col-12 p-md-6 p-lg-4 p-text-center">RAZÓN SOCIAL: {{saldoGeneralCliente.tcCliente.sRazonSocial}}</div>
+        <div class="p-col-12 p-md-6 p-lg-2 p-text-center">LIMITE DE CREDITO: {{saldoGeneralCliente.nLimiteCredito|currency:'$'}}</div>
+        <div class="p-col-12 p-md-6 p-lg-2 p-text-center">SALDO TOTAL: {{saldoGeneralCliente.nSaldoTotal|currency:'$'}}</div>
+        <div class="p-col-12 p-md-6 p-lg-2 p-text-center">CREDITO DISPONIBLE: {{saldoGeneralCliente.nCreditoDisponible|currency:'$'}}</div>
+    </div>
+</p-panel>
