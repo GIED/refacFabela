@@ -37,7 +37,9 @@ import { AlmacenModule } from '../almacen/almacen.module';
   ],
   exports:[
     ModalProductoComponent,
-    InputBusquedaComponent
+    InputBusquedaComponent,
+    ModalProductosBodegaComponent
+
    
   ]
 })

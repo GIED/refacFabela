@@ -1,2 +1,8 @@
-
-<app-input-busqueda></app-input-busqueda>
+<div class="p-col-12 p-text-center">
+    <h2>Trasado de Mercancia</h2>
+    <hr />
+</div>
+<app-input-busqueda (consultarPorId)=obtenerBodegas($event)></app-input-busqueda>
+<br>
+<app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>
+</app-modal-productos-bodega>
