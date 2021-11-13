@@ -20,17 +20,13 @@ import { ProductosModule } from '../productos/productos.module';
     IngresoMercanciaComponent,
     TraspasosComponent,
     InventarioComponent,
-    EntregaDeMercanciaComponent,
-   
-
- 
-   
+    EntregaDeMercanciaComponent
   ],
   imports: [
     AlmacenRoutingModule,
     PrimeModule,
     ProductosModule
-  ], 
+  ],
   providers:[CountryService, ProductService]
 })
 export class AlmacenModule { }

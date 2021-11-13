@@ -13,16 +13,27 @@ import { HistoriaPrecioProductoComponent } from './components/historia-precio-pr
 import { InputBusquedaComponent } from './components/input-busqueda/input-busqueda.component';
 import { ModalProductosBodegaComponent } from './components/modal-productos-bodega/modal-productos-bodega.component';
 import { ModalProductosAlternativosComponent } from './components/modal-productos-alternativos/modal-productos-alternativos.component';
+import { AlmacenModule } from '../almacen/almacen.module';
 
 
 @NgModule({
-  declarations: [RegistroProductoComponent, HistorialProductoComponent, AlternativosProductoComponent, ModalProductoComponent, HistoriaPrecioProductoComponent, InputBusquedaComponent, ModalProductosBodegaComponent, ModalProductosAlternativosComponent],
+  declarations: [
+    RegistroProductoComponent, 
+    HistorialProductoComponent,
+    AlternativosProductoComponent, 
+    ModalProductoComponent, 
+    HistoriaPrecioProductoComponent, 
+    InputBusquedaComponent, 
+    ModalProductosBodegaComponent,
+    ModalProductosAlternativosComponent
+  ],
   imports: [
     CommonModule,
     ProductosRoutingModule,
     PrimeModule,
     ReactiveFormsModule,
-    NgxSpinnerModule
+    
+    
   ],
   exports:[
     ModalProductoComponent,

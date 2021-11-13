@@ -10,6 +10,7 @@ import { VentasPorPedidoComponent } from './pages/ventas-por-pedido/ventas-por-p
 import { ModalProductoComponent } from '../productos/components/modal-producto/modal-producto.component';
 import { ProductosModule } from '../productos/productos.module';
 import { DetalleClienteComponent } from './components/detalle-cliente/detalle-cliente.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -18,7 +19,8 @@ import { DetalleClienteComponent } from './components/detalle-cliente/detalle-cl
   imports: [
     VentasycotizacionesRoutingModule,
     PrimeModule,
-    ProductosModule
+    ProductosModule,
+    ReactiveFormsModule
   ]
 })
 export class VentasycotizacionesModule { }
