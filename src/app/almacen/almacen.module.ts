@@ -31,6 +31,10 @@ import { ProductosModule } from '../productos/productos.module';
     PrimeModule,
     ProductosModule
   ], 
-  providers:[CountryService, ProductService]
+  exports:[
+   
+  ],
+
+  
 })
 export class AlmacenModule { }

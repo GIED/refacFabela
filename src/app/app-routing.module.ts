@@ -19,8 +19,8 @@ const routes: Routes = [
   },
   {
     path:'almacen', component: AppMainComponent,
-    loadChildren:() => import('./almacen/almacen.module').then(m => m.AlmacenModule)
-    
+    loadChildren:() => import('./almacen/almacen.module').then(m => m.AlmacenModule),
+   
   },
   {
     path:'productos', component: AppMainComponent,
@@ -50,7 +50,8 @@ const routes: Routes = [
    {
      path:'**',
      redirectTo:'login'
-   }
+   },
+  
    
    
    
