@@ -20,11 +20,7 @@ import { ProductosModule } from '../productos/productos.module';
     IngresoMercanciaComponent,
     TraspasosComponent,
     InventarioComponent,
-    EntregaDeMercanciaComponent,
-   
-
- 
-   
+    EntregaDeMercanciaComponent
   ],
   imports: [
     AlmacenRoutingModule,
@@ -36,5 +32,7 @@ import { ProductosModule } from '../productos/productos.module';
   ],
 
   
+  
+  providers:[CountryService, ProductService]
 })
 export class AlmacenModule { }

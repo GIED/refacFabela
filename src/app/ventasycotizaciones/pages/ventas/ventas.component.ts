@@ -14,6 +14,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { ThirdPartyDraggable } from '@fullcalendar/interaction';
 import { TvStockProducto } from '../../../productos/model/TvStockProducto';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 
 @Component({
@@ -22,80 +23,77 @@ import { TvStockProducto } from '../../../productos/model/TvStockProducto';
   styleUrls: ['./ventas.component.scss']
 })
 export class VentasComponent implements OnInit {
+
+  formGrp: FormGroup;
+
   clienteSeleccionado:Clientes;
   cliente:string;
-  nIdProducto:number;
+  productoSeleccionado:TcProducto;
   producto:string;
   debuncerCliente: Subject<string> = new Subject();
   debuncerProducto: Subject<string> = new Subject();
 
   listaCliente: Clientes[]=[];
   listaProductoSugerencia: TcProducto[]=[];
+  listaProductos: TvStockProducto[];
+  productosFiltrados: TvStockProducto[]=[];
+  
 
   mostrarSugerenciasCliente:boolean=false;
   mostrarDetalleCliente:boolean=false;
   mostrarSugerenciasProducto:boolean=false;
 
-
   saldoGeneralCliente:SaldoGeneralCliente;
-
-
-  cities: SelectItem[];
-  paymentOptions: any[];
   productDialog: boolean;
-
-  products: Product[]=[];
-  //productsFiltrado: Product[]=[];
-
-  listaProductos: TvStockProducto[]=[];
-
-  product: Product;
-  
-
-  selectedProducts: Product[];
-
-  submitted: boolean;
-
-  cols: any[];
-
   total: number = 0;
 
-  
-  selectedCountryAdvanced: any[];
-  countries: any[];
-  filteredCountries: any[];
-
-  productosFiltrados: TvStockProducto[]=[];
-  productoSeleccionado: Product [] ;
-
-  constructor(private clienteService:ClienteService,private productoService:ProductoService, private productService: ProductService, private messageService: MessageService,
-    private confirmationService: ConfirmationService, private countryService: CountryService) { 
+  constructor(private clienteService:ClienteService,private productoService:ProductoService, private messageService: MessageService,
+    private confirmationService: ConfirmationService) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
+      this.listaProductos=[];
     }
 
   ngOnInit(): void {
     this.buscaCliente();
     this.buscaProducto();
+    this._initFormGroup();
+  }
 
+  _initFormGroup(): void{ 
+    this.formGrp=new FormGroup({
+      clienteCtrl: new FormControl('',[Validators.required,Validators.minLength(3)]),
+      productoCtrl: new FormControl('',[]),
+      clienteSeleccionadoCtrl: new FormControl('', []),
+      productoSelecionadoCtrl: new FormControl('', []),
+      nCantidadCtrl: new FormControl('', [ ])
+    });
+    
+  }
 
-    this.productService.getProducts().then(data => this.products = data);
-    this.cities = [
-      {label: 'New York', value: {id: 1, name: 'New York', code: 'NY'}},
-      {label: 'Rome', value: {id: 2, name: 'Rome', code: 'RM'}},
-      {label: 'London', value: {id: 3, name: 'London', code: 'LDN'}},
-      {label: 'Istanbul', value: {id: 4, name: 'Istanbul', code: 'IST'}},
-      {label: 'Paris', value: {id: 5, name: 'Paris', code: 'PRS'}}
-  ];
-  this.countryService.getCountries().then(countries => {
-    this.countries = countries;
-});
+  get clienteCtrl(){
+    return this.formGrp.get('clienteCtrl') as FormControl;
+  }
+
+  get productoCtrl(){
+    return this.formGrp.get('productoCtrl') as FormControl;
+  }
+
+  get clienteSeleccionadoCtrl(){
+    return this.formGrp.get('clienteSeleccionadoCtrl') as FormControl;
+  }
+  get productoSelecionadoCtrl(){
+    return this.formGrp.get('productoSelecionadoCtrl') as FormControl;
+  }
+  get nCantidadCtrl(){
+    return this.formGrp.get('nCantidadCtrl') as FormControl;
   }
 
   inputCliente(){ 
     this.mostrarDetalleCliente=false;
-    if (this.cliente.length >=3) {
+
+    if (this.clienteCtrl.valid) {
   
-      this.debuncerCliente.next(this.cliente);
+      this.debuncerCliente.next(this.formGrp.get('clienteCtrl').value);
     }else{
       this.mostrarSugerenciasCliente=false;
     }  
@@ -106,7 +104,7 @@ export class VentasComponent implements OnInit {
       .pipe(debounceTime(500))
       .subscribe(valor => { 
         this.clienteService.obtenerClientesLike(valor).subscribe(cliente => {
-          console.log(cliente.length);
+          //console.log(cliente.length);
           if (cliente.length != 0) {
             this.listaCliente=cliente;
             this.mostrarSugerenciasCliente=true;
@@ -120,8 +118,9 @@ export class VentasComponent implements OnInit {
 }
 
 valorSeleccionadoCliente(){
-  console.log(this.clienteSeleccionado);
-  this.cliente=this.clienteSeleccionado.sRazonSocial;
+  console.log(this.formGrp.get('clienteSeleccionadoCtrl').value);
+  this.clienteSeleccionado=this.formGrp.get('clienteSeleccionadoCtrl').value;
+  this.clienteCtrl.setValue(this.clienteSeleccionado.sRazonSocial);
   this.clienteService.obtenerSaldoGeneralCliente(this.clienteSeleccionado.nId).subscribe(saldoCliente=>{
     
     this.mostrarSugerenciasCliente=false;
@@ -141,14 +140,16 @@ valorSeleccionadoCliente(){
 }
 
 inputProducto(){
-    if (this.producto.length >=3) {
-      this.debuncerProducto.next(this.producto);
+  this.productosFiltrados=[];
+    if (this.productoCtrl.valid) {
+      this.debuncerProducto.next(this.formGrp.get('productoCtrl').value);
     }else{
       this.mostrarSugerenciasProducto=false;
     }  
 }
 
 buscaProducto(){
+  
     this.debuncerProducto
       .pipe(debounceTime(500))
       .subscribe(valor => { 
@@ -167,8 +168,10 @@ buscaProducto(){
 }
 
 valorSeleccionadoProducto(){
-  this.productoService.obtenerProductoIdBodegas(this.nIdProducto).subscribe(productoStock =>{
+  this.productoSeleccionado=this.formGrp.get('productoSelecionadoCtrl').value;
+  this.productoService.obtenerProductoIdBodegas(this.productoSeleccionado.nId).subscribe(productoStock =>{
     this.productosFiltrados.push(productoStock);
+    this.mostrarSugerenciasProducto=false;
   });
 }
 
@@ -176,23 +179,21 @@ valorSeleccionadoProducto(){
 
 
 
-openNew() {
-    this.product = {};
-    this.submitted = false;
+openNew() { 
     this.productDialog = true;
 }
  hideDialog() {
   this.productDialog = false;
-  this.submitted = false;
+  
 }
-editProduct(product: Product) {
-  this.product = {...product};
-  this.productDialog = true;
-}
+
 
 agregarProduct(producto: TvStockProducto) {
-  console.log(producto);
 
+  console.log(this.formGrp.get('nCantidadCtrl').value)
+  producto.ncantidad=this.formGrp.get('nCantidadCtrl').value;
+  console.log(producto);
+  //verifica que se agrege una cantidad
   if (producto.ncantidad === 0 || producto.ncantidad === undefined || producto.ncantidad === null) {
     //console.log("entro a if");
     
@@ -207,31 +208,38 @@ agregarProduct(producto: TvStockProducto) {
       //this.products[this.findIndexById(producto.id, this.products)]=producto;
     //}else{ 
 
-
+  // si la lista ya tiene datos entra a if para validar que el producto no se repita 
   if (this.listaProductos.length> 0) {
+    // si el indice retornado es -1 el producto no existe en la lista y se agrega
     if (this.findIndexById(producto.nIdProducto, this.listaProductos) === -1 ) {
 
-      //console.log("entro a else");
-      producto.tcProducto.cantidadVenta=producto.tcProducto.cantidad;
+      
+      producto.tcProducto.cantidadVenta=producto.ncantidad;
       this.listaProductos.push(producto);
 
       
-    }else{
+    }
+    //si entra a else el producto ya existe en la lista y solo actualiza la cantidad
+    else{
       
-      producto.tcProducto.cantidadVenta=this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)].tcProducto.cantidad +producto.tcProducto.cantidad;
+      producto.tcProducto.cantidadVenta=this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)].tcProducto.cantidadVenta +producto.ncantidad;
       this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
     }
-  }else{
-    producto.tcProducto.cantidadVenta=producto.tcProducto.cantidad;
+  }
+  //si entra a else el producto no existe en la lista
+  else{
+    producto.tcProducto.cantidadVenta=producto.ncantidad;
     this.listaProductos.push(producto);
   }
-  this.total += producto.tcProducto.nPrecioSinIva*producto.tcProducto.cantidad
-  producto.ncantidad=producto.ncantidad-producto.ncantidad;
+  //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
+  console.log("total a: "+this.total);
+  this.total += producto.tcProducto.nPrecioConIva*producto.ncantidad;
+  producto.nCantidadTotal=producto.nCantidadTotal-producto.ncantidad;
   producto.ncantidad=0;
+  console.log("total d: "+this.total);
   
   this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
- // this.productsFiltrado=[];
-  this.productoSeleccionado=[];
+  this.productosFiltrados=[];
   this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Producto Agregado Correctamente', life: 3000});
 
 //}
@@ -249,39 +257,9 @@ quitarProducto(producto: TvStockProducto){
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
 }
 
-
-onSelect(event: any){
-  //console.log( event );
-
-  //this.productsFiltrado.push(event)
-
+guardarCotizacion(tvStockProducto:TvStockProducto[]){
+  console.log(tvStockProducto);
 }
-
-filterCountry(event) {
-  const filtered: any[] = [];
-  const query = event.query;
-  for (let i = 0; i < this.countries.length; i++) {
-      const country = this.countries[i];
-      if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-          filtered.push(country);
-      }
-  }
-
-  this.filteredCountries = filtered;
-}
-
-/*filtrarProducto(event) {
-  const filtered: TvStockProducto[] = [];
-  const query = event.query;
-  for (let i = 0; i < this.products.length; i++) {
-      const producto = this.products[i];
-      if (producto.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-          filtered.push(producto);
-      }
-  }
-
-  this.productosFiltrados = filtered;
-}*/
 
 findIndexById(id: number, arreglo:TvStockProducto[]): number {
   let index = -1;

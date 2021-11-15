@@ -33,10 +33,6 @@ import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
         AppFooterComponent,
         AppRightPanelComponent,
         SpinnerComponent,  
-        
-       
-         
-       
     ],
     imports: [
         BrowserModule,
