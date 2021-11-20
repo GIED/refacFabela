@@ -163,8 +163,8 @@
 		</div>
 		<p-dialog [(visible)]="productDialog" [style]="{width: '800px'}" header="Notas de crédito del cliente" [modal]="true"
 			styleClass="p-fluid">
-            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['sFolioVenta']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
                        
@@ -177,7 +177,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th></th>
+                       
                         <th>No. Venta</th>
                         <th>Saldo Inicial</th>
                         <th>Abonos</th>
@@ -198,20 +198,23 @@
                         </td>
                         <td><span class="p-column-title"></span>{{venta.nSaldoTotal | number}}
                         </td>
-						<td><span class="p-column-title"></span> <div class="p-col">
-                            <p-progressBar [value]="venta.nAvancePago" [showValue]="false" ></p-progressBar>
-                        </div>
-                        <td><span class="p-column-title"></span> {{product.price | currency:'USD'}}
-                        </td>
 						<td> <span class="p-colum-title"></span>
 							<div class="p-col">
                                 <p-progressBar [value]="venta.nAvancePago" [showValue]="true" ></p-progressBar>
                             </div></td>
+						
+                        <td><span class="p-column-title"></span> {{venta.dFechaTerminoCredito | date}}
+                        </td>
+						
                     
-                        <td><span class="p-column-title"></span>01/10/2021
-                        </td>
-                        <td><span class="p-column-title"></span> Regular
-                        </td>
+                       
+							<td class="p-text-center"><span class="p-column-title">Status</span>
+								<div *ngIf="venta.sEstatus==='VENCIDO'">
+								<p-tag styleClass="p-mr-2" severity="danger">{{venta.sEstatus}}</p-tag>
+							  </div>
+							  <div *ngIf="venta.sEstatus==='REGULAR'">
+								<p-tag styleClass="p-mr-2" severity="success">{{venta.sEstatus}}</p-tag>
+							  </div>
                         <td>
                             <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
                         </td>
