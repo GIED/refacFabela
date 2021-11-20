@@ -4,7 +4,7 @@
         <hr />
     </div>
     <div class="p-col-12 p-xl-12 p-md-12">
-        <form [formGroup]="formGrp">
+        <form [formGroup]="formGrp" autocomplete="off">
             <div class="card">
                 <div class="p-grid">
 
@@ -82,7 +82,7 @@
                                             <td>{{producto.tcProducto.tcCategoria.sDescripcion}}</td>
                                             <td>{{producto.nCantidadTotal}}</td>
                                             <td>
-                                                <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100" placeholder="0">
+                                                <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100">
                                                 </p-inputNumber>
                                             </td>
                                             <td>
@@ -129,9 +129,9 @@
                                             <td>{{productoVenta.tcProducto.sProducto}}</td>
                                             <td>{{productoVenta.tcProducto.nPrecioConIva | currency:'$'}}</td>
                                             <td>
-                                                {{productoVenta.tcProducto.cantidadVenta}}
+                                                {{productoVenta.nCantidad}}
                                             </td>
-                                            <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.tcProducto.cantidadVenta | currency:'$'}}</td>
+                                            <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad | currency:'$'}}</td>
                                             <td>
                                                 <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(productoVenta)" class="p-button-rounded p-button-danger p-mr-2"></button>
                                             </td>
@@ -139,25 +139,17 @@
                                     </ng-template>
 
                                     <ng-template pTemplate="footer">
-                                        <div class="p-grid p-jc-end">
-                                            <div class="p-col-12">
-                                                <div class="box p-jc-end">
+                                        <tr>
+                                            <td colspan="6">
+                                                <div class="p-d-flex p-jc-end">
                                                     <strong>Cantidad Total: </strong> {{total |currency: '$'}}
                                                 </div>
-                                            </div>
-
-                                        </div>
+                                            </td>
+                                        </tr>
                                     </ng-template>
                                     <ng-template pTemplate="summary">
                                         <div class="p-grid p-mt-2" *ngIf="listaProductos.length>0">
-                                            <div class="p-col-6 ">
-
-                                                <button pButton class="p-button-primary" (click)="guardarCotizacion(listaProductos)" [disabled]="formGrp.invalid" label="Guardar cotización"></button>
-
-                                            </div>
-                                            <div class="p-col-6">
-                                                <button pButton class="p-button-success" disabled label="Generar venta"></button>
-                                            </div>
+                                            <button pButton class="p-button-primary" (click)="guardarCotizacion()" [disabled]="formGrp.invalid" label="Guardar cotización"></button>
                                         </div>
                                     </ng-template>
 
@@ -168,12 +160,16 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
             </div>
         </form>
     </div>
+    <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta" [style]="{width: '700px'}" [closable]="false" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <app-form-venta [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente" [total]="total" (generarVenta)="generarVenta($event)" (soloCotizacion)="soloCotizacion()"></app-form-venta>
+        </ng-template>
+        <ng-template pTemplate="footer">
+
+        </ng-template>
+    </p-dialog>
 
 </div>
