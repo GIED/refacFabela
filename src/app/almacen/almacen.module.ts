@@ -26,7 +26,13 @@ import { ProductosModule } from '../productos/productos.module';
     AlmacenRoutingModule,
     PrimeModule,
     ProductosModule
+  ], 
+  exports:[
+   
   ],
+
+  
+  
   providers:[CountryService, ProductService]
 })
 export class AlmacenModule { }

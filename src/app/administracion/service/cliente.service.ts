@@ -30,4 +30,8 @@ export class ClienteService {
     let url = environment.servicios.apiRefacFabela+locator.guardarClientes;
     return this.http.post<Clientes>(url,cliente);
   }
+  obtenerSaldosClientes(){
+    let url = environment.servicios.apiRefacFabela + locator.consultaClientesSaldos;
+    return this.http.get<SaldoGeneralCliente>(url);
+  }
 }

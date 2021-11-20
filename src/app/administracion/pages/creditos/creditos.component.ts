@@ -3,6 +3,11 @@ import { Product } from '../../../demo/domain/product';
 import { ProductService } from '../../../demo/service/productservice';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { SaldoGeneralCliente } from '../../../ventasycotizaciones/model/TvSaldoGeneralCliente';
+import { ClienteService } from '../../service/cliente.service';
+import { totalesGeneralesCreditos } from '../../interfaces/totalesGeneralesCredito';
+import { VentasService } from '../../../shared/service/ventas.service';
+import { TvVentasDetalle } from '../../../productos/model/TvVentasDetalle';
 
 @Component({
   selector: 'app-creditos',
@@ -31,86 +36,97 @@ import { MessageService } from 'primeng/api';
 export class CreditosComponent implements OnInit {
 
   productDialog: boolean;
-
+  cols:any;
   products: Product[];
-
   product: Product;
-
   selectedProducts: Product[];
-
-  submitted: boolean;
-
-  cols: any[];
+  submitted: boolean; 
  
+
+  /*listas y variables actuales*/
+
+  listaClientesCredito: SaldoGeneralCliente;
+  listaVentasDetalleCliente: TvVentasDetalle[];
+  totalesCreditos: totalesGeneralesCreditos ;
   pieData: any;
-
-  polarData: any;
-
-  radarData: any;
-
-  lineOptions: any;
-
-  barOptions: any;
-
   pieOptions: any;
-
-  polarOptions: any;
-
-  radarOptions: any;
-  
-  cars:any;
-
   car:any
 
   constructor(private productService: ProductService, private messageService: MessageService,
-              private confirmationService: ConfirmationService) {
+              private confirmationService: ConfirmationService, private clienteService:ClienteService, private ventasService: VentasService) {
+                  this.totalesCreditos={};
      
   }
 
   ngOnInit() {
-      this.productService.getProducts().then(data => this.products = data);
 
-      this.cols = [
-          { field: 'rfc', header: 'rfc' },
-          { field: 'razon_social', header: 'razon_social' },
-          { field: 'direccion', header: 'direccion' },
-          { field: 'telefono', header: 'telefono' },
-          { field: 'correo', header: 'correo' }
-      ];
+    this.clienteService.obtenerSaldosClientes().subscribe(data=>{
+        this.listaClientesCredito=data;       
+       this.totalesCreditos= this.obtenerTotalesCreditos(this.listaClientesCredito);       
+      console.log(this.totalesCreditos);
+      this.generarGrafica(this.totalesCreditos);
+    });      
+   
+    this.car = [
+        { total: '',abono: '',  saldo: '',  nabono: '',  ntotal: ''}
+       
+    ];
 
-      this.pieData = {
-        labels: ['Abonos', 'Saldos'],
+   
+  }
+
+  generarGrafica(totalesCreditos: totalesGeneralesCreditos){
+
+    this.pieData = {
+        labels: ['Saldo General', 'Abono General'],
         datasets: [
             {
-                data: [50000, 180000,],
+                data: [this.totalesCreditos.nSaldoTotalGeneral, this.totalesCreditos.nAbonos],
                 backgroundColor: [
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 99, 132)',
+                    'red',
+                    'green',
                    
                 ]
             }]
     };
-
-   
-    this.car = [
-        { total: '145,000'
-     },
-     { abono: '105,000'
-    },
-    { saldo: '40,000'
-},
-       
-    ];
-
     this.pieOptions = {
         plugins: {
             legend: {
                 labels: {
                     fontColor: '#A0A7B5'
-                }
+                },
+                
             }
-        }
+        },
+      
     };
+
+  }
+
+
+  obtenerTotalesCreditos(listaClientesCredito:SaldoGeneralCliente){
+      this.totalesCreditos.nSaldoTotalGeneral=0;
+      this.totalesCreditos.nTotalRegular=0;
+      this.totalesCreditos.nTotalVencidos=0;
+      this.totalesCreditos.nAbonos=0;
+      this.totalesCreditos.nTotalVenta=0;
+
+    for(let i in listaClientesCredito){
+        if(listaClientesCredito[i].sEstatus==="REGULAR"){
+            this.totalesCreditos.nTotalRegular+=1;        
+
+        }
+        if(listaClientesCredito[i].sEstatus==="VENCIDO"){
+            this.totalesCreditos.nTotalVencidos+=1;    
+
+        }
+        this.totalesCreditos.nSaldoTotalGeneral+=listaClientesCredito[i].nSaldoTotal;   
+        this.totalesCreditos.nAbonos+=listaClientesCredito[i].nAbonos;   
+        this.totalesCreditos.nTotalVenta+=listaClientesCredito[i].nTotalVenta;    
+
+    }
+  return this.totalesCreditos
+
   }
 
   openNew() {
@@ -132,9 +148,17 @@ export class CreditosComponent implements OnInit {
       });
   }
 
-  editProduct(product: Product) {
-      this.product = {...product};
+  consultaVentaDetalle(saldoGeneralCliente: SaldoGeneralCliente) {
+     console.log(saldoGeneralCliente);
       this.productDialog = true;
+
+    this.ventasService.obtenerVentaDetalleTipoPago(saldoGeneralCliente.tcCliente.nId, 1).subscribe(data=>{
+        this.listaVentasDetalleCliente=data;       
+      console.log(this.listaVentasDetalleCliente);
+    });      
+
+
+
   }
 
   deleteProduct(product: Product) {

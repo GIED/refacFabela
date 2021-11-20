@@ -1,7 +1,6 @@
-import { NgxSpinnerModule } from 'ngx-spinner';
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ProductosRoutingModule } from './productos-routing.module';
 import { RegistroProductoComponent } from './pages/registro-producto/registro-producto.component';
 import { HistorialProductoComponent } from './pages/historial-producto/historial-producto.component';
@@ -13,7 +12,9 @@ import { HistoriaPrecioProductoComponent } from './components/historia-precio-pr
 import { InputBusquedaComponent } from './components/input-busqueda/input-busqueda.component';
 import { ModalProductosBodegaComponent } from './components/modal-productos-bodega/modal-productos-bodega.component';
 import { ModalProductosAlternativosComponent } from './components/modal-productos-alternativos/modal-productos-alternativos.component';
-import { AlmacenModule } from '../almacen/almacen.module';
+
+
+
 
 
 @NgModule({
@@ -31,16 +32,13 @@ import { AlmacenModule } from '../almacen/almacen.module';
     CommonModule,
     ProductosRoutingModule,
     PrimeModule,
-    ReactiveFormsModule,
-    
+    ReactiveFormsModule,  
     
   ],
   exports:[
     ModalProductoComponent,
     InputBusquedaComponent,
-    ModalProductosBodegaComponent
-
-   
+    ModalProductosBodegaComponent   
   ]
 })
 export class ProductosModule { }
