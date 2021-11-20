@@ -5,6 +5,7 @@ static obtenerClientes='/obtenerClientes';
 static obtenerClienteLike='/consultaClienteLike?';
 static obtenerSaldoGeneral='/consultaClienteIdSaldo?'
 static guardarClientes='/guardarCliente';
+static consultaClientesSaldos='/consultaClienteSaldo'
 // api para proveedores
 static obtenerProveedores='/obtenerProveedores';
 static guardarProveedores='/guardarProveedores';
@@ -41,6 +42,8 @@ static obtenerNivel= '/catalogoNivel';
 
 //Inventario
 static consultaInventario ='/obtenerInventarioEsp?';
+//Api ventas
+static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?'
 
 
 

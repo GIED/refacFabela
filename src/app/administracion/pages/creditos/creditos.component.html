@@ -20,26 +20,39 @@
 							<ng-template pTemplate="header" >
 								<tr>
 									<th class="p-text-center" style="background:#ebd282 ;" >
-										Deuda Total
+										Total Inicial
 									</th>
 									<th class="p-text-center" style="background:#ebd282 ;" >
 										Abonos
 									</th>
 									<th class="p-text-center" style="background:#ebd282 ;" >
-										Saldo
+										Saldo Total
+									</th>
+									<th class="p-text-center" style="background:#ebd282 ;" >
+									    Total Vencidos
+									</th>
+									<th class="p-text-center" style="background:#ebd282 ;" >
+										Total Regular
 									</th>
 								</tr>
 							</ng-template>
 							<ng-template pTemplate="body" let-car >
 								<tr>
 									<td class="p-text-center" >
-											{{car.total}}
+										{{totalesCreditos.nTotalVenta | number}}
+									  </td>
+									  <td class="p-text-center" >
+										{{totalesCreditos.nAbonos | number}}
+									  </td>
+									<td class="p-text-center" >
+										{{totalesCreditos.nSaldoTotalGeneral | number}}
+									 
 									</td>
 									<td class="p-text-center">
-										{{car.abono}}
+										{{totalesCreditos.nTotalVencidos}}
 								</td>
 								<td class="p-text-center">
-									{{car.saldo}}
+									{{totalesCreditos.nTotalRegular}}
 							</td>
 								</tr>
 							</ng-template>
@@ -50,8 +63,8 @@
 					</div>
 				</div>
 			</div>
-			<p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true"
-				[globalFilterFields]="['name','country.name','representative.name','status']"
+			<p-table #dt [value]="listaClientesCredito" [columns]="cols" [rows]="10" [paginator]="true"
+				[globalFilterFields]="['tcCliente.sRfc','tcCliente.sRazonSocial','cliente.nLimiteCredito','cliente.nSaldoTotal', 'nCreditoDisponible']"
 				[(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
 				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
 				[showCurrentPageReport]="true">
@@ -73,66 +86,69 @@
 						<!--<th>Image</th>-->
 						<th pSortableColumn="price">Razón social <p-sortIcon field="price"></p-sortIcon>
 						</th>
-						<th pSortableColumn="price">No. Venta<p-sortIcon field="price"></p-sortIcon>
-						</th>
+					
 						
-						<th pSortableColumn="rating">Monto Credito <p-sortIcon field="rating"></p-sortIcon>
+						<th pSortableColumn="rating">Limite Crédito <p-sortIcon field="rating"></p-sortIcon>
+						</th>
+						<th pSortableColumn="rating">Disponible <p-sortIcon field="rating"></p-sortIcon>
+						</th>
+						<th pSortableColumn="inventoryStatus">Saldo<p-sortIcon field="inventoryStatus"></p-sortIcon>
+						</th>
+						<th pSortableColumn="inventoryStatus">Inicial <p-sortIcon field="inventoryStatus"></p-sortIcon>
 						</th>
 						<th pSortableColumn="inventoryStatus">Abonos <p-sortIcon field="inventoryStatus"></p-sortIcon>
 						</th>
-						<th pSortableColumn="inventoryStatus">Saldo <p-sortIcon field="inventoryStatus"></p-sortIcon>
-						</th>
-						<th pSortableColumn="category">Avance <p-sortIcon field="category"></p-sortIcon>
-						</th>
-						<th pSortableColumn="inventoryStatus">Fecha Inicio <p-sortIcon field="inventoryStatus"></p-sortIcon>
-						</th>
-						<th pSortableColumn="inventoryStatus">Fecha Termino <p-sortIcon field="inventoryStatus"></p-sortIcon>
-						</th>
+						<th pSortableColumn="category">Avance crédito <p-sortIcon field="category"></p-sortIcon>
+						</th>						
 						<th pSortableColumn="inventoryStatus">Estatus General <p-sortIcon field="inventoryStatus"></p-sortIcon>
 						</th>						
 					</tr>
 				</ng-template>
-				<ng-template pTemplate="body" let-product>
+				<ng-template pTemplate="body" let-cliente>
 					<tr>
 						<td>
 						</td>
 						<td><span class="p-column-title">Name</span>
-							{{product.name}}
+							{{cliente.tcCliente.sRfc}}
 						</td>
 						<!--	<td><span class="p-column-title">Image</span>
 							<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
 						</td>-->
 						<td><span class="p-column-title">Price</span>
-							PEDRO MANUEL FABELA MARTINEZ
+							{{cliente.tcCliente.sRazonSocial}}
 						</td>
-						<td><span class="p-column-title">Category</span>
-							14987
+						<td class="p-test-center">
+							{{cliente.nLimiteCredito | number}}
+						</td>
+						<td class="p-test-center">
+							{{cliente.nCreditoDisponible | number}}
 						</td>
 						<td><span class="p-column-title">Reviews</span>
-							5,685
+							{{cliente.nSaldoTotal | number}}
 						</td>
 						<td><span class="p-column-title">Status</span>
-							685
+							{{cliente.nTotalVenta | number}}
 						</td>
 						<td><span class="p-column-title">Status</span>
-							5,000
+							{{cliente.nAbonos | number}}
 						</td>
+						
 						<td> <span class="p-colum-title"></span>
 							<div class="p-col">
-                                <p-progressBar [value]="50" [showValue]="false" ></p-progressBar>
+                                <p-progressBar [value]="cliente.nAvanceCredito" [showValue]="true" ></p-progressBar>
                             </div></td>
-						<td><span class="p-column-title">Status</span>
-							01/10/2021
-						</td>
-						<td><span class="p-column-title">Status</span>
-							20/01/2022
-						</td>
-						<td><span class="p-column-title">Status</span>
-							PENDIENTE
+					
+						<td class="p-text-center"><span class="p-column-title">Status</span>
+							<div *ngIf="cliente.sEstatus==='VENCIDO'">
+							<p-tag styleClass="p-mr-2" severity="danger">{{cliente.sEstatus}}</p-tag>
+						  </div>
+						  <div *ngIf="cliente.sEstatus==='REGULAR'">
+							<p-tag styleClass="p-mr-2" severity="success">{{cliente.sEstatus}}</p-tag>
+						  </div>
 						</td>
 						<td>
 							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
-								(click)="editProduct(product)"></button>
+								(click)="consultaVentaDetalle(cliente)"></button>
 							<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
 								(click)="deleteProduct(product)"></button>
 						</td>
@@ -140,14 +156,14 @@
 				</ng-template>
 				<ng-template pTemplate="summary">
 					<div class="p-d-flex p-ai-center p-jc-between">
-						En total hay {{products ? products.length : 0 }} clientes.
+						En total hay {{listaClientesCredito ? listaClientesCredito.length : 0 }} clientes con crédito activo.
 					</div>
 				</ng-template>
 			</p-table>
 		</div>
 		<p-dialog [(visible)]="productDialog" [style]="{width: '800px'}" header="Notas de crédito del cliente" [modal]="true"
 			styleClass="p-fluid">
-            <p-table #dt [value]="products" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
@@ -172,23 +188,26 @@
                        
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product let-expanded="expanded">
+                <ng-template pTemplate="body" let-venta let-expanded="expanded">
                     <tr>
-                        <td>
-                            <button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+						<td><span class="p-column-title"></span> {{venta.sFolioVenta}}
                         </td>
-                        <td><span class="p-column-title"></span> {{product.id}}
+                        <td><span class="p-column-title"></span> {{venta.nTotalVenta | number}}
                         </td>
-                        <td><span class="p-column-title"></span> {{product.price | currency:'USD'}}
+                        <td><span class="p-column-title"></span> {{venta.nTotalAbono| number}}
                         </td>
-                        <td><span class="p-column-title"></span>{{product.price | currency:'USD'}}
+                        <td><span class="p-column-title"></span>{{venta.nSaldoTotal | number}}
                         </td>
-                        <td><span class="p-column-title"></span> {{product.price | currency:'USD'}}
-                        </td>
-                        <td><span class="p-column-title"></span> <div class="p-col">
-                            <p-progressBar [value]="50" [showValue]="false" ></p-progressBar>
+						<td><span class="p-column-title"></span> <div class="p-col">
+                            <p-progressBar [value]="venta.nAvancePago" [showValue]="false" ></p-progressBar>
                         </div>
+                        <td><span class="p-column-title"></span> {{product.price | currency:'USD'}}
                         </td>
+						<td> <span class="p-colum-title"></span>
+							<div class="p-col">
+                                <p-progressBar [value]="venta.nAvancePago" [showValue]="true" ></p-progressBar>
+                            </div></td>
+                    
                         <td><span class="p-column-title"></span>01/10/2021
                         </td>
                         <td><span class="p-column-title"></span> Regular
@@ -198,48 +217,8 @@
                         </td>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="rowexpansion" let-product>
-                    <tr>
-                        <td colspan="8">
-                            <div class="p-p-3">
-                                <p-table [value]="product.orders" dataKey="id">
-                                    <ng-template pTemplate="caption">
-                                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                                            <h5 class="p-m-0">Abonos a la Venta de Crédito {{product.name}}</h5>
-                                        </div>
-                                    </ng-template>
-                                    <ng-template pTemplate="header">
-                                        <tr>
-                                            <th>No. Venta</th>
-                                            <th>Saldo Inicial</th>
-                                            <th>Abono</th>
-                                            <th>Saldo Final</th>
-                                            <th>Fecha Abono</th>
-                                            <th>Estatus</th>
-                                        </tr>
-                                    </ng-template>
-                                    <ng-template pTemplate="body" let-order>
-                                        <tr>
-                                            <td>{{order.id}}</td>
-                                            <td>{{order.productCode}}</td>
-                                            <td>PESO</td>
-                                            <td>{{product.price}}</td>
-                                            <td>26</td>
-                                            <td>
-                                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
-                                            </td>
-                                        </tr>
-                                    </ng-template>
-                                    <ng-template pTemplate="emptymessage">
-                                        <tr>
-                                            <td colspan="6">No hay Abonos registrados para la Vernta de Crédito</td>
-                                        </tr>
-                                    </ng-template>
-                                </p-table>
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
+              
+               
             </p-table>
 		
 			<ng-template pTemplate="footer">

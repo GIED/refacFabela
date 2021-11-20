@@ -5,4 +5,8 @@ export class SaldoGeneralCliente{
 	nSaldoTotal: number;
     nCreditoDisponible: number;
     tcCliente: Clientes;
+    nSaldoUtilizado:number;
+    nAvanceCredito:number;
+    nEstatus:string;
+
 }

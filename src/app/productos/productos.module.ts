@@ -1,7 +1,6 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ProductosRoutingModule } from './productos-routing.module';
 import { RegistroProductoComponent } from './pages/registro-producto/registro-producto.component';
 import { HistorialProductoComponent } from './pages/historial-producto/historial-producto.component';
@@ -33,21 +32,13 @@ import { ModalProductosAlternativosComponent } from './components/modal-producto
     CommonModule,
     ProductosRoutingModule,
     PrimeModule,
-    ReactiveFormsModule,
-   
-   
-
-   
-    
-   
+    ReactiveFormsModule,  
     
   ],
   exports:[
     ModalProductoComponent,
     InputBusquedaComponent,
-    ModalProductosBodegaComponent
-
-   
+    ModalProductosBodegaComponent   
   ]
 })
 export class ProductosModule { }
