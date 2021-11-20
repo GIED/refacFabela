@@ -11,11 +11,12 @@ import { ModalProductoComponent } from '../productos/components/modal-producto/m
 import { ProductosModule } from '../productos/productos.module';
 import { DetalleClienteComponent } from './components/detalle-cliente/detalle-cliente.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormVentaComponent } from './components/form-venta/form-venta.component';
 
 
 
 @NgModule({
-  declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent],
+  declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent],
   imports: [
     VentasycotizacionesRoutingModule,
     PrimeModule,

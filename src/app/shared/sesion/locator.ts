@@ -42,6 +42,9 @@ static obtenerNivel= '/catalogoNivel';
 //Inventario
 static consultaInventario ='/obtenerInventarioEsp?';
 
+//Cotizaciones
+static guardaCotizacion= '/guardarCotizacion';
+
 
 
 

@@ -1,7 +1,7 @@
 import { TcProducto } from './../../../productos/model/TcProducto';
 
 import { Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
 import { CountryService } from '../../../demo/service/countryservice';
@@ -15,6 +15,8 @@ import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { ThirdPartyDraggable } from '@fullcalendar/interaction';
 import { TvStockProducto } from '../../../productos/model/TvStockProducto';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CotizacionDto } from '../../model/dto/CotizacionDto';
+import { VentasCotizacionesService } from '../../../shared/service/ventas-cotizaciones.service';
 
 
 @Component({
@@ -37,18 +39,26 @@ export class VentasComponent implements OnInit {
   listaProductoSugerencia: TcProducto[]=[];
   listaProductos: TvStockProducto[];
   productosFiltrados: TvStockProducto[]=[];
+  listaCotización: CotizacionDto[]=[];
+  estatusList: any[];
   
 
   mostrarSugerenciasCliente:boolean=false;
   mostrarDetalleCliente:boolean=false;
   mostrarSugerenciasProducto:boolean=false;
+  mostrarOpcionesVenta:boolean=false;
 
   saldoGeneralCliente:SaldoGeneralCliente;
-  productDialog: boolean;
+  
   total: number = 0;
 
-  constructor(private clienteService:ClienteService,private productoService:ProductoService, private messageService: MessageService,
-    private confirmationService: ConfirmationService) { 
+  constructor(
+    private clienteService:ClienteService,
+    private productoService:ProductoService, 
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
+    private ventasCotizacionService: VentasCotizacionesService,
+    ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
     }
@@ -57,15 +67,16 @@ export class VentasComponent implements OnInit {
     this.buscaCliente();
     this.buscaProducto();
     this._initFormGroup();
+    
   }
 
   _initFormGroup(): void{ 
     this.formGrp=new FormGroup({
       clienteCtrl: new FormControl('',[Validators.required,Validators.minLength(3)]),
-      productoCtrl: new FormControl('',[]),
+      productoCtrl: new FormControl('',[Validators.minLength(3)]),
       clienteSeleccionadoCtrl: new FormControl('', []),
       productoSelecionadoCtrl: new FormControl('', []),
-      nCantidadCtrl: new FormControl('', [ ])
+      nCantidadCtrl: new FormControl( 0 , [ ])
     });
     
   }
@@ -88,12 +99,14 @@ export class VentasComponent implements OnInit {
     return this.formGrp.get('nCantidadCtrl') as FormControl;
   }
 
+  
+
   inputCliente(){ 
     this.mostrarDetalleCliente=false;
 
     if (this.clienteCtrl.valid) {
   
-      this.debuncerCliente.next(this.formGrp.get('clienteCtrl').value);
+      this.debuncerCliente.next(this.clienteCtrl.value);
     }else{
       this.mostrarSugerenciasCliente=false;
     }  
@@ -118,8 +131,8 @@ export class VentasComponent implements OnInit {
 }
 
 valorSeleccionadoCliente(){
-  console.log(this.formGrp.get('clienteSeleccionadoCtrl').value);
-  this.clienteSeleccionado=this.formGrp.get('clienteSeleccionadoCtrl').value;
+  console.log(this.clienteSeleccionadoCtrl.value);
+  this.clienteSeleccionado=this.clienteSeleccionadoCtrl.value;
   this.clienteCtrl.setValue(this.clienteSeleccionado.sRazonSocial);
   this.clienteService.obtenerSaldoGeneralCliente(this.clienteSeleccionado.nId).subscribe(saldoCliente=>{
     
@@ -141,8 +154,8 @@ valorSeleccionadoCliente(){
 
 inputProducto(){
   this.productosFiltrados=[];
-    if (this.productoCtrl.valid) {
-      this.debuncerProducto.next(this.formGrp.get('productoCtrl').value);
+    if (this.productoCtrl.valid && this.productoCtrl.value != '') {
+      this.debuncerProducto.next(this.productoCtrl.value);
     }else{
       this.mostrarSugerenciasProducto=false;
     }  
@@ -154,7 +167,7 @@ buscaProducto(){
       .pipe(debounceTime(500))
       .subscribe(valor => { 
         this.productoService.obtenerProductosLike(valor).subscribe(productos => {
-          console.log(productos.length);
+         // console.log(productos.length);
           if (productos.length != 0) {
             this.listaProductoSugerencia=productos;
             this.mostrarSugerenciasProducto=true;
@@ -168,33 +181,26 @@ buscaProducto(){
 }
 
 valorSeleccionadoProducto(){
-  this.productoSeleccionado=this.formGrp.get('productoSelecionadoCtrl').value;
+  this.productoSeleccionado=this.productoSelecionadoCtrl.value;
   this.productoService.obtenerProductoIdBodegas(this.productoSeleccionado.nId).subscribe(productoStock =>{
+    if (productoStock.nCantidadTotal === 0) {
+      this.messageService.add({severity: 'warn', summary: 'sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
+    }
     this.productosFiltrados.push(productoStock);
     this.mostrarSugerenciasProducto=false;
+    this.productoCtrl.setValue('');
   });
 }
 
 
 
-
-
-openNew() { 
-    this.productDialog = true;
-}
- hideDialog() {
-  this.productDialog = false;
-  
-}
-
-
 agregarProduct(producto: TvStockProducto) {
 
-  console.log(this.formGrp.get('nCantidadCtrl').value)
-  producto.ncantidad=this.formGrp.get('nCantidadCtrl').value;
-  console.log(producto);
+  console.log("cantidad recibida: ",this.nCantidadCtrl.value)
+  producto.nCantidad=this.nCantidadCtrl.value;
+  
   //verifica que se agrege una cantidad
-  if (producto.ncantidad === 0 || producto.ncantidad === undefined || producto.ncantidad === null) {
+  if (producto.nCantidad === 0) {
     //console.log("entro a if");
     
     this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar una cantidad', life: 3000});
@@ -213,8 +219,6 @@ agregarProduct(producto: TvStockProducto) {
     // si el indice retornado es -1 el producto no existe en la lista y se agrega
     if (this.findIndexById(producto.nIdProducto, this.listaProductos) === -1 ) {
 
-      
-      producto.tcProducto.cantidadVenta=producto.ncantidad;
       this.listaProductos.push(producto);
 
       
@@ -222,24 +226,25 @@ agregarProduct(producto: TvStockProducto) {
     //si entra a else el producto ya existe en la lista y solo actualiza la cantidad
     else{
       
-      producto.tcProducto.cantidadVenta=this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)].tcProducto.cantidadVenta +producto.ncantidad;
+      producto.nCantidad=this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)].nCantidad +producto.nCantidad;
       this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
     }
   }
   //si entra a else el producto no existe en la lista
   else{
-    producto.tcProducto.cantidadVenta=producto.ncantidad;
+    console.log("producto con cantidad agregada en else: ",producto);
     this.listaProductos.push(producto);
+    
   }
   //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
   console.log("total a: "+this.total);
-  this.total += producto.tcProducto.nPrecioConIva*producto.ncantidad;
-  producto.nCantidadTotal=producto.nCantidadTotal-producto.ncantidad;
-  producto.ncantidad=0;
+  this.total += producto.tcProducto.nPrecioConIva*producto.nCantidad;
+  producto.nCantidadTotal=producto.nCantidadTotal-producto.nCantidad;
   console.log("total d: "+this.total);
   
-  this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
+  //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.productosFiltrados=[];
+  this.nCantidadCtrl.setValue(0);
   this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Producto Agregado Correctamente', life: 3000});
 
 //}
@@ -250,16 +255,66 @@ agregarProduct(producto: TvStockProducto) {
 quitarProducto(producto: TvStockProducto){
   console.log(producto);
   
-  producto.ncantidad= producto.ncantidad + producto.tcProducto.cantidadVenta;
-  this.total = this.total - producto.tcProducto.nPrecioConIva*producto.tcProducto.cantidadVenta;
+  this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
   console.log("total: ",this.total);
-  this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
+  //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
 }
 
-guardarCotizacion(tvStockProducto:TvStockProducto[]){
-  console.log(tvStockProducto);
+guardarCotizacion(){
+
+  //console.log(this.clienteSeleccionado);
+  //console.log(this.listaProductos);
+
+  const productoCotizado: CotizacionDto[]=[];
+
+  let folio = this.createFolio();
+
+  for (let producto of this.listaProductos) {
+    const cotizacionDto= new CotizacionDto();
+    cotizacionDto.nIdCliente=this.clienteSeleccionado.nId;
+    cotizacionDto.sFolio=folio;
+    cotizacionDto.nIdProducto=producto.nIdProducto;
+    cotizacionDto.nCantidad=producto.nCantidad;
+    cotizacionDto.nPrecioUnitario=producto.tcProducto.nPrecioSinIva;
+    cotizacionDto.nIvaUnitario=producto.tcProducto.nPrecioConIva-producto.tcProducto.nPrecioSinIva;
+    cotizacionDto.nTotalUnitario=producto.tcProducto.nPrecioConIva;
+
+    productoCotizado.push(JSON.parse(JSON.stringify(cotizacionDto)));
+    
+  }
+
+  this.listaCotización = productoCotizado;
+  console.log("lista enviada");
+   console.log(this.listaCotización);
+
+  this.ventasCotizacionService.guardaCotizacion(this.listaCotización).subscribe(resp =>{
+
+    if (resp === 'registrado') {
+      console.log(this.listaProductos);
+      console.log(this.saldoGeneralCliente);
+      this.mostrarOpcionesVenta=true;
+    }
+   
+  });
 }
+
+
+soloCotizacion(){
+  this.clienteCtrl.setValue('');
+  this.productoCtrl.setValue('');
+  this.clienteSeleccionadoCtrl.setValue('');
+  this.productoSelecionadoCtrl.setValue('');
+  this.nCantidadCtrl.setValue('');
+  this.listaProductos=[];
+  this.total=0.00;
+  this.mostrarDetalleCliente=false;
+  this.mostrarOpcionesVenta=false;
+
+
+}
+
+
 
 findIndexById(id: number, arreglo:TvStockProducto[]): number {
   let index = -1;
@@ -271,5 +326,14 @@ findIndexById(id: number, arreglo:TvStockProducto[]): number {
   }
   return index;
 }
+
+createFolio(): string {
+  let folio = '';
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for ( let i = 0; i < 5; i++ ) {
+    folio += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return folio;
+} 
 
 }
