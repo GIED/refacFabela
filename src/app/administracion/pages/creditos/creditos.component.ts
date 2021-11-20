@@ -8,6 +8,7 @@ import { ClienteService } from '../../service/cliente.service';
 import { totalesGeneralesCreditos } from '../../interfaces/totalesGeneralesCredito';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TvVentasDetalle } from '../../../productos/model/TvVentasDetalle';
+import { TwAbono } from '../../../productos/model/TwAbono';
 
 @Component({
   selector: 'app-creditos',
@@ -35,7 +36,6 @@ import { TvVentasDetalle } from '../../../productos/model/TvVentasDetalle';
 })
 export class CreditosComponent implements OnInit {
 
-  productDialog: boolean;
   cols:any;
   products: Product[];
   product: Product;
@@ -46,11 +46,14 @@ export class CreditosComponent implements OnInit {
   /*listas y variables actuales*/
 
   listaClientesCredito: SaldoGeneralCliente;
+  listaAbonosVenta:TwAbono[];
   listaVentasDetalleCliente: TvVentasDetalle[];
   totalesCreditos: totalesGeneralesCreditos ;
   pieData: any;
   pieOptions: any;
   car:any
+  productDialog: boolean;
+  productDialog2: boolean;
 
   constructor(private productService: ProductService, private messageService: MessageService,
               private confirmationService: ConfirmationService, private clienteService:ClienteService, private ventasService: VentasService) {
@@ -129,10 +132,15 @@ export class CreditosComponent implements OnInit {
 
   }
 
-  openNew() {
-      this.product = {};
-      this.submitted = false;
-      this.productDialog = true;
+  obtenerAbonosVentaId(tvVentasDetalle:TvVentasDetalle) {
+     console.log(tvVentasDetalle);
+      this.productDialog2 = true;
+
+      this.ventasService.obtenerAbonosVentaId(tvVentasDetalle.nId).subscribe(data=>{
+        this.listaAbonosVenta=data;       
+      console.log(this.listaAbonosVenta);
+    });      
+
   }
 
   deleteSelectedProducts() {
@@ -176,8 +184,14 @@ export class CreditosComponent implements OnInit {
 
   hideDialog() {
       this.productDialog = false;
-      this.submitted = false;
+      this
+      .submitted = false;
   }
+  hideDialog2() {
+    this.productDialog2 = false;
+    this.submitted = false;
+}
+
 
   saveProduct() {
       this.submitted = true;

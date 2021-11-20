@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 
 import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
+import { TwAbono } from 'src/app/productos/model/TwAbono';
 
 @Injectable({
   providedIn: 'root'
@@ -15,5 +16,9 @@ export class VentasService {
   obtenerVentaDetalleTipoPago(nIdCliente:number, nTipoPago:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleEstatus+'nIdCliente='+nIdCliente+'&nTipoPago='+nTipoPago;
     return this.http.get<TvVentasDetalle[]>(url);
+  }
+  obtenerAbonosVentaId(id:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaVentaAbonoId+'nId='+id;
+    return this.http.get<TwAbono[]>(url);
   }
 }
