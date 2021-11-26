@@ -48,6 +48,7 @@ static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';
+static consultaCotizaciones='/consultaCotizaciones'
 
 
 

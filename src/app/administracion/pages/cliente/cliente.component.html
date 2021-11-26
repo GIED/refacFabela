@@ -11,7 +11,7 @@
 
             </p-toolbar>
             <p-table #dt [value]="listaClientes" [rows]="10" [paginator]="true"
-                [globalFilterFields]="['sRfc','sRazonSocial','sTelefono']" [(selection)]="selectedProducts"
+                [globalFilterFields]="['sRfc','sRazonSocial']" [(selection)]="selectedProducts"
                 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
                 [showCurrentPageReport]="true">
@@ -29,18 +29,20 @@
                     <tr>
                         <th style="width: 3rem">
                         </th>
-                        <th pSortableColumn="name">RFC </th>                      
-                        <th pSortableColumn="price">Razón social
-                            <p-sortIcon field="price"></p-sortIcon>
+                        <th pSortableColumn="sRfc">RFC 
+                              <p-sortIcon field="sRfc"></p-sortIcon>    </th>
+                                         
+                        <th pSortableColumn="sRazonSocial">Razón social
+                            <p-sortIcon field="sRazonSocial"></p-sortIcon>
                         </th>
                         <th pSortableColumn="category">Dirección
-                            <p-sortIcon field="category"></p-sortIcon>
+                           
                         </th>
                         <th pSortableColumn="rating">Correo
-                            <p-sortIcon field="rating"></p-sortIcon>
+                           
                         </th>
                         <th pSortableColumn="inventoryStatus">Telénono
-                            <p-sortIcon field="inventoryStatus"></p-sortIcon>
+                          
                         </th>
                         <th></th>
                     </tr>
