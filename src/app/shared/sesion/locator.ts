@@ -45,6 +45,7 @@ static consultaInventario ='/obtenerInventarioEsp?';
 //Api ventas
 static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
+static guardaVenta= '/guardarVenta';
 
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';

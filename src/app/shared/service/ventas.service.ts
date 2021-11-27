@@ -5,6 +5,7 @@ import { locator } from '../sesion/locator';
 
 import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { TwAbono } from 'src/app/productos/model/TwAbono';
+import { DatosVenta } from 'src/app/ventasycotizaciones/interfaces/DatosVenta';
 
 @Injectable({
   providedIn: 'root'
@@ -21,4 +22,11 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaAbonoId+'nId='+id;
     return this.http.get<TwAbono[]>(url);
   }
+
+  guardaVenta(datosVenta:DatosVenta){
+    let url = environment.servicios.apiRefacFabela + locator.guardaVenta;
+    return this.http.post<any>(url,datosVenta);
+  }
+
+
 }

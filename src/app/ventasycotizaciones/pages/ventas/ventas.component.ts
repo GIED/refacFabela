@@ -17,6 +17,8 @@ import { TvStockProducto } from '../../../productos/model/TvStockProducto';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CotizacionDto } from '../../model/dto/CotizacionDto';
 import { VentasCotizacionesService } from '../../../shared/service/ventas-cotizaciones.service';
+import { DatosVenta } from '../../interfaces/DatosVenta';
+import { VentasService } from '../../../shared/service/ventas.service';
 
 
 @Component({
@@ -41,6 +43,8 @@ export class VentasComponent implements OnInit {
   productosFiltrados: TvStockProducto[]=[];
   listaCotización: CotizacionDto[]=[];
   estatusList: any[];
+
+  datosRegistraVenta:DatosVenta;
   
 
   mostrarSugerenciasCliente:boolean=false;
@@ -56,8 +60,8 @@ export class VentasComponent implements OnInit {
     private clienteService:ClienteService,
     private productoService:ProductoService, 
     private messageService: MessageService,
-    private confirmationService: ConfirmationService,
     private ventasCotizacionService: VentasCotizacionesService,
+    private ventaService:VentasService
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -310,6 +314,33 @@ soloCotizacion(){
   this.total=0.00;
   this.mostrarDetalleCliente=false;
   this.mostrarOpcionesVenta=false;
+
+
+}
+
+generarVenta(datosVenta: DatosVenta){
+
+  this.datosRegistraVenta=datosVenta;
+  this.datosRegistraVenta.idCliente=this.clienteSeleccionado.nId;
+  this.datosRegistraVenta.sFolioVenta=this.createFolio();
+  this.datosRegistraVenta.idTipoVenta=1;
+  if (this.datosRegistraVenta.tipoPago === 1) {
+    this.datosRegistraVenta.fechaIniCredito=new Date();
+    var fin = new Date();
+    fin.setDate(fin.getDate() + 30);
+    this.datosRegistraVenta.fechaFinCredito=fin;
+  }else{
+    this.datosRegistraVenta.fechaIniCredito=null;
+    this.datosRegistraVenta.fechaFinCredito=null;
+  }
+  console.log("Datos para venta en padre");
+  console.log(this.datosRegistraVenta);
+
+  this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
+    console.log(resp);
+  })
+  
+  
 
 
 }

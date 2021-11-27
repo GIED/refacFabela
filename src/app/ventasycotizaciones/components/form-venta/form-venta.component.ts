@@ -6,6 +6,7 @@ import { producto } from '../../../productos/interfaces/producto.interfaces';
 import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { MessageService } from 'primeng/api';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DatosVenta } from '../../interfaces/DatosVenta';
 
 @Component({
   selector: 'app-form-venta',
@@ -17,8 +18,10 @@ export class FormVentaComponent implements OnInit {
   @Input() listaProductos:TvStockProducto[];
   @Input() saldoGeneralCliente:SaldoGeneralCliente;
   @Input() total:number;
-  @Output() emitirVenta: EventEmitter<TvStockProducto[]> = new EventEmitter();
+  @Output() emitirVenta: EventEmitter<DatosVenta> = new EventEmitter();
   @Output() soloCotizacion: EventEmitter<any> = new EventEmitter();
+
+  datosVenta:DatosVenta;
 
   listaValidada:TvStockProducto[];
 
@@ -29,6 +32,7 @@ export class FormVentaComponent implements OnInit {
   constructor(private productoService:ProductoService, private messageService: MessageService,) {
     this.listaValidada=[];
     this.muestraCredito=false;
+    this.datosVenta= { tipoPago: null, listaValidada: null};
    }
 
   ngOnInit(): void {
@@ -42,7 +46,7 @@ export class FormVentaComponent implements OnInit {
 
   _initFormGroupVentas(): void{ 
     this.formVentas=new FormGroup({
-      tipoPagoCtrl: new FormControl('0',[Validators.required])
+      tipoPagoCtrl: new FormControl("0",[Validators.required])
     });   
   }
 
@@ -78,7 +82,7 @@ export class FormVentaComponent implements OnInit {
   }
 
   quitarProducto(producto: TvStockProducto){
-    console.log(producto);
+    //console.log(producto);
     
     this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
     this.listaValidada.splice(this.findIndexById(producto.nIdProducto, this.listaValidada),1);
@@ -91,7 +95,14 @@ export class FormVentaComponent implements OnInit {
     if (this.validaStatusStock(this.listaValidada)) {
       this.messageService.add({severity: 'warn', summary: 'Stock Insuficiente', detail: 'No se puede generar la venta, elimine por favor los productos con stock insuficiente', life: 3000});
     }else{
-      console.log("lista para guardar");
+      //console.log("lista para guardar");
+
+      this.datosVenta.tipoPago = parseInt(this.tipoPagoCtrl.value);
+      this.datosVenta.listaValidada=this.listaValidada;
+
+      //console.log(this.datosVenta);
+
+      this.emitirVenta.emit(this.datosVenta);
     }
   
   
@@ -124,7 +135,7 @@ export class FormVentaComponent implements OnInit {
             break;
         }
     }
-    console.log("index: "+index);
+    //console.log("index: "+index);
     return index;
   }
   
