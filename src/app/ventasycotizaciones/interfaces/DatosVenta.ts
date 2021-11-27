@@ -1,4 +1,5 @@
 import { TvStockProducto } from "src/app/productos/model/TvStockProducto";
+import { TwCotizacion } from '../../productos/model/TcCotizacion';
 
 export interface DatosVenta{
     idCliente?:number;
@@ -9,4 +10,5 @@ export interface DatosVenta{
     fechaIniCredito?: Date;
     fechaFinCredito?:Date;
     listaValidada?: TvStockProducto[];
+    twCotizacion?: TwCotizacion;
 }

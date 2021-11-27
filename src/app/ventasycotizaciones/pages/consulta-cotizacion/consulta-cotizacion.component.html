@@ -4,8 +4,7 @@
             <div class="p-text-center">
                 <h2>Consulta de Cotizaciones</h2>
             </div>
-
-            <app-detalle-cotizacion [listaCotizaciones]="listaCotizaciones">
+            <app-detalle-cotizacion [listaCotizaciones]="listaCotizaciones" (cotizacionSeleccionada)="cotizacionSelecionada($event)">
             </app-detalle-cotizacion>
         </div>
     </div>

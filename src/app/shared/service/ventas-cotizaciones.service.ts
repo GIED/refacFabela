@@ -13,16 +13,13 @@ export class VentasCotizacionesService {
   constructor(private http: HttpClient) { }
 
   guardaCotizacion(listaCotizacion: Array<CotizacionDto>){
-    const httpOptions = {
-      responseType: 'text' as 'json'
-    };
     let url = environment.servicios.apiRefacFabela + locator.guardaCotizacion;
-    return this.http.post<any>(url,listaCotizacion,httpOptions);
+    return this.http.post<TwCotizacion>(url,listaCotizacion);
   }
 
   obtenerCotizaciones(){   
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizaciones;
-    return this.http.get<TwCotizacion>(url);
+    return this.http.get<TwCotizacion[]>(url);
   }
   
 }

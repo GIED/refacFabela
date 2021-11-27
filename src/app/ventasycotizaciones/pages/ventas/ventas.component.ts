@@ -19,6 +19,7 @@ import { CotizacionDto } from '../../model/dto/CotizacionDto';
 import { VentasCotizacionesService } from '../../../shared/service/ventas-cotizaciones.service';
 import { DatosVenta } from '../../interfaces/DatosVenta';
 import { VentasService } from '../../../shared/service/ventas.service';
+import { TwCotizacion } from '../../../productos/model/TcCotizacion';
 
 
 @Component({
@@ -45,6 +46,7 @@ export class VentasComponent implements OnInit {
   estatusList: any[];
 
   datosRegistraVenta:DatosVenta;
+  cotizacionData: TwCotizacion;
   
 
   mostrarSugerenciasCliente:boolean=false;
@@ -65,6 +67,7 @@ export class VentasComponent implements OnInit {
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
+      this.cotizacionData= new TwCotizacion();
     }
 
   ngOnInit(): void {
@@ -292,11 +295,12 @@ guardarCotizacion(){
   console.log("lista enviada");
    console.log(this.listaCotización);
 
-  this.ventasCotizacionService.guardaCotizacion(this.listaCotización).subscribe(resp =>{
+  this.ventasCotizacionService.guardaCotizacion(this.listaCotización).subscribe(cotizacionRegistrada =>{
 
-    if (resp === 'registrado') {
+    if (cotizacionRegistrada.nId !== null) {
       console.log(this.listaProductos);
       console.log(this.saldoGeneralCliente);
+      this.cotizacionData = cotizacionRegistrada;
       this.mostrarOpcionesVenta=true;
     }
    
@@ -333,12 +337,14 @@ generarVenta(datosVenta: DatosVenta){
     this.datosRegistraVenta.fechaIniCredito=null;
     this.datosRegistraVenta.fechaFinCredito=null;
   }
+  this.datosRegistraVenta.twCotizacion = this.cotizacionData;
   console.log("Datos para venta en padre");
   console.log(this.datosRegistraVenta);
+  console.log(this.cotizacionData);
 
-  this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
+ /* this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
     console.log(resp);
-  })
+  });*/
   
   
 

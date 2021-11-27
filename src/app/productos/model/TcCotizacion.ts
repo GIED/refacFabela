@@ -1,5 +1,5 @@
 import { Usuarios } from 'src/app/administracion/interfaces/usuarios';
-import { Clientes } from '../../administracion/interfaces/clientes';
+import { TcCliente } from '../../administracion/model/TcCliente';
 
 export class TwCotizacion{
     nId?: number;
@@ -7,9 +7,10 @@ export class TwCotizacion{
     nIdUsuario?:number;
     dFecha?:Date;
     nEstatus?: number;
+    sFolioCotizacion?:string;
+    tcCliente?: TcCliente  
+    tcUsuario?: Usuarios;
     nTotalCotizacion:number;
     n_Vigencia:number;
-    sFolioCotizacion?:string;
-    tcCliente?:    Clientes  
-    tcUsuario?: Usuarios;
+    
 }
