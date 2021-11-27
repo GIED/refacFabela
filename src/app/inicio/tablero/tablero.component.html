@@ -6,10 +6,10 @@
             </div>
             <div class="p-col-6 overview-box-text">
                 <h5>Clientes</h5>
-                <span>24 clientes registrados</span>
+                <span>{{toralesGeneralesTablero.nTotalClientes}} clientes registrados</span>
             </div>
             <div class="p-col-3 overview-box-status">
-                20
+                {{toralesGeneralesTablero.nTotalClientes | number}}
             </div>
         </div>
     </div>
@@ -20,10 +20,10 @@
             </div>
             <div class="p-col-6 overview-box-text">
                 <h5>Provedores</h5>
-                <span>48 Provedores registrados</span>
+                <span>   {{toralesGeneralesTablero.nTotalProveedores | number}} Provedores registrados</span>
             </div>
             <div class="p-col-3 overview-box-status">
-                532
+                {{toralesGeneralesTablero.nTotalProveedores | number}}
             </div>
         </div>
     </div>
@@ -34,10 +34,10 @@
             </div>
             <div class="p-col-6 overview-box-text">
                 <h5>Usuarios</h5>
-                <span>10 usuarios registrados</span>
+                <span> {{toralesGeneralesTablero.nTotalUsuarios | number}} usuarios registrados</span>
             </div>
             <div class="p-col-3 overview-box-status">
-                28
+                {{toralesGeneralesTablero.nTotalUsuarios | number}}
             </div>
         </div>
     </div>
@@ -48,10 +48,10 @@
             </div>
             <div class="p-col-6 overview-box-text">
                 <h5>Productos</h5>
-                <span>72 productos registrados</span>
+                <span> {{toralesGeneralesTablero.nTotalProductos | number}} productos registrados</span>
             </div>
             <div class="p-col-3 overview-box-status">
-                256
+                {{toralesGeneralesTablero.nTotalProductos | number}}
             </div>
         </div>
     </div>

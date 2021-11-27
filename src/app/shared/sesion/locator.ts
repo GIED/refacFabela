@@ -51,7 +51,9 @@ static guardaVenta= '/guardarVenta';
 static guardaCotizacion= '/guardarCotizacion';
 static consultaCotizaciones='/consultaCotizaciones'
 
+//Tablero
 
+static obtenerTotalesGeneralesTablero='/totales-generales-tablero';
 
 
 
