@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
+import { TwCotizacion } from 'src/app/productos/model/TcCotizacion';
+import { VentasCotizacionesService } from '../../../shared/service/ventas-cotizaciones.service';
 
 @Component({
   selector: 'app-consulta-cotizacion',
@@ -29,10 +31,26 @@ export class ConsultaCotizacionComponent implements OnInit {
   formaPago:any;
   usoCfdi:any;
 
+  //Estas son las variables que se tienen que quedar
+
+  listaCotizaciones: TwCotizacion;
+  
 constructor(private productService: ProductService, private messageService: MessageService,
-  private confirmationService: ConfirmationService) { }
+  private confirmationService: ConfirmationService, private ventasCotizacionesService:VentasCotizacionesService) { 
+    this.listaCotizaciones=null;
+  }
 
 ngOnInit(){
+
+  this.ventasCotizacionesService.obtenerCotizaciones().subscribe(data => {
+    this.listaCotizaciones=data;
+    console.log(this.listaCotizaciones);
+  })
+
+
+
+
+
   this.productService.getProducts().then(data => this.products = data);
   this.formaPago = [
       {label: 'Efectivo'},

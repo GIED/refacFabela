@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { CotizacionDto } from '../../ventasycotizaciones/model/dto/CotizacionDto';
 import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
+import { TwCotizacion } from '../../productos/model/TcCotizacion';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,11 @@ export class VentasCotizacionesService {
     };
     let url = environment.servicios.apiRefacFabela + locator.guardaCotizacion;
     return this.http.post<any>(url,listaCotizacion,httpOptions);
+  }
+
+  obtenerCotizaciones(){   
+    let url = environment.servicios.apiRefacFabela + locator.consultaCotizaciones;
+    return this.http.get<TwCotizacion>(url);
   }
   
 }

@@ -49,6 +49,7 @@ static guardaVenta= '/guardarVenta';
 
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';
+static consultaCotizaciones='/consultaCotizaciones'
 
 
 
