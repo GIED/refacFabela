@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
+import { TotalesGeneralesTablero } from '../model/TotalesGeneralesTablero';
+import { TableroService } from '../../shared/service/tablero.service';
 
 @Component({
   selector: 'app-tablero',
@@ -30,10 +32,27 @@ export class TableroComponent implements OnInit {
 
   events: any[];
 
-  constructor(private productService: ProductService) {
+  //Esstos son los metodos que se tienen que quedar para la implementación definitiva
+  toralesGeneralesTablero: TotalesGeneralesTablero;
+
+
+
+  constructor(private productService: ProductService, private tableroService: TableroService) {
+      this.toralesGeneralesTablero={};
      }
 
   ngOnInit() {
+
+
+        this.tableroService.obtenerTotalesGeneralesTablero().subscribe(data =>{
+
+            this.toralesGeneralesTablero=data;
+            console.log(this.toralesGeneralesTablero);
+
+        })
+
+
+
       this.productService.getProducts().then(data => this.products = data);
 
       this.lineChartData = {

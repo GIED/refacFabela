@@ -50,7 +50,9 @@ static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 static guardaCotizacion= '/guardarCotizacion';
 static consultaCotizaciones='/consultaCotizaciones'
 
+//Tablero
 
+static obtenerTotalesGeneralesTablero='/totales-generales-tablero';
 
 
 
