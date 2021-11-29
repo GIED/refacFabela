@@ -97,6 +97,7 @@ FullCalendarModule.registerPlugins([
     AccordionModule,
         AutoCompleteModule,
         AvatarModule,
+        AccordionModule,
         AvatarGroupModule,
         BadgeModule,
         BreadcrumbModule,
