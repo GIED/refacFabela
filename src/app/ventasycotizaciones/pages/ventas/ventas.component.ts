@@ -342,9 +342,9 @@ generarVenta(datosVenta: DatosVenta){
   console.log(this.datosRegistraVenta);
   console.log(this.cotizacionData);
 
- /* this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
+ this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
     console.log(resp);
-  });*/
+  });
   
   
 
