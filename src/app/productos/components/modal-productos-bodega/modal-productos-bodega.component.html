@@ -1,6 +1,8 @@
-<div class="p-text-center"><h3>Distribución de productos por bodega</h3></div>
+<div class="p-text-center">
+    <h3>Distribución de productos por bodega</h3>
+</div>
 
-<p-table [value]="listaProductoBodega" responsiveLayout="scroll" scrollHeight="400px" styleClass="p-datatable-sm">
+<p-table [value]="listaProductoBodega" responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
     <ng-template pTemplate="header">
         <tr>
             <th>Producto</th>
@@ -8,7 +10,7 @@
             <th>Anaquel</th>
             <th>Nivel</th>
             <th>Stock</th>
-            <th *ngIf="traspaso" >Acciones</th>
+            <th *ngIf="traspaso">Acciones</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-bodega>
@@ -18,35 +20,28 @@
             <td>{{bodega.tcAnaquel.sAnaquel}}</td>
             <td>{{bodega.tcNivel.sNivel}}</td>
             <td>{{bodega.nCantidad}}</td>
-       <td *ngIf="traspaso"><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-        (click)="editarProducto(bodega)"></button></td>
+            <td *ngIf="traspaso"><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editarProducto(bodega)"></button></td>
 
         </tr>
     </ng-template>
-    <ng-template pTemplate="summary">
-        <div class="p-col-12 p-text-right">
-            <strong>Stock Total: </strong> {{stockTotal}}
-        </div>
-    </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="bodegasDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
-styleClass="p-fluid">
-<ng-template pTemplate="content">
-    
+<p-dialog [(visible)]="bodegasDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+
         <div class="p-grid">
-           
+
             <div class="p-col-12 p-md-6 p-lg-6 p-text-center">No parte: {{productoBodega.tcProducto.sNoParte}} </div>
             <div class="p-col-12 p-md-6 p-lg-6 p-text-center">Producto: {{productoBodega.tcProducto.sProducto}}</div>
-            <div class="p-col-12 p-md-3 p-lg-3 p-text-center">Bodega:  {{productoBodega.tcBodega.sBodega}}</div>
+            <div class="p-col-12 p-md-3 p-lg-3 p-text-center">Bodega: {{productoBodega.tcBodega.sBodega}}</div>
             <div class="p-col-12 p-md-3 p-lg-3 p-text-center">Anaquel: {{productoBodega.tcAnaquel.sAnaquel}}</div>
-            <div class="p-col-12 p-md-3 p-lg-3 p-text-center">Nivel:  {{productoBodega.tcNivel.sNivel}}</div>
-            <div class="p-col-12 p-md-3 p-lg-3 p-text-center" style="background: purple; color: white;">Cantidad:  {{productoBodega.nCantidad}}   </div>
+            <div class="p-col-12 p-md-3 p-lg-3 p-text-center">Nivel: {{productoBodega.tcNivel.sNivel}}</div>
+            <div class="p-col-12 p-md-3 p-lg-3 p-text-center" style="background: purple; color: white;">Cantidad: {{productoBodega.nCantidad}} </div>
 
         </div>
-    
-   
-</ng-template>
+
+
+    </ng-template>
 
 
 </p-dialog>

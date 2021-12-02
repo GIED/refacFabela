@@ -4,6 +4,7 @@ import { CotizacionDto } from '../../ventasycotizaciones/model/dto/CotizacionDto
 import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 import { TwCotizacion } from '../../productos/model/TcCotizacion';
+import { TvStockProducto } from '../../productos/model/TvStockProducto';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,11 @@ export class VentasCotizacionesService {
   obtenerCotizaciones(){   
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizaciones;
     return this.http.get<TwCotizacion[]>(url);
+  }
+
+  obtenerCotizacionId(id: number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionId+'id='+id;
+    return this.http.get<TvStockProducto[]>(url);
   }
   
 }
