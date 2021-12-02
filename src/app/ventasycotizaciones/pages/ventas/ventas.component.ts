@@ -20,6 +20,9 @@ import { VentasCotizacionesService } from '../../../shared/service/ventas-cotiza
 import { DatosVenta } from '../../interfaces/DatosVenta';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TwCotizacion } from '../../../productos/model/TcCotizacion';
+import { producto } from '../../../productos/interfaces/producto.interfaces';
+import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
+import { BodegasService } from 'src/app/shared/service/bodegas.service';
 
 
 @Component({
@@ -44,6 +47,7 @@ export class VentasComponent implements OnInit {
   productosFiltrados: TvStockProducto[]=[];
   listaCotización: CotizacionDto[]=[];
   estatusList: any[];
+  listaProductoBodega: TwProductoBodega[];
 
   datosRegistraVenta:DatosVenta;
   cotizacionData: TwCotizacion;
@@ -53,17 +57,23 @@ export class VentasComponent implements OnInit {
   mostrarDetalleCliente:boolean=false;
   mostrarSugerenciasProducto:boolean=false;
   mostrarOpcionesVenta:boolean=false;
+  muestraProductos:boolean=false;
+  mostrarAlternativos:boolean=false;
+  muestraProductosBodega:boolean=false;
 
   saldoGeneralCliente:SaldoGeneralCliente;
   
   total: number = 0;
+  nIdProducto:number;
+  stockTotal: number = 0;
 
   constructor(
     private clienteService:ClienteService,
     private productoService:ProductoService, 
     private messageService: MessageService,
     private ventasCotizacionService: VentasCotizacionesService,
-    private ventaService:VentasService
+    private ventaService:VentasService,
+    private bodegasService: BodegasService,
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -155,6 +165,7 @@ valorSeleccionadoCliente(){
       this.saldoGeneralCliente.tcCliente=this.clienteSeleccionado;
     }
     this.mostrarDetalleCliente=true;
+    this.muestraProductos=true;
   });
   
 }
@@ -199,12 +210,38 @@ valorSeleccionadoProducto(){
   });
 }
 
+ubicacionProducto(producto: TvStockProducto){
+  this.bodegasService.obtenerProductoBodegas(producto.nIdProducto).subscribe(productoBodega => {
+    this.listaProductoBodega = productoBodega;
+    for (const key in productoBodega) {
+        this.stockTotal += this.listaProductoBodega[key].nCantidad;
+    }
+});
+this.muestraProductosBodega=true;
+}
+
+muestraAlternativo(producto: TvStockProducto){
+  console.log(producto);
+  this.nIdProducto= producto.nIdProducto;
+  this.mostrarAlternativos=true;
+}
+
+hideDialogAlter(){
+  this.mostrarAlternativos=false;
+}
+hideDialogBodega(){
+  this.muestraProductosBodega=false;
+}
+
 
 
 agregarProduct(producto: TvStockProducto) {
-
-  console.log("cantidad recibida: ",this.nCantidadCtrl.value)
-  producto.nCantidad=this.nCantidadCtrl.value;
+  console.log(producto);
+  if (producto.nCantidad == 0 || producto.nCantidad == null) {
+    console.log("cantidad recibida: ",this.nCantidadCtrl.value)
+    producto.nCantidad=this.nCantidadCtrl.value;
+  }
+  
   
   //verifica que se agrege una cantidad
   if (producto.nCantidad === 0) {
@@ -253,6 +290,7 @@ agregarProduct(producto: TvStockProducto) {
   this.productosFiltrados=[];
   this.nCantidadCtrl.setValue(0);
   this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Producto Agregado Correctamente', life: 3000});
+  this.muestraProductosBodega=false;
 
 //}
 }
@@ -318,6 +356,7 @@ soloCotizacion(){
   this.total=0.00;
   this.mostrarDetalleCliente=false;
   this.mostrarOpcionesVenta=false;
+  this.muestraProductos = false;
 
 
 }

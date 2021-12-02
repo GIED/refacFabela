@@ -12,11 +12,12 @@ import { DetalleClienteComponent } from './components/detalle-cliente/detalle-cl
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormVentaComponent } from './components/form-venta/form-venta.component';
 import { DetalleCotizacionComponent } from './components/detalle-cotizacion/detalle-cotizacion.component';
+import { ProductosAlternativosVentaComponent } from './components/productos-alternativos-venta/productos-alternativos-venta.component';
 
 
 
 @NgModule({
-  declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent],
+  declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent],
   imports: [
     VentasycotizacionesRoutingModule,
     PrimeModule,

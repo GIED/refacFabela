@@ -1,0 +1,52 @@
+<div class="p-col-12 p-lg-12 p-md-12 ">
+    <div class="p-grid p-dir-col">
+        <form [formGroup]="formGrp" autocomplete="off">
+            <div class="p-col-12 ">
+                <p-table [value]="productosFiltrados" [rows]="10" responsiveLayout="scroll" currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+
+                            <th pSortableColumn="noParte">No.Parte
+                            </th>
+                            <th pSortableColumn="descripcion">Descripcións
+
+                            </th>
+                            <th pSortableColumn="precio">Precio
+
+                            </th>
+                            <th pSortableColumn="categoria">Categoria
+
+                            </th>
+                            <th pSortableColumn="stock">stock
+
+                            </th>
+                            <th pSortableColumn="cantidad">Cantidad
+
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-producto>
+                        <tr>
+
+                            <td>{{producto.nIdProducto}}</td>
+                            <td>{{producto.tcProducto.sProducto}}</td>
+                            <td>{{producto.tcProducto.nPrecioConIva }}</td>
+                            <td>{{producto.tcProducto.tcCategoria.sDescripcion}}</td>
+                            <td>{{producto.nCantidadTotal}}</td>
+                            <td>
+                                <p-inputNumber formControlName="nCantidadCtrl" [min]="0" [max]="100">
+                                </p-inputNumber>
+                            </td>
+                            <td>
+                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+        </form>
+    </div>
+</div>
