@@ -44,6 +44,7 @@ static obtenerNivel= '/catalogoNivel';
 static consultaInventario ='/obtenerInventarioEsp?';
 //Api ventas
 static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?'
+static consultaVentaDetalle='/obtenerVentasDetalle'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 static guardaVenta= '/guardarVenta';
 

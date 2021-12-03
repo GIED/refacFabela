@@ -18,6 +18,10 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleEstatus+'nIdCliente='+nIdCliente+'&nTipoPago='+nTipoPago;
     return this.http.get<TvVentasDetalle[]>(url);
   }
+  obtenerVentaDetalle(){
+    let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalle;
+    return this.http.get<TvVentasDetalle[]>(url);
+  }
   obtenerAbonosVentaId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaAbonoId+'nId='+id;
     return this.http.get<TwAbono[]>(url);

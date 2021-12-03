@@ -156,7 +156,7 @@ export class CreditosComponent implements OnInit {
       });
   }
 
-  consultaVentaDetalle(saldoGeneralCliente: SaldoGeneralCliente) {
+  consultaVentaDetalleId(saldoGeneralCliente: SaldoGeneralCliente) {
      console.log(saldoGeneralCliente);
       this.productDialog = true;
 
