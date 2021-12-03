@@ -15,7 +15,7 @@
 				</div>
 				<div class="p-col-12 p-lg-6">	
 					<div class="card">
-						<div class="p-text-center"_><h3>Balance General</h3></div>
+						<div class="p-text-center"><h3>Balance General</h3></div>
 						<p-table [value]="car" >
 							<ng-template pTemplate="header" >
 								<tr>
@@ -64,7 +64,7 @@
 				</div>
 			</div>
 			<p-table #dt [value]="listaClientesCredito" [columns]="cols" [rows]="10" [paginator]="true"
-				[globalFilterFields]="['tcCliente.sRfc','tcCliente.sRazonSocial','cliente.nLimiteCredito','cliente.nSaldoTotal', 'nCreditoDisponible']"
+				[globalFilterFields]="['tcCliente.sRfc','tcCliente.sRazonSocial','nLimiteCredito','nSaldoTotal', 'nCreditoDisponible','nAbonos','nTotalVenta','sEstatus','nAvanceCredito']"
 				[(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
 				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
 				[showCurrentPageReport]="true">
@@ -82,25 +82,25 @@
 					<tr>
 						<th style="width: 3rem">
 						</th>
-						<th pSortableColumn="name">RFC </th>
+						<th pSortableColumn="tcCliente.sRfc">RFC<p-sortIcon field="tcCliente.sRfc"></p-sortIcon> </th>
 						<!--<th>Image</th>-->
-						<th pSortableColumn="price">Razón social <p-sortIcon field="price"></p-sortIcon>
+						<th pSortableColumn="tcCliente.sRazonSocial">Razón social <p-sortIcon field="tcCliente.sRazonSocial"></p-sortIcon>
 						</th>
 					
 						
-						<th pSortableColumn="rating">Limite Crédito <p-sortIcon field="rating"></p-sortIcon>
+						<th pSortableColumn="nLimiteCredito">Limite Crédito <p-sortIcon field="nLimiteCredito"></p-sortIcon>
 						</th>
-						<th pSortableColumn="rating">Disponible <p-sortIcon field="rating"></p-sortIcon>
+						<th pSortableColumn="nCreditoDisponible">Disponible <p-sortIcon field="nCreditoDisponible"></p-sortIcon>
 						</th>
-						<th pSortableColumn="inventoryStatus">Saldo<p-sortIcon field="inventoryStatus"></p-sortIcon>
+						<th pSortableColumn="nSaldoTotal">Saldo<p-sortIcon field="nSaldoTotal"></p-sortIcon>
 						</th>
-						<th pSortableColumn="inventoryStatus">Inicial <p-sortIcon field="inventoryStatus"></p-sortIcon>
+						<th pSortableColumn="nTotalVenta">Inicial <p-sortIcon field="nTotalVenta"></p-sortIcon>
 						</th>
-						<th pSortableColumn="inventoryStatus">Abonos <p-sortIcon field="inventoryStatus"></p-sortIcon>
+						<th pSortableColumn="nAbonos">Abonos <p-sortIcon field="nAbonos"></p-sortIcon>
 						</th>
-						<th pSortableColumn="category">Avance crédito <p-sortIcon field="category"></p-sortIcon>
+						<th pSortableColumn="nAvanceCredito">Avance crédito <p-sortIcon field="nAvanceCredito"></p-sortIcon>
 						</th>						
-						<th pSortableColumn="inventoryStatus">Estatus General <p-sortIcon field="inventoryStatus"></p-sortIcon>
+						<th pSortableColumn="sEstatus">Estatus General <p-sortIcon field="sEstatus"></p-sortIcon>
 						</th>						
 					</tr>
 				</ng-template>
@@ -163,7 +163,7 @@
 		</div>
 		<p-dialog [(visible)]="productDialog" [style]="{width: '800px'}" header="Notas de crédito del cliente" [modal]="true"
 			styleClass="p-fluid">
-            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['sFolioVenta']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['sFolioVenta','nTotalVenta','nTotalAbono','nSaldoTotal','dFechaTerminoCredito','sEstatus','nAvancePago']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
@@ -178,13 +178,14 @@
                 <ng-template pTemplate="header">
                     <tr>
                        
-                        <th>No. Venta</th>
-                        <th>Saldo Inicial</th>
-                        <th>Abonos</th>
-                        <th>Saldo Final</th>
-                        <th>Avance</th>
-                        <th>Fecha Vencimiento</th>
-                        <th>Estatus</th>
+						<th pSortableColumn="sFolioVenta">No. Venta<p-sortIcon field="sFolioVenta"></p-sortIcon> </th>
+						<th pSortableColumn="nTotalVenta">Saldo Inicial<p-sortIcon field="nTotalVenta"></p-sortIcon> </th>
+						<th pSortableColumn="nTotalAbono">nTotalAbono<p-sortIcon field="nTotalAbono"></p-sortIcon> </th>
+						<th pSortableColumn="nSaldoTotal">Saldo Final<p-sortIcon field="nSaldoTotal"></p-sortIcon> </th>
+						<th pSortableColumn="nAvancePago">Avance<p-sortIcon field="nAvancePago"></p-sortIcon> </th>
+						<th pSortableColumn="dFechaTerminoCredito">Fecha Vencimiento<p-sortIcon field="dFechaTerminoCredito"></p-sortIcon> </th>
+						<th pSortableColumn="sEstatus">Estatus<p-sortIcon field="sEstatus"></p-sortIcon> </th>
+					
                        
                     </tr>
                 </ng-template>
