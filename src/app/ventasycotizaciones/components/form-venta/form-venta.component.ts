@@ -37,9 +37,7 @@ export class FormVentaComponent implements OnInit {
 
   ngOnInit(): void {
 
-   // console.log("datos del form");
-    //console.log(this.listaProductos);
-    //console.log(this.saldoGeneralCliente);
+    
 
     this._initFormGroupVentas();
     this.validaStock();
@@ -59,7 +57,6 @@ export class FormVentaComponent implements OnInit {
   }
 
   validaStock(){
-
 
      for (const producto of this.listaProductos) {
 

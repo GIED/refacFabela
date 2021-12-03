@@ -17,7 +17,8 @@ import { ProductosAlternativosVentaComponent } from './components/productos-alte
 
 
 @NgModule({
-  declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent],
+  declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,
+    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent],
   imports: [
     VentasycotizacionesRoutingModule,
     PrimeModule,
