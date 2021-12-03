@@ -30,7 +30,6 @@ export class DetalleCotizacionComponent implements OnInit {
   constructor(private clienteService: ClienteService, private ventasCotizacionesService:VentasCotizacionesService) { 
     this.listaCotizaciones=[];
     this.mostrarOpcionesVenta=false;
-
     this.listaProductos=[];
     this.saldoGeneralCliente = new SaldoGeneralCliente();
   }
@@ -57,15 +56,11 @@ export class DetalleCotizacionComponent implements OnInit {
   consultaProductos(idCotizacion: number){
     
     this.ventasCotizacionesService.obtenerCotizacionId(idCotizacion).subscribe(listaProductos =>{
-     this.asignaLista(listaProductos);
-     
+     this.listaProductos=listaProductos;   
     });
   }
   
-  asignaLista(tvStockProducto: TvStockProducto[]){
-    this.listaProductos= tvStockProducto;
-    
-  }
+ 
 
   detalleCotizacion(twCotizacion: TwCotizacion){
 
@@ -73,9 +68,9 @@ export class DetalleCotizacionComponent implements OnInit {
     this.consultaSaldo(twCotizacion);
     this.consultaProductos(twCotizacion.nId);
 
-    console.log( this.saldoGeneralCliente);
-    console.log( this.listaProductos);
-    this.mostrarOpcionesVenta=true;
+    console.log(this.saldoGeneralCliente);
+    console.log(this.listaProductos);
+    //this.mostrarOpcionesVenta=true;
     
   }
 
