@@ -1,69 +1,93 @@
 <div class="p-grid layout-dashboard">
     <div class="p-col-12 p-xl-12 p-md-12">
+
+        <p-panel class="mt-2">
+            <div class="p-grid">
+                <div class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-12">
+                    <app-input-busqueda (consultarPorId)="informacionProducto($event)"></app-input-busqueda>
+                </div>
+                <div *ngIf="cargaInicial" class="p-col-12 p-grid">
+                    <div class="p-col-12">
+                        <h5 class="p-text-center" style="background: #aa7ea2; color: white;">Datos del producto</h5>
+                        <hr>
+                    </div>
+
+                    <div class="p-col-12 p-md-6 p-lg-3 "><strong>No parte:
+                        </strong>{{productoDetalle.tcProducto.sNoParte}} </div>
+                    <div class="p-col-12 p-md-6 p-lg-4 ">
+                        <strong>Producto:</strong>{{productoDetalle.tcProducto.sProducto}} </div>
+                    <div class="p-col-12 p-md-6 p-lg-5 ">
+                        <strong>Descripción:</strong>{{productoDetalle.tcProducto.sDescripcion}} </div>
+                    <div class="p-col-12 p-md-6 p-lg-4 "><strong>Marca:</strong>{{productoDetalle.tcProducto.sMarca}}
+                    </div>
+                    <div class="p-col-12 p-md-6 p-lg-4 ">
+                        <strong>Precio:</strong>{{productoDetalle.tcProducto.nPrecioConIva}} </div>
+                    <div class="p-col-12 p-md-6 p-lg-4 "><strong>Stock:</strong>{{productoDetalle.nCantidadTotal}}
+                    </div>
+                </div>
+            </div>
+        </p-panel>
+
+    </div>
+
+
+     <!--Gráfica y Tabla de historia de ingreso de prodcutos-->
+    <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6">
         <div class="card">
+            <div class="p-text-center">
+                <h3>
+                    Gráfica de Historia de precios del Producto</h3>
+            </div>
+            <div class="p-col-12 p-lg-12">
+                <div class="card">
+                    <div class=" p-justify-center">
+                        <p-chart id="dashboard-chart" type="line" [data]="historiaIngresoGraf" [options]="lineOptions">
+                        </p-chart>
+                    </div>
+                </div>
+            </div>
+            <div class="card widget-tasks">
+                <app-historia-precio-producto [listaHistoriaPrecioProducto]="listaHistoriaPrecioProducto"></app-historia-precio-producto>
+            </div>
+        </div>
+    </div>
+   
+ 
+    <!--Tabla de Ubicaciones de los productos-->
+    <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6">       
+            <div class="card">    
+                <div class="p-text-center">
+                    <h3>Gráfica de productos por bodega</h3>
+                </div>
+                <div class="p-col-12 p-lg-12">
+                    <div class="card">                        
+                        <div class="p-grid">
+                            <div class="p-col-8 p-offset-2">
+                                <div class="box"><p-chart type="pie" [data]="productoBodegaGraf"  [responsive]="true" ></p-chart>
+                                </div>
+                            </div>
+                        </div>
+                    </div>      
+                </div>   
+                <div class="card widget-tasks">
+                    <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>            </app-modal-productos-bodega>
+                </div> 
             
-          
-            <p-panel header="Datos del Producto">
-               
-            <div class="p-col-12 p-mb-4 p-lg-4 p-mb-lg-0">
-                <app-input-busqueda (consultarPorId)="historiaPrecioProducto($event)"></app-input-busqueda>
-            </div>
-                <div class="p-grid">
-                    <div class="p-col-12">                       
-                    
-                    <div class="p-col-12 p-md-6 p-lg-2 p-d-inline"><strong> Parte:</strong> 12345678 </div>
-                    <div class="p-col-12 p-md-6 p-lg-4 p-d-inline"><strong>Producto:</strong> Maquinaria Xddddd </div>
-                    <div class="p-col-12 p-md-6 p-lg-2 p-d-inline"><strong>Marca</strong>CTP</div>
-                    <div class="p-col-12 p-md-6 p-lg-2 p-d-inline"><strong>Precio:</strong> {{20000 | currency: '$'}}</div>
-                    <div class="p-col-12 p-md-6 p-lg-2 p-d-inline"><strong>Stock:</strong> 10</div>
-                 </div>
+        </div>   
+        
+    </div> 
+  
+   
 
-                </div>
+  
 
-
-
-            </p-panel>
-            </div>
-    </div>
-
-
-    <div class="p-col-12 p-lg-6 p-md-6 ">
-        <div class="p-grid p-dir-col p-nogutter">
-            <div class="p-col-12 ">
-                <div class="card widget-statistics">
-                    <div class="p-text-center">
-                        <h3>Ventas del Producto por mes </h3>
-                    </div>
-                    <div class="p-grid">
-                        
-                       
-                    </div>
-                    <p-chart id="dashboard-chart" type="line" [data]="lineData" [options]="lineOptions"></p-chart>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="p-col-12 p-lg-6 p-md-6">
-        <div class="card widget-tasks">
-           
-           
-            <app-historia-precio-producto [listaHistoriaPrecioProducto]= "listaHistoriaPrecioProducto" ></app-historia-precio-producto>
-
-
-
-
-        </div>
-    </div>
-    <div class="p-col-12 p-lg-6 p-md-6">
+    <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6">
         <div class="card">
             <div class="p-text-center">
                 <h3>Historia de precios del Producto</h3>
             </div>
 
-            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="450px"
-                styleClass="p-datatable-sm">
+            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="450px" styleClass="p-datatable-sm">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>No Parte</th>
@@ -87,30 +111,26 @@
         </div>
     </div>
 
-    <div class="p-col-12 p-lg-6 p-md-6">
-        <div class="card">
-
-            <div class="p-text-center">
-                <h3>Historia de precios del Producto</h3>
-            </div>
-            <div class="p-col-12 p-lg-12">
-
-
-                <div class="card">
-
-                    <div class=" p-justify-center">
-                        <p-chart id="dashboard-chart" type="line" [data]="lineData" [options]="lineOptions">
-                        </p-chart>
+    <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6 ">
+        <div class="p-grid p-dir-col p-nogutter">
+            <div class="p-col-12 ">
+                <div class="card widget-statistics">
+                    <div class="p-text-center">
+                        <h3>Ventas del Producto por mes </h3>
                     </div>
+                    <div class="p-grid">
+
+
+                    </div>
+                    <p-chart id="dashboard-chart" type="line" [data]="lineData" [options]="lineOptions"></p-chart>
                 </div>
-
-
             </div>
 
         </div>
     </div>
-    
-    <div class="p-col-12 p-lg-6 p-md-6">
+
+
+    <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6">
         <div class="card">
 
             <div class="p-text-center">
@@ -133,13 +153,12 @@
         </div>
     </div>
 
-    <div class="p-col-12 p-lg-6 p-md-6">
+    <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6">
         <div class="card">
             <div class="p-text-center">
                 <h3>Historia de ingreso del Producto</h3>
             </div>
-            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="450px"
-                styleClass="p-datatable-sm">
+            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="450px" styleClass="p-datatable-sm">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>No Parte</th>
@@ -163,7 +182,8 @@
         </div>
     </div>
 
-    
+
+
 
 
 </div>

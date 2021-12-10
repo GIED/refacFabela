@@ -4,6 +4,7 @@ import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
 import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { VentasService } from '../../../shared/service/ventas.service';
+import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
 
 @Component({
   selector: 'app-consulta-venta',
@@ -13,20 +14,18 @@ import { VentasService } from '../../../shared/service/ventas.service';
 export class ConsultaVentaComponent implements OnInit {
 
   productDialog: boolean;
-  
-
     selectedProducts: Product[];
-
+    selectedProducts2:VentaProductoDto;
     submitted: boolean;
-
     cols: any[];
-    detalleDialog: boolean;
-   
+    detalleDialog: boolean;   
     titulo:string;
     formaPago:any;
     usoCfdi:any;
+    mostrarProductos:boolean;
 
     listaVentasDetalleCliente: TvVentasDetalle[];
+    listaProductosVenta:VentaProductoDto;
 
   constructor(private productService: ProductService, private messageService: MessageService,
     private confirmationService: ConfirmationService, private ventasService:VentasService) { }
@@ -34,7 +33,7 @@ export class ConsultaVentaComponent implements OnInit {
   ngOnInit(){
      this.ventasService.obtenerVentaDetalle().subscribe(data=>{
      this.listaVentasDetalleCliente=data;       
-      console.log(this.listaVentasDetalleCliente);
+     // console.log(this.listaVentasDetalleCliente);
     }); 
   }
   openNew() {
@@ -80,6 +79,22 @@ hideDialog() {
     this.productDialog = false;
     this.submitted = false;
 }
+
+detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
+
+  this.mostrarProductos=true;
+
+  this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
+      this.listaProductosVenta=data;
+  })
+
+}
+
+hideDialogAlter(){
+  this.mostrarProductos=false;
+}
+
+
 
 
 

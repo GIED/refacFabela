@@ -58,7 +58,7 @@ export class ProductosAlternativosVentaComponent implements OnInit {
         console.log(productosAlter);
         for (const producto of productosAlter) {
           this.tvStockProducto = new TvStockProducto();
-          this.productoService.obtenerProductoIdBodegas(producto.nIdProductoAlternativo).subscribe(productoStock =>{
+          this.productoService.obtenerTotalBodegasIdProducto(producto.nIdProductoAlternativo).subscribe(productoStock =>{
             if (productoStock != null) {
               this.tvStockProducto=productoStock;
               this.productosFiltrados.push(this.tvStockProducto);

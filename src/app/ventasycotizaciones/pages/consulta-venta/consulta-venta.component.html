@@ -21,7 +21,7 @@
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                            placeholder="Buscar Venta de Crédicto..." />
+                            placeholder="Buscar Venta" />
                     </span>
                 </div>
             </ng-template>
@@ -62,13 +62,22 @@
                        
                     <td>
                         <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
-                            (click)="obtenerAbonosVentaId(venta)"></button>
+                            (click)="detalleVentaProductos(venta)"></button>
                         <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                             (click)="deleteProduct(product)"></button>
                     </td>
                 </tr>
             </ng-template>
         </p-table>
+
+        <p-dialog [(visible)]="mostrarProductos" header="Productos de la Venta" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <app-venta-productos-detalle [listaProductosVenta]="listaProductosVenta"></app-venta-productos-detalle>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
+            </ng-template>
+        </p-dialog>
     </div>
 </div>
 </div>

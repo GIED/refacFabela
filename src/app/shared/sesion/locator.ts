@@ -28,7 +28,7 @@ static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
-static obtenerProductoIdBodegas = '/obtenerProductoIdBodegas?';
+static obtenerTotalBodegasIdProducto = '/obtenerTotalBodegasIdProducto?';
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';
 static guardarProductoAlternativo = '/guardarProductoAlternativo'
@@ -46,6 +46,7 @@ static consultaInventario ='/obtenerInventarioEsp?';
 static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?'
 static consultaVentaDetalle='/obtenerVentasDetalle'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
+static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
 
 //Cotizaciones

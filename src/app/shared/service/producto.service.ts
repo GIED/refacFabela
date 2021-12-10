@@ -23,8 +23,8 @@ export class ProductoService {
     return this.http.get<TcProducto[]>(url);
   }
 
-  obtenerProductoIdBodegas(nId:number){
-    let url =environment.servicios.apiRefacFabela + locator.obtenerProductoIdBodegas+'id='+nId;
+  obtenerTotalBodegasIdProducto(nId:number){
+    let url =environment.servicios.apiRefacFabela + locator.obtenerTotalBodegasIdProducto+'id='+nId;
     return this.http.get<TvStockProducto>(url);
   }
 
