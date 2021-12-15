@@ -1,0 +1,61 @@
+<p-table #dt [value]="listaProductosVenta" responsiveLayout="scroll" [rows]="10"
+[paginator]="true"
+[globalFilterFields]="['sNoParte','sProducto','sDescripcion','sMarca','nCantidad','nTotalUnitario','nTotalPartida']"
+[(selection)]="selectedProducts2" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros"
+[showCurrentPageReport]="true">
+<ng-template pTemplate="caption">
+    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar producto vendido" />
+        </span>
+    </div>
+</ng-template>
+<ng-template pTemplate="header">
+    <tr>
+        <th pSortableColumn="sNoParte">No. Parte<p-sortIcon field="sNoParte"></p-sortIcon>
+        </th>
+        <th pSortableColumn="sProducto">Producto<p-sortIcon field="sProducto"></p-sortIcon>
+        </th>
+        <th pSortableColumn="sDescripcion">Descripción<p-sortIcon field="sDescripcion"></p-sortIcon>
+        </th>
+        <th pSortableColumn="sMarca">Marca<p-sortIcon field="sMarca"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalUnitario">Precio Unitario<p-sortIcon field="nTotalUnitario"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nCantidad">Cantidad<p-sortIcon field="nCantidad"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalPartida">Total Partida<p-sortIcon field="nTotalPartida"></p-sortIcon>
+        </th>
+        
+       
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-venta let-expanded="expanded">
+    <tr>
+
+       
+        <td><span class="p-column-title"></span> {{venta.sNoParte}}
+        </td>
+       <td><span class="p-column-title"></span> {{venta.sProducto}}
+        </td>
+        <td><span class="p-column-title"></span> {{venta.sDescripcion}}
+        </td>
+        <td><span class="p-column-title"></span>{{venta.sMarca}}
+        </td>
+         <td><span class="p-column-title"></span> {{venta.nTotalUnitario | number}}
+        </td>
+       
+        <td><span class="p-column-title"></span> {{venta.nCantidad | number}}
+        </td>
+         <td><span class="p-column-title"></span> {{venta.nTotalPartida | number}}
+        </td>
+       
+           
+      
+    </tr>
+</ng-template>
+</p-table>

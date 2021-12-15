@@ -200,7 +200,7 @@ buscaProducto(){
 
 valorSeleccionadoProducto(){
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
-  this.productoService.obtenerProductoIdBodegas(this.productoSeleccionado.nId).subscribe(productoStock =>{
+  this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
     if (productoStock.nCantidadTotal === 0) {
       this.messageService.add({severity: 'warn', summary: 'sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
     }

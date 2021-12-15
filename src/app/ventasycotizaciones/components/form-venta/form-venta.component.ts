@@ -64,7 +64,7 @@ export class FormVentaComponent implements OnInit {
       console.log(producto.nIdProducto);
 
 
-      this.productoService.obtenerProductoIdBodegas(producto.nIdProducto).subscribe(productoStock =>{
+      this.productoService.obtenerTotalBodegasIdProducto(producto.nIdProducto).subscribe(productoStock =>{
         if (productoStock.nCantidadTotal === 0 || producto.nCantidad > productoStock.nCantidadTotal) {
           producto.nStatus=0;
         }else{
