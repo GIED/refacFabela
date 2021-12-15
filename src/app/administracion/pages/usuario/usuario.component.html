@@ -8,7 +8,7 @@
 
                 </ng-template>
 
-               
+
             </p-toolbar>
 
             <p-table #dt [value]="listaUsuarios" [rows]="10" [paginator]="true" [globalFilterFields]="['sNombreusuario','sUsuario']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
@@ -28,15 +28,12 @@
                         <th pSortableColumn="name">Nombre Completo
                             <p-sortIcon field="name"></p-sortIcon>
                         </th>
-                        <!--<th>Image</th>-->
-                        <th pSortableColumn="price">Perfil
-                            <p-sortIcon field="price"></p-sortIcon>
+                        <th pSortableColumn="name">clave de identificación
+                            <p-sortIcon field="name"></p-sortIcon>
                         </th>
+                        <!--<th>Image</th>-->
                         <th pSortableColumn="category">Usuario
                             <p-sortIcon field="category"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="rating">Contraseña
-                            <p-sortIcon field="rating"></p-sortIcon>
                         </th>
                         <th pSortableColumn="inventoryStatus">Estatus
                             <p-sortIcon field="inventoryStatus"></p-sortIcon>
@@ -46,10 +43,9 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-usuario>
                     <tr>
-                        <td>{{usuario.sNombreusuario}}</td>
-                        <td>{{usuario.nPerfil}}</td>
+                        <td>{{usuario.sNombreUsuario}}</td>
+                        <td>{{usuario.sClaveUser}}</td>
                         <td>{{usuario.sUsuario}}</td>
-                        <td>{{usuario.sPassword}}</td>
                         <td>{{usuario.nEstatus === 1 ? 'Activo': 'Inactivo'}}</td>
                         <td>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editUsuario(usuario)"></button>
@@ -70,12 +66,11 @@
             <ng-template pTemplate="content">
                 <form [formGroup]="formulario">
                     <input type="text" pInputText formControlName="nId" hidden />
-                    <input type="text" pInputText formControlName="nPerfil" hidden />
                     <input type="text" pInputText formControlName="nEstatus" hidden />
-                    <input type="text" pInputText formControlName="sClaveuser" hidden />
+                    <input type="text" pInputText formControlName="sClaveUser" hidden />
                     <div class="p-field">
                         <label for="name">Nombre del usuario</label>
-                        <input type="text" pInputText name="sNombreUsuario" formControlName="sNombreusuario" [class.is-invalid]="validaNomUsu" />
+                        <input type="text" pInputText name="sNombreUsuario" formControlName="sNombreUsuario" [class.is-invalid]="validaNomUsu" />
                         <small class="p-error" *ngIf="validaNomUsu">*nombre de usuario requerido</small>
                     </div>
 
@@ -92,12 +87,26 @@
                             <small class="p-error" *ngIf="validaPassword">*password requerido</small>
                         </div>
                     </div>
+                    <div class="p-formgrid p-grid">
+                        <div class="p-field p-col">
+                            <label for="price">Rol</label>
+                            <p-listbox [options]="roles" formControlName="roles" optionValue="code" [class.is-invalid]="validaRol" [metaKeySelection]="false" [checkbox]="true" [filter]="false" [multiple]="true" optionLabel="name" [listStyle]="{'max-height':'250px'}" [style]="{'width':'15rem'}">
+                                <ng-template let-rol pTemplate="item">
+                                    <div class="country-item">
+                                        <div>{{rol.name}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-listbox>
+
+                            <small class="p-error" *ngIf="validaRol">*Rol requerido</small>
+                        </div>
+                    </div>
                 </form>
             </ng-template>
 
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarUsuario()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="!formulario.valid" (click)="guardarUsuario()"></button>
             </ng-template>
 
         </p-dialog>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppMainComponent } from '../../app.main.component';
+import { TokenService } from '../service/token.service';
 
 @Component({
     selector: 'app-menu',
@@ -9,13 +10,13 @@ export class AppMenuComponent implements OnInit {
 
     model: any[];
 
-    constructor(public appMain: AppMainComponent) {}
+    constructor(public appMain: AppMainComponent, private tokenService: TokenService) {}
 
     ngOnInit() {
         this.model = [
             {label: 'Inicio', icon: 'pi pi-fw pi-home',  routerLink: ['/inicio/tablero']},
             {
-                label: 'Administración', icon: 'pi pi-fw pi-cog',
+                label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.tokenService.IsAdmin() || this.tokenService.IsUser(),
                 items: [
                     {
                         label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['../administracion/usuario']

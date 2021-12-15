@@ -1,9 +1,10 @@
 export class TcUsuario {
     nId?:number;   
-    nPerfil?:number;
-    sNombreusuario?:string;   
+    sNombreUsuario?:string;   
     sUsuario?:string;  
     sPassword?:string;
-    sClaveuser?:string;
+    sClaveUser?:string;
     nEstatus?:number;
+    authorities:string[];
+
 }

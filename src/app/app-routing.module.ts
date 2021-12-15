@@ -2,13 +2,15 @@ import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import { AppMainComponent } from './app.main.component';
 import { AccesoComponent } from './login/acceso/acceso.component';
+import { LoginGuard } from './shared/guards/login.guard';
+import { ProdGuardService } from './shared/guards/prod-guard.service';
 
 
 
 
 const routes: Routes = [
     {
-     path:'administracion', component: AppMainComponent,
+     path:'administracion', component: AppMainComponent,  canActivate:[ProdGuardService], data: {expectedRol: ['admin']},
      loadChildren:() => import('./administracion/administracion.module').then(m => m.AdministracionModule),
      
    },
@@ -43,7 +45,7 @@ const routes: Routes = [
     
   },
   {
-    path:'login', component:AccesoComponent,
+    path:'login', component:AccesoComponent, canActivate:[LoginGuard],
     loadChildren:() => import('./login/login.module').then(m => m.LoginModule),
     
   },

@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../demo/domain/product';
-import { ProductService } from '../../../demo/service/productservice';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { UsuarioService } from '../../service/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Usuarios } from '../../interfaces/usuarios';
+import { NuevoUsuario } from '../../model/nuevo-usuario';
+
+interface Roles {
+    name: string;
+    code: string;
+  }
 
 @Component({
     selector: 'app-usuario',
@@ -32,15 +36,22 @@ import { Usuarios } from '../../interfaces/usuarios';
 })
 export class UsuarioComponent implements OnInit {
 
-    listaUsuarios: Usuarios[];
+    listaUsuarios: NuevoUsuario[];
     formulario: FormGroup;
     usuarioDialog: boolean;
-    usuario: Usuarios;
+    nuevoUsuario: NuevoUsuario;
+    roles: Roles[];
 
     constructor(private usuarioService: UsuarioService, private fb: FormBuilder, private messageService: MessageService,
         private confirmationService: ConfirmationService) {
         this.crearFormulario()
-
+        this.roles = [
+            { name: "Administrador", code: "admin" },
+            { name: "Ventas", code: "ventas" },
+            { name: "Almacen", code: "almacen" },
+            { name: "Cajas", code: "cajas" }
+          ];
+        this.listaUsuarios=[];
     }
 
     ngOnInit() {
@@ -49,11 +60,19 @@ export class UsuarioComponent implements OnInit {
 
     obtenerUsuarios() {
         this.usuarioService.getUsuarios().subscribe(usuarios => {
-            this.listaUsuarios = usuarios;
-        })
+
+            console.log(usuarios);
+            for (const usuario of usuarios) {
+                this.nuevoUsuario = new NuevoUsuario(usuario.nId, usuario.sClaveUser,usuario.sUsuario,usuario.sPassword, usuario.sNombreUsuario, usuario.nEstatus);
+                this.listaUsuarios.push(this.nuevoUsuario);    
+            }
+
+        });
     }
+
+
     get validaNomUsu() {
-        return this.formulario.get('sNombreusuario').invalid && this.formulario.get('sNombreusuario').touched;
+        return this.formulario.get('sNombreUsuario').invalid && this.formulario.get('sNombreUsuario').touched;
     }
     get validaUsuario() {
         return this.formulario.get('sUsuario').invalid && this.formulario.get('sUsuario').touched;
@@ -61,17 +80,20 @@ export class UsuarioComponent implements OnInit {
     get validaPassword() {
         return this.formulario.get('sPassword').invalid && this.formulario.get('sPassword').touched;
     }
+    get validaRol() {
+        return this.formulario.get('roles').invalid && this.formulario.get('roles').touched;
+    }
 
     // Crear formulario con sus validaciones de clientes
     crearFormulario() {
         this.formulario = this.fb.group({
             nId: ['', []],
-            nPerfil: ['', []],
             nEstatus: ['', []],
-            sClaveuser: ['', []],
-            sNombreusuario: ['', [Validators.required]],
+            sClaveUser: ['', []],
+            sNombreUsuario: ['', [Validators.required]],
             sUsuario: ['', [Validators.required]],
             sPassword: ['', [Validators.required]],
+            roles: ['', [Validators.required]],
         })
     }
 
@@ -84,10 +106,9 @@ export class UsuarioComponent implements OnInit {
     editUsuario(usuario: Usuarios) {
         this.usuarioDialog = true;
         this.fUsuario.nId.setValue(usuario.nId);
-        this.fUsuario.nPerfil.setValue(usuario.nPerfil);
         this.fUsuario.nEstatus.setValue(usuario.nEstatus);
-        this.fUsuario.sClaveuser.setValue(usuario.sClaveuser);
-        this.fUsuario.sNombreusuario.setValue(usuario.sNombreusuario);
+        this.fUsuario.sClaveUser.setValue(usuario.sClaveuser);
+        this.fUsuario.sNombreUsuario.setValue(usuario.sNombreusuario);
         this.fUsuario.sUsuario.setValue(usuario.sUsuario);
         this.fUsuario.sPassword.setValue(usuario.sPassword);
 
@@ -95,12 +116,12 @@ export class UsuarioComponent implements OnInit {
 
     limpiarFormulario() {
         this.fUsuario.nId.setValue("");
-        this.fUsuario.nPerfil.setValue("");
         this.fUsuario.nEstatus.setValue("");
-        this.fUsuario.sClaveuser.setValue("");
-        this.fUsuario.sNombreusuario.setValue("");
+        this.fUsuario.sClaveUser.setValue("");
+        this.fUsuario.sNombreUsuario.setValue("");
         this.fUsuario.sUsuario.setValue("");
         this.fUsuario.sPassword.setValue("");
+        this.fUsuario.roles.setValue("");
     }
 
     deleteUsuario(usuario: Usuarios) {
@@ -110,10 +131,10 @@ export class UsuarioComponent implements OnInit {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 usuario.nEstatus = 0;
-                this.usuarioService.guardaUsuario(usuario).subscribe(usuarioDesactivado => {
+                /*this.usuarioService.guardaUsuario(usuario).subscribe(usuarioDesactivado => {
                     this.listaUsuarios[this.findIndexById(usuarioDesactivado.nId.toString())] = usuarioDesactivado;
                     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'usuario desactivado', life: 3000 });
-                })
+                })*/
             }
         });
     }
@@ -134,26 +155,19 @@ export class UsuarioComponent implements OnInit {
                 }
             });
         } else {
-            this.usuario = this.formulario.value;
-
-            if (this.usuario.nId) {
-                this.usuarioService.guardaUsuario(this.usuario).subscribe(usuarioActualizado => {
-                    this.listaUsuarios[this.findIndexById(usuarioActualizado.nId.toString())] = usuarioActualizado;
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'usuario actualizado', life: 10000 });
-                })
-            }
-            else {
-                this.usuario.sClaveuser = this.createId();
-                this.usuario.nPerfil = 1;
-                this.usuario.nEstatus = 1;
-                this.usuarioService.guardaUsuario(this.usuario).subscribe(usuarioNuevo => {
+            this.nuevoUsuario = this.formulario.value; 
+            console.log(this.nuevoUsuario);          
+                this.nuevoUsuario.sClaveUser = this.createId();
+                this.nuevoUsuario.nEstatus = 1;
+                this.usuarioService.nuevo(this.nuevoUsuario).subscribe(usuarioNuevo => {
                     this.listaUsuarios.push(usuarioNuevo);
                     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'usuario guardado', life: 10000 });
                 })
-            }
+            
             this.listaUsuarios = [...this.listaUsuarios];
+            this.limpiarFormulario();
             this.usuarioDialog = false;
-            this.usuario = {};
+            
         }
 
     }

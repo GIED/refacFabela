@@ -21,6 +21,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
+import { interceptorProvider } from './shared/interceptors/prod-interceptor.service';
 
 
 @NgModule({
@@ -52,8 +53,10 @@ import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
         //{provide: LocationStrategy, useClass: HashLocationStrategy},
         // INTERCEPTOR PARA SPINNER
         {provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true},
-       
-         ProductService,MessageService, ConfirmationService,
+         ProductService,
+         MessageService, 
+         ConfirmationService,
+         interceptorProvider
     ],
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA ]

@@ -2,8 +2,8 @@
 
     <div class="login-content">
         <div class="night-switch">
-            <p-button styleClass="dark-switch"  icon="pi pi-circle-on" (click)="dark = true"></p-button>
-            <p-button styleClass="light-switch"  icon="pi pi-circle-off" (click)="dark = false"></p-button>
+            <p-button styleClass="dark-switch" icon="pi pi-circle-on" (click)="dark = true"></p-button>
+            <p-button styleClass="light-switch" icon="pi pi-circle-off" (click)="dark = false"></p-button>
         </div>
         <div class="login-panel">
             <div class="login-panel-content">
@@ -13,25 +13,22 @@
                 <h1>Refacciones Fabela</h1>
                 <p>Bienvenidos, favor de ingresar los datos del formulario</p>
                 <div class="forms">
-                    <div class="login-input-wrapper">
-                        <label for="username">Usuario</label>
-                        <input id="username" pInputText placeholder="Escriba su nombre de usuario..." />
-                        <i class="pi pi-user"></i>
-                    </div>
+                    <form #f="ngForm" (ngSubmit)="onLogin()" novalidate>
+                        <div class="login-input-wrapper">
+                            <label for="username">Usuario</label>
+                            <input name="sUsuario" id="sUsuario" [(ngModel)]="sUsuario" required pInputText placeholder="Escriba su nombre de usuario..." />
+                            <i class="pi pi-user"></i>
+                        </div>
 
-                    <div class="login-input-wrapper">
-                        <label for="password">Constraseña</label>
-                        <input type="password" id="password" placeholder="Escriba su contraseña" pPassword [feedback]="false"/>
-                        <i class="pi pi-lock"></i>
-                    </div>
-
-                  
-
-
-                    <div class="buttons">
-                        <button pButton type="button" [routerLink]="['/inicio/tablero']" label="Acceso"></button>
-                       
-                    </div>
+                        <div class="login-input-wrapper">
+                            <label for="password">Constraseña</label>
+                            <input type="password" name="sPassword" id="password" [(ngModel)]="sPassword" required placeholder="Escriba su contraseña" pPassword [feedback]="false" />
+                            <i class="pi pi-lock"></i>
+                        </div>
+                        <div class="buttons">
+                            <button pButton type="submit" [disabled]="!f.valid" label="Acceso"></button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

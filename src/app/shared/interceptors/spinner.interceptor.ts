@@ -27,6 +27,9 @@ export class SpinnerInterceptor implements HttpInterceptor {
           case 504:
             this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'Error de conexión con el servidor', life: 3000});
             break;
+          case 401:
+            this.messageService.add({ severity: 'error', summary: 'Error de autenticación', detail: error.error.message, life: 3000 });
+              break;
             default:
               this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'ocurrio un error', life: 3000});
               break;

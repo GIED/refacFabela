@@ -11,7 +11,10 @@ static obtenerProveedores='/obtenerProveedores';
 static guardarProveedores='/guardarProveedores';
 //api para usuarios
 static obtenerUsuarios='/obtenerUsuarios';
-static guardarUsuario='/guardarUsuario';
+static nuevoUsuario = '/nuevo';
+//api login
+static login = '/auth/login';
+static refresh= '/auth/refresh';
 //api para tipoCambio
 static consultaTipoCambioId='/consultaTipoCambioId';
 static actualizarTipoCambio='/actualizarTipoCambio';
