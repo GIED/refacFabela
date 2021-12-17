@@ -51,6 +51,7 @@ static consultaVentaDetalle='/obtenerVentasDetalle'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
+static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';

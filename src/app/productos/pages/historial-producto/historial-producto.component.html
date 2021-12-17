@@ -84,30 +84,65 @@
     <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6">
         <div class="card">
             <div class="p-text-center">
-                <h3>Historia de precios del Producto</h3>
+                <h3>Gráfica de Ventas del producto por mes</h3>
+            </div>
+            
+            <div class="p-col-12 p-lg-12">
+                <div class="card">
+                    <div class=" p-justify-center">
+                        <p-chart id="dashboard-chart" type="line" [data]="ventaProductoMesGraf" [options]="lineOptions">
+                        </p-chart>
+                    </div>
+                </div>
             </div>
 
-            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="450px" styleClass="p-datatable-sm">
+            <div class="p-text-center">
+                <h3>Ventas del producto por mes</h3>
+            </div>
+
+
+        
+            <p-table #dt [value]="listaProductosVentaMes" [rows]="5" [paginator]="true"
+                [globalFilterFields]="['totalVentas','cantidad', 'fechaVenta']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true"
+                responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <h5 class="p-m-0"></h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar en la tabla" />
+                        </span>
+                    </div>
+                </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>No Parte</th>
-                        <th>Nombre Parte</th>
-                        <th>Moneda</th>
-                        <th>Precio</th>
-                        <th>Fecha Registro</th>
+        
+                        <th pSortableColumn="totalVentas">Total Ventas <p-sortIcon field="totalVentas"></p-sortIcon></th>        
+                        <th pSortableColumn="cantidad">Total Producto<p-sortIcon field="cantidad"></p-sortIcon></th>
+                        <th pSortableColumn="fechaVenta">Mes/Año<p-sortIcon field="fechaVenta"></p-sortIcon></th>
+                        
+        
+        
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product>
+                <ng-template pTemplate="body" let-ventas>
+        
                     <tr>
-                        <td>{{product.code}}</td>
-                        <td>{{product.name}}</td>
-                        <td>PESO</td>
-                        <td>{{product.price}}</td>
-                        <td>10/10/2021</td>
+                        <td>{{ventas.totalVentas | number }}</td>
+                        <td>{{ventas.cantidad | number}}</td>
+                        <td>{{ventas.fechaVenta}}</td>
+                        
+        
                     </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{listaProductosVentaMes ? listaProductosVentaMes.length : 0 }} registros.
+                    </div>
                 </ng-template>
             </p-table>
-
         </div>
     </div>
 

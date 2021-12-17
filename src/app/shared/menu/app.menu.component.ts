@@ -16,7 +16,7 @@ export class AppMenuComponent implements OnInit {
         this.model = [
             {label: 'Inicio', icon: 'pi pi-fw pi-home',  routerLink: ['/inicio/tablero']},
             {
-                label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.tokenService.IsAdmin() || this.tokenService.IsUser(),
+                label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.tokenService.IsAdmin(),
                 items: [
                     {
                         label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['../administracion/usuario']
