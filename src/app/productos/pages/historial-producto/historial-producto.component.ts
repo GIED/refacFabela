@@ -9,6 +9,8 @@ import { TvProductoDetalle } from '../../model/TvProductoDetalle';
 import { forkJoin } from 'rxjs';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
+import { VentasService } from '../../../shared/service/ventas.service';
+import { TvVentaProductoMes } from '../../model/TvVentaProductoMes';
 
 @Component({
   selector: 'app-historial-producto',
@@ -38,14 +40,24 @@ lineChartOptions:any;
   productoBodegaGraf:any;
   pieOptions:any;
 
+  //objetos tabla Venta de productos por mes
+
+  listaProductosVentaMes:TvVentaProductoMes[];
+  laberProductoVentaMes: string[];
+  dataProductoVentaMes:number[];
+  ventaProductoMesGraf:any;
+
 
 
   constructor(private productService: ProductService, private messageService: MessageService,
-    private confirmationService: ConfirmationService, private spinner: NgxSpinnerService, private productosService:ProductoService, private bodegasService:BodegasService) {
+    private confirmationService: ConfirmationService, private spinner: NgxSpinnerService, private productosService:ProductoService, private bodegasService:BodegasService, private ventasService:VentasService) {
         this.labelsHistoriaIngresoProducto=[];
         this.dataHistoriaIngresoProducto=[];
         this.laberProductoBodega=[];
         this.dataProductoBodega=[];
+        this.listaProductosVentaMes=[];
+        this.laberProductoVentaMes=[];
+        this.dataProductoVentaMes=[];
       
      }
 
@@ -115,10 +127,13 @@ informacionProducto(nId:number) {
     let detalleProducto=this.productosService.obtenerTotalBodegasIdProducto(nId)
     //Consulta de producto por bodegas
     let productoBodegas=  this.bodegasService.obtenerProductoBodegas(nId);
+    //Consulta de ventas del producto por mes
+
+    let ventaMesProducto= this.ventasService.obtenerProductoVentaMesId(nId);
     
     //hace la consulta en orden y espera a realizar la recarga hasta que llegen todas las peticiones
     forkJoin([
-        historia,detalleProducto,productoBodegas
+        historia,detalleProducto,productoBodegas, ventaMesProducto
       ]).subscribe(resultado => {
         this.listaHistoriaPrecioProducto=resultado[0]       
         this.productoDetalle=resultado[1];
@@ -126,9 +141,17 @@ informacionProducto(nId:number) {
         for (const key in resultado[2]) {
             this.stockTotal += this.listaProductoBodega[key].nCantidad;
         }
+        this.listaProductosVentaMes=resultado[3];
+       
         this.cargaInicial=true;
+
+        console.log(this.listaProductosVentaMes);
+
+       
         this.graficaHistoriaPrecioProducto(this.listaHistoriaPrecioProducto);
         this.graficaproductoBodegas(this.listaProductoBodega);
+        this.graficaVentasMes(this.listaProductosVentaMes);
+
       })  
 
 }
@@ -207,6 +230,30 @@ graficaproductoBodegas(listaProductoBodega?:TwProductoBodega[]){
 
 
 }
-
+graficaVentasMes(listaProductosVentaMes?:TvVentaProductoMes[]){ 
+   
+    for (let index = 0; index < listaProductosVentaMes.length; index++) {
+        console.log("Estos es la lista que esta llegando para la generacion de la grafica")
+        console.log(listaProductosVentaMes);
+       
+        this.laberProductoVentaMes.push(listaProductosVentaMes[index].fechaVenta);      
+        this.dataProductoVentaMes.push(listaProductosVentaMes[index].cantidad);
+        
+    }
+    this.ventaProductoMesGraf = {
+        labels: this.laberProductoVentaMes,
+        datasets: [
+            
+            {
+                label: 'Productos Vendidos por mes',
+                data: this.dataProductoVentaMes,
+                fill: false,
+                backgroundColor: 'purple',
+                borderColor: 'purple',
+                tension: .4
+            }
+        ]
+    };
+}
 
 }
