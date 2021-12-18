@@ -58,7 +58,7 @@
                     </td>
                     <td class="p-text-center"><span class="p-column-title">Status</span>
                        
-                          {{venta.tcUsuario.sNombreusuario}}
+                          {{venta.tcUsuario.sNombreUsuario}}
                        
                     <td>
                         <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
@@ -78,6 +78,12 @@
                 <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
             </ng-template>
         </p-dialog>
+        <p-toolbar styleClass="p-mb-4">
+            <ng-template pTemplate="right">
+                <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                    class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+            </ng-template>
+        </p-toolbar>
     </div>
 </div>
 </div>
