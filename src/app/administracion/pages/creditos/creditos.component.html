@@ -16,29 +16,29 @@
 				<div class="p-col-12 p-lg-6">	
 					<div class="card">
 						<div class="p-text-center"><h3>Balance General</h3></div>
-						<p-table [value]="car" >
+						<p-table [value]="car"    >
 							<ng-template pTemplate="header" >
 								<tr>
-									<th class="p-text-center" style="background:#ebd282 ;" >
+									<th class="p-text-center" style="background:#aa7ea2; color:white" >
 										Total Inicial
 									</th>
-									<th class="p-text-center" style="background:#ebd282 ;" >
+									<th class="p-text-center"  style="background:#aa7ea2; color:white" >
 										Abonos
 									</th>
-									<th class="p-text-center" style="background:#ebd282 ;" >
+									<th class="p-text-center"  style="background:#aa7ea2; color:white" >
 										Saldo Total
 									</th>
-									<th class="p-text-center" style="background:#ebd282 ;" >
+									<th class="p-text-center" s style="background:#aa7ea2; color:white" >
 									    Total Vencidos
 									</th>
-									<th class="p-text-center" style="background:#ebd282 ;" >
+									<th class="p-text-center"  style="background:#aa7ea2; color:white" >
 										Total Regular
 									</th>
 								</tr>
 							</ng-template>
 							<ng-template pTemplate="body" let-car >
-								<tr>
-									<td class="p-text-center" >
+								<tr >
+									<td class="p-text-center"  >
 										{{totalesCreditos.nTotalVenta | number}}
 									  </td>
 									  <td class="p-text-center" >
@@ -58,14 +58,17 @@
 							</ng-template>
 						</p-table>
 						<div class="p-col-4 p-offset-4">
-						<button pButton pRipple label="Exportar Balance" icon="pi pi-upload" class="p-button-help p-mb-2"
-						(click)="dt.exportCSV()"></button></div>
+													
+									<button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+										class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+								
+						</div>
 					</div>
 				</div>
 			</div>
 			<p-table #dt [value]="listaClientesCredito" [columns]="cols" [rows]="10" [paginator]="true"
 				[globalFilterFields]="['tcCliente.sRfc','tcCliente.sRazonSocial','nLimiteCredito','nSaldoTotal', 'nCreditoDisponible','nAbonos','nTotalVenta','sEstatus','nAvanceCredito']"
-				[(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+				 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
 				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
 				[showCurrentPageReport]="true">
 				<ng-template pTemplate="caption">

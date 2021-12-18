@@ -32,21 +32,9 @@ import { TokenService } from './shared/service/token.service';
                 <div class="layout-topbar-right fadeInDown">
 					<ul class="layout-topbar-actions">
 						<li>
-							<p>Bienvenida(o): {{nombreUsuario}} </p>
+							<p style="color:white;">Bienvenida(o): {{nombreUsuario}} </p>
 						</li>
-						<li #calendar class="topbar-item" [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === calendar}">
-							<a href="#" (click)="appMain.onTopbarItemClick($event,calendar)">
-								<i class="topbar-icon pi pi-calendar"></i>
-							</a>
-							<ul class="fadeInDown" (click)="appMain.topbarItemClick = true">
-								<li class="layout-submenu-header">
-									<h1>Calendar</h1>
-								</li>
-								<li class="calendar">
-                                    <p-calendar [inline]="true"></p-calendar>
-								</li>
-							</ul>
-						</li>
+						
 						<li #profile class="topbar-item profile-item" [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === profile}">
 							<a href="#" (click)="appMain.onTopbarItemClick($event,profile)">
 							<i class="topbar-icon pi pi-user"></i>

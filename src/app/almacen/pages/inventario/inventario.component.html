@@ -1,23 +1,25 @@
 <div class="p-grid p-fluid">
-    <div class="p-col-12">
-
-    </div>
+    <!--Campos de filtro-->
     <div class="p-col-12 ">
         <div class="card">
-            <h2 class="p-mb-3 p-text-center">Inventario</h2>
-
+            <h3 class="p-mb-3 p-text-center">Inventario de productos</h3>
             <br>
             <div _ngcontent-iho-c213="" class="p-grid p-formgrid">
                 <div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
-                    <p-dropdown [options]="listaBodegas" optionLabel="sBodega" optionValue="nId" [(ngModel)]="bodega" (onChange)="consultaProducto()" placeholder="Selecciona una Bodega" [showClear]="true">
+                    <p-dropdown [options]="listaBodegas" optionLabel="sBodega" optionValue="nId" [(ngModel)]="bodega"
+                        (onChange)="consultaProducto()" placeholder="Selecciona una Bodega" [showClear]="true">
                     </p-dropdown>
 
                 </div>
                 <div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
-                    <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" [(ngModel)]="anaquel" (onChange)="consultaProducto()" placeholder="Selecciona un Anaquel" [showClear]="true"></p-dropdown>
+                    <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" [(ngModel)]="anaquel"
+                        (onChange)="consultaProducto()" placeholder="Selecciona un Anaquel" [showClear]="true">
+                    </p-dropdown>
                 </div>
                 <div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
-                    <p-dropdown [options]="listaNivel" optionLabel="sNivel" optionValue="nId" [(ngModel)]="nivel" (onChange)="consultaProducto()" placeholder="Selecciona una Nivel" [showClear]="true"></p-dropdown>
+                    <p-dropdown [options]="listaNivel" optionLabel="sNivel" optionValue="nId" [(ngModel)]="nivel"
+                        (onChange)="consultaProducto()" placeholder="Selecciona una Nivel" [showClear]="true">
+                    </p-dropdown>
                 </div>
             </div>
 
@@ -27,167 +29,136 @@
 
     </div>
     <div class="p-grid">
-        
-
-
         <div class="p-col-12">
             <div class="card">
-                <p-toolbar styleClass="p-mb-4">
-                    <ng-template pTemplate="right">
-                        <button pButton pRipple label="Exportar clientes" icon="pi pi-upload" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
-                     
-
-                    </ng-template>
-                </p-toolbar>
-               
-                <p-table #dt [value]="listaProductos"  dataKey="tcProducto.sNoParte"
-                         styleClass="p-datatable-customers" [rowHover]="true" [rows]="10" [paginator]="true"  [columns]="cols"  [(selection)]="productoSeleccion" [rowHover]="true"
-                         [filterDelay]="0" [globalFilterFields]="['tcProducto.sNoParte','producto.tcProducto.sProducto','tcProducto.sMarca', 'nCantidad']" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"  [showCurrentPageReport]="true" > 
+                <!--tabla de productos-->
+                <p-table #dt [value]="listaProductos" [columns]="cols" [rows]="10" [paginator]="true"
+                    [globalFilterFields]="['tcProducto.sNoParte','producto.tcProducto.sProducto','tcProducto.sDescripcion','tcProducto.sMarca', 'nCantidad','tcBodega.sBodega','tcAnaquel.sAnaquel','tcNivel.sNivel']"
+                   [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    [showCurrentPageReport]="true">
                     <ng-template pTemplate="caption">
                         <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                            Productos de la ubicación
+
                             <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                               placeholder="Buscar Producto"/>
-                    </span>
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Buscar en tabla" />
+                            </span>
                         </div>
                     </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            
                             <th pSortableColumn="tcProducto.sNoParte">
                                 <div class="p-d-flex p-jc-between p-ai-center">
                                     No Parte
                                     <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon>
-                                    <p-columnFilter type="text" field="tcProducto.sNoParte" display="menu" class="p-ml-auto"></p-columnFilter>
+                                    <p-columnFilter type="text" field="tcProducto.sNoParte" display="menu"
+                                        class="p-ml-auto"></p-columnFilter>
                                 </div>
                             </th>
                             <th pSortableColumn="tcProducto.sProducto">
                                 <div class="p-d-flex p-jc-between p-ai-center">
                                     Producto
                                     <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
-                                    <p-columnFilter type="text" field="tcProducto.sProducto" display="menu" class="p-ml-auto"></p-columnFilter>
+                                    <p-columnFilter type="text" field="tcProducto.sProducto" display="menu"
+                                        class="p-ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="tcProducto.sDescripcion">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Descripcion
+                                    <p-sortIcon field="tcProducto.sDescripcion"></p-sortIcon>
+                                    <p-columnFilter type="text" field="tcProducto.sDescripcion" display="menu"
+                                        class="p-ml-auto"></p-columnFilter>
                                 </div>
                             </th>
                             <th pSortableColumn="tcProducto.sMarca">
                                 <div class="p-d-flex p-jc-between p-ai-center">
-                                    Producto
+                                    Marca
                                     <p-sortIcon field="tcProducto.sMarca"></p-sortIcon>
-                                    <p-columnFilter type="text" field="tcProducto.sMarca" display="menu" class="p-ml-auto"></p-columnFilter>
+                                    <p-columnFilter type="text" field="tcProducto.sMarca" display="menu"
+                                        class="p-ml-auto"></p-columnFilter>
                                 </div>
                             </th>
-                            <th pSortableColumn="date">
+                            <th pSortableColumn="tcBodega.sBodega">
                                 <div class="p-d-flex p-jc-between p-ai-center">
-                                    Ubicación
-                                   
+                                    Bodega
+                                    <p-sortIcon field="tcBodega.sBodega"></p-sortIcon>
+                                    <p-columnFilter type="text" field="tcBodega.sBodega" display="menu"
+                                        class="p-ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="tcAnaquel.sAnaquel">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Anaquel
+                                    <p-sortIcon field="tcAnaquel.sAnaquel"></p-sortIcon>
+                                    <p-columnFilter type="text" field="tcAnaquel.sAnaquel" display="menu"
+                                        class="p-ml-auto"></p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="tcNivel.sNivel">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Nivel
+                                    <p-sortIcon field="tcNivel.sNivel"></p-sortIcon>
+                                    <p-columnFilter type="text" field="tcNivel.sNivel}" display="menu"
+                                        class="p-ml-auto"></p-columnFilter>
                                 </div>
                             </th>
                             <th pSortableColumn="nCantidad">
                                 <div class="p-d-flex p-jc-between p-ai-center">
                                     Cantidad
                                     <p-sortIcon field="nCantidad"></p-sortIcon>
-                                    <p-columnFilter type="text" field="nCantidad" display="menu" class="p-ml-auto"></p-columnFilter>
+                                    <p-columnFilter type="text" field="nCantidad" display="menu" class="p-ml-auto">
+                                    </p-columnFilter>
                                 </div>
                             </th>
-                          
-                            <th style="width: 8rem"></th>
-                        </tr>
+
                     </ng-template>
                     <ng-template pTemplate="body" let-producto>
                         <tr class="p-selectable-row">
-                            <td><span class="p-column-title">Name</span> {{producto.tcProducto.sNoParte}}
+                            <td><span class="p-column-title">No_parte</span> {{producto.tcProducto.sNoParte}}
                             </td>
-                          
-                            <td><span class="p-column-title">Price</span> {{producto.tcProducto.sProducto}}
+                            <td><span class="p-column-title">Producto</span> {{producto.tcProducto.sProducto}}
                             </td>
-                            <td><span class="p-column-title">Category</span> {{producto.tcProducto.sMarca}}
+                            <td><span class="p-column-title">Producto</span> {{producto.tcProducto.sDescripcion}}
                             </td>
-                            <td><span class="p-column-title">Reviews</span> {{producto.tcBodega.sBodega}}-{{producto.tcAnaquel.sAnaquel}}-{{producto.tcNivel.sNivel}}
+                            <td><span class="p-column-title">Marca</span> {{producto.tcProducto.sMarca}}
                             </td>
-                            <td><span class="p-column-title">Status</span> {{producto.nCantidad}}
+                            <td><span class="p-column-title">Bodega</span> {{producto.tcBodega.sBodega}}
                             </td>
-                           
+                            <td><span class="p-column-title">Anaquel</span>{{producto.tcAnaquel.sAnaquel}}
+                            </td>
+                            <td><span class="p-column-title">Nivel</span> {{producto.tcNivel.sNivel}}
+                            </td>
+                            <td><span class="p-column-title">Cantidad</span> {{producto.nCantidad}}
+                            </td>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="6">No hay registros para mostrar.</td>
+                            <td colspan="8" style="text-align: center;">No hay registros para mostrar.</td>
                         </tr>
                     </ng-template>
-
                     <ng-template pTemplate="summary">
                         <div class="p-d-flex p-ai-center p-jc-between">
                             En total hay {{listaProductos ? listaProductos.length : 0 }} productos.
                         </div>
                     </ng-template>
-               
-                    
+
                 </p-table>
-                
-               
+                <!--Boton para exportar datos de la tabla-->
+                <div *ngIf="listaProductos.length>0">
+                    <p-toolbar styleClass="p-mb-4">
+                        <ng-template pTemplate="right">
+                            <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                                class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                        </ng-template>
+                    </p-toolbar>
+                </div>
+                <!-- ////////////////////////////////////////////-->
             </div>
-            <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Datos del cliente" [modal]="true" styleClass="p-fluid">
-                <ng-template pTemplate="content">
-                    <img [src]="'assets/demo/images/product/' + product.image" [alt]="product.image" class="product-image" *ngIf="product.image">
-                    <div class="p-field">
-                        <label for="name">NO.PARTE</label>
-                        <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-                        <small class="p-invalid" *ngIf="submitted && !product.name">RFC requerido.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="description">DESCRIPCION</label>
-                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="3" cols="20"></textarea>
-                    </div>
-
-                    <div class="p-field">
-                        <label class="p-mb-3">MARCA</label>
-                        <div class="p-formgrid p-grid">
-                            <div class="p-field-radiobutton p-col-6">
-                                <p-radioButton id="category1" name="category" value="Accessories" [(ngModel)]="product.category"></p-radioButton>
-                                <label for="category1">CATEGORIA</label>
-                            </div>
-                            <div class="p-field-radiobutton p-col-6">
-                                <p-radioButton id="category2" name="category" value="Clothing" [(ngModel)]="product.category"></p-radioButton>
-                                <label for="category2">CANTIDAD</label>
-                            </div>
-                            <div class="p-field-radiobutton p-col-6">
-                                <p-radioButton id="category3" name="category" value="Electronics" [(ngModel)]="product.category"></p-radioButton>
-                                <label for="category3">UBICACION</label>
-                            </div>
-                            <div class="p-field-radiobutton p-col-6">
-                                <p-radioButton id="category4" name="category" value="Fitness" [(ngModel)]="product.category"></p-radioButton>
-                                <label for="category4">Fitness</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-formgrid p-grid">
-                        <div class="p-field p-col">
-                            <label for="price">Price</label>
-                            <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
-                        </div>
-                        <div class="p-field p-col">
-                            <label for="quantity">Quantity</label>
-                            <p-inputNumber id="quantity" [(ngModel)]="product.quantity"></p-inputNumber>
-                        </div>
-                    </div>
-                </ng-template>
-
-                <ng-template pTemplate="footer">
-                    <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                    <!--	<button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>-->
-                </ng-template>
-            </p-dialog>
-
             <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
         </div>
-   
-   
-   
-   
-   
     </div>
-
-
 </div>

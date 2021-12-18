@@ -36,7 +36,7 @@ import { TwAbono } from '../../../productos/model/TwAbono';
 })
 export class CreditosComponent implements OnInit {
 
-  cols:any;
+  
   products: Product[];
   product: Product;
   selectedProducts: Product[];
@@ -54,10 +54,24 @@ export class CreditosComponent implements OnInit {
   car:any
   productDialog: boolean;
   productDialog2: boolean;
+  cols:any;
 
   constructor(private productService: ProductService, private messageService: MessageService,
               private confirmationService: ConfirmationService, private clienteService:ClienteService, private ventasService: VentasService) {
                   this.totalesCreditos={};
+
+                  this.cols = [
+                    { field: 'tcCliente.sRfc', header: 'RFC' },
+                    { field: 'tcCliente.sRazonSocial', header: 'Razón Social' },
+                    { field: 'nLimiteCredito', header: 'Limite Crédito' },
+                    { field: 'nCreditoDisponible', header: 'Crédito Disponible' },
+                    { field: 'nSaldoTotal', header: 'Saldo' },
+                    { field: 'nTotalVenta', header: 'Total Venta' },
+                    { field: 'nAbonos', header: 'Abonos' },   
+                    { field: 'nAvanceCredito', header: 'Avance Crédito' },
+                    { field: 'sEstatus', header: 'Estatus' }
+        
+                ]
      
   }
 

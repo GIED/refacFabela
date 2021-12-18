@@ -27,58 +27,27 @@ export class ConsultaVentaComponent implements OnInit {
     listaVentasDetalleCliente: TvVentasDetalle[];
     listaProductosVenta:VentaProductoDto;
 
-  constructor(private productService: ProductService, private messageService: MessageService,
-    private confirmationService: ConfirmationService, private ventasService:VentasService) { }
+  constructor(  private ventasService:VentasService) {
+
+    this.cols = [
+      { field: 'sFolioVenta', header: 'Folio' },
+      { field: 'tcCliente.sRfc', header: 'RFC' },
+      { field: 'tcCliente.sRazonSocial', header: 'Razón Social' },
+      { field: 'nTotalVenta', header: 'Total Venta' },
+      { field: 'dFechaVenta', header: 'Fecha de Venta' },
+      { field: 'tcUsuario.sNombreUsuario', header: 'Vendedor' },
+     
+  ]
+   }
 
   ngOnInit(){
      this.ventasService.obtenerVentaDetalle().subscribe(data=>{
-     this.listaVentasDetalleCliente=data;       
-     // console.log(this.listaVentasDetalleCliente);
+     this.listaVentasDetalleCliente=data; 
+     console.log(this.listaVentasDetalleCliente);      
+    
     }); 
   }
-  openNew() {
-  
-    this.submitted = false;
-    this.productDialog = true;
-    this.titulo="Registro de Productos"
-}
-
-deleteSelectedProducts() {
-   
-}
-
-editProduct(product: Product) {
-  
-    this.productDialog = true;
-    this.titulo="Actualización de Producto"
-}
-alternativosProduct(product: Product) {
-  
-   
-   
-}
-registroAlternativos(){
-  
-    this.submitted = false;
-    this.productDialog = true;
-    this.titulo="Registro de Productos Alternativos"
-}
-detalleProduct(product: Product) {
-   
-    this.detalleDialog = true;
-   
-
-   
-}
-
-deleteProduct(product: Product) {
-  
-}
-
-hideDialog() {
-    this.productDialog = false;
-    this.submitted = false;
-}
+ 
 
 detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
 
