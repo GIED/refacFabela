@@ -25,6 +25,7 @@ export class ProductoService {
 
   obtenerTotalBodegasIdProducto(nId:number){
     let url =environment.servicios.apiRefacFabela + locator.obtenerTotalBodegasIdProducto+'id='+nId;
+    console.log(url);
     return this.http.get<TvStockProducto>(url);
   }
 

@@ -31,7 +31,7 @@ static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
-static obtenerTotalBodegasIdProducto = '/obtenerTotalBodegasIdProducto?';
+static obtenerTotalBodegasIdProducto='/obtenerTotalBodegasIdProducto?';
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';
 static guardarProductoAlternativo = '/guardarProductoAlternativo'

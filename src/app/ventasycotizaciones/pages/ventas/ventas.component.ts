@@ -201,6 +201,7 @@ buscaProducto(){
 valorSeleccionadoProducto(){
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
   this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
+    console.log(productoStock);
     if (productoStock.nCantidadTotal === 0) {
       this.messageService.add({severity: 'warn', summary: 'sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
     }
@@ -363,6 +364,9 @@ soloCotizacion(){
 
 generarVenta(datosVenta: DatosVenta){
 
+  console.log("Datos para venta en padre");
+  console.log(datosVenta);
+
   this.datosRegistraVenta=datosVenta;
   this.datosRegistraVenta.idCliente=this.clienteSeleccionado.nId;
   this.datosRegistraVenta.sFolioVenta=this.createFolio();
@@ -377,15 +381,15 @@ generarVenta(datosVenta: DatosVenta){
     this.datosRegistraVenta.fechaFinCredito=null;
   }
   this.datosRegistraVenta.twCotizacion = this.cotizacionData;
-  console.log("Datos para venta en padre");
+  console.log("Datos para guardar");
   console.log(this.datosRegistraVenta);
   console.log(this.cotizacionData);
 
- this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
+ /*this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
     console.log(resp);
   });
   
-  
+  */
 
 
 }
