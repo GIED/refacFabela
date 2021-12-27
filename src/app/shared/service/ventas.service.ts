@@ -24,6 +24,10 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalle;
     return this.http.get<TvVentasDetalle[]>(url);
   }
+  obtenerVentaDetalleEntrega(){
+    let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleEntrega;
+    return this.http.get<TvVentasDetalle[]>(url);
+  }
   obtenerAbonosVentaId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaAbonoId+'nId='+id;
     return this.http.get<TwAbono[]>(url);
@@ -41,6 +45,11 @@ export class VentasService {
   guardaVenta(datosVenta:DatosVenta){
     let url = environment.servicios.apiRefacFabela + locator.guardaVenta;
     return this.http.post<any>(url,datosVenta);
+  }
+
+  guardaVentaProductoId(ventaProductoDto:VentaProductoDto){
+    let url = environment.servicios.apiRefacFabela + locator.guardaVentaProductoId;
+    return this.http.post<any>(url,ventaProductoDto);
   }
 
 

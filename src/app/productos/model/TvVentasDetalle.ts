@@ -1,5 +1,6 @@
 import { Clientes } from '../../administracion/interfaces/clientes';
 import { Usuarios } from '../../administracion/interfaces/usuarios';
+import { TcEstatusVenta } from './TcEstatusVenta';
 export class TvVentasDetalle{
 
 nId?:number;
@@ -19,6 +20,7 @@ nFvancePago?:number;
 sEstatus?:string;
 tcCliente?:Clientes;
 tcUsuario?:Usuarios;
+tcEstatusVenta?:TcEstatusVenta;
 
 
     
