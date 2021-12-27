@@ -12,6 +12,8 @@ import { CountryService } from '../demo/service/countryservice';
 import { ProductService } from '../demo/service/productservice';
 import { InputBusquedaComponent } from '../productos/components/input-busqueda/input-busqueda.component';
 import { ProductosModule } from '../productos/productos.module';
+import { VentasycotizacionesModule } from '../ventasycotizaciones/ventasycotizaciones.module';
+import { VentaProductosDetalleEntregaComponent } from './components/venta-productos-detalle-entrega/venta-productos-detalle-entrega.component';
 
 
 
@@ -20,12 +22,14 @@ import { ProductosModule } from '../productos/productos.module';
     IngresoMercanciaComponent,
     TraspasosComponent,
     InventarioComponent,
-    EntregaDeMercanciaComponent
+    EntregaDeMercanciaComponent,
+    VentaProductosDetalleEntregaComponent
   ],
   imports: [
     AlmacenRoutingModule,
     PrimeModule,
-    ProductosModule
+    ProductosModule,
+    VentasycotizacionesModule
   ], 
   exports:[
    

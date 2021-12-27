@@ -11,7 +11,7 @@
 
         <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
             [paginator]="true"
-            [globalFilterFields]="['sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario']"
+            [globalFilterFields]="['sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
             [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
             currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
             [showCurrentPageReport]="true">
@@ -39,8 +39,12 @@
                     <th pSortableColumn="dFechaVenta">Fecha Venta<p-sortIcon
                             field="dFechaVenta"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
+                        field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+                </th>
                     <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor<p-sortIcon field="tcUsuario.sNombreusuario"></p-sortIcon>
                     </th>
+                    <th></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-venta let-expanded="expanded">
@@ -58,9 +62,14 @@
                     </td>
                     <td class="p-text-center"><span class="p-column-title">Status</span>
                        
-                          {{venta.tcUsuario.sNombreUsuario}}
+                          {{venta.tcEstatusVenta.sDescripcion}}
                        
-                    <td>
+                    <td class="p-text-center"><span class="p-column-title">Status</span>
+                       
+                            {{venta.tcUsuario.sNombreUsuario}}
+                    </td>
+                         
+                      <td>
                         <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
                             (click)="detalleVentaProductos(venta)"></button>
                         <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"

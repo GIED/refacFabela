@@ -25,6 +25,7 @@ import { VentaProductosDetalleComponent } from './components/venta-productos-det
     PrimeModule,
     ProductosModule,
     ReactiveFormsModule
-  ]
+  ],
+  exports:[VentaProductosDetalleComponent]
 })
 export class VentasycotizacionesModule { }

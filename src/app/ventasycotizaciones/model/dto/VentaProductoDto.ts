@@ -9,6 +9,7 @@ export class VentaProductoDto{
     nTotalUnitario?: number;
     nTotalPartida?: number;
     dFechaVenta?: Date;
+    nEstatusEntregaAlmacen:number;
 
 
 }
