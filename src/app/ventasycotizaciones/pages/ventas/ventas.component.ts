@@ -23,6 +23,7 @@ import { TwCotizacion } from '../../../productos/model/TcCotizacion';
 import { producto } from '../../../productos/interfaces/producto.interfaces';
 import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
+import { TokenService } from 'src/app/shared/service/token.service';
 
 
 @Component({
@@ -74,6 +75,7 @@ export class VentasComponent implements OnInit {
     private ventasCotizacionService: VentasCotizacionesService,
     private ventaService:VentasService,
     private bodegasService: BodegasService,
+    private tokenService: TokenService
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -319,6 +321,7 @@ guardarCotizacion(){
   for (let producto of this.listaProductos) {
     const cotizacionDto= new CotizacionDto();
     cotizacionDto.nIdCliente=this.clienteSeleccionado.nId;
+    cotizacionDto.nIdUsuario=this.tokenService.getIdUser();
     cotizacionDto.sFolio=folio;
     cotizacionDto.nIdProducto=producto.nIdProducto;
     cotizacionDto.nCantidad=producto.nCantidad;
@@ -369,6 +372,7 @@ generarVenta(datosVenta: DatosVenta){
 
   this.datosRegistraVenta=datosVenta;
   this.datosRegistraVenta.idCliente=this.clienteSeleccionado.nId;
+  this.datosRegistraVenta.idUsuario=this.tokenService.getIdUser();
   this.datosRegistraVenta.sFolioVenta=this.createFolio();
   this.datosRegistraVenta.idTipoVenta=1;
   if (this.datosRegistraVenta.tipoPago === 1) {

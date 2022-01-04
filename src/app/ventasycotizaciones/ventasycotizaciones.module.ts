@@ -14,12 +14,13 @@ import { FormVentaComponent } from './components/form-venta/form-venta.component
 import { DetalleCotizacionComponent } from './components/detalle-cotizacion/detalle-cotizacion.component';
 import { ProductosAlternativosVentaComponent } from './components/productos-alternativos-venta/productos-alternativos-venta.component';
 import { VentaProductosDetalleComponent } from './components/venta-productos-detalle/venta-productos-detalle.component';
+import { FormVentaPedidoComponent } from './components/form-venta-pedido/form-venta-pedido.component';
 
 
 
 @NgModule({
   declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,
-    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent],
+    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent],
   imports: [
     VentasycotizacionesRoutingModule,
     PrimeModule,

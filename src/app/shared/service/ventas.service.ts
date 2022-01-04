@@ -43,8 +43,11 @@ export class VentasService {
   }
 
   guardaVenta(datosVenta:DatosVenta){
+    const httpOptions = {
+      responseType: 'text' as 'json'
+   };
     let url = environment.servicios.apiRefacFabela + locator.guardaVenta;
-    return this.http.post<any>(url,datosVenta);
+    return this.http.post<any>(url,datosVenta, httpOptions);
   }
 
   guardaVentaProductoId(ventaProductoDto:VentaProductoDto){

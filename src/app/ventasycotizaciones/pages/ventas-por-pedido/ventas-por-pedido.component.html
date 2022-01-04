@@ -160,7 +160,7 @@
                                     </ng-template>
                                     <ng-template pTemplate="summary">
                                         <div class="p-grid p-mt-2" *ngIf="listaProductos.length>0">
-                                            <button pButton class="p-button-primary" (click)="guardarCotizacion()" [disabled]="formGrp.invalid" label="Guardar cotización"></button>
+                                            <button pButton class="p-button-primary" (click)="muestraFormVentaPedido()" [disabled]="formGrp.invalid" label="Generar venta por pedido"></button>
                                         </div>
                                     </ng-template>
 
@@ -193,7 +193,7 @@
     </p-dialog>
     <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta" [style]="{width: '700px'}" [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
-            <app-form-venta [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente" [total]="total" (emitirVenta)="generarVenta($event)" (soloCotizacion)="soloCotizacion()"></app-form-venta>
+            <app-form-venta-pedido [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente" [total]="total" (emitirVenta)="generarVenta($event)" (cancelar)="cancelar()"></app-form-venta-pedido>
         </ng-template>
         <ng-template pTemplate="footer">
 

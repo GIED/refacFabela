@@ -42,8 +42,21 @@ export class TokenService {
     return nameUser;
   }
 
+  //obtener id del usuario
+  public getIdUser(){
+    if (!this.isLogged()) {
+      return null;
+    }
+    const token = this.getToken();
+    const payload = token.split('.')[1];
+    const payloadDecoded = atob(payload);
+    const values =JSON.parse(payloadDecoded);
+    const idUser = values.nId;
 
+    return idUser;
+  }
 
+  
   // obtener Perfiles del usuario logeado
 
   public IsAdmin(){

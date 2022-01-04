@@ -19,6 +19,7 @@ import { VentasCotizacionesService } from '../../../shared/service/ventas-cotiza
 import { VentasService } from '../../../shared/service/ventas.service';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { debounceTime } from 'rxjs/operators';
+import { TokenService } from '../../../shared/service/token.service';
 
 @Component({
   selector: 'app-ventas-por-pedido',
@@ -69,6 +70,7 @@ export class VentasPorPedidoComponent implements OnInit {
     private ventasCotizacionService: VentasCotizacionesService,
     private ventaService:VentasService,
     private bodegasService: BodegasService,
+    private tokenService: TokenService
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -302,60 +304,10 @@ quitarProducto(producto: TvStockProducto){
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
 }
 
-guardarCotizacion(){
-
-  //console.log(this.clienteSeleccionado);
-  //console.log(this.listaProductos);
-
-  const productoCotizado: CotizacionDto[]=[];
-
-  let folio = this.createFolio();
-
-  for (let producto of this.listaProductos) {
-    const cotizacionDto= new CotizacionDto();
-    cotizacionDto.nIdCliente=this.clienteSeleccionado.nId;
-    cotizacionDto.sFolio=folio;
-    cotizacionDto.nIdProducto=producto.nIdProducto;
-    cotizacionDto.nCantidad=producto.nCantidad;
-    cotizacionDto.nPrecioUnitario=producto.tcProducto.nPrecioSinIva;
-    cotizacionDto.nIvaUnitario=producto.tcProducto.nPrecioConIva-producto.tcProducto.nPrecioSinIva;
-    cotizacionDto.nTotalUnitario=producto.tcProducto.nPrecioConIva;
-
-    productoCotizado.push(JSON.parse(JSON.stringify(cotizacionDto)));
-    
-  }
-
-  this.listaCotización = productoCotizado;
-  console.log("lista enviada");
-   console.log(this.listaCotización);
-
-  this.ventasCotizacionService.guardaCotizacion(this.listaCotización).subscribe(cotizacionRegistrada =>{
-
-    if (cotizacionRegistrada.nId !== null) {
-      console.log(this.listaProductos);
-      console.log(this.saldoGeneralCliente);
-      this.cotizacionData = cotizacionRegistrada;
-      this.mostrarOpcionesVenta=true;
-    }
-   
-  });
+muestraFormVentaPedido(){
+  this.mostrarOpcionesVenta=true;
 }
 
-
-soloCotizacion(){
-  this.clienteCtrl.setValue('');
-  this.productoCtrl.setValue('');
-  this.clienteSeleccionadoCtrl.setValue('');
-  this.productoSelecionadoCtrl.setValue('');
-  this.nCantidadCtrl.setValue('');
-  this.listaProductos=[];
-  this.total=0.00;
-  this.mostrarDetalleCliente=false;
-  this.mostrarOpcionesVenta=false;
-  this.muestraProductos = false;
-
-
-}
 
 generarVenta(datosVenta: DatosVenta){
 
@@ -364,8 +316,9 @@ generarVenta(datosVenta: DatosVenta){
 
   this.datosRegistraVenta=datosVenta;
   this.datosRegistraVenta.idCliente=this.clienteSeleccionado.nId;
+  this.datosRegistraVenta.idUsuario=this.tokenService.getIdUser();
   this.datosRegistraVenta.sFolioVenta=this.createFolio();
-  this.datosRegistraVenta.idTipoVenta=1;
+  this.datosRegistraVenta.idTipoVenta=3;
   if (this.datosRegistraVenta.tipoPago === 1) {
     this.datosRegistraVenta.fechaIniCredito=new Date();
     var fin = new Date();
@@ -384,9 +337,19 @@ generarVenta(datosVenta: DatosVenta){
     console.log(resp);
   });
   
-  
+}
 
-
+cancelar(){
+  this.clienteCtrl.setValue('');
+  this.productoCtrl.setValue('');
+  this.clienteSeleccionadoCtrl.setValue('');
+  this.productoSelecionadoCtrl.setValue('');
+  this.nCantidadCtrl.setValue('');
+  this.listaProductos=[];
+  this.total=0.00;
+  this.mostrarDetalleCliente=false;
+  this.mostrarOpcionesVenta=false;
+  this.muestraProductos = false;
 }
 
 
