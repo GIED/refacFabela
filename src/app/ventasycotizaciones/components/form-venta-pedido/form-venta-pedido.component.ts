@@ -24,13 +24,12 @@ export class FormVentaPedidoComponent implements OnInit {
   listaValidada:TvStockProducto[];
 
   formVentas:FormGroup;
-  muestraCredito:boolean;
+  
   
 
-  constructor(private productoService:ProductoService, private messageService: MessageService,) {
+  constructor(private messageService: MessageService) {
     this.listaValidada=[];
-    this.muestraCredito=false;
-    this.datosVenta= { tipoPago: null, listaValidada: null};
+    this.datosVenta= { anticipo: null, listaValidada: null};
    }
 
   ngOnInit(): void {
@@ -38,36 +37,28 @@ export class FormVentaPedidoComponent implements OnInit {
     
     this.listaValidada=this.listaProductos
     this._initFormGroupVentas();
-    this.validaCredito();
+    this.nAnticipoCtrl.setValue(this.total/2);
 
    
   }
 
   _initFormGroupVentas(): void{ 
     this.formVentas=new FormGroup({
-      tipoPagoCtrl: new FormControl("0",[Validators.required])
+      nAnticipoCtrl: new FormControl('',[Validators.required])
     });   
   }
 
-  get tipoPagoCtrl(){
-    return this.formVentas.get('tipoPagoCtrl') as FormControl;
+  get nAnticipoCtrl(){
+    return this.formVentas.get('nAnticipoCtrl') as FormControl;
   }
 
-  validaCredito(){
-    if (this.saldoGeneralCliente.nCreditoDisponible > 0 && this.saldoGeneralCliente.nCreditoDisponible >= this.total) {
-      this.muestraCredito =  true;
-    }else{
-      this.muestraCredito =  false;
-    }
-     
-  }
+ 
 
   quitarProducto(producto: TvStockProducto){
     //console.log(producto);
     
     this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
     this.listaValidada.splice(this.findIndexById(producto.nIdProducto, this.listaValidada),1);
-    this.validaCredito();
   }
 
 
@@ -76,12 +67,15 @@ export class FormVentaPedidoComponent implements OnInit {
     
       //console.log("lista para guardar");
 
-      this.datosVenta.tipoPago = parseInt(this.tipoPagoCtrl.value);
-      this.datosVenta.listaValidada=this.listaProductos;
+      if (this.nAnticipoCtrl.value < this.total/2 ) {
+        this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'El anticipo para generar el pedido debé ser almenos de: '+this.total/2, life: 3000});
+      }else{
+        this.datosVenta.anticipo = this.nAnticipoCtrl.value;
+        this.datosVenta.listaValidada=this.listaProductos;
+        //console.log(this.datosVenta);
+        this.emitirVenta.emit(this.datosVenta);
+      }
 
-      //console.log(this.datosVenta);
-
-      this.emitirVenta.emit(this.datosVenta);
     
   
   

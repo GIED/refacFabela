@@ -67,7 +67,6 @@ export class VentasPorPedidoComponent implements OnInit {
     private clienteService:ClienteService,
     private productoService:ProductoService, 
     private messageService: MessageService,
-    private ventasCotizacionService: VentasCotizacionesService,
     private ventaService:VentasService,
     private bodegasService: BodegasService,
     private tokenService: TokenService
@@ -199,8 +198,8 @@ valorSeleccionadoProducto(){
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
   this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
     console.log(productoStock);
-    if (productoStock.nCantidadTotal === 0) {
-      this.messageService.add({severity: 'warn', summary: 'sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
+    if (productoStock.nCantidadTotal !== 0) {
+      this.messageService.add({severity: 'warn', summary: 'Con existencias', detail: 'El producto seleccionado  cuenta con existencias.', life: 3000});
     }
     this.productosFiltrados.push(productoStock);
     this.mostrarSugerenciasProducto=false;
@@ -280,8 +279,8 @@ agregarProduct(producto: TvStockProducto) {
   }
   //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
   console.log("total a: "+this.total);
-  this.total += producto.tcProducto.nPrecioConIva*producto.nCantidad;
-  producto.nCantidadTotal=producto.nCantidadTotal-producto.nCantidad;
+  this.total += producto.tcProducto.nPrecioConIva*this.nCantidadCtrl.value;
+  producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
   console.log("total d: "+this.total);
   
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
@@ -319,24 +318,44 @@ generarVenta(datosVenta: DatosVenta){
   this.datosRegistraVenta.idUsuario=this.tokenService.getIdUser();
   this.datosRegistraVenta.sFolioVenta=this.createFolio();
   this.datosRegistraVenta.idTipoVenta=3;
-  if (this.datosRegistraVenta.tipoPago === 1) {
-    this.datosRegistraVenta.fechaIniCredito=new Date();
-    var fin = new Date();
-    fin.setDate(fin.getDate() + 30);
-    this.datosRegistraVenta.fechaFinCredito=fin;
-  }else{
-    this.datosRegistraVenta.fechaIniCredito=null;
-    this.datosRegistraVenta.fechaFinCredito=null;
-  }
+  this.datosRegistraVenta.fechaIniCredito=null;
+  this.datosRegistraVenta.fechaFinCredito=null;
+  this.datosRegistraVenta.tipoPago=0;
+  
+  
   this.datosRegistraVenta.twCotizacion = this.cotizacionData;
   console.log("Datos para guardar");
   console.log(this.datosRegistraVenta);
   console.log(this.cotizacionData);
 
- this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
-    console.log(resp);
+ this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(ventaPedido =>{
+    this.generarVentaPdf(ventaPedido.nId);
   });
   
+}
+
+generarVentaPdf(idVenta:number){
+
+  this.ventaService.generarVentaPedidoPdf(idVenta).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'venta_pedido_' + idVenta + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta pedido Generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+        this.cancelar();
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta pedido', life: 3000});
+      }
+
+  });
+
 }
 
 cancelar(){

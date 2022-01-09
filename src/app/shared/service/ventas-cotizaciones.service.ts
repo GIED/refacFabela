@@ -5,6 +5,8 @@ import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 import { TwCotizacion } from '../../productos/model/TcCotizacion';
 import { TvStockProducto } from '../../productos/model/TvStockProducto';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +29,20 @@ export class VentasCotizacionesService {
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionId+'id='+id;
     return this.http.get<TvStockProducto[]>(url);
   }
+
+  generarCotizacionPdf(nIdCotizacion: number){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarCotizacionPdf + 'nIdCotizacion=' + nIdCotizacion, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+
+  }
+
+  
   
 }

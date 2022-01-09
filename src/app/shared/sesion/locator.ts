@@ -54,11 +54,14 @@ static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
 static guardaVentaProductoId= '/guardaVentaProductoId';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
+static generarVentaPdf='/getVenta?'
+static generarVentaPedidoPdf='/getVentaPedido?'
 
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';
 static consultaCotizaciones='/consultaCotizaciones'
 static consultaCotizacionId='/consultaCotizacionId?'
+static generarCotizacionPdf='/getCotizacion?'
 
 //Tablero
 

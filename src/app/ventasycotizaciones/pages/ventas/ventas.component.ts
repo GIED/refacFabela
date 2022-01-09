@@ -285,8 +285,8 @@ agregarProduct(producto: TvStockProducto) {
   }
   //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
   console.log("total a: "+this.total);
-  this.total += producto.tcProducto.nPrecioConIva*producto.nCantidad;
-  producto.nCantidadTotal=producto.nCantidadTotal-producto.nCantidad;
+  this.total += producto.tcProducto.nPrecioConIva*this.nCantidadCtrl.value;
+  producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
   console.log("total d: "+this.total);
   
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
@@ -349,8 +349,51 @@ guardarCotizacion(){
   });
 }
 
+generarCotizacionPdf(idCotizacion:number){
+
+  this.ventasCotizacionService.generarCotizacionPdf(idCotizacion).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'cotizacion_' + idCotizacion + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Cotizacion Generada', life: 3000});
+        
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar la Cotizacion', life: 3000});
+      }
+
+  });
+
+}
+
 
 soloCotizacion(){
+
+  this.generarCotizacionPdf(this.cotizacionData.nId);
+
+  this.clienteCtrl.setValue('');
+  this.productoCtrl.setValue('');
+  this.clienteSeleccionadoCtrl.setValue('');
+  this.productoSelecionadoCtrl.setValue('');
+  this.nCantidadCtrl.setValue('');
+  this.listaProductos=[];
+  this.total=0.00;
+  this.mostrarDetalleCliente=false;
+  this.mostrarOpcionesVenta=false;
+  this.muestraProductos = false;
+
+
+}
+
+limpiaFormulario(){
+
+
   this.clienteCtrl.setValue('');
   this.productoCtrl.setValue('');
   this.clienteSeleccionadoCtrl.setValue('');
@@ -389,12 +432,36 @@ generarVenta(datosVenta: DatosVenta){
   console.log(this.datosRegistraVenta);
   console.log(this.cotizacionData);
 
- this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
-    console.log(resp);
+ this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(venta =>{
+  this.generarVentaPdf(venta.nId);    
   });
   
   
 
+
+}
+
+generarVentaPdf(idVenta:number){
+
+  this.ventaService.generarVentaPdf(idVenta).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'venta_' + idVenta + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+        this.limpiaFormulario();
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+      }
+
+  });
 
 }
 

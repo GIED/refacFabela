@@ -8,6 +8,9 @@ import { TwAbono } from 'src/app/productos/model/TwAbono';
 import { DatosVenta } from 'src/app/ventasycotizaciones/interfaces/DatosVenta';
 import { VentaProductoDto } from 'src/app/ventasycotizaciones/model/dto/VentaProductoDto';
 import { TvVentaProductoMes } from 'src/app/productos/model/TvVentaProductoMes';
+import { TwVenta } from '../../productos/model/TwVenta';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -43,16 +46,39 @@ export class VentasService {
   }
 
   guardaVenta(datosVenta:DatosVenta){
-    const httpOptions = {
-      responseType: 'text' as 'json'
-   };
+    
     let url = environment.servicios.apiRefacFabela + locator.guardaVenta;
-    return this.http.post<any>(url,datosVenta, httpOptions);
+    return this.http.post<TwVenta>(url,datosVenta);
   }
 
   guardaVentaProductoId(ventaProductoDto:VentaProductoDto){
     let url = environment.servicios.apiRefacFabela + locator.guardaVentaProductoId;
     return this.http.post<any>(url,ventaProductoDto);
+  }
+
+  generarVentaPdf(nIdVenta: number){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarVentaPdf + 'nIdVenta=' + nIdVenta, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+
+  }
+  generarVentaPedidoPdf(nIdVentaPedido: number){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarVentaPedidoPdf + 'nIdVentaPedido=' + nIdVentaPedido, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+
   }
 
 

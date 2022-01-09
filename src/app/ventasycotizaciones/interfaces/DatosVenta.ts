@@ -11,4 +11,5 @@ export interface DatosVenta{
     fechaFinCredito?:Date;
     listaValidada?: TvStockProducto[];
     twCotizacion?: TwCotizacion;
+    anticipo?:number;
 }

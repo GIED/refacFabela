@@ -97,8 +97,13 @@
                                                 </p-inputNumber>
                                             </td>
                                             <td>
-                                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
+                                                <button *ngIf="producto.nCantidadTotal===0; else mensaje;" pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
+                                                <ng-template #mensaje>
+                                                    <p style="color: red;">El producto seleccionado cuenta con Stock. No puede generar un pedido sobre este producto. </p>
+                                                </ng-template>
+
                                             </td>
+
                                         </tr>
                                     </ng-template>
                                 </p-table>
@@ -191,7 +196,7 @@
             <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogBodega()"></button>
         </ng-template>
     </p-dialog>
-    <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta" [style]="{width: '700px'}" [closable]="false" styleClass="p-fluid">
+    <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta por pedido" [style]="{width: '700px'}" [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
             <app-form-venta-pedido [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente" [total]="total" (emitirVenta)="generarVenta($event)" (cancelar)="cancelar()"></app-form-venta-pedido>
         </ng-template>
