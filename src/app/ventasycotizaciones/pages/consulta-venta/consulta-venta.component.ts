@@ -27,7 +27,7 @@ export class ConsultaVentaComponent implements OnInit {
     listaVentasDetalleCliente: TvVentasDetalle[];
     listaProductosVenta:VentaProductoDto;
 
-  constructor(  private ventasService:VentasService) {
+  constructor(  private ventasService:VentasService,  private messageService: MessageService,  ) {
 
     this.cols = [
       { field: 'sFolioVenta', header: 'Folio' },
@@ -75,5 +75,31 @@ createId(): string {
     }
     return id;
 }
+
+generarVentaPdf(tvVentasDetalle:TvVentasDetalle){
+
+  this.ventasService.generarVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'venta_' + tvVentasDetalle.nId + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+      }
+
+  });
+
+}
+
+
 
 }

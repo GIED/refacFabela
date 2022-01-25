@@ -7,6 +7,7 @@ import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { forkJoin } from 'rxjs';
 import { DatosVenta } from '../../interfaces/DatosVenta';
 import { VentasService } from 'src/app/shared/service/ventas.service';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -29,7 +30,8 @@ export class ConsultaCotizacionComponent implements OnInit {
 
 
   
-constructor(private clienteService: ClienteService,private ventaService:VentasService, private ventasCotizacionesService:VentasCotizacionesService) { 
+constructor(private clienteService: ClienteService,private ventaService:VentasService,  private messageService: MessageService,
+  private ventasCotizacionesService: VentasCotizacionesService) { 
     this.listaCotizaciones=[];
     this.saldoGeneralCliente = new SaldoGeneralCliente();
     this.mostrarOpcionesVenta = false;
@@ -127,4 +129,29 @@ createFolio(): string {
   return folio;
 } 
 
+generarCotizacionPdf(twCotizacion: TwCotizacion){
+
+  this.ventasCotizacionesService.generarCotizacionPdf(twCotizacion.nId).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'cotizacion_' + twCotizacion.nId + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Cotizacion Generada', life: 3000});
+        
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar la Cotizacion', life: 3000});
+      }
+
+  });
+
 }
+
+}
+
+

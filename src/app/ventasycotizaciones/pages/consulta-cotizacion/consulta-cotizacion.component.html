@@ -95,6 +95,8 @@
                         </td>
 
                         <td *ngIf="cotizacion.nEstatus == 2"> vendidó </td>
+                        <td> <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                            (click)="generarCotizacionPdf(cotizacion)"></button></td>
 
 
 

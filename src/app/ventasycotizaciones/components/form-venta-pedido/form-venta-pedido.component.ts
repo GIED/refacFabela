@@ -67,9 +67,10 @@ export class FormVentaPedidoComponent implements OnInit {
     
       //console.log("lista para guardar");
 
-      if (this.nAnticipoCtrl.value < this.total/2 ) {
-        this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'El anticipo para generar el pedido debé ser almenos de: '+this.total/2, life: 3000});
-      }else{
+      if (this.nAnticipoCtrl.value < this.total/2 || this.nAnticipoCtrl.value > this.total ) {
+        this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'El anticipo para generar el pedido debé ser almenos de: '+this.total/2+' y menor a:'+this.total, life: 3000});
+      }
+      else{
         this.datosVenta.anticipo = this.nAnticipoCtrl.value;
         this.datosVenta.listaValidada=this.listaProductos;
         //console.log(this.datosVenta);
