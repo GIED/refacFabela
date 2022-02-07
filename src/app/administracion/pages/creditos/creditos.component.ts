@@ -9,6 +9,8 @@ import { totalesGeneralesCreditos } from '../../interfaces/totalesGeneralesCredi
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TvVentasDetalle } from '../../../productos/model/TvVentasDetalle';
 import { TwAbono } from '../../../productos/model/TwAbono';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-creditos',
@@ -41,6 +43,7 @@ export class CreditosComponent implements OnInit {
   product: Product;
   selectedProducts: Product[];
   submitted: boolean; 
+  formulario:FormGroup;
  
 
   /*listas y variables actuales*/
@@ -55,9 +58,10 @@ export class CreditosComponent implements OnInit {
   productDialog: boolean;
   productDialog2: boolean;
   cols:any;
+  tvVentasDetalle:TvVentasDetalle;
 
   constructor(private productService: ProductService, private messageService: MessageService,
-              private confirmationService: ConfirmationService, private clienteService:ClienteService, private ventasService: VentasService) {
+              private confirmationService: ConfirmationService, private clienteService:ClienteService, private ventasService: VentasService, private fb: FormBuilder) {
                   this.totalesCreditos={};
 
                   this.cols = [
@@ -72,6 +76,9 @@ export class CreditosComponent implements OnInit {
                     { field: 'sEstatus', header: 'Estatus' }
         
                 ]
+                this.tvVentasDetalle={};
+
+                this.crearFormulario();
      
   }
 
@@ -90,6 +97,18 @@ export class CreditosComponent implements OnInit {
     ];
 
    
+  }
+
+  crearFormulario() {
+  
+    this.formulario = this.fb.group({
+        
+        abono: ['',[Validators.required]],
+        idFormaPago: ['',[Validators.required]],
+        
+        
+    })
+    
   }
 
   generarGrafica(totalesCreditos: totalesGeneralesCreditos){
@@ -149,8 +168,9 @@ export class CreditosComponent implements OnInit {
   obtenerAbonosVentaId(tvVentasDetalle:TvVentasDetalle) {
      console.log(tvVentasDetalle);
       this.productDialog2 = true;
+      this.tvVentasDetalle=tvVentasDetalle;
 
-      this.ventasService.obtenerAbonosVentaId(tvVentasDetalle.nId).subscribe(data=>{
+      this.ventasService.obtenerAbonosVentaId(this.tvVentasDetalle.nId).subscribe(data=>{
         this.listaAbonosVenta=data;       
       console.log(this.listaAbonosVenta);
     });      
@@ -250,6 +270,13 @@ export class CreditosComponent implements OnInit {
   }
 
   
+
+  get validaAbono() {
+    return this.formulario.get('abono').invalid && this.formulario.get('abono').touched;
+  }
+  get validaFormaPago() {
+    return this.formulario.get('idFormaPago').invalid && this.formulario.get('idFormaPago').touched;
+  }
 
   
 

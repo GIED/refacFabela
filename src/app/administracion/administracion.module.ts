@@ -9,6 +9,7 @@ import { UsuarioComponent } from './pages/usuario/usuario.component';
 import { TipoCambioComponent } from './pages/tipo-cambio/tipo-cambio.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { CajaModule } from '../caja/caja.module';
 
 
 
@@ -22,8 +23,14 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     FormsModule, 
     ReactiveFormsModule,
     NgxSpinnerModule,
+    CajaModule,
+    ReactiveFormsModule,
+    CajaModule
     
     
+  ],
+  exports:[
+   
   ]
 })
 export class AdministracionModule {

@@ -8,6 +8,8 @@ import { Observable } from 'rxjs';
 import { TcCategoriaGeneral } from '../../productos/model/TcCategoriaGeneral';
 import { TcCategoria } from '../../productos/model/TcCategoria';
 import { TcGanancia } from '../../productos/model/TcGanancia';
+import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
+import { TwCaja } from '../../productos/model/TwCaja';
 
 @Injectable({
   providedIn: 'root'
@@ -42,4 +44,19 @@ export class CatalogoService {
     let url= environment.servicios.apiRefacFabela + locator.consultaClaveSat;
     return this.http.get<TcClavesat[]>(url);
   }
+  obtenerFormaPago(){
+    let url= environment.servicios.apiRefacFabela + locator.consultaFormaPago;
+    return this.http.get<TcFormaPago[]>(url);
+  }
+  obtenerFormaPagoId(nId:number){
+    let url= environment.servicios.apiRefacFabela + locator.consultaFormaPagoId+'nId='+nId;
+    return this.http.get<TcFormaPago>(url);
+  }
+  obtenerCajaActiva(){
+    let url= environment.servicios.apiRefacFabela + locator.consultarCajaActiva;
+    return this.http.get<TwCaja>(url);
+  }
+
+
+  
 }

@@ -20,4 +20,10 @@ export class UsuarioService {
   public nuevo (nuevoUsuario: NuevoUsuario){
     return this.http.post<any>(environment.servicios.apiRefacFabela+locator.nuevoUsuario, nuevoUsuario);
   }
+
+  getUsuariosId(id:number) {
+    let url = environment.servicios.apiRefacFabela + locator.obtenerUsuariosId+'id='+id;
+    return this.http.get<TcUsuario>(url);
+  }
+
 }

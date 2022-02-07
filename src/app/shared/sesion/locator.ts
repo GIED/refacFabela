@@ -12,6 +12,7 @@ static guardarProveedores='/guardarProveedores';
 //api para usuarios
 static obtenerUsuarios='/obtenerUsuarios';
 static nuevoUsuario = '/nuevo';
+static obtenerUsuariosId='/consultarUsuarioId?';
 //api login
 static login = '/auth/login';
 static refresh= '/auth/refresh';
@@ -24,6 +25,9 @@ static consultaCategoriaGeneral='/catalogoCategoriaGeneral';
 static consultaCategoria= '/catalogoCategoriaId?';
 static consultaGanancia= '/catalogoGanancia';
 static consultaGananciaId= '/catalogoGananciaId?';
+static consultaFormaPago='/catalogoFormaPago';
+static consultaFormaPagoId='/catalogoFormaPagoId?';
+static consultarCajaActiva='/cajaActiva';
 //api productos
 static obtenerProductos= '/obtenerProductos';
 static obtenerProductosLike= '/obtenerProductosLike?';
@@ -34,7 +38,7 @@ static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
 static obtenerTotalBodegasIdProducto='/obtenerTotalBodegasIdProducto?';
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';
-static guardarProductoAlternativo = '/guardarProductoAlternativo'
+static guardarProductoAlternativo = '/guardarProductoAlternativo';
 //api Bodegas
 static obtenerBodegas= '/catalogoBodegas';
 static obtenerProductoBodegas = '/obtenerProductoBodegas?';
@@ -46,22 +50,24 @@ static obtenerNivel= '/catalogoNivel';
 //Inventario
 static consultaInventario ='/obtenerInventarioEsp?';
 //Api ventas
-static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?'
-static consultaVentaDetalle='/obtenerVentasDetalle'
+static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?';
+static consultaVentaDetalle='/obtenerVentasDetalle';
 static consultaVentaDetalleEntrega='/obtenerVentasDetalleEntrega'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
 static guardaVentaProductoId= '/guardaVentaProductoId';
+static guardaAbono= '/guardarAbono';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
-static generarVentaPdf='/getVenta?'
-static generarVentaPedidoPdf='/getVentaPedido?'
+static consultarVentaId='/obtenerVentaId?';
+static generarVentaPdf='/getVenta?';
+static generarVentaPedidoPdf='/getVentaPedido?';
 
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';
-static consultaCotizaciones='/consultaCotizaciones'
-static consultaCotizacionId='/consultaCotizacionId?'
-static generarCotizacionPdf='/getCotizacion?'
+static consultaCotizaciones='/consultaCotizaciones';
+static consultaCotizacionId='/consultaCotizacionId?';
+static generarCotizacionPdf='/getCotizacion?';
 
 //Tablero
 

@@ -14,6 +14,7 @@ import { InputBusquedaComponent } from '../productos/components/input-busqueda/i
 import { ProductosModule } from '../productos/productos.module';
 import { VentasycotizacionesModule } from '../ventasycotizaciones/ventasycotizaciones.module';
 import { VentaProductosDetalleEntregaComponent } from './components/venta-productos-detalle-entrega/venta-productos-detalle-entrega.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -29,7 +30,8 @@ import { VentaProductosDetalleEntregaComponent } from './components/venta-produc
     AlmacenRoutingModule,
     PrimeModule,
     ProductosModule,
-    VentasycotizacionesModule
+    VentasycotizacionesModule,
+    ReactiveFormsModule,  
   ], 
   exports:[
    

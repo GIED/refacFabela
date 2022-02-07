@@ -322,7 +322,6 @@ generarVenta(datosVenta: DatosVenta){
   this.datosRegistraVenta.fechaFinCredito=null;
   this.datosRegistraVenta.tipoPago=0;
   
-  
   this.datosRegistraVenta.twCotizacion = this.cotizacionData;
   console.log("Datos para guardar");
   console.log(this.datosRegistraVenta);

@@ -84,6 +84,7 @@ import {VirtualScrollerModule} from 'primeng/virtualscroller';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { FormsModule } from '@angular/forms';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -175,6 +176,7 @@ FullCalendarModule.registerPlugins([
         TreeModule,
         TreeTableModule,
         VirtualScrollerModule,
+        FormsModule
         
   ]
 })

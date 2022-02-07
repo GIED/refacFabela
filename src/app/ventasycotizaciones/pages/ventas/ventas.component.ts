@@ -161,7 +161,7 @@ valorSeleccionadoCliente(){
       this.saldoGeneralCliente=saldoCliente;
     }else{
       this.saldoGeneralCliente.nIdCliente=this.clienteSeleccionado.nId;
-      this.saldoGeneralCliente.nCreditoDisponible=0;
+      this.saldoGeneralCliente.nCreditoDisponible=this.clienteSeleccionado.n_limiteCredito;
       this.saldoGeneralCliente.nLimiteCredito=this.clienteSeleccionado.n_limiteCredito;
       this.saldoGeneralCliente.nSaldoTotal=0;
       this.saldoGeneralCliente.tcCliente=this.clienteSeleccionado;
@@ -427,6 +427,7 @@ generarVenta(datosVenta: DatosVenta){
     this.datosRegistraVenta.fechaIniCredito=null;
     this.datosRegistraVenta.fechaFinCredito=null;
   }
+  
   this.datosRegistraVenta.twCotizacion = this.cotizacionData;
   console.log("Datos para guardar");
   console.log(this.datosRegistraVenta);

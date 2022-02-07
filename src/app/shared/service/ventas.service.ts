@@ -81,5 +81,15 @@ export class VentasService {
 
   }
 
+  obtnerVentaId(id:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultarVentaId+'nIdVenta='+id;
+    return this.http.get<any>(url);
+  }
+
+  guardaAbono(twAbono:TwAbono){
+    let url = environment.servicios.apiRefacFabela + locator.guardaAbono;
+    return this.http.post<any>(url,twAbono);
+  }
+
 
 }

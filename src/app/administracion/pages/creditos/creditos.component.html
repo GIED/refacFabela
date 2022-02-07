@@ -152,8 +152,8 @@
 						<td>
 							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
 								(click)="consultaVentaDetalleId(cliente)"></button>
-							<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-								(click)="deleteProduct(product)"></button>
+						<!--<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+								(click)="deleteProduct(product)"></button>-->
 						</td>
 					</tr>
 				</ng-template>
@@ -223,7 +223,7 @@
 							  
                         <td>
 							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"(click)="obtenerAbonosVentaId(venta)"></button>
-                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
+                          <!--  <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>-->
                         </td>
                     </tr>
                 </ng-template>
@@ -239,53 +239,9 @@
 		</p-dialog>
 		<p-dialog [(visible)]="productDialog2" [style]="{width: '800px'}" header="Abonos de la nota de crédito" [modal]="true"
 			styleClass="p-fluid">
-            <p-table #dt [value]="listaAbonosVenta" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['sFolioVenta']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
-                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
-              
-                <ng-template pTemplate="header">
-                    <tr>
-                       
-                        <th>Id Abono</th>
-                        <th>Folio Venta</th>
-                        <th>Abono</th>
-                        <th>Fecha Abono</th>
-						<th>Forma de pago</th>
-						<th>Nombre Usuario</th>
-                      
-                       
-                       
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-abono let-expanded="expanded">
-                    <tr>
-						<td><span class="p-column-title"></span> {{abono.nId}}
-                        </td>
-						<td><span class="p-column-title"></span> {{abono.twVenta.sFolioVenta}}
-                        </td>
-						<td><span class="p-column-title"></span> {{abono.nAbono | number}}
-                        </td>
-						<td><span class="p-column-title"></span> {{abono.dFecha | date }}
-                        </td>
-						<td><span class="p-column-title"></span> {{abono.tcFormapago.sDescripcion}}
-                        </td>
-						<td><span class="p-column-title"></span> {{abono.twVenta.twCaja.tcUsuario.sNombreusuario}}
-                        </td>
-                        
-						<td>
-                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>
-                        </td>
-                    </tr>
-                </ng-template>
-              
-               
-            </p-table>
-		
-			<ng-template pTemplate="footer">
-				<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-					(click)="hideDialog2()"></button>
-				
-			</ng-template>
+
+			<app-detalle-abonos-credito [listaAbonosVenta]="listaAbonosVenta" [tvVentasDetalle]="tvVentasDetalle" ></app-detalle-abonos-credito>
 		</p-dialog>
-		<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+           
 	</div>
 </div>

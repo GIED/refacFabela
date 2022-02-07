@@ -1,0 +1,93 @@
+
+ <div><h3>Venta a crédito: VC-{{tvVentasDetalle.nId}}</h3></div>
+ <div><h3>El monto total para cubrir la venta es de: {{tvVentasDetalle.nSaldoTotal}}</h3></div>
+ <button type="button" pButton pRipple icon="pi pi-dollar" label="Nuevo Abono"
+ class="p-button-success p-mb-2"    (click)="hideDialog2()"></button>
+ <p-table #dt [value]="listaAbonosVenta" responsiveLayout="scroll"  [rows]="5" [paginator]="true" [globalFilterFields]="['sFolioVenta']"  [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
+
+ <ng-template pTemplate="header">
+     <tr>
+        
+         <th>Id Abono</th>
+         <th>Folio Venta</th>
+         <th>Abono</th>
+         <th>Fecha Abono</th>
+         <th>Forma de pago</th>
+         <th>Nombre Usuario</th> 
+               
+     </tr>
+ </ng-template>
+ <ng-template pTemplate="body" let-abono let-expanded="expanded">
+     <tr>
+         <td><span class="p-column-title"></span> {{abono.nId}}
+         </td>
+         <td><span class="p-column-title"></span> {{abono.twVenta.sFolioVenta}}
+         </td>
+         <td><span class="p-column-title"></span> {{abono.nAbono | number}}
+         </td>
+         <td><span class="p-column-title"></span> {{abono.dFecha | date }}
+         </td>
+         <td><span class="p-column-title"></span> {{abono.tcFormapago.sDescripcion}}
+         </td>
+         <td><span class="p-column-title"></span> {{abono.tcUsuario.sNombreUsuario}}
+         </td>
+         
+        
+     </tr>
+ </ng-template>
+
+
+</p-table>
+
+<ng-template pTemplate="footer">
+<!-- <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+     (click)="hideDialog2()"></button>-->
+ 
+</ng-template>
+
+<p-dialog [(visible)]="abrirformulario" [style]="{width: '800px'}" header="Nuevo Abono" [modal]="true" styleClass="p-fluid">
+
+    <form [formGroup]="formulario" autocomplete="off">
+       
+        <div class="p-grid">
+            <div class="p-field p-col-6">
+                <label for="name">Monto del abono</label>
+                <input type="text" pInputText name="abono" formControlName="abono"  [class.is-invalid]="validaAbono" />
+                <small class="p-error" *ngIf="validaAbono">*Se requiere un número.</small>
+            </div>         
+           
+            <div class="p-field p-col-6">
+                <label for="marca">Forma de pago</label>
+                <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago"
+                    [showClear]="true"></p-dropdown>
+                <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>
+            </div>
+           
+        </div>
+    </form>
+   
+   
+   
+   
+    <div class="p-grid p-jc-end">
+        <div class="p-col-8">
+            <div class="box"></div>
+        </div>
+        <div class="p-col-2">
+            <div class="box">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="cerrarModal()"></button>
+            </div>
+        </div>
+        <div class="p-col-2">
+            <div class="box">
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarAbono()"></button>
+            </div>
+        </div>
+    </div>
+
+
+			
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
