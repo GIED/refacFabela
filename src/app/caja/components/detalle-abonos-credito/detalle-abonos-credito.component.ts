@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { TwAbono } from 'src/app/productos/model/TwAbono';
@@ -23,6 +23,8 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
   @Input() listaAbonosVenta: TwAbono[];
   @Input() tvVentasDetalle: TvVentasDetalle;
+
+  @Output() refrescarSaldosCliete: EventEmitter<boolean> = new EventEmitter();
 
   formulario: FormGroup;
   abrirformulario: boolean;
@@ -145,6 +147,8 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
            this.genenerAbonoVentaPDF(this.tvVentasDetalle);
 
+
+           this.refrescarSaldosCliete.emit(true);    
      
          });
        
@@ -188,13 +192,19 @@ export class DetalleAbonosCreditoComponent implements OnInit {
         this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de abono Generado', life: 3000});
         //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
         this.limpiaFormulario();
+      
+
       } else {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de abono', life: 3000});
       }
 
+
+
   });
 
   }
+
+  
 
   get validaAbono() {
     return this.formulario.get('abono').invalid && this.formulario.get('abono').touched;

@@ -59,6 +59,7 @@ export class CreditosComponent implements OnInit {
   productDialog2: boolean;
   cols:any;
   tvVentasDetalle:TvVentasDetalle;
+  auxSaldoGeneralCliente: SaldoGeneralCliente;
 
   constructor(private productService: ProductService, private messageService: MessageService,
               private confirmationService: ConfirmationService, private clienteService:ClienteService, private ventasService: VentasService, private fb: FormBuilder) {
@@ -84,13 +85,7 @@ export class CreditosComponent implements OnInit {
 
   ngOnInit() {
 
-    this.clienteService.obtenerSaldosClientes().subscribe(data=>{
-        this.listaClientesCredito=data;       
-       this.totalesCreditos= this.obtenerTotalesCreditos(this.listaClientesCredito);       
-      console.log(this.totalesCreditos);
-      this.generarGrafica(this.totalesCreditos);
-      console.log( this.listaClientesCredito);
-    });      
+   this.consultaSaldosCliente();
    
     this.car = [
         { total: '',abono: '',  saldo: '',  nabono: '',  ntotal: ''}
@@ -98,6 +93,17 @@ export class CreditosComponent implements OnInit {
     ];
 
    
+  }
+
+  consultaSaldosCliente(){
+    this.clienteService.obtenerSaldosClientes().subscribe(data=>{
+      this.listaClientesCredito=data;       
+     this.totalesCreditos= this.obtenerTotalesCreditos(this.listaClientesCredito);       
+    console.log(this.totalesCreditos);
+    this.generarGrafica(this.totalesCreditos);
+    console.log( this.listaClientesCredito);
+  });      
+
   }
 
   genenerAbonoVentaPDF(tvVentasDetalle:TvVentasDetalle){
@@ -217,6 +223,16 @@ export class CreditosComponent implements OnInit {
 
   }
 
+  refrescar(bandera: boolean){
+
+    if(bandera){
+      this.consultaSaldosCliente();
+      this.consultaVentaDetalleId(this.auxSaldoGeneralCliente);
+
+    }
+
+  }
+
   obtenerAbonosVentaId(tvVentasDetalle:TvVentasDetalle) {
      console.log(tvVentasDetalle);
       this.productDialog2 = true;
@@ -245,9 +261,10 @@ export class CreditosComponent implements OnInit {
   consultaVentaDetalleId(saldoGeneralCliente: SaldoGeneralCliente) {
      console.log(saldoGeneralCliente);
       this.productDialog = true;
-
+     this.auxSaldoGeneralCliente=saldoGeneralCliente;
     this.ventasService.obtenerVentaDetalleTipoPago(saldoGeneralCliente.tcCliente.nId, 1).subscribe(data=>{
-        this.listaVentasDetalleCliente=data;       
+        this.listaVentasDetalleCliente=data;  
+             
       console.log(this.listaVentasDetalleCliente);
     });      
 
