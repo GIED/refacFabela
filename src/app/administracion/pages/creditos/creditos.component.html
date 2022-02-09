@@ -151,9 +151,9 @@
 						</td>
 						<td>
 							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
-								(click)="consultaVentaDetalleId(cliente)"></button>
-						<!--<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-								(click)="deleteProduct(product)"></button>-->
+								(click)="consultaVentaDetalleId(cliente)"></button> 
+								<button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-mr-2"
+									(click)="genenerHistorialAbonoVentaPDF(cliente)"></button>
 						</td>
 					</tr>
 				</ng-template>
@@ -188,6 +188,8 @@
 						<th pSortableColumn="nAvancePago">Avance<p-sortIcon field="nAvancePago"></p-sortIcon> </th>
 						<th pSortableColumn="dFechaTerminoCredito">Fecha Vencimiento<p-sortIcon field="dFechaTerminoCredito"></p-sortIcon> </th>
 						<th pSortableColumn="sEstatus">Estatus<p-sortIcon field="sEstatus"></p-sortIcon> </th>
+
+						<th></th>
 					
                        
                     </tr>
@@ -223,8 +225,10 @@
 							  
                         <td>
 							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"(click)="obtenerAbonosVentaId(venta)"></button>
-                          <!--  <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="deleteProduct(product)"></button>-->
+                         
                         </td>
+						<td><button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-mr-2"
+							(click)="genenerAbonoVentaPDF(venta)"></button></td>
                     </tr>
                 </ng-template>
               

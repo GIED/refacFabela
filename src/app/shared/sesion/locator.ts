@@ -61,6 +61,8 @@ static guardaAbono= '/guardarAbono';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultarVentaId='/obtenerVentaId?';
 static generarVentaPdf='/getVenta?';
+static generarAbonoVentaPdf='/getAbonoVentaId?';
+static generarHistorialAbonoVentaPdf='/getAbonoVentaIdCliente?';
 static generarVentaPedidoPdf='/getVentaPedido?';
 
 //Cotizaciones

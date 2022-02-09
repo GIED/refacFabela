@@ -81,6 +81,32 @@ export class VentasService {
 
   }
 
+
+  generarAbonoVentaPdf(nIdVenta: number){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarAbonoVentaPdf + 'nIdVenta=' + nIdVenta, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+
+  }
+  generarHistorialAbonoVentaPdf(nIdCliente: number){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarHistorialAbonoVentaPdf + 'nIdCliente=' + nIdCliente, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+
+  }
+
   obtnerVentaId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultarVentaId+'nIdVenta='+id;
     return this.http.get<any>(url);

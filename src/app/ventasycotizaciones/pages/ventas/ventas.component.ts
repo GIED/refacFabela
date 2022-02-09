@@ -351,6 +351,7 @@ guardarCotizacion(){
 
 generarCotizacionPdf(idCotizacion:number){
 
+ 
   this.ventasCotizacionService.generarCotizacionPdf(idCotizacion).subscribe(resp => {
 
     

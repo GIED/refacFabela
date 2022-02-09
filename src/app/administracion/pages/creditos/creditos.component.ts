@@ -89,6 +89,7 @@ export class CreditosComponent implements OnInit {
        this.totalesCreditos= this.obtenerTotalesCreditos(this.listaClientesCredito);       
       console.log(this.totalesCreditos);
       this.generarGrafica(this.totalesCreditos);
+      console.log( this.listaClientesCredito);
     });      
    
     this.car = [
@@ -98,6 +99,57 @@ export class CreditosComponent implements OnInit {
 
    
   }
+
+  genenerAbonoVentaPDF(tvVentasDetalle:TvVentasDetalle){
+ 
+    this.ventasService.generarAbonoVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'abono_'+tvVentasDetalle.nId+'_'+tvVentasDetalle.nIdCliente+'.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de abono Generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de abono', life: 3000});
+      }
+
+  });
+
+  }
+
+  genenerHistorialAbonoVentaPDF(saldoGeneralCliente: SaldoGeneralCliente){
+
+    console.log("este es el el id del cliente"+saldoGeneralCliente.nIdCliente);
+ 
+    this.ventasService.generarHistorialAbonoVentaPdf(saldoGeneralCliente.nIdCliente).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'historial_abono_'+saldoGeneralCliente.nIdCliente+'.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'historial de créditos del cliente generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el historial de créditos del cliente generado', life: 3000});
+      }
+
+  });
+
+  }
+
 
   crearFormulario() {
   
@@ -268,6 +320,7 @@ export class CreditosComponent implements OnInit {
       }
       return id;
   }
+  
 
   
 
@@ -277,6 +330,8 @@ export class CreditosComponent implements OnInit {
   get validaFormaPago() {
     return this.formulario.get('idFormaPago').invalid && this.formulario.get('idFormaPago').touched;
   }
+
+  
 
   
 
