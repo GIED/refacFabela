@@ -38,7 +38,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-dollar',
+                label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-dollar', visible:this.tokenService.IsAdmin() || this.tokenService.isVenta(),
                 items: [
                     {
                         label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['../ventasycotizaciones/ventas']
@@ -60,7 +60,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Almacen', icon: 'pi pi-fw pi-slack',
+                label: 'Almacen', icon: 'pi pi-fw pi-slack',visible:this.tokenService.IsAdmin() || this.tokenService.isAlmacen(),
                 items: [
                     {
                         label: 'Ingreso mercancia', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/ingreso-mercancia']
@@ -81,7 +81,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Productos', icon: 'pi pi-fw pi-briefcase',
+                label: 'Productos', icon: 'pi pi-fw pi-briefcase', visible:this.tokenService.IsAdmin(),
                 items: [
                     {
                         label: 'Registro', icon: 'pi pi-fw pi-external-link', routerLink: ['../productos/registro-producto']
@@ -96,7 +96,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Caja', icon: 'pi pi-fw pi-id-card',
+                label: 'Caja', icon: 'pi pi-fw pi-id-card', visible:this.tokenService.IsAdmin() || this.tokenService.isCaja(),
                 items: [
                     {
                         label: 'Cobrar', icon: 'pi pi-fw pi-dollar', routerLink: ['../caja/cobrar']
@@ -114,6 +114,9 @@ export class AppMenuComponent implements OnInit {
                     
                 ]
             },
+            {
+                label:'venta por internet', icon: 'pi pi-globe', visible:this.tokenService.IsAdmin() || this.tokenService.isDistribuidor() , routerLink: ['../ventasycotizaciones/ventas-por-internet']
+            }
            /* {
                 label: 'Reportes', icon: 'pi pi-fw pi-chart-bar',
                 items: [

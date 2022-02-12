@@ -6,5 +6,6 @@ export class TcUsuario {
     sClaveUser?:string;
     nEstatus?:number;
     authorities:string[];
+    rfcDistribuidor:string;
 
 }

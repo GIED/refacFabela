@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { locator } from 'src/app/shared/sesion/locator';
 import { Clientes } from '../interfaces/clientes';
 import { SaldoGeneralCliente } from '../../ventasycotizaciones/model/TvSaldoGeneralCliente';
+import { TcCliente } from '../model/TcCliente';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,10 @@ export class ClienteService {
   obtenerSaldoGeneralCliente(id: number){
     let url = environment.servicios.apiRefacFabela + locator.obtenerSaldoGeneral+'id='+id;
     return this.http.get<SaldoGeneralCliente>(url);
+  }
+  consultaClienteIdUsuario(idUsuario: number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaClienteIdUsuario+'id='+idUsuario;
+    return this.http.get<TcCliente>(url);
   }
   guardaCliente(cliente:Clientes){
     let url = environment.servicios.apiRefacFabela+locator.guardarClientes;

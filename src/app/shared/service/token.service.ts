@@ -75,6 +75,71 @@ export class TokenService {
     return true;
   }
 
+  public isVenta(){
+    if (!this.isLogged()) {
+      return false;
+    }
+    const token = this.getToken();
+    const payload = token.split('.')[1];
+    const payloadDecoded = atob(payload);
+    const values =JSON.parse(payloadDecoded);
+    const roles = values.roles;
+    if (roles.indexOf('ROLE_VENTA') < 0) {
+      return false;
+    }
+
+    return true;
+  }
+  public isDistribuidor(){
+    if (!this.isLogged()) {
+      return false;
+    }
+    const token = this.getToken();
+    const payload = token.split('.')[1];
+    const payloadDecoded = atob(payload);
+    const values =JSON.parse(payloadDecoded);
+    const roles = values.roles;
+    if (roles.indexOf('ROLE_DISTRIBUIDOR') < 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public isAlmacen(){
+    if (!this.isLogged()) {
+      return false;
+    }
+    const token = this.getToken();
+    const payload = token.split('.')[1];
+    const payloadDecoded = atob(payload);
+    const values =JSON.parse(payloadDecoded);
+    const roles = values.roles;
+    if (roles.indexOf('ROLE_ALMACEN') < 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  public isCaja(){
+    if (!this.isLogged()) {
+      return false;
+    }
+    const token = this.getToken();
+    const payload = token.split('.')[1];
+    const payloadDecoded = atob(payload);
+    const values =JSON.parse(payloadDecoded);
+    const roles = values.roles;
+    if (roles.indexOf('ROLE_CAJA') < 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+
   public IsUser(){
     if (!this.isLogged()) {
       return false;

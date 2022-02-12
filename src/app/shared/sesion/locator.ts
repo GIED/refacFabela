@@ -3,7 +3,8 @@ export class locator{
 // api para clientes
 static obtenerClientes='/obtenerClientes';
 static obtenerClienteLike='/consultaClienteLike?';
-static obtenerSaldoGeneral='/consultaClienteIdSaldo?'
+static obtenerSaldoGeneral='/consultaClienteIdSaldo?';
+static consultaClienteIdUsuario='/consultaClienteIdUsuario?';
 static guardarClientes='/guardarCliente';
 static consultaClientesSaldos='/consultaClienteSaldo'
 // api para proveedores

@@ -39,6 +39,7 @@ export class UsuarioComponent implements OnInit {
     listaUsuarios: NuevoUsuario[];
     formulario: FormGroup;
     usuarioDialog: boolean;
+    muestraInput:boolean;
     nuevoUsuario: NuevoUsuario;
     roles: Roles[];
 
@@ -49,9 +50,11 @@ export class UsuarioComponent implements OnInit {
             { name: "Administrador", code: "admin" },
             { name: "Ventas", code: "ventas" },
             { name: "Almacen", code: "almacen" },
-            { name: "Cajas", code: "cajas" }
+            { name: "Cajas", code: "cajas" },
+            { name: "distribuidor", code:"distribuidor"}
           ];
         this.listaUsuarios=[];
+        this.muestraInput=false;
     }
 
     ngOnInit() {
@@ -63,7 +66,7 @@ export class UsuarioComponent implements OnInit {
 
             console.log(usuarios);
             for (const usuario of usuarios) {
-                this.nuevoUsuario = new NuevoUsuario(usuario.nId, usuario.sClaveUser,usuario.sUsuario,usuario.sPassword, usuario.sNombreUsuario, usuario.nEstatus);
+                this.nuevoUsuario = new NuevoUsuario(usuario.nId, usuario.sClaveUser,usuario.sUsuario,usuario.sPassword, usuario.sNombreUsuario, usuario.nEstatus, usuario.rfcDistribuidor);
                 this.listaUsuarios.push(this.nuevoUsuario);    
             }
 
@@ -83,6 +86,9 @@ export class UsuarioComponent implements OnInit {
     get validaRol() {
         return this.formulario.get('roles').invalid && this.formulario.get('roles').touched;
     }
+    get validaRfcDistribuidor() {
+        return this.formulario.get('rfcDistribuidor').invalid && this.formulario.get('rfcDistribuidor').touched;
+    }
 
     // Crear formulario con sus validaciones de clientes
     crearFormulario() {
@@ -94,6 +100,7 @@ export class UsuarioComponent implements OnInit {
             sUsuario: ['', [Validators.required]],
             sPassword: ['', [Validators.required]],
             roles: ['', [Validators.required]],
+            rfcDistribuidor:['',[Validators.required]]
         })
     }
 
@@ -170,6 +177,31 @@ export class UsuarioComponent implements OnInit {
             
         }
 
+    }
+
+    verificaDistribuidor(){
+
+        let valor =this.fUsuario.roles.value;
+
+        if (valor.length === 0) {
+            this.muestraInput=false;
+            this.fUsuario.rfcDistribuidor.setValue('no aplica');
+        }else{
+            this.muestraInput=false;
+            this.fUsuario.rfcDistribuidor.setValue('no aplica');
+            for (const valor of this.fUsuario.roles.value) {
+                //console.log(valor);
+                    if (valor === 'distribuidor') {
+                        this.muestraInput=true;
+                        this.fUsuario.rfcDistribuidor.setValue('');
+                    }
+            }
+        }
+
+
+        
+
+        
     }
 
     findIndexById(id: string): number {

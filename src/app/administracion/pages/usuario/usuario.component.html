@@ -88,9 +88,10 @@
                         </div>
                     </div>
                     <div class="p-formgrid p-grid">
-                        <div class="p-field p-col">
+                        <div class="p-field p-col-6">
                             <label for="price">Rol</label>
-                            <p-listbox [options]="roles" formControlName="roles" optionValue="code" [class.is-invalid]="validaRol" [metaKeySelection]="false" [checkbox]="true" [filter]="false" [multiple]="true" optionLabel="name" [listStyle]="{'max-height':'250px'}" [style]="{'width':'15rem'}">
+                            <p-listbox [options]="roles" formControlName="roles" optionValue="code" (click)="verificaDistribuidor()" [class.is-invalid]="validaRol" [metaKeySelection]="false" [checkbox]="false" [filter]="false" [multiple]="true" optionLabel="name" [listStyle]="{'max-height':'250px'}"
+                                [style]="{'width':'15rem'}">
                                 <ng-template let-rol pTemplate="item">
                                     <div class="country-item">
                                         <div>{{rol.name}}</div>
@@ -100,6 +101,12 @@
 
                             <small class="p-error" *ngIf="validaRol">*Rol requerido</small>
                         </div>
+                        <div class="p-field p-col-6" *ngIf="muestraInput">
+                            <label for="name">RFC del cliente</label>
+                            <input type="text" pInputText name="rfcDistribuidor" formControlName="rfcDistribuidor" [class.is-invalid]="validaRfcDistribuidor" required />
+                            <small class="p-error" *ngIf="validaRfcDistribuidor">*rfc del cliente requerido</small>
+                        </div>
+
                     </div>
                 </form>
             </ng-template>

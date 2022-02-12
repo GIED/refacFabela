@@ -15,32 +15,32 @@ const routes: Routes = [
      
    },
    {
-    path:'ventasycotizaciones', component: AppMainComponent,
+    path:'ventasycotizaciones', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','distribuidor']},
     loadChildren:() => import('./ventasycotizaciones/ventasycotizaciones.module').then(m => m.VentasycotizacionesModule),
    
   },
   {
-    path:'almacen', component: AppMainComponent,
+    path:'almacen', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin', 'almacen']},
     loadChildren:() => import('./almacen/almacen.module').then(m => m.AlmacenModule),
    
   },
   {
-    path:'productos', component: AppMainComponent,
+    path:'productos', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin']},
     loadChildren:() => import('./productos/productos.module').then(m => m.ProductosModule),
      
   },
   {
-    path:'caja', component: AppMainComponent,
+    path:'caja', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','caja']},
     loadChildren:() => import('./caja/caja.module').then(m => m.CajaModule),
     
   },
   {
-    path:'reportes', component: AppMainComponent,
+    path:'reportes', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin']},
     loadChildren:() => import('./reportes/reportes.module').then(m => m.ReportesModule),
     
   },
   {
-    path:'inicio', component:AppMainComponent,
+    path:'inicio', component:AppMainComponent, 
     loadChildren:() => import('./inicio/inicio.module').then(m => m.InicioModule),
     
   },

@@ -6,30 +6,36 @@ import { ConsultaCotizacionComponent } from "./pages/consulta-cotizacion/consult
 import { ConsultaVentaComponent } from "./pages/consulta-venta/consulta-venta.component";
 import { VentasComponent } from "./pages/ventas/ventas.component";
 import { VentasPorPedidoComponent } from "./pages/ventas-por-pedido/ventas-por-pedido.component";
+import { VentasPorInternetComponent } from './pages/ventas-por-internet/ventas-por-internet.component';
+import { ProdGuardService } from '../shared/guards/prod-guard.service';
 
 const routes: Routes = [
   {
     path: "",
     children: [
       {
-        path: "ventas",
+        path: "ventas",canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas']},
         component: VentasComponent,
       },
       {
-        path: "ventas-por-pedido",
+        path: "ventas-por-pedido",canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas']},
         component: VentasPorPedidoComponent,
       },
       {
-        path: "consulta-venta",
+        path: "consulta-venta",canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas']},
         component: ConsultaVentaComponent,
       },
       {
-        path: "consulta-cotizacion",
+        path: "consulta-cotizacion",canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas']},
         component: ConsultaCotizacionComponent,
       },
       {
-        path: "cancela-venta",
+        path: "cancela-venta",canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas']},
         component: CancelaVentaComponent,
+      },
+      {
+        path: "ventas-por-internet",  canActivate:[ProdGuardService], data: {expectedRol: ['admin','distribuidor']},
+        component: VentasPorInternetComponent,
       },
     ],
   },
