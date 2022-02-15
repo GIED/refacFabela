@@ -164,7 +164,7 @@
 				</ng-template>
 			</p-table>
 		</div>
-		<p-dialog [(visible)]="productDialog" [style]="{width: '800px'}" header="Notas de crédito del cliente" [modal]="true"
+		<p-dialog [(visible)]="productDialog" [style]="{width: '900px'}" header="Notas de crédito del cliente" [modal]="true"
 			styleClass="p-fluid">
             <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['sFolioVenta','nTotalVenta','nTotalAbono','nSaldoTotal','dFechaTerminoCredito','sEstatus','nAvancePago']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
@@ -183,7 +183,8 @@
                        
 						<th pSortableColumn="sFolioVenta">No. Venta<p-sortIcon field="sFolioVenta"></p-sortIcon> </th>
 						<th pSortableColumn="nTotalVenta">Saldo Inicial<p-sortIcon field="nTotalVenta"></p-sortIcon> </th>
-						<th pSortableColumn="nTotalAbono">nTotalAbono<p-sortIcon field="nTotalAbono"></p-sortIcon> </th>
+						<th pSortableColumn="nTotalAbono">TotalAbono<p-sortIcon field="nTotalAbono"></p-sortIcon> </th>
+						<th pSortableColumn="descuento">Descuento<p-sortIcon field="descuento"></p-sortIcon> </th>
 						<th pSortableColumn="nSaldoTotal">Saldo Final<p-sortIcon field="nSaldoTotal"></p-sortIcon> </th>
 						<th pSortableColumn="nAvancePago">Avance<p-sortIcon field="nAvancePago"></p-sortIcon> </th>
 						<th pSortableColumn="dFechaTerminoCredito">Fecha Vencimiento<p-sortIcon field="dFechaTerminoCredito"></p-sortIcon> </th>
@@ -201,6 +202,8 @@
                         <td><span class="p-column-title"></span> {{venta.nTotalVenta | number}}
                         </td>
                         <td><span class="p-column-title"></span> {{venta.nTotalAbono| number}}
+                        </td>
+						<td><span class="p-column-title"></span> {{venta.descuento| number}}
                         </td>
                         <td><span class="p-column-title"></span>{{venta.nSaldoTotal | number}}
                         </td>

@@ -16,6 +16,7 @@ export class TwVenta{
     nIdCaja?:number;
     dFechaInicioCredito?:Date;
     dFechaPagoCredito?:Date;
+    credito?:number;
     tcCliente?:Clientes
     tcTipoVenta?:TcTipoVenta;
     tcUsuario?:Usuarios;
