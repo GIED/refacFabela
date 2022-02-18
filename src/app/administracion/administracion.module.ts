@@ -10,6 +10,7 @@ import { TipoCambioComponent } from './pages/tipo-cambio/tipo-cambio.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { CajaModule } from '../caja/caja.module';
+import { VentasycotizacionesModule } from '../ventasycotizaciones/ventasycotizaciones.module';
 
 
 
@@ -25,11 +26,13 @@ import { CajaModule } from '../caja/caja.module';
     NgxSpinnerModule,
     CajaModule,
     ReactiveFormsModule,
-    CajaModule
+    CajaModule,
+    VentasycotizacionesModule
     
     
   ],
   exports:[
+    CreditosComponent 
    
   ]
 })

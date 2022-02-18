@@ -33,6 +33,11 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Créditos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/creditos']
                     },
+                    
+                    {
+                        label: 'Descuentos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../ventasycotizaciones/descuento-venta']
+                    },
+                    
                    
 
                 ]
@@ -109,7 +114,7 @@ export class AppMenuComponent implements OnInit {
                     },*/
                     
                     {
-                        label: 'Abonos', icon: 'pi pi-fw pi-sort-numeric-down', routerLink: ['../caja/abonos']
+                        label: 'Abonos', icon: 'pi pi-fw pi-sort-numeric-down', routerLink: ['../administracion/creditos']
                     },
                     
                 ]

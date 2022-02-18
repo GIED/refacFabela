@@ -1,3 +1,4 @@
+
 import { Usuarios } from '../../administracion/interfaces/usuarios';
 export class TwCaja {
     nId?:number;
@@ -10,4 +11,5 @@ export class TwCaja {
     n_saldoFinal?:number;
     n_saldoInicial?:number;
     tcUsuario?:Usuarios;
+   
 }

@@ -2,11 +2,8 @@
     
     <div class="p-col-12">
         <div class="card">	
-    <div class="p-text-center"><h3>Consulta de ventas</h3></div>
-        <p-toast></p-toast>
-      
-       
-
+    <div class="p-text-center"><h3>Descuento a ventas no cobradas</h3></div>
+        <p-toast></p-toast>   
 
 
         <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
@@ -86,6 +83,8 @@
                             (click)="detalleVentaProductos(venta)"></button>
                         <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                             (click)="generarVentaPdf(venta)"></button>
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
+                            (click)="abrir(venta)"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -105,7 +104,43 @@
                     class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
             </ng-template>
         </p-toolbar>
+
+   
+        <p-dialog [(visible)]="abrirformulario" [style]="{width: '800px'}" header="Registro de Descuentos" [modal]="true" styleClass="p-fluid">
+
+            <form [formGroup]="formulario" autocomplete="off">
+               
+                <div class="p-grid">
+                    <div class="p-field p-col-6">
+                        <label for="name">Monto del Descuento</label>
+                        <input type="text" pInputText name="descuento" formControlName="descuento"  [class.is-invalid]="validaDescuento" />
+                        <small class="p-error" *ngIf="validaDescuento">*Se requiere un número.</small>
+                    </div>                         
+                  
+                </div>
+            </form>     
+ 
+            <div class="p-grid p-jc-end">
+                <div class="p-col-8">
+                    <div class="box"></div>
+                </div>
+                <div class="p-col-2">
+                    <div class="box">
+                        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="cerrarModal()"></button>
+                    </div>
+                </div>
+                <div class="p-col-2">
+                    <div class="box">
+                        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarDescuento()"></button>
+                    </div>
+                </div>
+            </div>
+        
+        
+                    
+        </p-dialog>
     </div>
 </div>
 </div>
    
+

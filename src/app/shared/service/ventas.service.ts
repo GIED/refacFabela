@@ -23,6 +23,10 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleEstatus+'nIdCliente='+nIdCliente+'&nTipoPago='+nTipoPago;
     return this.http.get<TvVentasDetalle[]>(url);
   }
+    obtenerVentaDetalleEstatusVenta(nEstatusVenta:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleEstatusVenta+'nEstatusVenta='+nEstatusVenta;
+    return this.http.get<TvVentasDetalle[]>(url);
+  }
   obtenerVentaDetalle(){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalle;
     return this.http.get<TvVentasDetalle[]>(url);
@@ -45,10 +49,13 @@ export class VentasService {
     return this.http.get<TvVentaProductoMes[]>(url);
   }
 
-  guardaVenta(datosVenta:DatosVenta){
-    
+  guardaVenta(datosVenta:DatosVenta){    
     let url = environment.servicios.apiRefacFabela + locator.guardaVenta;
     return this.http.post<TwVenta>(url,datosVenta);
+  }
+  guardaVentaDescuento(tvVentasDetalle:TvVentasDetalle){    
+    let url = environment.servicios.apiRefacFabela + locator.guardaVentaDescuento;
+    return this.http.post<TvVentasDetalle>(url,tvVentasDetalle);
   }
 
   guardaVentaProductoId(ventaProductoDto:VentaProductoDto){

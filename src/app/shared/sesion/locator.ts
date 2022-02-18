@@ -52,11 +52,13 @@ static obtenerNivel= '/catalogoNivel';
 static consultaInventario ='/obtenerInventarioEsp?';
 //Api ventas
 static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?';
+static consultaVentaDetalleEstatusVenta='/obtenerVentasClienteDetalleEstatusVenta?';
 static consultaVentaDetalle='/obtenerVentasDetalle';
 static consultaVentaDetalleEntrega='/obtenerVentasDetalleEntrega'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
+static guardaVentaDescuento= '/guardarVentaDescuento';
 static guardaVentaProductoId= '/guardaVentaProductoId';
 static guardaAbono= '/guardarAbono';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';

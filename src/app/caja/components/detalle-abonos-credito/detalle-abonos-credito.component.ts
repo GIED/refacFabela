@@ -49,7 +49,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
 
     this.crearFormulario();
-    console.log(this.tvVentasDetalle)
+    console.log(this.tvVentasDetalle);
   }
 
   crearFormulario() {

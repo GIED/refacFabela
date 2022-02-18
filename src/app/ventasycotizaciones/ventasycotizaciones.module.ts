@@ -16,18 +16,19 @@ import { ProductosAlternativosVentaComponent } from './components/productos-alte
 import { VentaProductosDetalleComponent } from './components/venta-productos-detalle/venta-productos-detalle.component';
 import { FormVentaPedidoComponent } from './components/form-venta-pedido/form-venta-pedido.component';
 import { VentasPorInternetComponent } from './pages/ventas-por-internet/ventas-por-internet.component';
+import { DescuentoVentaComponent } from './pages/descuento-venta/descuento-venta.component';
 
 
 
 @NgModule({
   declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,
-    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent],
+    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, DescuentoVentaComponent],
   imports: [
     VentasycotizacionesRoutingModule,
     PrimeModule,
     ProductosModule,
     ReactiveFormsModule
   ],
-  exports:[VentaProductosDetalleComponent]
+  exports:[VentaProductosDetalleComponent, DescuentoVentaComponent]
 })
 export class VentasycotizacionesModule { }
