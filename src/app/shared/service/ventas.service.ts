@@ -53,8 +53,8 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.guardaVenta;
     return this.http.post<TwVenta>(url,datosVenta);
   }
-  guardaVentaDescuento(tvVentasDetalle:TvVentasDetalle){    
-    let url = environment.servicios.apiRefacFabela + locator.guardaVentaDescuento;
+  guardaVentaDetalle(tvVentasDetalle:TvVentasDetalle){    
+    let url = environment.servicios.apiRefacFabela + locator.guardaVentaDetalle;
     return this.http.post<TvVentasDetalle>(url,tvVentasDetalle);
   }
 

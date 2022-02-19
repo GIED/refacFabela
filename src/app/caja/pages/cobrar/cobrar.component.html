@@ -29,202 +29,159 @@
                 <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-4 ">Total
                     General:<strong>10,200</strong></div>
             </p-toolbar>
-            <p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true"
-                [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true"
-                dataKey="id" styleClass="p-datatable-customers"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
+                [paginator]="true"
+                [globalFilterFields]="['sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
+                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                        <h5 class="p-m-0">Ventas por cobrar del: 01/10/2021 al 10/10/2021</h5>
+
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                                placeholder="Buscar Nota..." />
+                                placeholder="Buscar Venta" />
                         </span>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>No. venta</th>
-                        <th>RFC</th>
-                        <th>Razón Social</th>
-                        <th>Vendedor</th>
-                        <th>Fecha Venta</th>
-                        <th>Estatus</th>
-                        <th>Total</th>
+                        <th pSortableColumn="sFolioVenta">No. Venta<p-sortIcon field="sFolioVenta"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcCliente.sRfc">Rfc<p-sortIcon field="tcCliente.sRfc"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcCliente.sRazonSocial">Razón Social<p-sortIcon
+                                field="tcCliente.sRazonSocial"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nTotalVenta">Total Venta<p-sortIcon field="nTotalVenta"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nTotalAbono">Total Abonos<p-sortIcon field="nTotalAbono"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="descuento">Descuento<p-sortIcon field="descuento"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nSaldoTotal">Saldo Final<p-sortIcon field="nSaldoTotal"></p-sortIcon>
+                        </th>
+
+                        <th pSortableColumn="dFechaVenta">Fecha Venta<p-sortIcon field="dFechaVenta"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
+                                field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor<p-sortIcon
+                                field="tcUsuario.sNombreusuario"></p-sortIcon>
+                        </th>
+                        <th></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product>
+                <ng-template pTemplate="body" let-venta let-expanded="expanded">
                     <tr>
-                        <td><span class="p-column-title"></span> {{product.id}}
+                        <td><span class="p-column-title"></span> {{venta.sFolioVenta}}
                         </td>
-                        <td><span class="p-column-title"></span> {{product.id}}
+                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc}}
                         </td>
-                        <td><span class="p-column-title"></span> {{product.name}}
+                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRazonSocial}}
                         </td>
-                        <td><span class="p-column-title"></span> Mabiel
+                        <td><span class="p-column-title"></span>{{venta.nTotalVenta | number}}
+                        </td>
+                        <td><span class="p-column-title"></span>{{venta.nTotalAbono | number}}
+                        </td>
+                        <td><span class="p-column-title"></span>{{venta.descuento | number}}
                         </td>
                         <td><span class="p-column-title"></span>
-                            01/10/2021:12:20:26 pm
+                            <p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
                         </td>
-                        <td><span class="p-column-title"></span>
-                            POR COBRAR
+
+                        <td><span class="p-column-title"></span> {{venta.dFechaVenta | date}}
                         </td>
-                        <td><span class="p-column-title">Status</span>
-                            {{product.price | currency:'USD'}}
+                        <td class="p-text-center"><span class="p-column-title">Status</span>
+
+                            {{venta.tcEstatusVenta.sDescripcion}}
+
+                        <td class="p-text-center"><span class="p-column-title">Status</span>
+
+                            {{venta.tcUsuario.sNombreUsuario}}
                         </td>
+
                         <td>
-                            <button pButton pRipple icon="pi pi-dollar" class="p-button-rounded p-button-info p-mr-2"
-                                (click)="detalleProduct(product)"></button>
-                            <button pButton pRipple icon="pi pi-file-o" class="p-button-rounded p-button-warning"
-                                (click)="alternativosProduct(product)"></button>
-                            <button pButton pRipple icon="pi pi-file-pdf"
-                                class="p-button-rounded p-button-danger p-mr-2" (click)="dt.exportCSV()"></button>
-                            <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                (click)="deleteProduct(product)"></button> -->
+                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="detalleVentaProductos(venta)"></button>
+                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                                (click)="generarVentaPdf(venta)"></button>
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
+                                (click)="abrir(venta)"></button>
                         </td>
                     </tr>
-                </ng-template>
-                <ng-template pTemplate="summary">
-                    <div class="p-d-flex p-ai-center p-jc-between">
-                        Total de Ventas: {{products ? products.length : 0 }}
-                    </div>
                 </ng-template>
             </p-table>
-        </div>
-        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [modal]="true"
-            styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <div class="p-grid">
-                    <div class="p-field p-col-6">
-                        <label for="name">No. de parte</label>
-                        <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-                        <small class="p-invalid" *ngIf="submitted && !product.name">Name is required.</small>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="name">Nombre del producto</label>
-                        <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-                        <small class="p-invalid" *ngIf="submitted && !product.name">Name is required.</small>
-                    </div>
-                    <div class="p-field p-col-12">
-                        <label for="description">Descripcion</label>
-                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="2"
-                            cols="20"></textarea>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="marca">Marca</label>
-                        <p-dropdown [options]="marca" [(ngModel)]="selectedDrop" placeholder="Seleccine una marca"
-                            [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="marca">Categoria General</label>
-                        <p-dropdown [options]="ListaCategoriaGeneral" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine una categoria general" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="marca">Categoria </label>
-                        <p-dropdown [options]="ListaCategoria" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="moneda">Moneda</label>
-                        <p-dropdown [options]="ListaMoneda" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine una moneda" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="estatus">Estatus</label>
-                        <p-dropdown [options]="ListaEstatus" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine el estatus" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="price">clave SAT</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
-                            locale="en-US"></p-inputNumber>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="price">Precio</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
-                            locale="en-US"></p-inputNumber>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="ganancia">Ganancia</label>
-                        <p-dropdown [options]="ListaGanancias" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine una Ganancia" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="price">Precio Final</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
-                            locale="en-US" [disabled]="true"></p-inputNumber>
-                    </div>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-                    (click)="hideDialog()"></button>
-                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-                    (click)="saveProduct()"></button>
-            </ng-template>
-        </p-dialog>
-        <p-dialog [(visible)]="detalleDialog" [style]="{width: '700px'}" header="Cobro de Nota" [modal]="true"
-            styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <div class="card">
 
+            <p-dialog [(visible)]="mostrarProductos" header="Productos de la Venta" [style]="{width: '900px'}"
+                [closable]="false" styleClass="p-fluid">
+                <ng-template pTemplate="content">
+                    <app-venta-productos-detalle [listaProductosVenta]="listaProductosVenta">
+                    </app-venta-productos-detalle>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text"
+                        (click)="hideDialogAlter()"></button>
+                </ng-template>
+            </p-dialog>
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="right">
+                    <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                        class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
 
-                    <div class="p-col-12 p-lg-12">
+            <!--formulario de cobro de caja-->
+            <p-dialog [(visible)]="abrirformulario" [style]="{width: '800px'}" header="Cobro de Ventas"
+                [modal]="true" styleClass="p-fluid">
 
+                <div class="p-text-center">La venta a cobrar es la {{noVenta}}, con un monto de <strong>$ {{totalVenta | number}}</strong> </div>    
+                       
 
-                        <div class="card">
+                <form [formGroup]="formulario" autocomplete="off">
 
-                            <h5>El número de Nota a cobrar es de: <strong>1520</strong></h5>
-                            <p-dropdown [options]="formaPago" [(ngModel)]="selectedDrop"
-                                placeholder="Selecciona la forma de pago" [showClear]="true"></p-dropdown>
-                            <h5>El monto a cobrar es de: <strong> 5,555.00</strong></h5>
-
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-
-
-                </div>
-
-
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-                    (click)="hideDialog()"></button>
-                <button pButton pRipple label="Cobrar" icon="pi pi-check" class="p-button-text"
-                    (click)="saveProduct()"></button>
-            </ng-template>
-        </p-dialog>
-        <p-dialog [(visible)]="alternativosDialog" [style]="{width: '700px'}" header="Facturación de la Nota"
-            [modal]="true" styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <div class="card">
-                    <div class="p-col-12 p-lg-12">
-                        <div class="card">
-                            <h5>El número de Nota a Facturar es: <strong>1520</strong></h5>
-                            <p-dropdown [options]="usoCfdi" [(ngModel)]="selectedDrop" placeholder="Selecciona uso CFDI"
+                    <div class="p-grid">
+                       
+                        <div class="p-field p-col-12">
+                            <label for="marca">Forma de pago</label>
+                            <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago"
                                 [showClear]="true"></p-dropdown>
-                            <h5>El monto a Facturar es: <strong> 5,555.00</strong></h5>
+                            <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>
+                        </div>
+
+                    </div>
+                   
+                   
+               
+                </form>
+
+                <div class="p-grid p-jc-end">
+                    <div class="p-col-8">
+                        <div class="box"></div>
+                    </div>
+                    <div class="p-col-2">
+                        <div class="box">
+                            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                                (click)="cerrarModal()"></button>
+                        </div>
+                    </div>
+                    <div class="p-col-2">
+                        <div class="box">
+                            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                                (click)="cobrarVenta()"></button>
                         </div>
                     </div>
                 </div>
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-                    (click)="hideDialog()"></button>
-                <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-text"
-                    (click)="saveProduct()"></button>
-            </ng-template>
-        </p-dialog>
+
+
+
+            </p-dialog>
+
+        </div>
+
+
         <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
     </div>
 </div>

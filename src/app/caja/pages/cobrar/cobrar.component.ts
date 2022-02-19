@@ -1,7 +1,12 @@
+import { VentaProductoDto } from './../../../ventasycotizaciones/model/dto/VentaProductoDto';
+import { CatalogoService } from './../../../shared/service/catalogo.service';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Product } from 'src/app/demo/domain/product';
-import { ProductService } from 'src/app/demo/service/productservice';
+import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
+import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
+import { VentasService } from 'src/app/shared/service/ventas.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-cobrar',
@@ -9,194 +14,218 @@ import { ProductService } from 'src/app/demo/service/productservice';
   styleUrls: ['./cobrar.component.scss']
 })
 export class CobrarComponent implements OnInit {
-  productDialog: boolean;
-
-    products: Product[];
-
-    product: Product;
-
-    selectedProducts: Product[];
-
-    submitted: boolean;
-
-    cols: any[];
-    detalleDialog: boolean;
-    lineOptions:any;
-    lineData: any;
-    alternativosDialog: boolean;
+ 
     titulo:string;
-    formaPago:any;
-    usoCfdi:any;
+ 
 
-  constructor(private productService: ProductService, private messageService: MessageService,
-    private confirmationService: ConfirmationService) { }
+
+/*objetos definitivos  */
+  listaVentasDetalleCliente: TvVentasDetalle[];
+  mostrarProductos:boolean;
+  listaProductosVenta:VentaProductoDto;
+  abrirformulario: boolean;
+  VentaDescuentoDto:TvVentasDetalle;
+  formulario: FormGroup;
+  cols: any[];
+  listaFormaPago: TcFormaPago[];
+  noVenta:number;
+  totalVenta:number;
+
+
+  constructor( private messageService: MessageService, private ventasService:VentasService,
+    private confirmationService: ConfirmationService, private fb: FormBuilder, private catalogo: CatalogoService ) { }
 
   ngOnInit(){
-    this.productService.getProducts().then(data => this.products = data);
-    this.formaPago = [
-        {label: 'Efectivo'},
-        {label: 'Tarjeta de Crédito'},
-        {label: 'Tarjeta de Débito'},
-        {label: 'Transferencia'},
-        {label: 'Cheque'},
-        {label: 'Depósito'},
-
-    ];
-    this.usoCfdi = [
-        {label: 'Gastos en general'},
-        {label: 'Adquisisción de Mercancias'},
-       
-
-    ];
-  }
-  openNew() {
-    this.product = {};
-    this.submitted = false;
-    this.productDialog = true;
-    this.titulo="Registro de Productos"
-}
-
-deleteSelectedProducts() {
-    this.confirmationService.confirm({
-        message: 'Are you sure you want to delete the selected products?',
-        header: 'Confirm',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-            this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-            this.selectedProducts = null;
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
-        }
-    });
-}
-
-editProduct(product: Product) {
-    this.product = {...product};
-    this.productDialog = true;
-    this.titulo="Actualización de Producto"
-}
-alternativosProduct(product: Product) {
-    this.product = {...product};
-    this.alternativosDialog = true;
    
-}
-registroAlternativos(){
-    this.product = {};
-    this.submitted = false;
-    this.productDialog = true;
-    this.titulo="Registro de Productos Alternativos"
-}
-detalleProduct(product: Product) {
-    this.product = {...product};
-    this.detalleDialog = true;
-    this.lineData = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                backgroundColor: 'rgb(255, 205, 86)',
-                borderColor: 'rgb(255, 205, 86)',
-                tension: .4
-            },
-            {
-                label: 'Second Dataset',
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: false,
-                backgroundColor: 'rgb(75, 192, 192)',
-                borderColor: 'rgb(75, 192, 192)',
-                tension: .4
+    
+
+    this.crearFormulario();
+    this.consultaVentas();
+
+
+  }
+ 
+
+consultaVentas(){
+
+    this.ventasService.obtenerVentaDetalleEstatusVenta(1).subscribe(data=>{
+      this.listaVentasDetalleCliente=data; 
+      console.log(this.listaVentasDetalleCliente);      
+     
+     }); 
+  }
+
+  detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
+
+    this.mostrarProductos=true;
+    
+    this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
+        this.listaProductosVenta=data;
+    })
+    
+    }
+
+    generarVentaPdf(tvVentasDetalle:TvVentasDetalle){
+
+        this.ventasService.generarVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
+        
+          
+            const file = new Blob([resp], { type: 'application/pdf' });
+            console.log('file: ' + file.size);
+            if (file != null && file.size > 0) {
+              const fileURL = window.URL.createObjectURL(file);
+              const anchor = document.createElement('a');
+              anchor.download = 'venta_' + tvVentasDetalle.nId + '.pdf';
+              anchor.href = fileURL;
+              anchor.click();
+              this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+              //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+             
+            } else {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
             }
-        ]
-    };
+        
+        });
+        
+        }
 
-    this.lineOptions = {
-        plugins: {
-            legend: {
-                labels: {
-                    fontColor: '#A0A7B5'
+
+        abrir(tvVentasDetalle:TvVentasDetalle){
+
+            this.catalogo.obtenerFormaPago().subscribe(data => {
+                this.listaFormaPago = data;
+              });
+
+              this.noVenta=tvVentasDetalle.nId;
+              this.totalVenta=tvVentasDetalle.nSaldoTotal;
+
+            this.VentaDescuentoDto=tvVentasDetalle;
+          
+           
+            console.log(tvVentasDetalle);
+            this.abrirformulario=true;
+          
+           
+          }
+
+          crearFormulario() {
+
+            this.formulario = this.fb.group({
+          
+            
+              idFormaPago: ['', [Validators.required]],
+          
+            });
+          
+          }
+          cerrarModal() {
+            this.abrirformulario = false;
+          
+            this.limpiaFormulario();
+          
+          }
+          limpiaFormulario() {
+           
+            this.fProducto.idFormaPago.setValue("");
+           }
+           
+          
+          get validaFormaPago() {
+            return this.formulario.get('idFormaPago').invalid && this.formulario.get('idFormaPago').touched;
+          }    
+          
+          
+          get fProducto() {
+            return this.formulario.controls;
+          }
+
+          cobrarVenta() {
+
+            if (this.formulario.invalid) {
+              return Object.values(this.formulario.controls).forEach(control => {
+          
+                if (control instanceof FormGroup) {
+                  // tslint:disable-next-line: no-shadowed-variable
+          
+                  Object.values(control.controls).forEach(control => control.markAsTouched());
+                } else {
+                  control.markAsTouched();
                 }
+          
+              });
+          
             }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: '#A0A7B5'
-                },
-                grid: {
-                    color:  'rgba(160, 167, 181, .3)',
-                }
-            },
-            y: {
-                ticks: {
-                    color: '#A0A7B5'
-                },
-                grid: {
-                    color:  'rgba(160, 167, 181, .3)',
-                }
-            },
-        }
-    };
-}
+            else {
+          
+             
+             console.log( this.VentaDescuentoDto);
+            
 
-deleteProduct(product: Product) {
-    this.confirmationService.confirm({
-        message: 'Desea borrar el producto ' + product.name + '?',
-        header: 'Confirmar',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-            this.products = this.products.filter(val => val.id !== product.id);
-            this.product = {};
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
-        }
-    });
-}
+              let con1= this.catalogo.obtenerFormaPagoId(this.formulario.get('idFormaPago').value);
+              let con2=this.catalogo.obtenerEstatusVentaId(2);
+             
 
-hideDialog() {
-    this.productDialog = false;
-    this.submitted = false;
-}
+              forkJoin([con1,con2]).subscribe(data=>{              
+         
+               this.VentaDescuentoDto.tcFormapago=data[0];
+               this.VentaDescuentoDto.tcEstatusVenta=data[1];
 
-saveProduct() {
-    this.submitted = true;
+               this.guardarCobro();
+               this.limpiaFormulario();
+               this.abrirformulario=false;
 
-    if (this.product.name.trim()) {
-        if (this.product.id) {
-            this.products[this.findIndexById(this.product.id)] = this.product;
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto actualizado', life: 3000});
-        }
-        else {
-            this.product.id = this.createId();
-            this.product.image = 'product-placeholder.svg';
-            this.products.push(this.product);
-            this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Guardado', life: 3000});
-        }
 
-        this.products = [...this.products];
-        this.productDialog = false;
-        this.product = {};
-    }
-}
+              });
+              
+           
+            
+               
+          
+            
 
-findIndexById(id: string): number {
-    let index = -1;
-    for (let i = 0; i < this.products.length; i++) {
-        if (this.products[i].id === id) {
-            index = i;
-            break;
-        }
-    }
+             }
+          
+          
+            }
 
-    return index;
-}
+            guardarCobro(){
 
-createId(): string {
-    let id = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for ( let i = 0; i < 5; i++ ) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-}
+                console.log("Esto es el objeto que se estará insertando");
+                console.log(this.VentaDescuentoDto);
 
-}
+                this.ventasService.guardaVentaDetalle(this.VentaDescuentoDto).subscribe(data=>{
+          
+                    this.consultaVentas();
+                     
+                    this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Se guardo el cobro de la venta', life: 3000});
+                
+                
+                    });
+                   
+              
+                
+    
+                 }
+
+
+            }
+
+
+
+
+
+            
+          
+          
+          
+          
+          
+
+
+  
+
+
+
+
+
+

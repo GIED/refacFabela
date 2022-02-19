@@ -10,6 +10,7 @@ import { TcCategoria } from '../../productos/model/TcCategoria';
 import { TcGanancia } from '../../productos/model/TcGanancia';
 import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
 import { TwCaja } from '../../productos/model/TwCaja';
+import { TcEstatusVenta } from '../../productos/model/TcEstatusVenta';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,10 @@ export class CatalogoService {
   obtenerFormaPagoId(nId:number){
     let url= environment.servicios.apiRefacFabela + locator.consultaFormaPagoId+'nId='+nId;
     return this.http.get<TcFormaPago>(url);
+  }
+  obtenerEstatusVentaId(nId:number){
+    let url= environment.servicios.apiRefacFabela + locator.consultaEstatusVentaId+'nId='+nId;
+    return this.http.get<TcEstatusVenta>(url);
   }
   obtenerCajaActiva(){
     let url= environment.servicios.apiRefacFabela + locator.consultarCajaActiva;

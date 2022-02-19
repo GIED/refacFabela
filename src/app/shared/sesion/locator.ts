@@ -28,6 +28,7 @@ static consultaGanancia= '/catalogoGanancia';
 static consultaGananciaId= '/catalogoGananciaId?';
 static consultaFormaPago='/catalogoFormaPago';
 static consultaFormaPagoId='/catalogoFormaPagoId?';
+static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';
 //api productos
 static obtenerProductos= '/obtenerProductos';
@@ -58,7 +59,7 @@ static consultaVentaDetalleEntrega='/obtenerVentasDetalleEntrega'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
-static guardaVentaDescuento= '/guardarVentaDescuento';
+static guardaVentaDetalle= '/guardarVentaDetalle';
 static guardaVentaProductoId= '/guardaVentaProductoId';
 static guardaAbono= '/guardarAbono';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
