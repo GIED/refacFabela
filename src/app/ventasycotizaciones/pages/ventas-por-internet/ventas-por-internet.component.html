@@ -1,13 +1,152 @@
 <div class="p-grid p-fluid">
-    <div class="p-col-12 p-text-center">
-        <h2>Ventas por internet</h2>
-        <hr />
-    </div>
-    <div class="p-col-12 p-xl-12 p-md-12">
-        <div class="p-col-12">
+    <div class="card">
+        <form [formGroup]="formGrp" autocomplete="off">
+            <div class="p-col-12 p-text-center">
+                <h2>Ventas y Cotizaciones</h2>
+                <hr />
+            </div>
+            <div class="p-col-12 p-xl-12 p-md-12">
+                <div class="p-col-12" *ngIf="mostrarCredito">
 
-            <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>
+                    <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>
 
-        </div>
+                </div>
+            </div>
+
+            <div class="p-col-12 p-lg-12 p-md-12 ">
+                <div class="p-grid p-dir-col">
+                    <div class="p-col-12 ">
+                        <p-table [value]="productosFiltrados" responsiveLayout="scroll" currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
+                            <ng-template pTemplate="caption">
+
+                                <div class="p-grid p-ai-start vertical-container">
+                                    <div class="p-col-6">
+                                        <label for="name">Producto</label>
+                                        <input type="text" pInputText name="producto" formControlName="productoCtrl" placeholder="Ingrese el nombre del producto que busca" (input)="inputProducto()" />
+                                        <p-listbox *ngIf="mostrarSugerenciasProducto" [options]="listaProductoSugerencia" formControlName="productoSelecionadoCtrl" optionLabel="sNoParte" (onClick)="valorSeleccionadoProducto()" [listStyle]="{'max-height':'200px'}">
+                                            <ng-template let-producto pTemplate="item">
+                                                <div>
+                                                    <div>{{producto.sNoParte}}-{{producto.sProducto}}</div>
+                                                </div>
+                                            </ng-template>
+                                        </p-listbox>
+                                    </div>
+                                </div>
+
+
+
+
+                                <p-toast></p-toast>
+                            </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+
+                                    <th pSortableColumn="noParte">No.Parte
+                                    </th>
+                                    <th pSortableColumn="descripcion">Descripcións
+
+                                    </th>
+                                    <th pSortableColumn="precio">Precio
+
+                                    </th>
+                                    <th pSortableColumn="categoria">Categoria
+
+                                    </th>
+                                    <th pSortableColumn="stock">Pz disponibles
+
+                                    </th>
+                                    <th pSortableColumn="cantidad">Cantidad
+
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-producto>
+                                <tr>
+
+                                    <td (click)="muestraAlternativo(producto)">{{producto.nIdProducto}}</td>
+                                    <td>{{producto.tcProducto.sProducto}}</td>
+                                    <td>{{producto.tcProducto.nPrecioConIva }}</td>
+                                    <td>{{producto.tcProducto.tcCategoria.sDescripcion}}</td>
+                                    <td (click)="ubicacionProducto(producto)">{{producto.nCantidadTotal}}</td>
+                                    <td>
+                                        <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100">
+                                        </p-inputNumber>
+                                    </td>
+                                    <td>
+                                        <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-col-12 p-lg-12 p-md-12 ">
+                <div class="p-col-12 p-mt-3">
+                    <span class="p-input-icon-left">
+                <h5 class="p-text-center" >Carrito de compras <i class="pi pi-shopping-cart"></i></h5>
+            </span>
+                </div>
+                <div class="p-grid p-dir-col p-nogutter">
+                    <div class="p-col-12 ">
+                        <p-table [value]="listaProductos" [rows]="10" responsiveLayout="scroll">
+
+                            <ng-template pTemplate="header">
+                                <tr>
+
+                                    <th pSortableColumn="noParte">No.Parte
+
+                                    </th>
+                                    <th pSortableColumn="descripcion">Descripcións
+
+                                    </th>
+                                    <th pSortableColumn="precio">Precio
+
+                                    </th>
+                                    <th pSortableColumn="cantidad">Cantidad</th>
+                                    <th pSortableColumn="total">Total</th>
+                                    <th pSortableColumn="accion">Quitar</th>
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-productoVenta>
+                                <tr>
+
+                                    <td>{{productoVenta.tcProducto.sNoParte}}</td>
+                                    <td>{{productoVenta.tcProducto.sProducto}}</td>
+                                    <td>{{productoVenta.tcProducto.nPrecioConIva | currency:'$'}}</td>
+                                    <td>
+                                        {{productoVenta.nCantidad}}
+                                    </td>
+                                    <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad | currency:'$'}}</td>
+                                    <td>
+                                        <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(productoVenta)" class="p-button-rounded p-button-danger p-mr-2"></button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template pTemplate="footer">
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="p-d-flex p-jc-end">
+                                            <strong>Cantidad Total: </strong> {{total |currency: '$'}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="summary">
+                                <div class="p-grid p-mt-2" *ngIf="listaProductos.length>0">
+                                    <button pButton class="p-button-primary" (click)="guardarCotizacion()" [disabled]="formGrp.invalid" label="Guardar cotización"></button>
+                                </div>
+                            </ng-template>
+
+                        </p-table>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

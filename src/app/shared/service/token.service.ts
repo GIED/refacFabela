@@ -23,7 +23,8 @@ export class TokenService {
   }
 
   public isLogged(): boolean{
-   if ( this.getToken()) {
+    
+   if (this.getToken() != null) {
      return true;
    }
    return false;

@@ -8,6 +8,7 @@ import { VentasComponent } from "./pages/ventas/ventas.component";
 import { VentasPorPedidoComponent } from "./pages/ventas-por-pedido/ventas-por-pedido.component";
 import { VentasPorInternetComponent } from './pages/ventas-por-internet/ventas-por-internet.component';
 import { ProdGuardService } from '../shared/guards/prod-guard.service';
+import { PagoVentaInternetComponent } from './pages/pago-venta-internet/pago-venta-internet.component';
 
 const routes: Routes = [
   {
@@ -34,8 +35,12 @@ const routes: Routes = [
         component: CancelaVentaComponent,
       },
       {
-        path: "ventas-por-internet",  canActivate:[ProdGuardService], data: {expectedRol: ['admin','distribuidor']},
+        path: "ventas-por-internet",  canActivate:[ProdGuardService], data: {expectedRol: ['distribuidor']},
         component: VentasPorInternetComponent,
+      },
+      {
+        path: "pagos-venta-internet",  canActivate:[ProdGuardService], data: {expectedRol: ['distribuidor']},
+        component: PagoVentaInternetComponent,
       },
     ],
   },

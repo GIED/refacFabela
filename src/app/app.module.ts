@@ -50,7 +50,7 @@ import { interceptorProvider } from './shared/interceptors/prod-interceptor.serv
     ],
     providers: [
         //quita el # de la url
-        //{provide: LocationStrategy, useClass: HashLocationStrategy},
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
         // INTERCEPTOR PARA SPINNER
         {provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true},
          ProductService,
