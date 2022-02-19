@@ -14,7 +14,7 @@ export class AppMenuComponent implements OnInit {
 
     ngOnInit() {
         this.model = [
-            {label: 'Inicio', icon: 'pi pi-fw pi-home',  routerLink: ['/inicio/tablero']},
+            {label: 'Inicio', icon: 'pi pi-fw pi-home',  visible:this.tokenService.IsAdmin(),  routerLink: ['/inicio/tablero']},
             {
                 label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.tokenService.IsAdmin(),
                 items: [
@@ -120,7 +120,16 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label:'venta por internet', icon: 'pi pi-globe', visible:this.tokenService.IsAdmin() || this.tokenService.isDistribuidor() , routerLink: ['../ventasycotizaciones/ventas-por-internet']
+                label:'Distribuidor', icon: 'pi pi-sitemap', visible:this.tokenService.isDistribuidor(), 
+                items:[
+                    {
+                        label:'Cotizaciones', icon: 'pi pi-globe', routerLink: ['../ventasycotizaciones/ventas-por-internet']
+                    },
+                    {
+                        label:'Pago de Cotizaciones', icon: 'pi pi-dollar', routerLink: ['../ventasycotizaciones/pagos-venta-internet']
+                    }
+
+                ]
             }
            /* {
                 label: 'Reportes', icon: 'pi pi-fw pi-chart-bar',

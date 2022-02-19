@@ -1,0 +1,104 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <div class="p-text-center">
+                <h2>Consulta de Cotizaciones</h2>
+            </div>
+            <p-table #dt [value]="listaCotizaciones" [rows]="10" [paginator]="true" [globalFilterFields]="[
+          'sFolioCotizacion',
+          'tcCliente.sRfc',
+          'tcCliente.sRazonSocial',
+          'nTotalCotizacion',
+          'dFecha'
+        ]" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="
+              p-d-flex p-flex-column p-flex-md-row p-jc-md-between
+              table-header
+            ">
+                        <h5 class="p-m-0">Cotizaciones</h5>
+                        <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar en toda la tabla"
+              />
+            </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr class="p-text-center">
+                        <th pSortableColumn="sFolioCotizacion">
+                            Folio Cotización
+
+                        </th>
+                        <th pSortableColumn="dFecha">
+                            Fecha
+
+                        </th>
+
+                        <th pSortableColumn="nTotalCotizacion">
+                            Total Cotización
+
+                        </th>
+                        <th pSortableColumn="name">Vigencia</th>
+                        <th>Subir comprobante</th>
+                        <th>Descargar cotización</th>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-cotizacion>
+                    <tr class="p-text-center">
+                        <td>
+                            {{ cotizacion.sFolioCotizacion }}
+                        </td>
+                        <td>
+                            {{ cotizacion.dFecha | date }}
+                        </td>
+
+                        <td>
+                            {{ cotizacion.nTotalCotizacion | number }}
+                        </td>
+                        <td *ngIf="cotizacion.nEstatus == 1">
+                            <i *ngIf="cotizacion.nVigencia == 0" class="pi pi-check" style="color: green;"></i>
+                            <i *ngIf="cotizacion.nVigencia == 1" class="pi pi-times" style="color: red;"></i>
+                        </td>
+                        <td *ngIf="cotizacion.nEstatus == 2">
+                            <i class="pi pi-money-bill" style="color: blue;"></i>
+                        </td>
+
+                        <td *ngIf="cotizacion.nEstatus == 1">
+
+                            <button *ngIf="cotizacion.nVigencia == 0" pButton pRipple icon="pi pi-cloud-upload" class="p-button-rounded p-button-info p-mr-2" (click)="muestraFormComprobante(cotizacion)"></button>
+                            <p *ngIf="cotizacion.nVigencia == 1">la cotización expiró</p>
+
+                        </td>
+
+                        <td *ngIf="cotizacion.nEstatus == 2"> vendidó </td>
+                        <td> <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="generarCotizacionPdf(cotizacion.nId)"></button></td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{ listaCotizaciones ? listaCotizaciones.length : 0 }} Registros.
+                    </div>
+                </ng-template>
+            </p-table>
+
+
+
+            <p-confirmDialog [style]="{ width: '600px' }"></p-confirmDialog>
+
+        </div>
+    </div>
+    <p-dialog [(visible)]="mostrarFormCarga" header="Subir comprobante de pago" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <app-form-carga-comprobante [cotizacion]="cotizacion"></app-form-carga-comprobante>
+        </ng-template>
+        <ng-template pTemplate="footer">
+
+        </ng-template>
+    </p-dialog>
+</div>
