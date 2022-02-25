@@ -1,0 +1,86 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <div class="p-text-center">
+                <h2>Comprobantes Cargados</h2>
+            </div>
+            <p-table #dt [value]="listaComprobantesInternet" [rows]="10" [paginator]="true" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="
+              p-d-flex p-flex-column p-flex-md-row p-jc-md-between
+              table-header
+            ">
+                        <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar en toda la tabla"
+              />
+            </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr class="p-text-center">
+                        <th pSortableColumn="cliente">
+                            Cliente
+                        </th>
+                        <th pSortableColumn="sFolioCotizacion">
+                            Folio Cotización
+                        </th>
+                        <th pSortableColumn="dFecha">
+                            Fecha
+                        </th>
+
+                        <th pSortableColumn="nTotalCotizacion">
+                            Total Cotización
+                        </th>
+                        <th>Estatus</th>
+                        <th>Descargar Comprobante</th>
+                        <th>Acción</th>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-pago>
+                    <tr class="p-text-center">
+                        <td>
+                            {{pago.twCotizacion.tcCliente.sRazonSocial }}
+                        </td>
+                        <td>{{pago.twCotizacion.sFolioCotizacion}}</td>
+                        <td>
+                            {{pago.twCotizacion.dFecha | date }}
+                        </td>
+
+                        <td>
+                            {{ pago.twCotizacion.nTotalCotizacion | number }}
+                        </td>
+                        <td *ngIf="pago.nStatus == 1">
+                            <i *ngIf="cotizacion.nVigencia == 0" class="pi pi-check" style="color: green;"></i>
+                            <i *ngIf="cotizacion.nVigencia == 1" class="pi pi-times" style="color: red;"></i>
+                        </td>
+                        <td *ngIf="pago.nStatus == 2">
+                            <i class="pi pi-money-bill" style="color: blue;"></i>
+                        </td>
+
+                        <td *ngIf="cotizacion.nEstatus == 1">
+
+                        </td>
+                        <td> <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="generarCotizacionPdf(cotizacion.nId)"></button></td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{ listaCotizaciones ? listaCotizaciones.length : 0 }} Registros.
+                    </div>
+                </ng-template>
+            </p-table>
+
+
+
+            <p-confirmDialog [style]="{ width: '600px' }"></p-confirmDialog>
+
+        </div>
+    </div>
+
+</div>
