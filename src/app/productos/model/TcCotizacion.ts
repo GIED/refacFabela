@@ -8,7 +8,7 @@ export class TwCotizacion{
     dFecha?:Date;
     nEstatus?: number;
     sFolioCotizacion?:string;
-    tcCliente?: TcCliente  
+    tcCliente: TcCliente = new TcCliente();  
     tcUsuario?: Usuarios;
     nTotalCotizacion:number;
     n_Vigencia:number;

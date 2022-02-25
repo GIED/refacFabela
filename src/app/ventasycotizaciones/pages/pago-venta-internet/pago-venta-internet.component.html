@@ -95,7 +95,7 @@
     </div>
     <p-dialog [(visible)]="mostrarFormCarga" header="Subir comprobante de pago" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
         <ng-template pTemplate="content">
-            <app-form-carga-comprobante [cotizacion]="cotizacion"></app-form-carga-comprobante>
+            <app-form-carga-comprobante [cotizacion]="cotizacion" (comprobanteCargado)="subirComprobante($event)"></app-form-carga-comprobante>
         </ng-template>
         <ng-template pTemplate="footer">
 

@@ -33,10 +33,13 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Créditos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/creditos']
                     },
-                    
                     {
                         label: 'Descuentos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../ventasycotizaciones/descuento-venta']
                     },
+                    {
+                        label: 'valida comprobantes', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/validaComprobante']
+                    },
+
                     
                    
 

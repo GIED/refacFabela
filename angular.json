@@ -32,11 +32,13 @@
                             "src/assets"
                         ],
                         "styles": [
-                            "src/styles.scss"
+                            "src/styles.scss",
+                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
                         ],
                         "scripts": [
                             "node_modules/prismjs/prism.js",
-                            "node_modules/prismjs/components/prism-typescript.js"
+                            "node_modules/prismjs/components/prism-typescript.js",
+                            "node_modules/bootstrap/dist/js/bootstrap.min.js"
                         ],
                         "allowedCommonJsDependencies": ["@fullcalendar/daygrid", "@fullcalendar/timegrid", "@fullcalendar/interaction", "chart.js"]
                     },

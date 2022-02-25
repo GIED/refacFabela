@@ -1,11 +1,18 @@
 <div class="card">
-    <h5>Cargar comprobante de pago para la cotización No. {{cotizacion.sFolioCotizacion}}</h5>
-    <p-fileUpload name="demo[]" url="http://localhost:4200/#/ventasycotizaciones/pagos-venta-internet" (onUpload)="onUpload($event)" accept="image/*" maxFileSize="1000000">
-        <ng-template pTemplate="content">
-            <ul *ngIf="uploadedFiles.length">
-                <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-            </ul>
-        </ng-template>
-    </p-fileUpload>
+    <div class="card-header">
+        Cargar comprobante de pago para la cotización No. {{cotizacion.sFolioCotizacion}}
+    </div>
+    <div class="card-body">
 
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="input-group">
+                    <input (change)="subirComprobante($event)" type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                    <button (click)="enviarFoto()" class="btn btn-outline-success" type="button" id="inputGroupFileAddon04">Subir comprobante</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 </div>

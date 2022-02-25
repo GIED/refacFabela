@@ -5,6 +5,7 @@ import { UsuarioComponent } from "./pages/usuario/usuario.component";
 import { ProveedorComponent } from "./pages/proveedor/proveedor.component";
 import { CreditosComponent } from "./pages/creditos/creditos.component";
 import { TipoCambioComponent } from "./pages/tipo-cambio/tipo-cambio.component";
+import { ValidaComprobanteComponent } from './pages/valida-comprobante/valida-comprobante.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
       {
         path: "creditos",
         component: CreditosComponent,
+      },
+      {
+        path: "validaComprobante",
+        component: ValidaComprobanteComponent,
       },
     ],
   },

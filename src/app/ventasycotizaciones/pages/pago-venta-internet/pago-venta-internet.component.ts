@@ -3,6 +3,8 @@ import { TwCotizacion } from '../../../productos/model/TcCotizacion';
 import { VentasCotizacionesService } from '../../../shared/service/ventas-cotizaciones.service';
 import { TokenService } from '../../../shared/service/token.service';
 import { MessageService } from 'primeng/api';
+import { VentasInternetService } from '../../../shared/service/ventas-internet.service';
+import { TwPagoComprobanteInternet } from '../../model/TwPagoComprobanteInternet';
 
 @Component({
   selector: 'app-pago-venta-internet',
@@ -15,11 +17,17 @@ export class PagoVentaInternetComponent implements OnInit {
   listaCotizaciones: TwCotizacion[];
   cotizacion: TwCotizacion;
   mostrarFormCarga:boolean;
+  twPagoComprobanteInternet: TwPagoComprobanteInternet;
 
-  constructor(private ventasCotizacionesService: VentasCotizacionesService, private tokenService: TokenService, private messageService: MessageService) {
+  constructor(
+    private ventasCotizacionesService: VentasCotizacionesService, 
+    private tokenService: TokenService, 
+    private messageService: MessageService,
+    private ventaInternetService: VentasInternetService) {
     this.listaCotizaciones= [];
     this.mostrarFormCarga=false;
     this.cotizacion= new TwCotizacion();
+    this.twPagoComprobanteInternet = new TwPagoComprobanteInternet();
    }
 
   ngOnInit(): void {
@@ -60,6 +68,23 @@ export class PagoVentaInternetComponent implements OnInit {
   muestraFormComprobante(twCotizacion: TwCotizacion){
     this.cotizacion=twCotizacion;
     this.mostrarFormCarga=true;
+
+  }
+
+  subirComprobante(comprobante: File){
+
+    let formData = new FormData();
+    formData.append("archivo", comprobante);
+    formData.append("id", this.cotizacion.nId.toString());
+
+    this.ventaInternetService.guardaVenta(formData).subscribe(respuesta =>{
+      this.twPagoComprobanteInternet=respuesta.TwPagoComprobanteInternet;
+      this.messageService.add({severity: 'success', summary: 'Correcto', detail: respuesta.mensaje, life: 3000});
+    	this.mostrarFormCarga=false;
+    }, error=>{
+      this.messageService.add({severity: 'success', summary: 'Correcto', detail: error.mensaje, life: 3000});
+    })
+
 
   }
 

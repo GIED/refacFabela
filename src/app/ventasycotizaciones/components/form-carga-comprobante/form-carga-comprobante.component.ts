@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { TwCotizacion } from '../../../productos/model/TcCotizacion';
 
@@ -11,23 +11,25 @@ import { TwCotizacion } from '../../../productos/model/TcCotizacion';
 export class FormCargaComprobanteComponent implements OnInit {
 
   @Input() cotizacion:TwCotizacion;
+  @Output() comprobanteCargado:EventEmitter<File> = new EventEmitter();
 
-  uploadedFiles: any[] = [];
+  private comprobanteSeleccionado:File;
 
   constructor(private messageService: MessageService) { }
 
   ngOnInit(): void {
   }
 
-  onUpload(event) {
-    for(let file of event.files) {
-        this.uploadedFiles.push(file);
-    }
+  subirComprobante(event){
+    this.comprobanteSeleccionado = event.target.files[0];
+    console.log(this.comprobanteSeleccionado);
+  }
 
-    console.log(this.uploadedFiles);
+  enviarFoto(){
+    this.comprobanteCargado.emit(this.comprobanteSeleccionado);
+  }
 
-    this.messageService.add({severity: 'info', summary: 'File Uploaded', detail: ''});
-}
+  
 
-
+ 
 }

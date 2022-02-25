@@ -76,8 +76,11 @@ static consultaCotizacionDistribuidor='/consultaCotizacionDistribuidor?';
 static consultaCotizacionId='/consultaCotizacionId?';
 static generarCotizacionPdf='/getCotizacion?';
 
-//Tablero
+//ventasPorInternet
+static guardaComprobante='/guardaComprobante';
+static consultaPagoComprobante='/consultaPagoComprobante?'
 
+//Tablero
 static obtenerTotalesGeneralesTablero='/totales-generales-tablero';
 
 

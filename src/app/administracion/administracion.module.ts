@@ -11,13 +11,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { CajaModule } from '../caja/caja.module';
 import { VentasycotizacionesModule } from '../ventasycotizaciones/ventasycotizaciones.module';
+import { ValidaComprobanteComponent } from './pages/valida-comprobante/valida-comprobante.component';
 
 
 
 
 @NgModule({
     
-  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent],
+  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent],
   imports: [
     AdministracionRoutingModule,   
     PrimeModule,
