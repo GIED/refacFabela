@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Product } from 'src/app/demo/domain/product';
-import { ProductService } from 'src/app/demo/service/productservice';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+
+
+import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
 import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
+
 import { VentasService } from 'src/app/shared/service/ventas.service';
 import { VentaProductoDto } from 'src/app/ventasycotizaciones/model/dto/VentaProductoDto';
 
@@ -13,70 +16,109 @@ import { VentaProductoDto } from 'src/app/ventasycotizaciones/model/dto/VentaPro
 })
 export class EntregaDeMercanciaComponent implements OnInit {
 
-  productDialog: boolean;
-    selectedProducts: Product[];
-    selectedProducts2:VentaProductoDto;
-    submitted: boolean;
-    cols: any[];
-    detalleDialog: boolean;   
-    titulo:string;
-    formaPago:any;
-    usoCfdi:any;
-    mostrarProductos:boolean;
+  titulo:string;
+ 
 
+
+  /*objetos definitivos  */
     listaVentasDetalleCliente: TvVentasDetalle[];
+    mostrarProductos:boolean;
     listaProductosVenta:VentaProductoDto;
-
-    constructor(  private ventasService:VentasService) {
-
-      this.cols = [
-        { field: 'sFolioVenta', header: 'Folio' },
-        { field: 'tcCliente.sRfc', header: 'RFC' },
-        { field: 'tcCliente.sRazonSocial', header: 'Razón Social' },
-        { field: 'nTotalVenta', header: 'Total Venta' },
-        { field: 'dFechaVenta', header: 'Fecha de Venta' },
-        { field: 'tcUsuario.sNombreUsuario', header: 'Vendedor' },
-       
-    ]
-     }
-
-     ngOnInit(){
-      this.ventasService.obtenerVentaDetalleEntrega().subscribe(data=>{
-      this.listaVentasDetalleCliente=data; 
-      console.log(this.listaVentasDetalleCliente);      
-     
-     }); 
-   }
+    abrirformulario: boolean;
+    VentaDescuentoDto:TvVentasDetalle;
+    formulario: FormGroup;
+    cols: any[];
+    listaFormaPago: TcFormaPago[];
+    noVenta:number;
+    totalVenta:number;
+    selectedProducts2:VentaProductoDto; 
+    
   
- 
- detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
- 
-   this.mostrarProductos=true;
- 
-   this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
-       this.listaProductosVenta=data;
-       console.log(this.listaProductosVenta);
-   })
- 
- }
- 
- hideDialogAlter(){
-   this.mostrarProductos=false;
- }
- 
- 
- 
- 
- 
- createId(): string {
-     let id = '';
-     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-     for ( let i = 0; i < 5; i++ ) {
-         id += chars.charAt(Math.floor(Math.random() * chars.length));
-     }
-     return id;
- }
+  
+    constructor( private messageService: MessageService, private ventasService:VentasService,
+     private fb: FormBuilder,  ) { }
+  
+    ngOnInit(){
+     
+      
+  
+     
+      this.consultaVentas();
+  
+  
+    }
+   
+  
+  consultaVentas(){
+  
+      this.ventasService.obtenerVentaDetalleEstatusVenta(2).subscribe(data=>{
+        this.listaVentasDetalleCliente=data; 
+        console.log(this.listaVentasDetalleCliente);      
+       
+       }); 
+    }
+  
+    detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
+  
+      this.mostrarProductos=true;
+      
+      this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
+          this.listaProductosVenta=data;
+      })
+      
+      }
+  
+      generarVentaPdf(tvVentasDetalle:TvVentasDetalle){
+  
+          this.ventasService.generarVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
+          
+            
+              const file = new Blob([resp], { type: 'application/pdf' });
+              console.log('file: ' + file.size);
+              if (file != null && file.size > 0) {
+                const fileURL = window.URL.createObjectURL(file);
+                const anchor = document.createElement('a');
+                anchor.download = 'venta_' + tvVentasDetalle.nId + '.pdf';
+                anchor.href = fileURL;
+                anchor.click();
+                this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+                //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+               
+              } else {
+                this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+              }
+          
+          });
+          
+          }          
+           
+  
+           
 
-}
+              hideDialogAlter(){
+                this.mostrarProductos=false;
+              }
+  
+            
+
+                   entregaProducto(prod:VentaProductoDto){
+
+                    console.log(prod);
+
+                    this.ventasService.guardaVentaProductoEntregaId(prod).subscribe(data=>{
 
 
+                      this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Se guardo la entrega del producto', life: 3000});
+
+
+                    })
+
+                   }
+  
+  
+              }
+  
+  
+  
+  
+  

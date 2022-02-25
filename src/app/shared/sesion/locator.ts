@@ -61,6 +61,7 @@ static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
 static guardaVentaDetalle= '/guardarVentaDetalle';
 static guardaVentaProductoId= '/guardaVentaProductoId';
+static guardaVentaProductoEntrega= '/guardaVentasProducto';
 static guardaAbono= '/guardarAbono';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultarVentaId='/obtenerVentaId?';
