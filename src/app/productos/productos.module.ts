@@ -12,7 +12,9 @@ import { HistoriaPrecioProductoComponent } from './components/historia-precio-pr
 import { InputBusquedaComponent } from './components/input-busqueda/input-busqueda.component';
 import { ModalProductosBodegaComponent } from './components/modal-productos-bodega/modal-productos-bodega.component';
 import { ModalProductosAlternativosComponent } from './components/modal-productos-alternativos/modal-productos-alternativos.component';
-import { RegistroPedidosComponent } from './pages/registro-pedidos/registro-pedidos.component';
+import { RegistroPedidosComponent } from './pages/administracion-pedidos/registro-pedidos.component';
+import { PedidoProductosComponent } from './components/pedido-productos/pedido-productos.component';
+import { AltaPedidosComponent } from './components/alta-pedidos/alta-pedidos.component';
 
 
 
@@ -30,6 +32,8 @@ import { RegistroPedidosComponent } from './pages/registro-pedidos/registro-pedi
     ModalProductosBodegaComponent,
     ModalProductosAlternativosComponent,
     RegistroPedidosComponent,
+    PedidoProductosComponent,
+    AltaPedidosComponent,
     
   ],
   imports: [

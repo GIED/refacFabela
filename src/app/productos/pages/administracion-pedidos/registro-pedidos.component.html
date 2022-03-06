@@ -1,0 +1,118 @@
+<div class="p-grid">
+
+    <div class="p-col-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Nuevo Pedido" icon="pi pi-plus"
+                        class="p-button-success p-mr-2 p-mb-2" (click)="nuevoPedido()"></button>
+                </ng-template>
+            </p-toolbar>
+
+               <!--Tabla de productos general-->
+            <p-table #dt [value]="listaPedidoDetalle" [rows]="10" [paginator]="true"
+                [globalFilterFields]="['sId', 'dFechaPedido']" [(selection)]="selectedProducts" [rowHover]="true"
+                dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <h5 class="p-m-0">Administración de Productos</h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar producto..." />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Clave Pedido</th>
+                        <th>Fecha de Pedido</th>
+                        <th>Usuario</th>
+                        <th>Total de Productos</th>
+                        <th>Entregados</th>
+                        <th>Sin Entregar</th>
+                        <th>Estatus</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-pedido>
+                    <tr>
+                        <td><span class="p-column-title">id</span> {{pedido.nId}}
+                        </td>
+                       <td><span class="p-column-title">No de parte</span> {{pedido.sCvePedido}}
+                        </td>
+                        <td><span class="p-column-title">producto</span> {{pedido.dFechaPedido | date}}
+                        </td>
+                        <td><span class="p-column-title">Descipcion</span> {{pedido.sNombreUsuario}}
+                        </td>
+                        <td><span class="p-column-title">Status</span> {{pedido.nTotalProductos}}
+                        </td> 
+                        <td><span class="p-column-title">Status</span> {{pedido.nTotalEntregados}}
+                        </td> 
+                        <td><span class="p-column-title">Status</span> {{pedido.nTotalSinEntregar}}
+                        </td> 
+                        <td><span class="p-column-title">Status</span> {{pedido.nEstatus}}
+                        </td> 
+                        <td>
+                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
+                                (click)="consultaProductosRegistrados(pedido.nId)"></button>
+                            <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning"
+                                (click)="alternativosProduct(pedido.tcProducto.nId, pedido.tcProducto.sProducto)"></button>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="editarProducto(pedido.tcProducto)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                (click)="deleteProduct(pedido.tcProducto)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        Total de Productos: {{listaProductos ? listaProductos.length : 0 }}
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
+        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+            styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
+                    (guardarProducto)="saveProduct($event)"></app-modal-producto>
+            </ng-template>
+        </p-dialog>
+
+           <!--Detalle de pedidos-->
+
+        <p-dialog [(visible)]="detalleDialog" [style]="{width: '1200px'}" header="Detalle del Pedido" [modal]="true"
+            styleClass="p-fluid" [closable]="false">
+            <ng-template pTemplate="content">
+              
+                
+                <app-pedido-productos [listaPedidos]="listaPedidos" >  </app-pedido-productos>
+
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialogDetalle()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <!--Alta de pedidos-->
+        <p-dialog [(visible)]="registroPedido" [style]="{width: '1200px'}" header="Registro de pedido" [modal]="true"
+        styleClass="p-fluid" [closable]="false">
+        <ng-template pTemplate="content">
+          
+            
+            <app-alta-pedidos  (listaPedidoDetalle)="recatgarPedidodEstatus($event)"></app-alta-pedidos>
+
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                (click)="cerrarNuevoPedido()"></button>
+        </ng-template>
+    </p-dialog>
+      
+       
+    </div>
+</div>
