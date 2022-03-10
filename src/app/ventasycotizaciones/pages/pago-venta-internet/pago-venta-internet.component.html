@@ -43,7 +43,7 @@
                             Total Cotización
 
                         </th>
-                        <th pSortableColumn="name">Vigencia</th>
+                        <th pSortableColumn="name">Estatus</th>
                         <th>Subir comprobante</th>
                         <th>Descargar cotización</th>
 
@@ -52,32 +52,37 @@
                 <ng-template pTemplate="body" let-cotizacion>
                     <tr class="p-text-center">
                         <td>
-                            {{ cotizacion.sFolioCotizacion }}
+                            {{ cotizacion.twCotizacionesDetalle.sFolioCotizacion }}
                         </td>
                         <td>
-                            {{ cotizacion.dFecha | date }}
+                            {{ cotizacion.twCotizacionesDetalle.dFecha | date }}
                         </td>
 
                         <td>
-                            {{ cotizacion.nTotalCotizacion | number }}
+                            {{ cotizacion.twCotizacionesDetalle.nTotalCotizacion | number }}
                         </td>
-                        <td *ngIf="cotizacion.nEstatus == 1">
-                            <i *ngIf="cotizacion.nVigencia == 0" class="pi pi-check" style="color: green;"></i>
-                            <i *ngIf="cotizacion.nVigencia == 1" class="pi pi-times" style="color: red;"></i>
+                        <td *ngIf="cotizacion.nStatus == 0">
+                            <i class="pi pi-times" style="color: red;">Sin comprobante Cargado</i>
                         </td>
-                        <td *ngIf="cotizacion.nEstatus == 2">
-                            <i class="pi pi-money-bill" style="color: blue;"></i>
+                        <td *ngIf="cotizacion.nStatus == 1">
+                            <i class="pi pi-times" style="color: blue;">Comprobante Cargado</i>
                         </td>
-
-                        <td *ngIf="cotizacion.nEstatus == 1">
-
-                            <button *ngIf="cotizacion.nVigencia == 0" pButton pRipple icon="pi pi-cloud-upload" class="p-button-rounded p-button-info p-mr-2" (click)="muestraFormComprobante(cotizacion)"></button>
-                            <p *ngIf="cotizacion.nVigencia == 1">la cotización expiró</p>
-
+                        <td *ngIf="cotizacion.nStatus == 2">
+                            <i class="pi pi-money-bill" style="color: blue;">Pago Aprobado</i>
                         </td>
-
-                        <td *ngIf="cotizacion.nEstatus == 2"> vendidó </td>
-                        <td> <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="generarCotizacionPdf(cotizacion.nId)"></button></td>
+                        <td *ngIf="cotizacion.nStatus == 3">
+                            <i class="pi pi-money-bill" style="color: blue;">Comprobante Rechazado</i>
+                        </td>
+                        <td *ngIf="cotizacion.nStatus == 0 || cotizacion.nStatus == 3">
+                            <button pButton pRipple icon="pi pi-cloud-upload" class="p-button-rounded p-button-info p-mr-2" (click)="muestraFormComprobante(cotizacion.twCotizacionesDetalle)"></button>
+                        </td>
+                        <td *ngIf="cotizacion.nStatus == 1">
+                            En espera de ser aprobado
+                        </td>
+                        <td *ngIf="cotizacion.nStatus == 2">
+                            Preparando su pedido
+                        </td>
+                        <td> <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="generarCotizacionPdf(cotizacion.twCotizacionesDetalle.nId)"></button></td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">

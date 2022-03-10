@@ -22,6 +22,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
 import { interceptorProvider } from './shared/interceptors/prod-interceptor.service';
+import { DialogService } from 'primeng/dynamicdialog';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { interceptorProvider } from './shared/interceptors/prod-interceptor.serv
          ProductService,
          MessageService, 
          ConfirmationService,
+         DialogService,
          interceptorProvider
     ],
     bootstrap: [AppComponent],

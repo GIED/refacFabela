@@ -22,6 +22,7 @@ import {ColorPickerModule} from 'primeng/colorpicker';
 import {ContextMenuModule} from 'primeng/contextmenu';
 import {DataViewModule} from 'primeng/dataview';
 import {DialogModule} from 'primeng/dialog';
+import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {DividerModule} from 'primeng/divider';
 import {DragDropModule} from 'primeng/dragdrop';
 import {DropdownModule} from 'primeng/dropdown';
@@ -118,6 +119,7 @@ FullCalendarModule.registerPlugins([
         ContextMenuModule,
         DataViewModule,
         DialogModule,
+        DynamicDialogModule,
         DividerModule,
         DragDropModule,
         DropdownModule,

@@ -1,12 +1,20 @@
+import { Model } from 'src/app/shared/utils/model';
 import { TwCotizacion } from '../../productos/model/TcCotizacion';
-export class TwPagoComprobanteInternet{
+import { TcCliente } from '../../administracion/model/TcCliente';
+export class TwPagoComprobanteInternet implements Model{
 
     nId: number;
 	nIdCotizacion:number;
 	nIdCliente:number;
 	sComprobante:string;
     nStatus:number;
-	twCotizacionesDetalle:TwCotizacion=new TwCotizacion();
+	sObservaciones:string;
+	dFechaCarga:Date;
+	fFechaValidacion:Date;
+	twCotizacionesDetalle:TwCotizacion;
+	tcCliente:TcCliente;
+	
+	
 
 
 }

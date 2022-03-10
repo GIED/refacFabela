@@ -73,13 +73,15 @@ static generarVentaPedidoPdf='/getVentaPedido?';
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';
 static consultaCotizaciones='/consultaCotizaciones';
-static consultaCotizacionDistribuidor='/consultaCotizacionDistribuidor?';
 static consultaCotizacionId='/consultaCotizacionId?';
 static generarCotizacionPdf='/getCotizacion?';
 
 //ventasPorInternet
+static registraCotizacionInternet= '/guardaRegistroCotizacionInternet'
 static guardaComprobante='/guardaComprobante';
+static consultaCotizacionDistribuidor='/consultaCotizacionDistribuidor?';
 static consultaPagoComprobante='/consultaPagoComprobante?'
+static actualizarEstatusComprobante= '/actualizarEstatusComprobante'
 
 //Tablero
 static obtenerTotalesGeneralesTablero='/totales-generales-tablero';

@@ -1,5 +1,6 @@
 <div class="p-grid">
     <div class="p-col-12">
+
         <div class="card">
             <div class="p-text-center">
                 <h2>Comprobantes Cargados</h2>
@@ -32,41 +33,40 @@
                         <th pSortableColumn="dFecha">
                             Fecha
                         </th>
-
                         <th pSortableColumn="nTotalCotizacion">
                             Total Cotización
                         </th>
                         <th>Estatus</th>
-                        <th>Descargar Comprobante</th>
                         <th>Acción</th>
+
 
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-pago>
-                    <tr class="p-text-center">
+                    <tr>
                         <td>
-                            {{pago.twCotizacion.tcCliente.sRazonSocial }}
+                            {{pago.twCotizacionesDetalle.tcCliente.sRazonSocial}}
                         </td>
-                        <td>{{pago.twCotizacion.sFolioCotizacion}}</td>
+                        <td>{{pago.twCotizacionesDetalle.sFolioCotizacion}}</td>
                         <td>
-                            {{pago.twCotizacion.dFecha | date }}
+                            {{pago.twCotizacionesDetalle.dFecha | date }}
                         </td>
 
                         <td>
-                            {{ pago.twCotizacion.nTotalCotizacion | number }}
+                            {{ pago.twCotizacionesDetalle.nTotalCotizacion | number }}
+                        </td>
+                        <td *ngIf="pago.nStatus == 0">
+                            <i class="pi pi-times" style="color: orange;"> Rechazado</i>
                         </td>
                         <td *ngIf="pago.nStatus == 1">
-                            <i *ngIf="cotizacion.nVigencia == 0" class="pi pi-check" style="color: green;"></i>
-                            <i *ngIf="cotizacion.nVigencia == 1" class="pi pi-times" style="color: red;"></i>
+                            <i class="pi pi-times" style="color: red;"> Sin validar</i>
                         </td>
                         <td *ngIf="pago.nStatus == 2">
-                            <i class="pi pi-money-bill" style="color: blue;"></i>
+                            <i class="pi pi-check" style="color: green;"> validado</i>
                         </td>
-
-                        <td *ngIf="cotizacion.nEstatus == 1">
-
+                        <td>
+                            <button type="button" (click)="show(pago)" pButton icon="pi pi-info-circle" label="Ver"></button>
                         </td>
-                        <td> <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="generarCotizacionPdf(cotizacion.nId)"></button></td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
@@ -75,12 +75,8 @@
                     </div>
                 </ng-template>
             </p-table>
-
-
-
-            <p-confirmDialog [style]="{ width: '600px' }"></p-confirmDialog>
-
         </div>
+
     </div>
 
 </div>

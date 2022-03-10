@@ -1,7 +1,7 @@
 import { TvStockProducto } from "src/app/productos/model/TvStockProducto";
 import { TwCotizacion } from '../../productos/model/TcCotizacion';
 
-export interface DatosVenta{
+export class DatosVenta{
     idCliente?:number;
     idUsuario?:number;
     sFolioVenta?:string;

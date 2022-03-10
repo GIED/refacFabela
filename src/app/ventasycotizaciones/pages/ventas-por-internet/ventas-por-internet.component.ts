@@ -15,6 +15,8 @@ import { MessageService } from 'primeng/api';
 import { VentasCotizacionesService } from 'src/app/shared/service/ventas-cotizaciones.service';
 import { TcCliente } from '../../../administracion/model/TcCliente';
 import { VentasService } from 'src/app/shared/service/ventas.service';
+import { TwPagoComprobanteInternet } from '../../model/TwPagoComprobanteInternet';
+import { VentasInternetService } from '../../../shared/service/ventas-internet.service';
 
 @Component({
   selector: 'app-ventas-por-internet',
@@ -52,6 +54,8 @@ export class VentasPorInternetComponent implements OnInit {
   mostrarCredito:boolean=false;
 
   saldoGeneralCliente:SaldoGeneralCliente;
+
+  comprobante:TwPagoComprobanteInternet = new TwPagoComprobanteInternet(); 
   
   total: number = 0;
   nIdProducto:number;
@@ -62,7 +66,8 @@ export class VentasPorInternetComponent implements OnInit {
               private productoService:ProductoService, 
               private messageService: MessageService,
               private ventasCotizacionService: VentasCotizacionesService,
-              private ventaService:VentasService) {
+              private ventaService:VentasService,
+              private ventaInternetService: VentasInternetService) {
     this.saldoGeneralCliente= new SaldoGeneralCliente();
     this.listaProductos=[];
   }
@@ -262,15 +267,23 @@ export class VentasPorInternetComponent implements OnInit {
     this.listaCotización = productoCotizado;
     console.log("lista enviada");
      console.log(this.listaCotización);
-  
+    
+    //registra cotizacion en twCotizacion
     this.ventasCotizacionService.guardaCotizacion(this.listaCotización).subscribe(cotizacionRegistrada =>{
   
       if (cotizacionRegistrada.nId !== null) {
         console.log(this.listaProductos);
         console.log(this.saldoGeneralCliente);
         this.cotizacionData = cotizacionRegistrada;
-        this.generarCotizacionPdf(this.cotizacionData.nId);
-        this.soloCotizacion();
+
+        this.comprobante.nIdCotizacion=this.cotizacionData.nId;
+        this.comprobante.nIdCliente=this.cotizacionData.nIdCliente;
+        this.comprobante.nStatus=0;
+        //regitra datos en tabla twPagoComprobanteInternet
+        this.ventaInternetService.guardaRegistroCI(this.comprobante).subscribe(resp =>{
+          this.generarCotizacionPdf(resp.twPagoComprobanteInternet.nIdCotizacion);
+          this.soloCotizacion();
+        });
       }
      
     });
@@ -387,7 +400,7 @@ generarVentaPdf(idVenta:number){
 
 }
 
-  findIndexById(id: number, arreglo:TvStockProducto[]): number {
+findIndexById(id: number, arreglo:TvStockProducto[]): number {
     let index = -1;
     for (let i = 0; i < arreglo.length; i++) {
         if (arreglo[i].nIdProducto === id) {
@@ -398,7 +411,7 @@ generarVentaPdf(idVenta:number){
     return index;
   }
 
-  createFolio(): string {
+createFolio(): string {
     let folio = '';
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for ( let i = 0; i < 5; i++ ) {

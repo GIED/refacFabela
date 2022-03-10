@@ -64,8 +64,11 @@ export class VentasService {
   }
 
   guardaVentaProductoEntregaId(ventaProductoDto:VentaProductoDto){
+    const httpOptions = {
+      responseType: 'text' as 'json'
+    };
     let url = environment.servicios.apiRefacFabela + locator.guardaVentaProductoEntrega;
-    return this.http.post<any>(url,ventaProductoDto);
+    return this.http.post<any>(url,ventaProductoDto,httpOptions);
   }
 
   generarVentaPdf(nIdVenta: number){

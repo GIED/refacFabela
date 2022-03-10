@@ -1,0 +1,31 @@
+<form [formGroup]="formGrp" class="p-fluid p-pt-4">
+    <div class="p-grid  card-container green-container">
+        <div class="p-field p-col-6 p-md-6">
+            <img src="http://localhost:4043/api/refacFabela/verComprobante/{{twPagoComprobanteInternet.sComprobante}}" class="grid grid-nogutter justify-content-center" width="250" alt="">
+        </div>
+        <div class="p-field p-col-6 p-md-6">
+            <div class=" p-col-12 p-md-12" *ngFor="let resp of respuestas" class="field-checkbox">
+                <p-radioButton [value]="resp.key" formControlName="validaCtrl" (onClick)="obtenerValor()"></p-radioButton>
+                <label>{{resp.name}}</label>
+            </div>
+            <div class=" p-col-12 p-md-12 mt-4" *ngIf="mostrar">
+                <span class="p-float-label">
+                    <textarea id="float-input" formControlName="observaCtrl" pInputTextarea></textarea>
+                    <label for="float-input">Observaciones</label>
+                </span>
+            </div>
+
+        </div>
+    </div>
+    <div class="p-grid p-jc-end">
+        <div class="p-col-3">
+            <button pButton pRipple type="button" class="p-button-outlined p-button-danger p-button-sm" (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times" required></button>
+        </div>
+        <div class="p-col-3" *ngIf="mostrar">
+            <button pButton pRipple type="button" class="p-button-warning p-button-sm p-button-raised" (click)="onRechazarClicked()" label="Rechazar Comprobante" icon="pi pi-times" [disabled]="formGrp.invalid"></button>
+        </div>
+        <div class="p-col-3" *ngIf="!mostrar">
+            <button pButton pRipple type="button" class="p-button-success p-button-sm p-button-raised" (click)="onGuardarClicked()" label="Aprobar venta" icon="pi pi-check" [disabled]="formGrp.invalid"></button>
+        </div>
+    </div>
+</form>
