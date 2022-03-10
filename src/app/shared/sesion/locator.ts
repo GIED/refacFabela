@@ -48,6 +48,12 @@ static obtenerProductoBodegas = '/obtenerProductoBodegas?';
 static obtenerAnaqueles= '/catalogoAnaquel';
 //api Nivel
 static obtenerNivel= '/catalogoNivel';
+//api Pedidos
+static obtenerProductosPedido='/obtenerProductosPedido?';
+static obtenerPedidosEstatus='/obtenerPedidosEstatus?';
+static guardaPedido= '/guardarPedido';
+static guardaIngresoProductoPedido= '/ingresoProductoPedido';
+static generarPedidoPdf='/getPedidoId?';
 
 //Inventario
 static consultaInventario ='/obtenerInventarioEsp?';

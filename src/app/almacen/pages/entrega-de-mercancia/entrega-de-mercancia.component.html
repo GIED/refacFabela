@@ -149,8 +149,12 @@
                             </td>
                              <td><span class="p-column-title"></span> {{venta.nTotalPartida | number}}
                             </td>
-                            <td> <p-checkbox [(ngModel)]="venta.nEstatusEntregaAlmacen" [binary]="true"
-                            (onChange)=entregaProducto(venta)></p-checkbox></td>
+                            <td> 
+                                <div *ngIf="venta.nEstatusEntregaAlmacen==false"><p-checkbox [(ngModel)]="venta.nEstatusEntregaAlmacen" [binary]="true"
+                            (onChange)=entregaProducto(venta)></p-checkbox>
+                              </div>
+                              <div *ngIf="venta.nEstatusEntregaAlmacen==true">Entregado</div>
+                            </td>
                            
                            
                                

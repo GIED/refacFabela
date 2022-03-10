@@ -19,7 +19,9 @@ export class InputBusquedaComponent implements OnInit {
   listaNoParte:TcProducto[]; 
   mostrarSugerencias: boolean;
   nId:number;
+  producto:TcProducto;
   @Output() consultarPorId: EventEmitter<number> = new EventEmitter();
+  @Output() productoSeleccionado: EventEmitter<TcProducto> = new EventEmitter();
 
   constructor(private productosService:ProductoService, private messageService:MessageService) { }
 
@@ -66,12 +68,20 @@ export class InputBusquedaComponent implements OnInit {
   
 }
 
-valorSeleccionado(){
-  console.log(this.nId);
- this.consultarPorId.emit(this.nId)
- this.mostrarSugerencias=false;
- this.sNoParte='';
+  valorSeleccionado() {
+    //console.log(this.nId);
+    this.consultarPorId.emit(this.nId)
 
-}
+    for (let i in this.listaNoParte) {
+      if (this.listaNoParte[i].nId == this.nId) {
+        this.producto = this.listaNoParte[i];
+      }
+    }
+
+    this.productoSeleccionado.emit(this.producto);
+    this.mostrarSugerencias = false;
+    this.sNoParte = '';
+
+  }
 
 }

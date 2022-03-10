@@ -32,6 +32,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ProductosModule,
     VentasycotizacionesModule,
     ReactiveFormsModule,  
+    ProductosModule
   ], 
   exports:[
    
