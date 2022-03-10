@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { ProductoService } from 'src/app/shared/service/producto.service';
@@ -8,6 +8,7 @@ import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
 import { TcProducto } from '../../model/TcProducto';
 import { TwPedidoProducto } from '../../model/TwPedidoProducto';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
+import { TvPedidoDetalle } from '../../model/TvPedidoDetalle';
 
 @Component({
   selector: 'app-pedido-productos',
@@ -16,7 +17,12 @@ import { TwProductoBodega } from '../../model/TwProductoBodega';
 })
 export class PedidoProductosComponent implements OnInit {
 
-  listaPedidos:TwPedidoProducto[];
+  @Input() listaPedidos: TwPedidoProducto[];
+  @Input() banIngreso: boolean;
+  @Output() listaPedidoDetalle: EventEmitter<TvPedidoDetalle[]> = new EventEmitter();
+  
+
+ 
   productDialog: boolean = false;
     detalleDialog: boolean = false;
     alternativosDialog: boolean = false;
@@ -42,12 +48,14 @@ export class PedidoProductosComponent implements OnInit {
       private confirmationService: ConfirmationService, ) { }
 
   ngOnInit(): void {
-    this.consultaProductosRegistrados();
+
+    console.log(this.banIngreso);
+    
   }
 
-  consultaProductosRegistrados(){
+  consultaProductosRegistrados(nId:number){
 
-    this.pedidosService.obtenerProductosPedido(1).subscribe(data=>{
+    this.pedidosService.obtenerProductosPedido(nId).subscribe(data=>{
    this.listaPedidos=data;
    console.log(this.listaPedidos);
 
@@ -113,6 +121,29 @@ saveProduct(producto: TcProducto) {
   
 }
 
+entregaProducto(producto:TwPedidoProducto){
+
+ this.pedidosService.guardaIngresoProductoPedido(producto).subscribe(data=>{
+
+  for (let index = 0; index < this.listaPedidos.length; index++) {
+    if(this.listaPedidos[index].nId==data.nId){
+       
+      this.listaPedidos[index].nEstatus=data.nEstatus;
+      this.listaPedidos[index].dFechaRecibida=data.dFechaRecibida;
+      
+      
+    }
+    
+  }
+
+  this.messageService.add({ severity: 'success', summary: 'Registro Correcto', detail: 'Se registro el ingreso del producto', life: 3000 });
+  this.obtenerPedidoDetalle();
+
+ });
+
+
+}
+
 hideDialog(valor: boolean) {
   this.productDialog = valor;
 }
@@ -132,6 +163,14 @@ findIndexById(id: number): number {
       }
   }
   return index;
+}
+
+obtenerPedidoDetalle(){
+  this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
+    this.listaPedidoDetalle.emit(data);
+  
+      
+    })
 }
 createId(): string {
   let id = '';

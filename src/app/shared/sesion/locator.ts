@@ -52,6 +52,7 @@ static obtenerNivel= '/catalogoNivel';
 static obtenerProductosPedido='/obtenerProductosPedido?';
 static obtenerPedidosEstatus='/obtenerPedidosEstatus?';
 static guardaPedido= '/guardarPedido';
+static guardaIngresoProductoPedido= '/ingresoProductoPedido';
 static generarPedidoPdf='/getPedidoId?';
 
 //Inventario

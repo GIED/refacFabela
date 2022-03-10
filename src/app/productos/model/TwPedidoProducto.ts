@@ -12,7 +12,7 @@ export class TwPedidoProducto{
     nIdProveedor: number;
     nCantidaRecibida:number;
     dFechaRecibida: Date;
-    nEstatus:number;
+    nEstatus:boolean;
     sObservaciones: string;
     nIdUsuario:number;
     tcProducto: TcProducto;

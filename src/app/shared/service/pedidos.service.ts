@@ -30,6 +30,10 @@ export class PedidosService {
         let url = environment.servicios.apiRefacFabela + locator.guardaPedido;
         return this.http.post<any>(url,pedidoDto);
       }
+      guardaIngresoProductoPedido(twPedidoProducto:TwPedidoProducto){
+        let url = environment.servicios.apiRefacFabela + locator.guardaIngresoProductoPedido;
+        return this.http.post<any>(url,twPedidoProducto);
+      }
 
       generarPedidoPdf(nId: number){
         const httpOptions = {

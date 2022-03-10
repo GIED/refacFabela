@@ -33,16 +33,19 @@ tcPedidoProducto:TwPedidoProducto;
 proveedor:Proveedores;
 mostraarListaCompra:boolean=false;
 pedidoDto: PedidoDto;
+productDialog:boolean;
+titulo:string;
+producto:TcProducto;
 
 
-  constructor(private productoService: ProductoService,
+  constructor(private productosService: ProductoService,
      private proveedorService: ProveedorService, 
      private fb: FormBuilder,
       private usuarioService: UsuarioService,
        private tokenService: TokenService, 
        private pedidosService: PedidosService,
        private messageService: MessageService,  private confirmationService: ConfirmationService) { 
-    this._initFormGroup();
+
     this.listaProducto=[];
     this.listaProveedores=[];
     this.listaProductosCompra=[];
@@ -118,7 +121,7 @@ pedidoDto: PedidoDto;
       this.tcPedidoProducto.nIdProveedor=this.fProducto.nIdProveedorCtrl.value;
       this.tcPedidoProducto.nCantidaRecibida=null;
       this.tcPedidoProducto.dFechaRecibida=null;
-      this.tcPedidoProducto.nEstatus=0;
+      this.tcPedidoProducto.nEstatus=false;
       this.tcPedidoProducto.sObservaciones=null;   
       this.tcPedidoProducto.nIdUsuario=this.tokenService.getIdUser(); 
       this.tcPedidoProducto.tcProducto=producto;      
@@ -199,7 +202,7 @@ this.messageService.add({ severity: 'success', summary: 'Producto eliminado', de
      this.pedidoDto=data;
      
       this.cerrarNuevoPedido();
-      this.generarVentaPdf( this.pedidoDto.nId);
+      this.generarPedidoPdf( this.pedidoDto.nId);
       console.log(data);
      })
 
@@ -217,7 +220,7 @@ this.messageService.add({ severity: 'success', summary: 'Producto eliminado', de
       })
   }
 
-  generarVentaPdf(nId:number){
+  generarPedidoPdf(nId:number){
 
     console.log("Se va a generar el comprobante");
 
@@ -233,7 +236,7 @@ this.messageService.add({ severity: 'success', summary: 'Producto eliminado', de
           anchor.href = fileURL;
           anchor.click();
           this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Comprobante de Pedido Generado', life: 6000});
-          //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+          //una vez generado el reporte limproducto:TcProducto;pia el formulario para una nueva venta o cotización 
          
         } else {
           this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se puedo generar el comprobante del pedido', life: 6000});
@@ -242,6 +245,39 @@ this.messageService.add({ severity: 'success', summary: 'Producto eliminado', de
     });
   
   }
+
+  editarProducto(producto:TcProducto){
+    this.producto=producto;
+    this.titulo="Registro de Productos"
+    this.productDialog=true;
+
+  }
+
+  hideDialog(){
+    this.productDialog=false;
+
+  }
+
+  saveProduct(producto:TcProducto){
+
+
+    if (producto.nId) {
+      this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
+          this.listaProducto[0].nPrecioPeso = productoActualizado.nPrecioPeso;
+          this.messageService.add({ severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000 });
+      });
+  }
+  else {
+      this.productosService.guardaProducto(producto).subscribe(productoNuevo => {
+          this.listaProducto.push(productoNuevo);
+          this.messageService.add({ severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000 });
+      });
+  }
+  this.productDialog = false;
+
+  }
+
+ 
 
   
   

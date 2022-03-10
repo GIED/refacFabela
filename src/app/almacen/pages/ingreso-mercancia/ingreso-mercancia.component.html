@@ -1,104 +1,114 @@
 <div class="p-grid">
+
     <div class="p-col-12">
-        <p-toast></p-toast>
-        <div class="card">
-            <div class="p-text-center">
-                <h3>Ingreso de mercancia</h3>
-            </div>
+        <div class="card">           
 
+               <!--Tabla de productos general-->
+            <p-table #dt [value]="listaPedidoDetalle"  [rows]="10" [paginator]="true"
+            [globalFilterFields]="['nId','sCvePedido','dFechaPedido','sNombreUsuario','sNombreUsuario','nTotalProductos','nTotalEntregados','nTotalSinEntregar','nEstatus']" [(selection)]="selectedProducts"
+            [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+            [showCurrentPageReport]="true">
+            <ng-template pTemplate="caption">
+                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                    <h5 class="p-m-0">Administración de pedidos</h5>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Buscar Pedido" />
+                    </span>
+                </div>
+            </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="nId">Pedido
+                            <p-sortIcon field="nId"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="sCvePedido">Clave Pedido
+                            <p-sortIcon field="sCvePedido"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="dFechaPedido">Fecha de Pedido
+                            <p-sortIcon field="dFechaPedido"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="sNombreUsuario">Usuario
+                            <p-sortIcon field="sNombreUsuario"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nTotalProductos">Total de Productos
+                            <p-sortIcon field="nTotalProductos"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nTotalEntregados">Entregados
+                            <p-sortIcon field="nTotalEntregados"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nTotalSinEntregar">Sin Entregar
+                            <p-sortIcon field="nTotalSinEntregar"></p-sortIcon>
+                        </th>                   
+                       
+                        <th pSortableColumn="nEstatus">Estatus
+                            <p-sortIcon field="nEstatus"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-pedido>
+                    <tr>
+                        <td><span class="p-column-title">id</span> {{pedido.nId}}
+                        </td>
+                       <td><span class="p-column-title">No de parte</span> {{pedido.sCvePedido}}
+                        </td>
+                        <td><span class="p-column-title">producto</span> {{pedido.dFechaPedido | date}}
+                        </td>
+                        <td><span class="p-column-title">Descipcion</span> {{pedido.sNombreUsuario}}
+                        </td>
+                        <td><span class="p-column-title">Status</span> {{pedido.nTotalProductos}}
+                        </td> 
+                        <td><span class="p-column-title">Status</span> {{pedido.nTotalEntregados}}
+                        </td> 
+                        <td><span class="p-column-title">Status</span> {{pedido.nTotalSinEntregar}}
+                        </td> 
+                        <td><span class="p-column-title">Status</span> Pendiente de Entrega
+                        </td> 
+                        <td>
+                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
+                                (click)="consultaProductosRegistrados(pedido.nId)"></button>
+                          <!-- <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning"
+                                (click)="alternativosProduct(pedido.tcProducto.nId, pedido.tcProducto.sProducto)"></button>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="editarProducto(pedido.tcProducto)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                (click)="deleteProduct(pedido.tcProducto)"></button>--> 
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        Total de Productos: {{listaProductos ? listaProductos.length : 0 }}
+                    </div>
+                </ng-template>
+            </p-table>
         </div>
-
-        <p-table [value]="products" dataKey="name" responsiveLayout="scroll">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th style="width: 3rem"></th>
-                    <th pSortableColumn="name">No. de pedido
-                        <p-sortIcon field="name"></p-sortIcon>
-                    </th>
-
-                    <th pSortableColumn="price">Proveedor
-                        <p-sortIcon field="price"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="category">Fecha de solicitud
-                        <p-sortIcon field="category"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="rating">Total de productos a recibir
-                        <p-sortIcon field="rating"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="inventoryStatus">Estatus
-                        <p-sortIcon field="inventoryStatus"></p-sortIcon>
-                    </th>
-                </tr>
+        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+            styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
+                    (guardarProducto)="saveProduct($event)"></app-modal-producto>
             </ng-template>
-            <ng-template pTemplate="body" let-product let-expanded="expanded">
-                <tr>
-                    <td>
-                        <button type="button" pButton pRipple [pRowToggler]="product" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
-                    </td>
-                    <td>{{product.code}}</td>
+        </p-dialog>
 
-                    <td>{{product.name}}</td>
-                    <td>15/10/2021</td>
-                    <td>
-                        {{product.quantity}}
-                    </td>
-                    <td><span>completa</span></td>
-                </tr>
+           <!--Detalle de pedidos-->
+
+        <p-dialog [(visible)]="detalleDialog" [style]="{width: '1200px'}" header="Detalle del Pedido" [modal]="true"
+            styleClass="p-fluid" [closable]="false">
+            <ng-template pTemplate="content">
+              
+                
+                <app-pedido-productos [listaPedidos]="listaPedidos"  [banIngreso]="true" (listaPedidoDetalle)="obtenerPedidosEstatus()"  >  </app-pedido-productos>
+
             </ng-template>
-            <ng-template pTemplate="rowexpansion" let-product>
-                <tr>
-                    <td colspan="7">
-                        <div class="p-p-3">
-                            <p-table [value]="product.orders" dataKey="id">
-                                <ng-template pTemplate="header">
-                                    <tr>
-                                        <th colspan="6" class="p-text-center">
-                                            <h4>Mercancia Recibida del No. de Pedido {{product.code}}</h4>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th pSortableColumn="id">No. de parte
-                                            <p-sortIcon field="price"></p-sortIcon>
-                                        </th>
-                                        <th pSortableColumn="customer">Nombre Producto
-                                            <p-sortIcon field="customer"></p-sortIcon>
-                                        </th>
-                                        <th pSortableColumn="amount">Cantidad Solicitada
-                                            <p-sortIcon field="amount"></p-sortIcon>
-                                        </th>
-                                        <th pSortableColumn="amount">Cantidad Recibida
-                                            <p-sortIcon field="amount"></p-sortIcon>
-                                        </th>
-                                        <th pSortableColumn="status">Estatus
-                                            <p-sortIcon field="status"></p-sortIcon>
-                                        </th>
-                                        <th style="width: 4rem"></th>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body" let-order>
-                                    <tr>
-                                        <td>{{order.id}}</td>
-                                        <td>{{order.customer}}</td>
-                                        <td>{{order.amount}}</td>
-                                        <td>
-                                            <p-inputNumber [(ngModel)]="order.quantity" [min]="0" [max]="100" [showButtons]="true"></p-inputNumber>
-                                        </td>
-                                        <td><span [class]="'order-badge order-' + order.status.toLowerCase()">{{order.status}}</span></td>
-                                        <td>
-                                            <p-checkbox name="groupname" value="val1" [(ngModel)]="order.quantity"></p-checkbox>
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="emptymessage">
-                                    <tr>
-                                        <td colspan="6">There are no order for this product yet.</td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
-                        </div>
-                    </td>
-                </tr>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialogDetalle()"></button>
             </ng-template>
-        </p-table>
+        </p-dialog>      
+      
+       
     </div>
 </div>

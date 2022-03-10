@@ -38,6 +38,7 @@ export class RegistroPedidosComponent implements OnInit {
     traspaso:boolean=false;
     listaPedidoDetalle:TvPedidoDetalle[];
     registroPedido:boolean;
+   
 
   constructor(private pedidosService: PedidosService,  private productosService: ProductoService,
     private bodegasService: BodegasService,
@@ -49,12 +50,13 @@ export class RegistroPedidosComponent implements OnInit {
     this.obtenerPedidosEstatus();
   }
 
-  consultaProductosRegistrados(mId:number){
-    this.detalleDialog=true;
+  consultaProductosRegistrados(nId:number){
+   
 
-    this.pedidosService.obtenerProductosPedido(mId).subscribe(data=>{
+    this.pedidosService.obtenerProductosPedido(nId).subscribe(data=>{
    this.listaPedidos=data;
    console.log(this.listaPedidos);
+   this.detalleDialog=true;
 
 
     })
@@ -65,6 +67,8 @@ export class RegistroPedidosComponent implements OnInit {
   cerrarNuevoPedido(){
     this.registroPedido=false;
   }
+
+ 
  
 
  obtenerPedidosEstatus(){
@@ -105,6 +109,34 @@ hideDialogAlternativos() {
 hideDialogDetalle() {
   this.detalleDialog = false;
 }
+
+generarPedidoPdf(nId:number){
+
+  console.log("Se va a generar el comprobante");
+
+  this.pedidosService.generarPedidoPdf(nId).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'pedido_' +nId + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Comprobante de Pedido Generado', life: 6000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se puedo generar el comprobante del pedido', life: 6000});
+      }
+
+  });
+
+}
+
+
 
 
 

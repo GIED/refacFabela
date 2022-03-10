@@ -35,6 +35,10 @@
                         <td>{{producto.sDescripcion}}</td>
                         <td>{{producto.nPrecioPeso | number}}</td>
                         <td>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="editarProducto(producto)"></button>
+                        </td>
+                        <td>
                             <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0"
                                 [max]="1000" [class.is-invalid]="validanCantidadCtrl"></p-inputNumber>
                             <small class="p-error" *ngIf="validanCantidadCtrl">*Registrar Cantidad.</small>
@@ -62,7 +66,7 @@
 
 <div class="p-grid" *ngIf="mostraarListaCompra" class="p-col-12 p-lg-12 p-md-12 ">
     <div class="p-text-center">
-        <h3>Lista de productos a pedir</h3>
+        <h3>Lista de productos por pedir</h3>
     </div>
 
     <div class="p-col-12 p-lg-12 p-md-12 ">
@@ -110,4 +114,14 @@
     </div>
 
 </div>
+
+<!--registro de productos-->
+
+<p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+styleClass="p-fluid">
+<ng-template pTemplate="content">
+    <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
+        (guardarProducto)="saveProduct($event)"></app-modal-producto>
+</ng-template>
+</p-dialog>
 

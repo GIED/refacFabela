@@ -44,9 +44,17 @@ import { AltaPedidosComponent } from './components/alta-pedidos/alta-pedidos.com
     
   ],
   exports:[
-    ModalProductoComponent,
-    InputBusquedaComponent,
-    ModalProductosBodegaComponent   
+    RegistroProductoComponent, 
+    HistorialProductoComponent,
+    AlternativosProductoComponent, 
+    ModalProductoComponent, 
+    HistoriaPrecioProductoComponent, 
+    InputBusquedaComponent, 
+    ModalProductosBodegaComponent,
+    ModalProductosAlternativosComponent,
+    RegistroPedidosComponent,
+    PedidoProductosComponent,
+    AltaPedidosComponent,
   ]
 })
 export class ProductosModule { }
