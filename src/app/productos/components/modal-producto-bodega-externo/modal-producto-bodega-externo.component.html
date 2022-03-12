@@ -1,10 +1,23 @@
 <form [formGroup]="formGrp" class="p-fluid p-pt-4">
     <div class="p-grid">
-
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">No parte: {{productoBodega.tcProducto.sNoParte}} </div>
+        <div class="p-col-12 p-text-center">
+            <h3>Ubicación Actual</h3>
+        </div>
         <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Producto: {{productoBodega.tcProducto.sProducto}}</div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center"><span style="background: purple; color: white;">Stock: {{productoBodega.nCantidad}}</span></div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Bodega: {{productoBodega.tcBodega.sBodega}}</div>
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
+            Bodega: {{productoBodega.tcBodega.sBodega}} Anaquel: {{productoBodega.tcAnaquel.sAnaquel}} Nivel: {{productoBodega.tcNivel.sNivel}}
+
+        </div>
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center"><span style="background: purple; color: white;">Stock Actual: {{productoBodega.nCantidad}}</span></div>
+        <p-divider></p-divider>
+        <div class="p-col-12 p-text-center">
+            <h3>Ubicación Destino</h3>
+        </div>
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
+            <label>Bodega<strong>*</strong></label>
+            <p-dropdown [options]="listaAux" optionLabel="sBodega" optionValue="nId" formControlName="bodegaCtrl" placeholder="Selecciona una Bodega" [showClear]="true" optionDisabled="inactive">
+            </p-dropdown>
+        </div>
         <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
             <label>Anaquel<strong>*</strong></label>
             <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" formControlName="anaquelCtrl" placeholder="Selecciona un Anaquel" [showClear]="true">

@@ -1,52 +1,78 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ModelContainer } from '../../../shared/utils/model-container';
-import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { ModeActionOnModel } from '../../../shared/utils/model-action-on-model';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
-import { ObjectUtils } from '../../../shared/utils/object-ultis';
-import { TcAnaquel } from 'src/app/productos/model/TcAnaquel';
+import { TcAnaquel } from '../../model/TcAnaquel';
 import { TcNivel } from '../../model/TcNivel';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { AnaquelService } from '../../../shared/service/anaquel.service';
 import { NivelService } from '../../../shared/service/nivel.service';
 import { TraspasoService } from '../../../shared/service/traspaso.service';
+import { ModeActionOnModel } from '../../../shared/utils/model-action-on-model';
+import { ObjectUtils } from '../../../shared/utils/object-ultis';
+import { BodegasService } from '../../../shared/service/bodegas.service';
+import { TcBodega } from '../../model/TcBodega';
+
+interface Bodegai{
+  nId?: number;
+  inactive?: boolean;
+  sBodega?: string;
+}
 
 @Component({
-  selector: 'app-modal-productos-bodega',
-  templateUrl: './modal-productos-bodega.component.html',
-  styleUrls: ['./modal-productos-bodega.component.scss']
+  selector: 'app-modal-producto-bodega-externo',
+  templateUrl: './modal-producto-bodega-externo.component.html',
+  styleUrls: ['./modal-producto-bodega-externo.component.scss']
 })
-export class ModalProductosBodegaComponent implements OnInit {
+export class ModalProductoBodegaExternoComponent implements OnInit {
 
   modelContainer: ModelContainer;
   formGrp: FormGroup;
   productoBodega:TwProductoBodega;
 
+  listaBodega:TcBodega[];
+  listaAux:Bodegai[]=[];
+  bodegaI:Bodegai;
   listaAnaquel: TcAnaquel[];
   listaNivel: TcNivel[];
 
 
-  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig, private anaquelService: AnaquelService,
+  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig,private bodegasService: BodegasService, private anaquelService: AnaquelService,
     private nivelService: NivelService, private traspasoService:TraspasoService) {
     this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
    }
 
   ngOnInit(): void {
   this._initFormGroup();
+
   this.anaquelService.obtenerAnanquel().subscribe(anaquel => {
     this.listaAnaquel = anaquel;
-});
+  });
 
-this.nivelService.obtenerNivel().subscribe(nivel => {
+  this.nivelService.obtenerNivel().subscribe(nivel => {
     this.listaNivel = nivel;
+  });
+
+  this.bodegasService.obtenerBodegas().subscribe(bodegas => {
+
+    for (let index = 0; index < bodegas.length; index++) {
+      const valor = bodegas[index];
+      this.bodegaI={nId:valor.nId, sBodega:valor.sBodega, inactive: this.bodegaCtrl.value == valor.nId ? true : false};
+      this.listaAux.push(this.bodegaI);
+      
+    }
+
+    
+
+
 });
   }
 
   _initFormGroup(): void {
     let modelContainer: ModelContainer = this.config.data;
     this.productoBodega = ObjectUtils.isEmpty(modelContainer.modelData) ? new TwProductoBodega() : modelContainer.modelData as TwProductoBodega;
-    console.log(this.productoBodega);
     this.formGrp = new FormGroup({
+      bodegaCtrl: new FormControl(this.productoBodega.nIdBodega, [Validators.required]),
       anaquelCtrl: new FormControl(this.productoBodega.nIdAnaquel, [Validators.required]),
       nivelCtrl: new FormControl(this.productoBodega.nIdNivel,[Validators.required])
     });
@@ -77,6 +103,9 @@ this.nivelService.obtenerNivel().subscribe(nivel => {
 
   }
 
+  get bodegaCtrl() {
+    return this.formGrp.get('bodegaCtrl') as FormControl;
+  }
   get anaquelCtrl() {
     return this.formGrp.get('anaquelCtrl') as FormControl;
   }
@@ -85,9 +114,4 @@ this.nivelService.obtenerNivel().subscribe(nivel => {
     return this.formGrp.get('nivelCtrl') as FormControl;
   }
 
-  
 }
-
- 
-
-

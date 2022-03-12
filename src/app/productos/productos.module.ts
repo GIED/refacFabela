@@ -15,6 +15,7 @@ import { ModalProductosAlternativosComponent } from './components/modal-producto
 import { RegistroPedidosComponent } from './pages/administracion-pedidos/registro-pedidos.component';
 import { PedidoProductosComponent } from './components/pedido-productos/pedido-productos.component';
 import { AltaPedidosComponent } from './components/alta-pedidos/alta-pedidos.component';
+import { ModalProductoBodegaExternoComponent } from './components/modal-producto-bodega-externo/modal-producto-bodega-externo.component';
 
 
 
@@ -34,6 +35,7 @@ import { AltaPedidosComponent } from './components/alta-pedidos/alta-pedidos.com
     RegistroPedidosComponent,
     PedidoProductosComponent,
     AltaPedidosComponent,
+    ModalProductoBodegaExternoComponent,
     
   ],
   imports: [
@@ -51,6 +53,7 @@ import { AltaPedidosComponent } from './components/alta-pedidos/alta-pedidos.com
     HistoriaPrecioProductoComponent, 
     InputBusquedaComponent, 
     ModalProductosBodegaComponent,
+    ModalProductoBodegaExternoComponent,
     ModalProductosAlternativosComponent,
     RegistroPedidosComponent,
     PedidoProductosComponent,

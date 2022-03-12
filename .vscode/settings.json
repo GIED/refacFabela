@@ -1,4 +1,11 @@
 {
     "svn.ignoreMissingSvnWarning": true,
-    "angular.enable-strict-mode-prompt": false
+    "angular.enable-strict-mode-prompt": false,
+    "cSpell.words": [
+        "Distribución",
+        "Mercancía",
+        "Producto",
+        "productos",
+        "Traspaso"
+    ]
 }
