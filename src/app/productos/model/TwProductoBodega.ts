@@ -2,7 +2,8 @@ import { TcProducto } from './TcProducto';
 import { TcAnaquel } from './TcAnaquel';
 import { TcBodega } from './TcBodega';
 import { TcNivel } from './TcNivel';
-export class TwProductoBodega{
+import { Model } from '../../shared/utils/model';
+export class TwProductoBodega implements Model{
     nId:number;
 	
 	nIdBodega:number;

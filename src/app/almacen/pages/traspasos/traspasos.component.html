@@ -1,8 +1,39 @@
 <div class="p-col-12 p-text-center">
-    <h2>Trasado de Mercancia</h2>
+    <h2>Traspaso de Mercancía</h2>
     <hr />
 </div>
 <app-input-busqueda (consultarPorId)=obtenerBodegas($event)></app-input-busqueda>
 <br>
-<app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>
-</app-modal-productos-bodega>
+<div *ngIf="mostrar">
+    <div class="p-text-center">
+        <h3>Distribución por bodega del producto: {{listaProductoBodega[0].tcProducto.sNoParte}} </h3>
+    </div>
+
+    <p-table [value]="listaProductoBodega" responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Producto</th>
+                <th>Bodega</th>
+                <th>Anaquel</th>
+                <th>Nivel</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-bodega>
+            <tr>
+                <td>{{bodega.tcProducto.sProducto}}</td>
+                <td>{{bodega.tcBodega.sBodega}}</td>
+                <td>{{bodega.tcAnaquel.sAnaquel}}</td>
+                <td>{{bodega.tcNivel.sNivel}}</td>
+                <td>{{bodega.nCantidad}}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-home" class="p-button-rounded p-button-success p-mr-2" (click)="modalProductoBodega(bodega)" pTooltip="Movimiento Interno"></button>
+                    <button pButton pRipple icon="pi pi-send" class="p-button-rounded p-button-success p-mr-2" (click)="modalProductoBodegaExterno(bodega)" pTooltip="Movimiento Externo"></button>
+                </td>
+
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>

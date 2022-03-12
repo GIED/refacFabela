@@ -5,6 +5,7 @@ import { TokenService } from '../../../shared/service/token.service';
 import { MessageService } from 'primeng/api';
 import { VentasInternetService } from '../../../shared/service/ventas-internet.service';
 import { TwPagoComprobanteInternet } from '../../model/TwPagoComprobanteInternet';
+import { findIndex } from 'rxjs/operators';
 
 @Component({
   selector: 'app-pago-venta-internet',
@@ -14,7 +15,7 @@ import { TwPagoComprobanteInternet } from '../../model/TwPagoComprobanteInternet
 })
 export class PagoVentaInternetComponent implements OnInit {
 
-  listaCotizaciones: TwCotizacion[];
+  listaCotizaciones: TwPagoComprobanteInternet[];
   cotizacion: TwCotizacion;
   mostrarFormCarga:boolean;
   twPagoComprobanteInternet: TwPagoComprobanteInternet;
@@ -40,6 +41,8 @@ export class PagoVentaInternetComponent implements OnInit {
     }); 
 
   }
+
+  
 
   generarCotizacionPdf(idCotizacion:number){
 
@@ -77,8 +80,17 @@ export class PagoVentaInternetComponent implements OnInit {
     formData.append("archivo", comprobante);
     formData.append("id", this.cotizacion.nId.toString());
 
+    console.log('formData: ',formData)
+
     this.ventaInternetService.guardaVenta(formData).subscribe(respuesta =>{
-      this.twPagoComprobanteInternet=respuesta.TwPagoComprobanteInternet;
+      this.twPagoComprobanteInternet=respuesta.twPagoComprobanteInternet;
+      console.log(this.twPagoComprobanteInternet);
+      const index = this.listaCotizaciones.findIndex(t => t.nId == this.twPagoComprobanteInternet.nId);
+
+      console.log("index", index);
+
+      this.listaCotizaciones[index]=this.twPagoComprobanteInternet;
+      
       this.messageService.add({severity: 'success', summary: 'Correcto', detail: respuesta.mensaje, life: 3000});
     	this.mostrarFormCarga=false;
     }, error=>{

@@ -7,6 +7,7 @@ import { TwCotizacion } from '../../productos/model/TcCotizacion';
 import { TvStockProducto } from '../../productos/model/TvStockProducto';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { TwPagoComprobanteInternet } from '../../ventasycotizaciones/model/TwPagoComprobanteInternet';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,7 @@ export class VentasCotizacionesService {
 
   obtenerCotizacionDistribuidor(idUsuario: number){   
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionDistribuidor + 'idUsuario='+idUsuario;
-    return this.http.get<TwCotizacion[]>(url);
+    return this.http.get<TwPagoComprobanteInternet[]>(url);
   }
 
   obtenerCotizacionId(id: number){
