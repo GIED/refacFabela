@@ -3,6 +3,7 @@ import { Usuarios } from '../../administracion/interfaces/usuarios';
 import { TcEstatusVenta } from './TcEstatusVenta';
 import { TcFormaPago } from './TcFormaPago';
 import { TwCaja } from './TwCaja';
+import { TcTipoVenta } from './TcTipoVenta';
 export class TvVentasDetalle{
 
 nId?:number;
@@ -24,7 +25,8 @@ tcCliente?:Clientes;
 tcUsuario?:Usuarios;
 tcEstatusVenta?:TcEstatusVenta;
 descuento?:number;
-tcFormapago?:TcFormaPago;
+tcFormapago?:TcFormaPago = new TcFormaPago ;
 twCaja?:TwCaja;
+tcTipoVenta?: TcTipoVenta;
     
 }

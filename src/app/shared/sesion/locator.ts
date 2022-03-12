@@ -61,6 +61,7 @@ static consultaInventario ='/obtenerInventarioEsp?';
 static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?';
 static consultaVentaDetalleEstatusVenta='/obtenerVentasClienteDetalleEstatusVenta?';
 static consultaVentaDetalle='/obtenerVentasDetalle';
+static consultaVentaDetalleCajaVigente='/obtenerVentasCajaVigente';
 static consultaVentaDetalleEntrega='/obtenerVentasDetalleEntrega'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 static consultaProductoVentaId='/consultaProductoVentaId?';

@@ -102,6 +102,8 @@ export class EntregaDeMercanciaComponent implements OnInit {
         detail: "Se guardo la entrega del producto",
         life: 3000,
       });
+
+      this.consultaVentas();
     });
   }
 }

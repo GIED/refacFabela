@@ -30,6 +30,7 @@ export class CobrarComponent implements OnInit {
   listaFormaPago: TcFormaPago[];
   noVenta:number;
   totalVenta:number;
+  mostrarBalance:boolean;
 
 
   constructor( private messageService: MessageService, private ventasService:VentasService,
@@ -205,6 +206,17 @@ consultaVentas(){
               
                 
     
+                 }
+
+                 verBalance(){
+
+                  this.mostrarBalance=true;
+
+                 }
+
+                 cerrarBalance(){
+                   this.mostrarBalance=false;
+
                  }
 
 
