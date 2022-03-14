@@ -45,7 +45,7 @@ this.nivelService.obtenerNivel().subscribe(nivel => {
   _initFormGroup(): void {
     let modelContainer: ModelContainer = this.config.data;
     this.productoBodega = ObjectUtils.isEmpty(modelContainer.modelData) ? new TwProductoBodega() : modelContainer.modelData as TwProductoBodega;
-    console.log(this.productoBodega);
+    //console.log(this.productoBodega);
     this.formGrp = new FormGroup({
       anaquelCtrl: new FormControl(this.productoBodega.nIdAnaquel, [Validators.required]),
       nivelCtrl: new FormControl(this.productoBodega.nIdNivel,[Validators.required])

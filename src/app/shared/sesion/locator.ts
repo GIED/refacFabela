@@ -93,7 +93,8 @@ static actualizarEstatusComprobante= '/actualizarEstatusComprobante'
 static obtenerTotalesGeneralesTablero='/totales-generales-tablero';
 
 //traspasos
-static movimientoInterno='/movimientoInterno'
+static movimientoInterno='/movimientoInterno';
+static movimientoExterno='/movimientoExterno';
 
 
 

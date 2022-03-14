@@ -50,7 +50,7 @@ export class UsuarioComponent implements OnInit {
             { name: "Administrador", code: "admin" },
             { name: "Ventas", code: "ventas" },
             { name: "Almacen", code: "almacen" },
-            { name: "Cajas", code: "cajas" },
+            { name: "Caja", code: "caja" },
             { name: "distribuidor", code:"distribuidor"}
           ];
         this.listaUsuarios=[];

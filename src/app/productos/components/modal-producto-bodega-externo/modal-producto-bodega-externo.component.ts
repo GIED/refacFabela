@@ -12,6 +12,7 @@ import { ModeActionOnModel } from '../../../shared/utils/model-action-on-model';
 import { ObjectUtils } from '../../../shared/utils/object-ultis';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TcBodega } from '../../model/TcBodega';
+import { TwProductoBodegaDto } from '../../model/TwProductoBodegaDto';
 
 interface Bodegai{
   nId?: number;
@@ -33,8 +34,7 @@ export class ModalProductoBodegaExternoComponent implements OnInit {
   listaBodega:TcBodega[];
   listaAux:Bodegai[]=[];
   bodegaI:Bodegai;
-  listaAnaquel: TcAnaquel[];
-  listaNivel: TcNivel[];
+  
 
 
   constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig,private bodegasService: BodegasService, private anaquelService: AnaquelService,
@@ -45,19 +45,13 @@ export class ModalProductoBodegaExternoComponent implements OnInit {
   ngOnInit(): void {
   this._initFormGroup();
 
-  this.anaquelService.obtenerAnanquel().subscribe(anaquel => {
-    this.listaAnaquel = anaquel;
-  });
-
-  this.nivelService.obtenerNivel().subscribe(nivel => {
-    this.listaNivel = nivel;
-  });
+  
 
   this.bodegasService.obtenerBodegas().subscribe(bodegas => {
 
     for (let index = 0; index < bodegas.length; index++) {
       const valor = bodegas[index];
-      this.bodegaI={nId:valor.nId, sBodega:valor.sBodega, inactive: this.bodegaCtrl.value == valor.nId ? true : false};
+      this.bodegaI={nId:valor.nId, sBodega:valor.sBodega, inactive: this.productoBodega.nIdBodega == valor.nId ? true : false};
       this.listaAux.push(this.bodegaI);
       
     }
@@ -72,16 +66,17 @@ export class ModalProductoBodegaExternoComponent implements OnInit {
     let modelContainer: ModelContainer = this.config.data;
     this.productoBodega = ObjectUtils.isEmpty(modelContainer.modelData) ? new TwProductoBodega() : modelContainer.modelData as TwProductoBodega;
     this.formGrp = new FormGroup({
-      bodegaCtrl: new FormControl(this.productoBodega.nIdBodega, [Validators.required]),
-      anaquelCtrl: new FormControl(this.productoBodega.nIdAnaquel, [Validators.required]),
-      nivelCtrl: new FormControl(this.productoBodega.nIdNivel,[Validators.required])
+      bodegaCtrl: new FormControl('', [Validators.required]),
+      cantidadCtrl: new FormControl('',[Validators.required])
     });
   }
 
-  castFormGrup(){
-    let model = this.productoBodega;
-    model.nIdAnaquel= this.anaquelCtrl.value;
-    model.nIdNivel= this.nivelCtrl.value;
+  castFormGrp(){
+    let model = new TwProductoBodegaDto();
+    model.nIdBodegaActual=this.productoBodega.nIdBodega;
+    model.nCantidadActual=this.productoBodega.nCantidad;
+    model.nIdBodegaDestino=this.bodegaCtrl.value;
+    model.nCantidadDestino=this.cantidadCtrl.value;
 
     return model;
 
@@ -89,12 +84,8 @@ export class ModalProductoBodegaExternoComponent implements OnInit {
 
 
   onGuardarClicked(){
-
-    this.traspasoService.guardarMovimientoInterno(this.castFormGrup()).subscribe(resp => {
-      this.ref.close(resp.twProductobodega);
-    })
-
-
+      //console.log(this.castFormGrp());
+      this.ref.close(this.castFormGrp());
   }
 
   onCancelarClicked(){
@@ -106,12 +97,9 @@ export class ModalProductoBodegaExternoComponent implements OnInit {
   get bodegaCtrl() {
     return this.formGrp.get('bodegaCtrl') as FormControl;
   }
-  get anaquelCtrl() {
-    return this.formGrp.get('anaquelCtrl') as FormControl;
-  }
-
-  get nivelCtrl() {
-    return this.formGrp.get('nivelCtrl') as FormControl;
+  
+  get cantidadCtrl() {
+    return this.formGrp.get('cantidadCtrl') as FormControl;
   }
 
 }
