@@ -1,0 +1,33 @@
+
+.back-color-canceladas{
+    background: green;
+}
+.caja-cierre-totales{
+    color:white; 
+    align-items: center; 
+    height: 50px; 
+    display: flex; 
+    justify-content: center;
+}
+.color-fondo-1{
+  background:   #79b9cb;
+
+}
+.color-fondo-2{
+    background:   #f0c56d;;
+}
+.color-fondo-3{
+    background:   #98b87e;
+}
+.color-fondo-4{
+    background:   #aa7ea2;
+}
+:host ::ng-deep .floatlabel-demo {
+    .p-field {
+        margin-top: 2rem;
+    }
+
+    .p-multiselect-panel .p-multiselect-header {
+        padding-bottom: 0;
+    }
+}

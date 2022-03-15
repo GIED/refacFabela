@@ -1,0 +1,128 @@
+<div class="p-grid">
+    <div class="p-col-12">       
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4" *ngIf="mostrarIndicadores">
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-1">Total Ventas:
+                    <strong>{{totalVentas}}</strong>
+                </div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-2">Ventas Mostrador
+                     <strong>{{totalVentasMostrador}}</strong></div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-3">Ventas Mostrador Pedido
+                    <strong>{{totalVentasMostradorPedido}}</strong>
+                </div>
+                <div class="p-col-12 p-xl-3 p-md-6 p-text-center caja-cierre-totales color-fondo-4 ">Ventas Distribuidor
+                    General:<strong>{{totalVentasInternet}}</strong></div>
+            </p-toolbar>
+
+            <p-toolbar styleClass="p-mb-3" *ngIf="mostrarIndicadores">
+                <div class="p-col-12 p-xl-4 p-md-6 p-text-center caja-cierre-totales color-fondo-1">Saldo Ventas:
+                    <strong>{{ventasTotal | number}}</strong>
+                </div>
+                <div class="p-col-12 p-xl-4 p-md-6 p-text-center caja-cierre-totales color-fondo-2">Total a Crédito
+                     <strong>{{ventasCreditoTotal | number}}</strong></div>
+                <div class="p-col-12 p-xl-4 p-md-6 p-text-center caja-cierre-totales color-fondo-3">Ventas Contado
+                    <strong>{{ventasContadoTotal | number}}</strong>
+                </div>
+                
+            </p-toolbar>
+        </div>
+  
+<p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll"  [rows]="10"
+[paginator]="true"
+[globalFilterFields]="['sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
+[rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
+[showCurrentPageReport]="true">
+<ng-template pTemplate="caption">
+    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar Venta" />
+        </span>
+    </div>
+</ng-template>
+<ng-template pTemplate="header">
+    <tr>
+        <th pSortableColumn="sFolioVenta">No. Venta<p-sortIcon field="sFolioVenta"></p-sortIcon>
+        </th>
+        <th pSortableColumn="tcCliente.sRfc">Rfc<p-sortIcon field="tcCliente.sRfc"></p-sortIcon>
+        </th>
+        <th pSortableColumn="tcCliente.sRazonSocial">Razón Social<p-sortIcon
+                field="tcCliente.sRazonSocial"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalVenta">Total Venta<p-sortIcon field="nTotalVenta"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalAbono">Total Abonos<p-sortIcon field="nTotalAbono"></p-sortIcon>
+        </th>
+        <th pSortableColumn="descuento">Descuento<p-sortIcon field="descuento"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nSaldoTotal">Saldo Final<p-sortIcon field="nSaldoTotal"></p-sortIcon>
+        </th>
+
+        <th pSortableColumn="dFechaVenta">Fecha Venta<p-sortIcon field="dFechaVenta"></p-sortIcon>
+        </th>
+        <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
+                field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+        </th>
+       
+        <th pSortableColumn="tcEstatusVenta.sDescripcion">Origen Venta<p-sortIcon
+            field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+    </th>
+        <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor<p-sortIcon
+                field="tcUsuario.sNombreusuario"></p-sortIcon>
+        </th>
+        <th></th>
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-venta let-expanded="expanded">
+    <tr>
+        <td><span class="p-column-title"></span> {{venta.sFolioVenta}}
+        </td>
+        <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc}}
+        </td>
+        <td><span class="p-column-title"></span> {{venta.tcCliente.sRazonSocial}}
+        </td>
+        <td><span class="p-column-title"></span>{{venta.nTotalVenta | number}}
+        </td>
+        <td><span class="p-column-title"></span>{{venta.nTotalAbono | number}}
+        </td>
+        <td><span class="p-column-title"></span>{{venta.descuento | number}}
+        </td>
+        <td><span class="p-column-title"></span>
+            <p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
+        </td>
+
+        <td><span class="p-column-title"></span> {{venta.dFechaVenta | date}}
+        </td>
+        <td class="p-text-center"><span class="p-column-title">Status</span>
+
+            {{venta.tcEstatusVenta.sDescripcion}}
+        </td>
+        
+        <td class="p-text-center"><span class="p-column-title">Status</span>
+
+            {{venta.tcTipoVenta.sDescripcion}}
+        </td>
+       
+        
+
+        <td class="p-text-center"><span class="p-column-title">Status</span>
+
+            {{venta.tcUsuario.sNombreUsuario}}
+        </td>
+
+        <td>
+          <!-- <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+                (click)="detalleVentaProductos(venta)"></button>
+            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                (click)="generarVentaPdf(venta)"></button>
+            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
+                (click)="abrir(venta)"></button>--> 
+        </td>
+    </tr>
+</ng-template>
+</p-table>
+</div>
+</div>

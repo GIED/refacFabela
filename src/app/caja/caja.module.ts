@@ -11,6 +11,7 @@ import { DetalleAbonosCreditoComponent } from './components/detalle-abonos-credi
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AdministracionModule } from '../administracion/administracion.module';
 import { FormAbonosComponent } from './components/form-abonos/form-abonos.component';
+import { BalanceCajaComponent } from './components/balance-caja/balance-caja.component';
 
 
 
@@ -21,7 +22,8 @@ import { FormAbonosComponent } from './components/form-abonos/form-abonos.compon
     CierreDeCajaComponent,
     AbonosComponent,
     DetalleAbonosCreditoComponent,
-    FormAbonosComponent
+    FormAbonosComponent,
+    BalanceCajaComponent
    
   ],
   imports: [
