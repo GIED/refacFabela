@@ -13,22 +13,21 @@
         <div class="p-col-12 p-text-center">
             <h3>Ubicación Destino</h3>
         </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
+        <div class="p-col-12 p-md-6 p-lg-6 p-text-center">
             <label>Bodega<strong>*</strong></label>
             <p-dropdown [options]="listaAux" optionLabel="sBodega" optionValue="nId" formControlName="bodegaCtrl" placeholder="Selecciona una Bodega" [showClear]="true" optionDisabled="inactive">
             </p-dropdown>
+            <div *ngIf="bodegaCtrl.invalid && (bodegaCtrl.dirty || bodegaCtrl.touched)">
+                <small class="p-error" *ngIf="bodegaCtrl.errors?.required">Campo obligatorio</small>
+            </div>
         </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
-            <label>Anaquel<strong>*</strong></label>
-            <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" formControlName="anaquelCtrl" placeholder="Selecciona un Anaquel" [showClear]="true">
-            </p-dropdown>
-        </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
+        <div class="p-col-12 p-md-6 p-lg-6 p-text-center">
 
-            <label>Nivel<strong>*</strong></label>
-            <p-dropdown [options]="listaNivel" optionLabel="sNivel" optionValue="nId" formControlName="nivelCtrl" placeholder="Selecciona una Nivel" [showClear]="true">
-            </p-dropdown>
-
+            <label>Cantidad<strong>*</strong></label>
+            <p-inputNumber formControlName="cantidadCtrl" min="1" [max]="productoBodega.nCantidad" required></p-inputNumber>
+            <div *ngIf="cantidadCtrl.invalid || (cantidadCtrl.dirty || cantidadCtrl.touched)">
+                <small class="p-error" *ngIf="cantidadCtrl.errors?.required">Campo obligatorio</small>
+            </div>
         </div>
 
     </div>
@@ -37,7 +36,7 @@
             <button pButton pRipple type="button" class="p-button-outlined p-button-danger p-button-sm" (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times" required></button>
         </div>
         <div class="p-col-3">
-            <button pButton pRipple type="button" class="p-button-warning p-button-sm p-button-raised" (click)="onGuardarClicked()" label="Mover Mercancía" icon="pi pi-times" [disabled]="formGrp.invalid"></button>
+            <button pButton pRipple type="button" class="p-button-success p-button-sm p-button-raised" (click)="onGuardarClicked()" label="Mover Mercancía" icon="pi pi-check" [disabled]="formGrp.invalid"></button>
         </div>
     </div>
 </form>

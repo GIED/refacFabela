@@ -7,6 +7,9 @@ import { ModeActionOnModel } from '../../../shared/utils/model-action-on-model';
 import { ModelContainer } from '../../../shared/utils/model-container';
 import { findIndex } from 'rxjs/operators';
 import { ModalProductoBodegaExternoComponent } from '../../../productos/components/modal-producto-bodega-externo/modal-producto-bodega-externo.component';
+import { producto } from '../../../productos/interfaces/producto.interfaces';
+import { TwProductoBodegaDto } from '../../../productos/model/TwProductoBodegaDto';
+import { TraspasoService } from '../../../shared/service/traspaso.service';
 
 @Component({
   selector: 'app-traspasos',
@@ -16,10 +19,12 @@ import { ModalProductoBodegaExternoComponent } from '../../../productos/componen
 export class TraspasosComponent implements OnInit {
 
   listaProductoBodega: TwProductoBodega[];
+  listaProductoBodegaAux: TwProductoBodega[]=[];
   mostrar:boolean;
+  newProBod:TwProductoBodega; 
   
   
-  constructor(private bodegasService: BodegasService, public dialogService: DialogService) {
+  constructor(private bodegasService: BodegasService, public dialogService: DialogService,private traspasoService:TraspasoService) {
     this.mostrar=false;
    }
 
@@ -42,7 +47,7 @@ export class TraspasosComponent implements OnInit {
        width: '70%'
    })
    ref.onClose.subscribe((data:TwProductoBodega) =>{
-     console.log('data que se recibe al cerrar',data);
+     //console.log('data que se recibe al cerrar',data);
      this.obtenerBodegas(data.nIdProducto);
    })
   }
@@ -53,10 +58,38 @@ export class TraspasosComponent implements OnInit {
        header: 'Movimiento Externo de Mercancía',
        width: '70%'
    })
-   ref.onClose.subscribe((data:TwProductoBodega) =>{
-     console.log('data que se recibe al cerrar',data);
-     this.obtenerBodegas(data.nIdProducto);
-   })
+   ref.onClose.subscribe((data:TwProductoBodegaDto) =>{
+     //console.log('data que se recibe al cerrar externo',data);
+     for (const valor of this.listaProductoBodega) {
+
+        this.newProBod = new TwProductoBodega();
+
+        this.newProBod.nId=valor.nId;
+        this.newProBod.nIdBodega=valor.nIdBodega;
+        this.newProBod.nIdProducto=valor.nIdProducto;
+        if (valor.nIdBodega == data.nIdBodegaActual) {
+          this.newProBod.nCantidad=data.nCantidadActual-data.nCantidadDestino;
+        }else if (valor.nIdBodega==data.nIdBodegaDestino) {
+          this.newProBod.nCantidad=valor.nCantidad+data.nCantidadDestino;
+        }else{
+          this.newProBod.nCantidad=valor.nCantidad;
+        }
+        this.newProBod.nEstatus=valor.nEstatus;
+        this.newProBod.nIdNivel=valor.nIdNivel;
+        this.newProBod.nIdAnaquel=valor.nIdAnaquel;
+        
+        this.listaProductoBodegaAux.push(this.newProBod);
+       
+     }
+
+     this.traspasoService.guardarMovimientoExterno(this.listaProductoBodegaAux).subscribe(resp =>{
+       
+       this.obtenerBodegas(resp.listaProductoBodega[0].nIdProducto);
+     })
+
+     
+   });
+
   }
 
 
