@@ -1,0 +1,30 @@
+<form [formGroup]="formGrp" class="p-fluid p-pt-4">
+    <div class="p-grid">
+
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">No parte: {{productoBodega.tcProducto.sNoParte}} </div>
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Producto: {{productoBodega.tcProducto.sProducto}}</div>
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center"><span style="background: purple; color: white;">Stock: {{productoBodega.nCantidad}}</span></div>
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Bodega: {{productoBodega.tcBodega.sBodega}}</div>
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
+            <label>Anaquel<strong>*</strong></label>
+            <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" formControlName="anaquelCtrl" placeholder="Selecciona un Anaquel" [showClear]="true">
+            </p-dropdown>
+        </div>
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
+
+            <label>Nivel<strong>*</strong></label>
+            <p-dropdown [options]="listaNivel" optionLabel="sNivel" optionValue="nId" formControlName="nivelCtrl" placeholder="Selecciona una Nivel" [showClear]="true">
+            </p-dropdown>
+
+        </div>
+
+    </div>
+    <div class="p-grid p-jc-end p-mt-2">
+        <div class="p-col-3">
+            <button pButton pRipple type="button" class="p-button-outlined p-button-danger p-button-sm" (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times" required></button>
+        </div>
+        <div class="p-col-3">
+            <button pButton pRipple type="button" class="p-button-warning p-button-sm p-button-raised" (click)="onGuardarClicked()" label="Mover Mercancía" icon="pi pi-times" [disabled]="formGrp.invalid"></button>
+        </div>
+    </div>
+</form>

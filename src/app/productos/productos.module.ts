@@ -10,12 +10,13 @@ import { ModalProductoComponent } from './components/modal-producto/modal-produc
 import { ReactiveFormsModule } from '@angular/forms';
 import { HistoriaPrecioProductoComponent } from './components/historia-precio-producto/historia-precio-producto.component';
 import { InputBusquedaComponent } from './components/input-busqueda/input-busqueda.component';
-import { ModalProductosBodegaComponent } from './components/modal-productos-bodega/modal-productos-bodega.component';
 import { ModalProductosAlternativosComponent } from './components/modal-productos-alternativos/modal-productos-alternativos.component';
 import { RegistroPedidosComponent } from './pages/administracion-pedidos/registro-pedidos.component';
 import { PedidoProductosComponent } from './components/pedido-productos/pedido-productos.component';
 import { AltaPedidosComponent } from './components/alta-pedidos/alta-pedidos.component';
+import { ModalProductosBodegaInternoComponent } from './components/modal-productos-bodega-interno/modal-productos-bodega-interno.component';
 import { ModalProductoBodegaExternoComponent } from './components/modal-producto-bodega-externo/modal-producto-bodega-externo.component';
+import { ModalProductosBodegaComponent } from './components/modal-productos-bodega/modal-productos-bodega.component';
 
 
 
@@ -30,12 +31,13 @@ import { ModalProductoBodegaExternoComponent } from './components/modal-producto
     ModalProductoComponent, 
     HistoriaPrecioProductoComponent, 
     InputBusquedaComponent, 
-    ModalProductosBodegaComponent,
     ModalProductosAlternativosComponent,
     RegistroPedidosComponent,
     PedidoProductosComponent,
     AltaPedidosComponent,
+    ModalProductosBodegaInternoComponent,
     ModalProductoBodegaExternoComponent,
+    ModalProductosBodegaComponent
     
   ],
   imports: [
@@ -52,8 +54,9 @@ import { ModalProductoBodegaExternoComponent } from './components/modal-producto
     ModalProductoComponent, 
     HistoriaPrecioProductoComponent, 
     InputBusquedaComponent, 
-    ModalProductosBodegaComponent,
+    ModalProductosBodegaInternoComponent,
     ModalProductoBodegaExternoComponent,
+    ModalProductosBodegaComponent,
     ModalProductosAlternativosComponent,
     RegistroPedidosComponent,
     PedidoProductosComponent,

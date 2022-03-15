@@ -2,14 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { ModalProductosBodegaComponent } from '../../../productos/components/modal-productos-bodega/modal-productos-bodega.component';
 import { ModeActionOnModel } from '../../../shared/utils/model-action-on-model';
 import { ModelContainer } from '../../../shared/utils/model-container';
-import { findIndex } from 'rxjs/operators';
 import { ModalProductoBodegaExternoComponent } from '../../../productos/components/modal-producto-bodega-externo/modal-producto-bodega-externo.component';
-import { producto } from '../../../productos/interfaces/producto.interfaces';
 import { TwProductoBodegaDto } from '../../../productos/model/TwProductoBodegaDto';
 import { TraspasoService } from '../../../shared/service/traspaso.service';
+import { ModalProductosBodegaInternoComponent } from 'src/app/productos/components/modal-productos-bodega-interno/modal-productos-bodega-interno.component';
 
 @Component({
   selector: 'app-traspasos',
@@ -41,7 +39,7 @@ export class TraspasosComponent implements OnInit {
   }
 
   modalProductoBodega(dataBodega:TwProductoBodega) {
-    const ref = this.dialogService.open(ModalProductosBodegaComponent, {
+    const ref = this.dialogService.open(ModalProductosBodegaInternoComponent, {
        data: new ModelContainer(ModeActionOnModel.CREATING, dataBodega),
        header: 'Movimiento Interno de mercancía',
        width: '70%'

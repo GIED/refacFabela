@@ -1,30 +1,47 @@
-<form [formGroup]="formGrp" class="p-fluid p-pt-4">
-    <div class="p-grid">
+<div class="p-text-center">
+    <h3>Distribución de productos por bodega</h3>
+</div>
 
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">No parte: {{productoBodega.tcProducto.sNoParte}} </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Producto: {{productoBodega.tcProducto.sProducto}}</div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center"><span style="background: purple; color: white;">Stock: {{productoBodega.nCantidad}}</span></div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Bodega: {{productoBodega.tcBodega.sBodega}}</div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
-            <label>Anaquel<strong>*</strong></label>
-            <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" formControlName="anaquelCtrl" placeholder="Selecciona un Anaquel" [showClear]="true">
-            </p-dropdown>
-        </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
+<p-table [value]="listaProductoBodega" responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Producto</th>
+            <th>Bodega</th>
+            <th>Anaquel</th>
+            <th>Nivel</th>
+            <th>Stock</th>
+            <th *ngIf="traspaso">Acciones</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-bodega>
+        <tr>
+            <td>{{bodega.tcProducto.sProducto}}</td>
+            <td>{{bodega.tcBodega.sBodega}}</td>
+            <td>{{bodega.tcAnaquel.sAnaquel}}</td>
+            <td>{{bodega.tcNivel.sNivel}}</td>
+            <td>{{bodega.nCantidad}}</td>
+            <td *ngIf="traspaso"><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editarProducto(bodega)"></button></td>
 
-            <label>Nivel<strong>*</strong></label>
-            <p-dropdown [options]="listaNivel" optionLabel="sNivel" optionValue="nId" formControlName="nivelCtrl" placeholder="Selecciona una Nivel" [showClear]="true">
-            </p-dropdown>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="bodegasDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+
+        <div class="p-grid">
+
+            <div class="p-col-12 p-md-6 p-lg-6 p-text-center">No parte: {{productoBodega.tcProducto.sNoParte}} </div>
+            <div class="p-col-12 p-md-6 p-lg-6 p-text-center">Producto: {{productoBodega.tcProducto.sProducto}}</div>
+            <div class="p-col-12 p-md-3 p-lg-3 p-text-center">Bodega: {{productoBodega.tcBodega.sBodega}}</div>
+            <div class="p-col-12 p-md-3 p-lg-3 p-text-center">Anaquel: {{productoBodega.tcAnaquel.sAnaquel}}</div>
+            <div class="p-col-12 p-md-3 p-lg-3 p-text-center">Nivel: {{productoBodega.tcNivel.sNivel}}</div>
+            <div class="p-col-12 p-md-3 p-lg-3 p-text-center" style="background: purple; color: white;">Cantidad: {{productoBodega.nCantidad}} </div>
 
         </div>
 
-    </div>
-    <div class="p-grid p-jc-end p-mt-2">
-        <div class="p-col-3">
-            <button pButton pRipple type="button" class="p-button-outlined p-button-danger p-button-sm" (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times" required></button>
-        </div>
-        <div class="p-col-3">
-            <button pButton pRipple type="button" class="p-button-warning p-button-sm p-button-raised" (click)="onGuardarClicked()" label="Mover Mercancía" icon="pi pi-times" [disabled]="formGrp.invalid"></button>
-        </div>
-    </div>
-</form>
+
+    </ng-template>
+
+
+</p-dialog>
