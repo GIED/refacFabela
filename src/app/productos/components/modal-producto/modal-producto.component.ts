@@ -10,6 +10,8 @@ import { TcClavesat } from '../../model/TcClavesat';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ProductoService } from '../../../shared/service/producto.service';
+import { UsuarioService } from '../../../administracion/service/usuario.service';
+import { TokenService } from 'src/app/shared/service/token.service';
 
 interface Moneda {
   name: string,
@@ -52,6 +54,8 @@ export class ModalProductoComponent implements OnInit {
               private catalogoService: CatalogoService, 
               private productosService: ProductoService, 
               private messageService: MessageService,
+              private usuarioService: UsuarioService,
+              private tokenService: TokenService, 
               ) { 
     this.crearFormulario();
     this.listaMoneda =[
@@ -98,6 +102,9 @@ export class ModalProductoComponent implements OnInit {
   get validaClaveSat() {
     return this.formulario.get('nIdclavesat').invalid && this.formulario.get('nIdclavesat').touched;
   }
+  get validaBar() {
+    return this.formulario.get('sIdBar').invalid && this.formulario.get('sIdBar').touched;
+  }
 
   crearFormulario() {
   
@@ -116,6 +123,7 @@ export class ModalProductoComponent implements OnInit {
         nEstatus:['',[]],
         dFecha:['',[]],
         nIdclavesat:['',[Validators.required]],
+        sIdBar:['',[Validators.required, Validators.minLength(3)]],
         
     })
     this.formulario.get('nIdCategoria').disable();
@@ -185,7 +193,7 @@ export class ModalProductoComponent implements OnInit {
     }else{
       this.tcProducto = this.formulario.value;
       this.tcProducto.nEstatus=1;
-      this.tcProducto.nIdusuario=1; 
+      this.tcProducto.nIdusuario=this.tokenService.getIdUser(); 
       this.guardarProducto.emit(this.tcProducto);
       this.productDialog = false;
       this.fProducto.sNoParte.setValue("");
@@ -213,6 +221,7 @@ export class ModalProductoComponent implements OnInit {
     this.obtenerCategoria();
     this.formulario.get('nIdCategoria').enable();
     this.precioFinal=productoEditar.nPrecioConIva;
+    this.fProducto.sIdBar.setValue(productoEditar.sIdBar);
 
 }
 
@@ -230,6 +239,7 @@ limpiaFormulario() {
   this.fProducto.nEstatus.setValue("");
   this.fProducto.dFecha.setValue("");
   this.fProducto.nIdclavesat.setValue("");
+  this.fProducto.sIdBar.setValue("");
   
 
 

@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { ClienteService } from '../../service/cliente.service';
 import { Clientes } from '../../interfaces/clientes';
 import { FormGroup, FormBuilder, Validators, FormControl, FormsModule } from '@angular/forms';
+import { TokenService } from '../../../shared/service/token.service';
 
 
 
@@ -46,7 +47,8 @@ export class ClienteComponent implements OnInit {
   formulario: FormGroup;
 
   constructor(private messageService: MessageService,
-    private confirmationService: ConfirmationService, private clienteService: ClienteService, private fb: FormBuilder,) {
+    private confirmationService: ConfirmationService, private clienteService: ClienteService, private fb: FormBuilder,
+    private tokenService: TokenService) {
     this.crearFormulario();
   }
 
@@ -62,6 +64,7 @@ export class ClienteComponent implements OnInit {
       sDireccion: ['', [Validators.required]],
       sTelefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       sCorreo: ['', [Validators.required, Validators.email]],
+      nCp: ['', [Validators.required,  Validators.minLength(5), Validators.maxLength(5), Validators.pattern('^[0-9]{5}') ]],
       nId: ['', []],
       sClave: ['', []]
     })
@@ -82,6 +85,9 @@ export class ClienteComponent implements OnInit {
   }
   get validaCorreo() {
     return this.formulario.get('sCorreo').invalid && this.formulario.get('sCorreo').touched;
+  }
+  get validaCp() {
+    return this.formulario.get('nCp').invalid && this.formulario.get('nCp').touched;
   }
 
   // Carga de clientes inicial(Todos)
@@ -107,6 +113,7 @@ export class ClienteComponent implements OnInit {
     this.fclientes.sRazonSocial.setValue("");
     this.fclientes.sRfc.setValue("");
     this.fclientes.sClave.setValue("");
+    this.fclientes.nCp.setValue("");
   }
 
 
@@ -128,6 +135,7 @@ export class ClienteComponent implements OnInit {
     this.fclientes.sRazonSocial.setValue(cliente.sRazonSocial);
     this.fclientes.sRfc.setValue(cliente.sRfc);
     this.fclientes.sClave.setValue(cliente.sClave);
+    this.fclientes.nCp.setValue(cliente.nCp);
 
   }
 
@@ -205,6 +213,7 @@ export class ClienteComponent implements OnInit {
 
     if (this.cliente.nId) {
       this.cliente.nEstatus = 1;
+      this.cliente.n_idUsuarioCredito=this.tokenService.getIdUser();
       this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
         this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000 });

@@ -35,6 +35,6 @@ import { FormCargaComprobanteComponent } from './components/form-carga-comproban
     ProductosModule,
     ReactiveFormsModule
   ],
-  exports:[VentaProductosDetalleComponent, DescuentoVentaComponent]
+  exports:[VentaProductosDetalleComponent, DescuentoVentaComponent, ProductosAlternativosVentaComponent]
 })
 export class VentasycotizacionesModule { }

@@ -122,6 +122,13 @@
                         <small *ngIf="validaDireccion" class="p-error">Dirección invalida, favor de verificar.</small>
                     </div>
                     <div class="p-field">
+                        <label for="name">Código postal</label>
+
+                        <input type="text" pInputText formControlName="nCp"
+                            [class.is-invalid]="validaCp" />
+                        <small *ngIf="validaCp" class="p-error">Cp invalida, favor de verificar.</small>
+                    </div>
+                    <div class="p-field">
                         <label for="name">Teléfono</label>
                         <input type="tel" pInputText formControlName="sTelefono" [class.is-invalid]="validaTelefono" />
                         <small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>

@@ -19,7 +19,7 @@ export class PedidoProductosComponent implements OnInit {
 
   @Input() listaPedidos: TwPedidoProducto[];
   @Input() banIngreso: boolean;
-  @Output() listaPedidoDetalle: EventEmitter<TvPedidoDetalle[]> = new EventEmitter();
+  
   
 
  
@@ -167,10 +167,8 @@ findIndexById(id: number): number {
 
 obtenerPedidoDetalle(){
   this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
-    this.listaPedidoDetalle.emit(data);
-  
       
-    })
+    });
 }
 createId(): string {
   let id = '';

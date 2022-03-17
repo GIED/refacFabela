@@ -55,6 +55,13 @@
                                                     </ng-template>
                                                 </p-listbox>
                                             </div>
+
+                                            <p-toolbar styleClass="p-mb-4">
+                                                <ng-template pTemplate="left">
+                                                    <button pButton pRipple label="Agregar Editar Producto" icon="pi pi-plus"
+                                                        class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
+                                                </ng-template>
+                                            </p-toolbar>
                                         </div>
 
 
@@ -204,5 +211,13 @@
 
         </ng-template>
     </p-dialog>
+
+    <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+    styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
+            (guardarProducto)="saveProduct($event)"></app-modal-producto>
+    </ng-template>
+</p-dialog>
 
 </div>

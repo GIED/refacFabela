@@ -78,7 +78,7 @@ export class RegistroPedidosComponent implements OnInit {
   this.listaPedidoDetalle=data;
 
     
-  })
+  });
 
  }
 

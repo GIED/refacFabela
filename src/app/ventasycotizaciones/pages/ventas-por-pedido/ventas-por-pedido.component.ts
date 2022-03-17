@@ -56,6 +56,8 @@ export class VentasPorPedidoComponent implements OnInit {
   muestraProductos:boolean=false;
   mostrarAlternativos:boolean=false;
   muestraProductosBodega:boolean=false;
+  productDialog:boolean=false;
+  titulo:string;
 
   saldoGeneralCliente:SaldoGeneralCliente;
   
@@ -338,7 +340,7 @@ generarVentaPdf(idVenta:number){
   this.ventaService.generarVentaPedidoPdf(idVenta).subscribe(resp => {
 
     
-      const file = new Blob([resp], { type: 'application/pdf' });
+      const file = new Blob([resp], { type: 'productDialogapplication/pdf' });
       console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
@@ -391,5 +393,34 @@ createFolio(): string {
   }
   return folio;
 } 
+
+saveProduct(producto: TcProducto) {
+
+  if (producto.nId) {
+      this.productoService.guardaProducto(producto).subscribe(productoActualizado => {
+         
+          this.messageService.add({ severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000 });
+      });
+  }
+  else {
+      this.productoService.guardaProducto(producto).subscribe(productoNuevo => {
+        
+          this.messageService.add({ severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000 });
+      });
+  }
+  this.productDialog = false;
+ 
+}
+
+openNew() {
+  this.producto = null;
+  this.productDialog = true;
+  this.titulo = "Registro de Productos"
+}
+
+hideDialog(){
+  this.productDialog = false;
+
+}
 
 }

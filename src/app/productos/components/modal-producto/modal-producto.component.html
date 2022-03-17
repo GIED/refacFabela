@@ -20,6 +20,11 @@
             <textarea id="description" pInputTextarea name="sDescripcion" formControlName="sDescripcion" rows="2" cols="20"></textarea>
         </div>
         <div class="p-field p-col-6">
+            <label for="marca">Código</label>
+            <input type="text" pInputText name="sIdBar" formControlName="sIdBar" [class.is-invalid]="validaBar" />
+            <small class="p-error" *ngIf="validaBar">*código del producto requerida.</small>
+        </div>
+        <div class="p-field p-col-6">
             <label for="marca">Marca</label>
             <input type="text" pInputText name="sMarca" formControlName="sMarca" [class.is-invalid]="validaMarca" />
             <small class="p-error" *ngIf="validaMarca">*marca del producto requerida.</small>
@@ -59,7 +64,7 @@
             </p-dropdown>
             <small class="p-error" *ngIf="validaGanancia">*Ganancia requerida</small>
         </div>
-        <div class="p-field p-col-6 p-text-center">
+        <div class="p-field p-col-12 p-text-center">
             <label for="price">Precio Final</label>
             <br>
             <strong>{{precioFinal | currency}}</strong>

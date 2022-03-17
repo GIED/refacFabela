@@ -53,8 +53,10 @@
                                                             <div>{{producto.sNoParte}}-{{producto.sProducto}}</div>
                                                         </div>
                                                     </ng-template>
+                                                   
                                                 </p-listbox>
                                             </div>
+                                          
                                         </div>
 
 
@@ -87,7 +89,7 @@
                                     <ng-template pTemplate="body" let-producto>
                                         <tr>
 
-                                            <td (click)="muestraAlternativo(producto)">{{producto.nIdProducto}}</td>
+                                            <td (click)="muestraAlternativo(producto)">{{producto.tcProducto.sNoParte}}</td>
                                             <td>{{producto.tcProducto.sProducto}}</td>
                                             <td>{{producto.tcProducto.nPrecioConIva }}</td>
                                             <td>{{producto.tcProducto.tcCategoria.sDescripcion}}</td>
@@ -199,5 +201,6 @@
 
         </ng-template>
     </p-dialog>
+    
 
 </div>

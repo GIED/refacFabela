@@ -11,4 +11,5 @@ export interface Clientes {
     sRfc?: string;
     sTelefono?: string;
     sClave?:string;
+    nCp?:number;
 }

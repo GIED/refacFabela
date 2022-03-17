@@ -238,6 +238,7 @@ hideDialogBodega(){
 
 
 
+
 agregarProduct(producto: TvStockProducto) {
   console.log(producto);
   if (producto.nCantidad == 0 || producto.nCantidad == null) {
