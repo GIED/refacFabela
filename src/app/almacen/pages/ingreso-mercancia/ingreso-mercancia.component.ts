@@ -75,7 +75,13 @@ export class IngresoMercanciaComponent implements OnInit {
   this.listaPedidoDetalle=data;
 
     
-  })
+  });
+
+ }
+
+ obtenerPedidosEstatusActualiza(PedidoDetalle:TvPedidoDetalle[]){
+
+  this.listaPedidoDetalle=PedidoDetalle;
 
  }
 

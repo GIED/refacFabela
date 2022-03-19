@@ -5,5 +5,6 @@ export class TwPedido{
 	 dFechaPedido:Date;
 	 sObservaciones:string;
      nEstatus:number;
+	 nIdVenta:number;
      dFechaPedidoCierre:Date;	
 }

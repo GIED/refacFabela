@@ -146,6 +146,7 @@
         </div>
     </div>
 
+<!--
     <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6 ">
         <div class="p-grid p-dir-col p-nogutter">
             <div class="p-col-12 ">
@@ -163,7 +164,6 @@
 
         </div>
     </div>
-
 
     <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6">
         <div class="card">
@@ -186,30 +186,44 @@
             </div>
 
         </div>
-    </div>
+    </div>-->
 
     <div *ngIf="cargaInicial" class="p-col-12 p-lg-6 p-md-6">
         <div class="card">
             <div class="p-text-center">
                 <h3>Historia de ingreso del Producto</h3>
             </div>
-            <p-table [value]="products" responsiveLayout="scroll" scrollHeight="450px" styleClass="p-datatable-sm">
-                <ng-template pTemplate="header">
+
+            
+            <p-table #dt [value]="listaIngresoProducto" [rows]="5" [paginator]="true"
+            [globalFilterFields]="['tcBodega.sBodega','nCantidad', 'dFechaingreso', 'tcUsuario.sNombreUsuario']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true"
+            responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
+            <ng-template pTemplate="caption">
+                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                    <h5 class="p-m-0"></h5>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Buscar en la tabla" />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
                     <tr>
-                        <th>No Parte</th>
-                        <th>Nombre Parte</th>
-                        <th>Bodega</th>
-                        <th>Ubicación</th>
-                        <th>Total_ingreso</th>
+                        <th pSortableColumn="tcBodega.sBodega">Bodega <p-sortIcon field="tcBodega.sBodega"></p-sortIcon></th>        
+                        <th pSortableColumn="nCantidad">Cantidad<p-sortIcon field="nCantidad"></p-sortIcon></th>
+                        <th pSortableColumn="tcUsuario.sNombreUsuario'">Usuario<p-sortIcon field="tcUsuario.sNombreUsuario'"></p-sortIcon></th>
+                        <th pSortableColumn="dFechaingreso">Fecha Ingreso<p-sortIcon field="dFechaingreso"></p-sortIcon></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product>
+                <ng-template pTemplate="body" let-producto>
                     <tr>
-                        <td>{{product.code}}</td>
-                        <td>{{product.name}}</td>
-                        <td>LOCAL</td>
-                        <td>100 A</td>
-                        <td>28</td>
+                        <td>{{producto.tcBodega.sBodega}}</td>
+                        <td>{{producto.nCantidad}}</td>
+                        <td>{{producto.tcUsuario.sNombreUsuario}}</td>
+                        <td>{{producto.dFechaingreso | date}}</td>
+
                     </tr>
                 </ng-template>
             </p-table>

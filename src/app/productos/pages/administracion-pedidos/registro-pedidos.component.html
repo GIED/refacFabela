@@ -11,7 +11,7 @@
 
                <!--Tabla de productos general-->
             <p-table #dt [value]="listaPedidoDetalle" [rows]="10" [paginator]="true"
-            [globalFilterFields]="['nId','sCvePedido','dFechaPedido','sNombreUsuario','sNombreUsuario','nTotalProductos','nTotalEntregados','nTotalSinEntregar','nEstatus']" [(selection)]="selectedProducts"
+            [globalFilterFields]="['nId','sCvePedido','dFechaPedido','sNombreUsuario','sNombreUsuario','nTotalProductos','nTotalEntregados','nTotalSinEntregar','nEstatus', 'nIdVenta']" [(selection)]="selectedProducts"
             [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
             currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
             [showCurrentPageReport]="true">
@@ -43,8 +43,10 @@
                         <th pSortableColumn="nTotalProductos">Total de Productos
                             <p-sortIcon field="nTotalProductos"></p-sortIcon>
                         </th>
-                        
-                        <th pSortableColumn="nEstatus">Estatus
+                        <th pSortableColumn="nIdVenta">Origen Pedido
+                            <p-sortIcon field="nIdVenta"></p-sortIcon>
+                        </th>                        
+                        <th pSortableColumn="nEstatus">Estatus Pedido
                             <p-sortIcon field="nEstatus"></p-sortIcon>
                         </th>
                     
@@ -62,8 +64,10 @@
                         </td>
                         <td><span class="p-column-title p-text-center">Status</span><div class="p-text-center"> {{pedido.nTotalProductos}}</div>
                         </td> 
+                        
+                        <td><div *ngIf="pedido.nIdVenta==null">Pedido Inventario</div><div *ngIf="pedido.nIdVenta!=null">Pedido Venta</div></td>
                        
-                        <td><span class="p-column-title  p-text-center">Status</span><div class="p-text-center"> {{pedido.nEstatus}}</div>
+                        <td><span class="p-column-title  p-text-center">Status</span><div class="p-text-center"><div *ngIf="pedido.nEstatus==0">Pedido Registrado</div></div>
                         </td> 
                         <td>
                             <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"

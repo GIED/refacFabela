@@ -6,4 +6,5 @@ export class TvStockProducto{
     tcProducto: TcProducto;
     nStatus?:number;
     nTipoPago?:number;
+    nIdProveedor?:number;
 }

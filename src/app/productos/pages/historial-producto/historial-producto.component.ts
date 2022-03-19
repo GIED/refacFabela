@@ -11,6 +11,7 @@ import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TvVentaProductoMes } from '../../model/TvVentaProductoMes';
+import { TwHistoriaIngresoProducto } from '../../model/TwHistoriaIngresoProducto';
 
 @Component({
   selector: 'app-historial-producto',
@@ -47,6 +48,10 @@ lineChartOptions:any;
   dataProductoVentaMes:number[];
   ventaProductoMesGraf:any;
 
+  //objetos de ingreso de producto
+
+  listaIngresoProducto: TwHistoriaIngresoProducto[];
+
 
 
   constructor(private productService: ProductService, private messageService: MessageService,
@@ -58,6 +63,7 @@ lineChartOptions:any;
         this.listaProductosVentaMes=[];
         this.laberProductoVentaMes=[];
         this.dataProductoVentaMes=[];
+        this.dataHistoriaIngresoProducto=[];
       
      }
 
@@ -127,13 +133,14 @@ informacionProducto(nId:number) {
     let detalleProducto=this.productosService.obtenerTotalBodegasIdProducto(nId)
     //Consulta de producto por bodegas
     let productoBodegas=  this.bodegasService.obtenerProductoBodegas(nId);
-    //Consulta de ventas del producto por mes
-
+  // consulat de historia de ingreso del producto
+    let historiaIngreso=this.productosService.historiaIngresoProducto(nId)
+  //Consulta de ventas del producto por mes
     let ventaMesProducto= this.ventasService.obtenerProductoVentaMesId(nId);
     
     //hace la consulta en orden y espera a realizar la recarga hasta que llegen todas las peticiones
     forkJoin([
-        historia,detalleProducto,productoBodegas, ventaMesProducto
+        historia,detalleProducto,productoBodegas, ventaMesProducto, historiaIngreso
       ]).subscribe(resultado => {
         this.listaHistoriaPrecioProducto=resultado[0]       
         this.productoDetalle=resultado[1];
@@ -145,7 +152,8 @@ informacionProducto(nId:number) {
        
         this.cargaInicial=true;
 
-        console.log(this.listaProductosVentaMes);
+        this.listaIngresoProducto=resultado[4];
+        console.log(this.listaIngresoProducto);
 
        
         this.graficaHistoriaPrecioProducto(this.listaHistoriaPrecioProducto);

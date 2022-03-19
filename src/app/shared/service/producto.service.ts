@@ -6,6 +6,7 @@ import { locator } from '../sesion/locator';
 import { TcHistoriaPrecioProducto } from '../../productos/model/TcHistoriaPrecioProducto';
 import { TwProductoAlternativo } from 'src/app/productos/model/TwProductoAlternativo';
 import { TvStockProducto } from '../../productos/model/TvStockProducto';
+import { TwHistoriaIngresoProducto } from 'src/app/productos/model/TwHistoriaIngresoProducto';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,11 @@ export class ProductoService {
   historiaPrecioProducto(nId: number){
     let url = environment.servicios.apiRefacFabela + locator.obtenerHistoriaPrecioProducto+'n_id='+nId;
     return this.http.get<TcHistoriaPrecioProducto[]>(url);
+  }
+
+  historiaIngresoProducto(nId: number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerHistoriaIngresoProducto+'n_id='+nId;
+    return this.http.get<TwHistoriaIngresoProducto[]>(url);
   }
 
   simuladorPrecioProducto(producto: TcProducto){

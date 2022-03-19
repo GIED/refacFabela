@@ -76,6 +76,7 @@ export class RegistroPedidosComponent implements OnInit {
 
   this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
   this.listaPedidoDetalle=data;
+  console.log(this.listaPedidoDetalle);
 
     
   });

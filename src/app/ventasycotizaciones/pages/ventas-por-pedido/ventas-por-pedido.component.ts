@@ -20,6 +20,8 @@ import { VentasService } from '../../../shared/service/ventas.service';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { debounceTime } from 'rxjs/operators';
 import { TokenService } from '../../../shared/service/token.service';
+import { ProveedorService } from 'src/app/administracion/service/proveedor.service';
+import { Proveedores } from '../../../administracion/interfaces/proveedores';
 
 @Component({
   selector: 'app-ventas-por-pedido',
@@ -65,13 +67,16 @@ export class VentasPorPedidoComponent implements OnInit {
   nIdProducto:number;
   stockTotal: number = 0;
 
+  listaProveedores:Proveedores[];
+
   constructor(
     private clienteService:ClienteService,
     private productoService:ProductoService, 
     private messageService: MessageService,
     private ventaService:VentasService,
     private bodegasService: BodegasService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private proveedorService: ProveedorService, 
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -82,7 +87,15 @@ export class VentasPorPedidoComponent implements OnInit {
     this.buscaCliente();
     this.buscaProducto();
     this._initFormGroup();
+    this.obtenerProveedores();
     
+  }
+
+  obtenerProveedores() {
+    this.proveedorService.getProveedores().subscribe(provedores => {
+      this.listaProveedores = provedores;
+      console.log(this.listaProveedores);
+    })
   }
 
   _initFormGroup(): void{ 
@@ -91,7 +104,8 @@ export class VentasPorPedidoComponent implements OnInit {
       productoCtrl: new FormControl('',[Validators.minLength(3)]),
       clienteSeleccionadoCtrl: new FormControl('', []),
       productoSelecionadoCtrl: new FormControl('', []),
-      nCantidadCtrl: new FormControl( 0 , [ ])
+      nCantidadCtrl: new FormControl( 0 , [ ]),
+      nIdProveedorCtrl:  new FormControl ('',[Validators.required])
     });
     
   }
@@ -112,6 +126,9 @@ export class VentasPorPedidoComponent implements OnInit {
   }
   get nCantidadCtrl(){
     return this.formGrp.get('nCantidadCtrl') as FormControl;
+  }
+  get nIdProveedorCtrl(){
+    return this.formGrp.get('nIdProveedorCtrl') as FormControl;
   }
 
   
@@ -239,14 +256,17 @@ agregarProduct(producto: TvStockProducto) {
   if (producto.nCantidad == 0 || producto.nCantidad == null) {
     console.log("cantidad recibida: ",this.nCantidadCtrl.value)
     producto.nCantidad=this.nCantidadCtrl.value;
+    producto.nIdProveedor=this.nIdProveedorCtrl.value;
   }
   
   
   //verifica que se agrege una cantidad
-  if (producto.nCantidad === 0) {
+  console.log("Este es el valor del proveedor");
+  console.log(this.nIdProveedorCtrl.value, "valor");
+  if (producto.nCantidad === 0 && this.nIdProveedorCtrl.value!==null) {
     //console.log("entro a if");
     
-    this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar una cantidad', life: 3000});
+    this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar cantidad y Proveedor', life: 3000});
 
   }else{ 
 

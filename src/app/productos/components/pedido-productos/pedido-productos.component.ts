@@ -19,6 +19,10 @@ export class PedidoProductosComponent implements OnInit {
 
   @Input() listaPedidos: TwPedidoProducto[];
   @Input() banIngreso: boolean;
+  @Output() listaPedidoDetalle: EventEmitter<TvPedidoDetalle[]>=new EventEmitter();
+
+
+
   
   
 
@@ -41,6 +45,7 @@ export class PedidoProductosComponent implements OnInit {
     nIdProducto: number;
     sProducto: string;
     traspaso:boolean=false;
+    
 
     constructor(private pedidosService: PedidosService,  private productosService: ProductoService,
       private bodegasService: BodegasService,
@@ -167,7 +172,8 @@ findIndexById(id: number): number {
 
 obtenerPedidoDetalle(){
   this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
-      
+      this.listaPedidoDetalle.emit(data);
+      console.log(data);
     });
 }
 createId(): string {

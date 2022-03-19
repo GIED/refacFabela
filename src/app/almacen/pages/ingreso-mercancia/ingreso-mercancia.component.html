@@ -100,7 +100,7 @@
             <ng-template pTemplate="content">
               
                 
-                <app-pedido-productos [listaPedidos]="listaPedidos"  [banIngreso]="true" (listaPedidoDetalle)="obtenerPedidosEstatus()"  >  </app-pedido-productos>
+                <app-pedido-productos [listaPedidos]="listaPedidos"  [banIngreso]="true" (listaPedidoDetalle)="obtenerPedidosEstatusActualiza($event)"  >  </app-pedido-productos>
 
             </ng-template>
             <ng-template pTemplate="footer">

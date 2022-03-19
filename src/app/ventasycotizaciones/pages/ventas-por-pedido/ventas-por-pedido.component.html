@@ -89,6 +89,9 @@
                                             <th pSortableColumn="cantidad">Cantidad
 
                                             </th>
+                                            <th pSortableColumn="cantidad">Proveedor
+
+                                            </th>
                                         </tr>
                                     </ng-template>
                                     <ng-template pTemplate="body" let-producto>
@@ -103,13 +106,23 @@
                                                 <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100">
                                                 </p-inputNumber>
                                             </td>
-                                            <td>
-                                                <button *ngIf="producto.nCantidadTotal===0; else mensaje;" pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
+                                           
+                                                <td>
+                                                    <p-dropdown [options]="listaProveedores" formControlName="nIdProveedorCtrl"
+                                                        optionLabel="sRazonSocial" optionValue="nId" [class.is-invalid]="validanIdProveedorCtrl"
+                                                        placeholder="Seleccine un Proveedor" [showClear]="true"></p-dropdown>
+                                                    <small class="p-error" *ngIf="validanIdProveedorCtrl">*Registrar Proveedor.</small>
+                                                </td>
+
+                                                <td>
+                                                    <button *ngIf="producto.nCantidadTotal===0; else mensaje;" pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
+                                                   </td>  
+                                               <td>
                                                 <ng-template #mensaje>
                                                     <p style="color: red;">El producto seleccionado cuenta con Stock. No puede generar un pedido sobre este producto. </p>
                                                 </ng-template>
-
-                                            </td>
+                                                </td> 
+                                           
 
                                         </tr>
                                     </ng-template>
