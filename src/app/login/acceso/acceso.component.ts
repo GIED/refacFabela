@@ -10,14 +10,13 @@ import { MessageService } from 'primeng/api';
   templateUrl: './acceso.component.html',
   styleUrls: ['./acceso.component.scss']
 })
-export class AccesoComponent  {
+export class AccesoComponent{
 
-  isLogged = false;
-  isLoginFail= false;
+  
   loginUsuario:LoginUsuario;
   sUsuario: string;
   sPassword: string;
-  errMsg:string;
+  roles: string[]=[];
   dark: boolean;
   checked: boolean;
 
@@ -28,14 +27,20 @@ export class AccesoComponent  {
     private messageService: MessageService,){
     
   }
+ 
 
   onLogin(){
     this.loginUsuario = new LoginUsuario(this.sUsuario, this.sPassword);
     this.authService.login(this.loginUsuario).subscribe(data =>{
+      
       this.tokenService.setToken(data.token);
       this.router.navigate(['/inicio'])
       this.messageService.add({ severity: 'success', summary: 'Acceso Correcto', detail: "Inicio de sesión correcto", life: 3000 });
 
+    },error =>{
+      
+      this.messageService.add({ severity: 'error', summary: 'Acceso Incorrecto', detail: error.error.mensaje, life: 3000 });
+      this.router.navigate(['/login'])
     });
   }
 

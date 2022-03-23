@@ -14,20 +14,25 @@ export class ProdGuardService implements CanActivate{
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean{
     const expectedRol = route.data.expectedRol;
+    const roles = this.tokenService.getRoles();
 
-    if (this.tokenService.IsAdmin()) {
-      this.realRol= 'admin';
-    }else if (this.tokenService.isVenta()) {
-      this.realRol= 'ventas';
-    }else if (this.tokenService.isDistribuidor()) {
-      this.realRol= 'distribuidor';
-    }else if (this.tokenService.isAlmacen()) {
-      this.realRol= 'almacen';
-    }else if (this.tokenService.isCaja()) {
-      this.realRol= 'caja';
-    }
-    if (!this.tokenService.isLogged() || expectedRol.indexOf(this.realRol) < 0) {
-      this.router.navigate(['/inicio']);
+    roles.forEach(rol =>{
+      if (rol === 'ROLE_ADMIN') {
+        this.realRol= 'admin';
+      }else if (rol === 'ROLE_VENTA') {
+        this.realRol= 'ventas';
+      }else if (rol === 'ROLE_DISTRIBUIDOR') {
+        this.realRol= 'distribuidor';
+      }else if (rol === 'ROLE_ALMACEN') {
+        this.realRol= 'almacen';
+      }else if (rol === 'ROLE_CAJA') {
+        this.realRol= 'caja';
+      }
+    })
+
+   
+    if (!this.tokenService.isLogged || expectedRol.indexOf(this.realRol) < 0) {
+      this.router.navigate(['/login']);
       return false;
     }
     return true;

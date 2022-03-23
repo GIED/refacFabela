@@ -9,14 +9,29 @@ import { TokenService } from '../service/token.service';
 export class AppMenuComponent implements OnInit {
 
     model: any[];
+    realRol: string;
 
     constructor(public appMain: AppMainComponent, private tokenService: TokenService) {}
 
     ngOnInit() {
+        const roles = this.tokenService.getRoles();
+        roles.forEach(rol =>{
+            if (rol === 'ROLE_ADMIN') {
+              this.realRol= 'admin';
+            }else if (rol === 'ROLE_VENTA') {
+              this.realRol= 'ventas';
+            }else if (rol === 'ROLE_DISTRIBUIDOR') {
+              this.realRol= 'distribuidor';
+            }else if (rol === 'ROLE_ALMACEN') {
+              this.realRol= 'almacen';
+            }else if (rol === 'ROLE_CAJA') {
+              this.realRol= 'caja';
+            }
+          });
         this.model = [
-            {label: 'Inicio', icon: 'pi pi-fw pi-home',  visible:this.tokenService.IsAdmin(),  routerLink: ['/inicio/tablero']},
+            {label: 'Inicio', icon: 'pi pi-fw pi-home',  visible:this.realRol==='admin',  routerLink: ['/inicio/tablero']},
             {
-                label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.tokenService.IsAdmin(),
+                label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.realRol==='admin',
                 items: [
                     {
                         label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['../administracion/usuario']
@@ -46,7 +61,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-dollar', visible:this.tokenService.IsAdmin() || this.tokenService.isVenta(),
+                label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-dollar', visible:this.realRol==='admin' || this.realRol==='ventas',
                 items: [
                     {
                         label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['../ventasycotizaciones/ventas']
@@ -68,7 +83,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Almacen', icon: 'pi pi-fw pi-slack',visible:this.tokenService.IsAdmin() || this.tokenService.isAlmacen(),
+                label: 'Almacen', icon: 'pi pi-fw pi-slack',visible:this.realRol==='admin' || this.realRol==='almacen',
                 items: [
                     {
                         label: 'Ingreso mercancia', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/ingreso-mercancia']
@@ -89,7 +104,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Productos', icon: 'pi pi-fw pi-briefcase', visible:this.tokenService.IsAdmin(),
+                label: 'Productos', icon: 'pi pi-fw pi-briefcase', visible:this.realRol==='admin',
                 items: [
                     {
                         label: 'Registro', icon: 'pi pi-fw pi-external-link', routerLink: ['../productos/registro-producto']
@@ -104,7 +119,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Caja', icon: 'pi pi-fw pi-id-card', visible:this.tokenService.IsAdmin() || this.tokenService.isCaja(),
+                label: 'Caja', icon: 'pi pi-fw pi-id-card', visible:this.realRol==='admin' || this.realRol==='ventas',
                 items: [
                     {
                         label: 'Cobrar', icon: 'pi pi-fw pi-dollar', routerLink: ['../caja/cobrar']
@@ -123,7 +138,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label:'Distribuidor', icon: 'pi pi-sitemap', visible:this.tokenService.isDistribuidor(), 
+                label:'Distribuidor', icon: 'pi pi-sitemap', visible:this.realRol==='distribuidor', 
                 items:[
                     {
                         label:'Cotizaciones', icon: 'pi pi-globe', routerLink: ['../ventasycotizaciones/ventas-por-internet']

@@ -1,7 +1,9 @@
+import { JsonPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 const TOKEN_KEY = 'AuthToken';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +16,29 @@ export class TokenService {
 
 
   public setToken(token : string){
-    window.localStorage.removeItem(TOKEN_KEY);
-    window.localStorage.setItem(TOKEN_KEY, token);
+    window.sessionStorage.removeItem(TOKEN_KEY);
+    window.sessionStorage.setItem(TOKEN_KEY, token);
   }
 
   public getToken(){
-    return localStorage.getItem(TOKEN_KEY);
+    return sessionStorage.getItem(TOKEN_KEY);
   }
+
+  public getRoles(){
+    if (!this.isLogged()) {
+      return null;
+    }
+    const token = this.getToken();
+    const payload = token.split('.')[1];
+    const payloadDecoded = atob(payload);
+    const values =JSON.parse(payloadDecoded);
+    const roles = values.roles;
+
+    return roles;
+  }
+
+  
+ 
 
   public isLogged(): boolean{
     
@@ -57,110 +75,10 @@ export class TokenService {
     return idUser;
   }
 
-  
-  // obtener Perfiles del usuario logeado
 
-  public IsAdmin(){
-    if (!this.isLogged()) {
-      return false;
-    }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const roles = values.roles;
-    if (roles.indexOf('ROLE_ADMIN') < 0) {
-      return false;
-    }
-
-    return true;
-  }
-
-  public isVenta(){
-    if (!this.isLogged()) {
-      return false;
-    }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const roles = values.roles;
-    if (roles.indexOf('ROLE_VENTA') < 0) {
-      return false;
-    }
-
-    return true;
-  }
-  public isDistribuidor(){
-    if (!this.isLogged()) {
-      return false;
-    }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const roles = values.roles;
-    if (roles.indexOf('ROLE_DISTRIBUIDOR') < 0) {
-      return false;
-    }
-
-    return true;
-  }
-
-  public isAlmacen(){
-    if (!this.isLogged()) {
-      return false;
-    }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const roles = values.roles;
-    if (roles.indexOf('ROLE_ALMACEN') < 0) {
-      return false;
-    }
-
-    return true;
-  }
-
-  public isCaja(){
-    if (!this.isLogged()) {
-      return false;
-    }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const roles = values.roles;
-    if (roles.indexOf('ROLE_CAJA') < 0) {
-      return false;
-    }
-
-    return true;
-  }
-
-
-
-  public IsUser(){
-    if (!this.isLogged()) {
-      return false;
-    }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const roles = values.roles;
-    if (roles.indexOf('ROLE_USER') < 0) {
-      return false;
-    }
-
-    return true;
-  }
-
-  
 
   public logout(){
-    window.localStorage.clear();
+    window.sessionStorage.clear();
     this.router.navigate(['/login']);
   }
 

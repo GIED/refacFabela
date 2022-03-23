@@ -40,7 +40,7 @@ const routes: Routes = [
     
   },
   {
-    path:'inicio', component:AppMainComponent, 
+    path:'inicio', component:AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','distribuidor','almacen','caja']},
     loadChildren:() => import('./inicio/inicio.module').then(m => m.InicioModule),
     
   },

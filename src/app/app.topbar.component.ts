@@ -84,6 +84,7 @@ export class AppTopBarComponent {
 
 	onLogOut(){
 		this.tokenService.logout();
+		
 	  }
 
 }
