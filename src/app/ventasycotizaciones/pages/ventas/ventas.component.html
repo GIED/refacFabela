@@ -1,7 +1,6 @@
 <div class="p-grid p-fluid">
     <div class="p-col-12 p-text-center">
-        <h2>Ventas y Cotizaciones</h2>
-        <hr />
+        <h3>Ventas y Cotizaciones</h3>       
     </div>
     <div class="p-col-12 p-xl-12 p-md-12">
         <form [formGroup]="formGrp" autocomplete="off">
@@ -9,7 +8,7 @@
                 <div class="p-grid">
 
                     <div class="p-col-12">
-                        <h5>Favor de Elegir un cliente</h5>
+                        <h6>Favor de Elegir un cliente</h6>
                         <input type="text" pInputText name="cliente" formControlName="clienteCtrl" (input)="inputCliente()" />
                         <p-listbox *ngIf="mostrarSugerenciasCliente" [options]="listaCliente" formControlName="clienteSeleccionadoCtrl" optionLabel="sRazonSocial" (onClick)="valorSeleccionadoCliente()">
                             <ng-template let-cliente pTemplate="item">
@@ -20,7 +19,7 @@
                         </p-listbox>
                     </div>
                     <p-accordion class="p-col-12" *ngIf="mostrarDetalleCliente">
-                        <p-accordionTab header="Datos del credito del cliente">
+                        <p-accordionTab header="Datos del crédito del cliente">
                             <div class="p-col-12">
                                 <ng-template [ngIf]="mostrarDetalleCliente">
                                     <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>
@@ -36,21 +35,22 @@
 
 
                 <br>
-                <div class="p-grid" *ngIf="muestraProductos">
-                    <div class="p-col-12 p-lg-12 p-md-12 ">
-                        <div class="p-grid p-dir-col">
+                <div class="p-grid " *ngIf="muestraProductos">
+                    <!--Busqueda de producto-->
+                    <div class="p-col-12 p-lg-6 p-md-6 ">
+                        <div class="p-grid p-dir-col fondo-content">
                             <div class="p-col-12 ">
                                 <p-table [value]="productosFiltrados" [rows]="10" responsiveLayout="scroll" currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
                                     <ng-template pTemplate="caption">
 
                                         <div class="p-grid p-ai-start vertical-container">
-                                            <div class="p-col-6">
+                                            <div class="p-col-12">
                                                 <label for="name">Producto</label>
                                                 <input type="text" pInputText name="producto" formControlName="productoCtrl" (input)="inputProducto()" />
                                                 <p-listbox *ngIf="mostrarSugerenciasProducto" [options]="listaProductoSugerencia" formControlName="productoSelecionadoCtrl" optionLabel="sNoParte" (onClick)="valorSeleccionadoProducto()" [listStyle]="{'max-height':'200px'}">
                                                     <ng-template let-producto pTemplate="item">
                                                         <div>
-                                                            <div>{{producto.sNoParte}}-{{producto.sProducto}}</div>
+                                                            <div>{{producto.sNoParte}}-{{producto.sProducto}}--{{producto.sDescripcion}}</div>
                                                         </div>
                                                     </ng-template>
                                                    
@@ -58,9 +58,6 @@
                                             </div>
                                           
                                         </div>
-
-
-
 
                                         <p-toast></p-toast>
                                     </ng-template>
@@ -84,6 +81,7 @@
                                             <th pSortableColumn="cantidad">Cantidad
 
                                             </th>
+                                            <th></th>
                                         </tr>
                                     </ng-template>
                                     <ng-template pTemplate="body" let-producto>
@@ -95,7 +93,7 @@
                                             <td>{{producto.tcProducto.tcCategoria.sDescripcion}}</td>
                                             <td (click)="ubicacionProducto(producto)">{{producto.nCantidadTotal}}</td>
                                             <td>
-                                                <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100">
+                                                <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="1000">
                                                 </p-inputNumber>
                                             </td>
                                             <td>
@@ -107,8 +105,29 @@
                             </div>
                         </div>
                     </div>
+                    <!--Distribución del producto-->
+                    <div class="p-col-12 p-lg-2 p-md-3 fondo-content ">
 
-                    <div class="p-col-12 p-lg-12 p-md-12 ">
+                        <br>
+                        <br>
+                       
+                       
+                                <app-modal-productos-bodega  [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>
+                                </app-modal-productos-bodega>
+                         
+
+
+                    </div>
+                    <!--Productos alternativos-->
+                    <div class="p-col-12 p-lg-4 p-md-4 fondo-content ">
+
+                        <div *ngIf="nIdProducto==null " class="p-text-center"> <br><h6>Productos Alternativos</h6></div>
+                        <app-productos-alternativos-venta *ngIf="nIdProducto!=null  " [nIdProducto]="nIdProducto" (producto)="agregarProduct($event)"></app-productos-alternativos-venta>
+
+
+                    </div>
+
+                    <div  class="p-col-12 p-lg-12 p-md-12 fondo-content ">
                         <div class="p-col-12 p-mt-3">
                             <span class="p-input-icon-left">
 							<h5 class="p-text-center" >Carrito de compras <i class="pi pi-shopping-cart"></i></h5>
@@ -176,23 +195,8 @@
             </div>
         </form>
     </div>
-    <p-dialog [(visible)]="mostrarAlternativos" header="Productos Alternativos" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
-        <ng-template pTemplate="content">
-            <app-productos-alternativos-venta [nIdProducto]="nIdProducto" (producto)="agregarProduct($event)"></app-productos-alternativos-venta>
-        </ng-template>
-        <ng-template pTemplate="footer">
-            <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
-        </ng-template>
-    </p-dialog>
-    <p-dialog [(visible)]="muestraProductosBodega" header="Productos Alternativos" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
-        <ng-template pTemplate="content">
-            <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>
-            </app-modal-productos-bodega>
-        </ng-template>
-        <ng-template pTemplate="footer">
-            <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogBodega()"></button>
-        </ng-template>
-    </p-dialog>
+ 
+   
     <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta" [style]="{width: '700px'}" [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
             <app-form-venta [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente" [total]="total" (emitirVenta)="generarVenta($event)" (soloCotizacion)="soloCotizacion()"></app-form-venta>

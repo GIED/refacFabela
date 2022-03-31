@@ -1,38 +1,52 @@
+
 <div class="p-col-12 p-lg-12 p-md-12 ">
-    <div class="p-grid p-dir-col">
+   
         <form [formGroup]="formGrp" autocomplete="off">
             <div class="p-col-12 ">
-                <p-table [value]="productosFiltrados" [rows]="10" responsiveLayout="scroll" currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
+                <p-table  #dt [value]="productosFiltrados" [rows]="2" [paginator]="true"
+                [globalFilterFields]="['tcProducto.sProducto','nCantidadTotal']"
+                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"  
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                [showCurrentPageReport]="true"> 
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                       
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar Alternativo" />
+                        </span>
+                    </div>
+                </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
 
-                            <th pSortableColumn="noParte">No.Parte
-                            </th>
-                            <th pSortableColumn="descripcion">Descripcións
+                           
+                          
+                            <th pSortableColumn="descripcion">No. Parte
 
                             </th>
+                            <th pSortableColumn="tcProducto.sProducto">Descripcion 
+                                <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>    </th>
                             <th pSortableColumn="precio">Precio
 
                             </th>
-                            <th pSortableColumn="categoria">Categoria
+                           <th pSortableColumn="nCantidadTotal">Stock
+                                <p-sortIcon field="nCantidadTotal"></p-sortIcon>    </th>
+                            <th pSortableColumn="stock">Cantidad
 
                             </th>
-                            <th pSortableColumn="stock">stock
-
-                            </th>
-                            <th pSortableColumn="cantidad">Cantidad
-
-                            </th>
+                            
+                            <th></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-producto>
                         <tr>
-
-                            <td>{{producto.nIdProducto}}</td>
+                            <td>{{producto.tcProducto.sNoParte}}</td>
                             <td>{{producto.tcProducto.sProducto}}</td>
                             <td>{{producto.tcProducto.nPrecioConIva }}</td>
-                            <td>{{producto.tcProducto.tcCategoria.sDescripcion}}</td>
-                            <td>{{producto.nCantidadTotal}}</td>
+                           
+                            <td class="p-text-center"><div *ngIf="producto.nCantidadTotal==0" style="background: red; border-radius: 30px;">{{producto.nCantidadTotal}}</div><div *ngIf="producto.nCantidadTotal>0" style="background: green; border-radius: 30px;">{{producto.nCantidadTotal}}</div></td>
                             <td>
                                 <p-inputNumber formControlName="nCantidadCtrl" [min]="0" [max]="100">
                                 </p-inputNumber>
@@ -41,12 +55,13 @@
                                 <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
                             </td>
                         </tr>
-                    </ng-template>
+                    </ng-template>                   
                 </p-table>
+               
             </div>
 
             <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 
         </form>
-    </div>
+    
 </div>

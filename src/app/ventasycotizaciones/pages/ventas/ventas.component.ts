@@ -202,6 +202,8 @@ buscaProducto(){
 
 valorSeleccionadoProducto(){
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
+  this.ubicacionProducto(this.productoSeleccionado.nId);
+  this.nIdProducto=this.productoSeleccionado.nId;
   this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
     console.log(productoStock);
     if (productoStock.nCantidadTotal === 0) {
@@ -213,8 +215,8 @@ valorSeleccionadoProducto(){
   });
 }
 
-ubicacionProducto(producto: TvStockProducto){
-  this.bodegasService.obtenerProductoBodegas(producto.nIdProducto).subscribe(productoBodega => {
+ubicacionProducto(nId: number){
+  this.bodegasService.obtenerProductoBodegas(nId).subscribe(productoBodega => {
     this.listaProductoBodega = productoBodega;
     for (const key in productoBodega) {
         this.stockTotal += this.listaProductoBodega[key].nCantidad;
@@ -244,6 +246,9 @@ agregarProduct(producto: TvStockProducto) {
   if (producto.nCantidad == 0 || producto.nCantidad == null) {
     console.log("cantidad recibida: ",this.nCantidadCtrl.value)
     producto.nCantidad=this.nCantidadCtrl.value;
+    this.listaProductoBodega=[];
+    this.productosFiltrados=[];
+    this.nIdProducto=null;
   }
   
   

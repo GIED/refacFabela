@@ -1,25 +1,23 @@
 <div class="p-text-center">
-    <h3>Distribución de productos por bodega</h3>
+    <h6>Producto Bodega</h6>
 </div>
 
 <p-table [value]="listaProductoBodega" responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
     <ng-template pTemplate="header">
-        <tr>
-            <th>Producto</th>
+        <tr>           
             <th>Bodega</th>
-            <th>Anaquel</th>
-            <th>Nivel</th>
-            <th>Stock</th>
+            <th  class="p-text-center">Anaquel</th>
+            <th  class="p-text-center">Nivel</th>
+            <th  class="p-text-center">Stock</th>
             <th *ngIf="traspaso">Acciones</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-bodega>
         <tr>
-            <td>{{bodega.tcProducto.sProducto}}</td>
             <td>{{bodega.tcBodega.sBodega}}</td>
-            <td>{{bodega.tcAnaquel.sAnaquel}}</td>
-            <td>{{bodega.tcNivel.sNivel}}</td>
-            <td>{{bodega.nCantidad}}</td>
+            <td class="p-text-center">{{bodega.tcAnaquel.sAnaquel}}</td>
+            <td  class="p-text-center">{{bodega.tcNivel.sNivel}}</td>
+            <td  class="p-text-center"> <div *ngIf="bodega.nCantidad==0" style="background: red; border-radius: 30px;">{{bodega.nCantidad}}</div> <div *ngIf="bodega.nCantidad>0" style="background: green; border-radius: 30px;">{{bodega.nCantidad}}</div> </td>
             <td *ngIf="traspaso"><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editarProducto(bodega)"></button></td>
 
         </tr>
