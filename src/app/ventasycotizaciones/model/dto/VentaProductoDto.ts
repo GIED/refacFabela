@@ -2,6 +2,7 @@ export class VentaProductoDto{
 
     nId?:number; 
     sNoParte?: string;
+    nIdProducto?: number;
     sProducto?: string;
     sDescripcion?: string;
     sMarca?:string;
@@ -10,6 +11,9 @@ export class VentaProductoDto{
     nTotalPartida?: number;
     dFechaVenta?: Date;
     nEstatusEntregaAlmacen:number;
+    sBodega?:string;
+    sAnaquel?:string;
+    sNivel?:string;
 
 
 }

@@ -95,7 +95,7 @@
                   
                     <p-table #dt [value]="listaProductosVenta" responsiveLayout="scroll" [rows]="10"
                     [paginator]="true"
-                    [globalFilterFields]="['sNoParte','sProducto','sDescripcion','sMarca','nCantidad','nTotalUnitario','nTotalPartida']"
+                    [globalFilterFields]="['sNoParte','sProducto','sDescripcion','sMarca','nCantidad','nTotalUnitario','nTotalPartida', 'sAnaquel']"
                     [(selection)]="selectedProducts2" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                     currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros"
                     [showCurrentPageReport]="true">
@@ -125,6 +125,8 @@
                             </th>
                             <th pSortableColumn="nTotalPartida">Total Partida<p-sortIcon field="nTotalPartida"></p-sortIcon>
                             </th>
+                            <th pSortableColumn="sAnaquel">Ubicación<p-sortIcon field="sAnaquel"></p-sortIcon>
+                            </th>
                             <td></td>
                             
                            
@@ -148,6 +150,8 @@
                             <td><span class="p-column-title"></span> {{venta.nCantidad | number}}
                             </td>
                              <td><span class="p-column-title"></span> {{venta.nTotalPartida | number}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.sBodega}}-{{venta.sNivel}}-{{venta.sAnaquel}}
                             </td>
                             <td> 
                                 <div *ngIf="venta.nEstatusEntregaAlmacen==false"><p-checkbox [(ngModel)]="venta.nEstatusEntregaAlmacen" [binary]="true"
