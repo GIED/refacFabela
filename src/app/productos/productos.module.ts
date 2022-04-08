@@ -37,7 +37,7 @@ import { ModalProductosBodegaComponent } from './components/modal-productos-bode
     AltaPedidosComponent,
     ModalProductosBodegaInternoComponent,
     ModalProductoBodegaExternoComponent,
-    ModalProductosBodegaComponent
+    ModalProductosBodegaComponent    
     
   ],
   imports: [
@@ -61,6 +61,7 @@ import { ModalProductosBodegaComponent } from './components/modal-productos-bode
     RegistroPedidosComponent,
     PedidoProductosComponent,
     AltaPedidosComponent,
+
   ]
 })
 export class ProductosModule { }
