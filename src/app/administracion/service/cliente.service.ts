@@ -5,6 +5,7 @@ import { locator } from 'src/app/shared/sesion/locator';
 import { Clientes } from '../interfaces/clientes';
 import { SaldoGeneralCliente } from '../../ventasycotizaciones/model/TvSaldoGeneralCliente';
 import { TcCliente } from '../model/TcCliente';
+import { TcRegimenFiscal } from 'src/app/productos/model/TcRegimenFiscal';
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +39,9 @@ export class ClienteService {
   obtenerSaldosClientes(){
     let url = environment.servicios.apiRefacFabela + locator.consultaClientesSaldos;
     return this.http.get<SaldoGeneralCliente>(url);
+  }
+  obtenerRegimenFiscal(){
+    let url = environment.servicios.apiRefacFabela + locator.consultaRegimenFiscal;
+    return this.http.get<TcRegimenFiscal[]>(url);
   }
 }

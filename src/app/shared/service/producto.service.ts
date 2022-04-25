@@ -45,6 +45,11 @@ export class ProductoService {
     return this.http.post<TcProducto>(url,producto);
   }
 
+  calcularPrecioProducto(producto: TcProducto){
+    let url = environment.servicios.apiRefacFabela + locator.calcularPrecioProducto;
+    return this.http.post<TcProducto>(url,producto);
+  }
+
   historiaPrecioProducto(nId: number){
     let url = environment.servicios.apiRefacFabela + locator.obtenerHistoriaPrecioProducto+'n_id='+nId;
     return this.http.get<TcHistoriaPrecioProducto[]>(url);

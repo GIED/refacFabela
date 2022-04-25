@@ -26,8 +26,10 @@
                             <th pSortableColumn="descripcion">No. Parte
 
                             </th>
-                            <th pSortableColumn="tcProducto.sProducto">Descripcion 
+                            <th pSortableColumn="tcProducto.sProducto">Producto 
                                 <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>    </th>
+                                <th pSortableColumn="precio">Descripción
+                                    <th pSortableColumn="precio">Marca
                             <th pSortableColumn="precio">Precio
 
                             </th>
@@ -44,7 +46,9 @@
                         <tr>
                             <td>{{producto.tcProducto.sNoParte}}</td>
                             <td>{{producto.tcProducto.sProducto}}</td>
-                            <td>{{producto.tcProducto.nPrecioConIva }}</td>
+                            <td>{{producto.tcProducto.sDescripcion}}</td>
+                            <td>{{producto.tcProducto.sMarca}}</td>
+                            <td>${{producto.tcProducto.nPrecioConIva | number:'1.1-3' }}</td>
                            
                             <td class="p-text-center"><div *ngIf="producto.nCantidadTotal==0" style="background: red; border-radius: 30px;">{{producto.nCantidadTotal}}</div><div *ngIf="producto.nCantidadTotal>0" style="background: green; border-radius: 30px;">{{producto.nCantidadTotal}}</div></td>
                             <td>

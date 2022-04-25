@@ -7,6 +7,7 @@ static obtenerSaldoGeneral='/consultaClienteIdSaldo?';
 static consultaClienteIdUsuario='/consultaClienteIdUsuario?';
 static guardarClientes='/guardarCliente';
 static consultaClientesSaldos='/consultaClienteSaldo'
+static consultaRegimenFiscal='/catalogoRegimenFiscal'
 // api para proveedores
 static obtenerProveedores='/obtenerProveedores';
 static guardarProveedores='/guardarProveedores';
@@ -35,6 +36,7 @@ static obtenerProductos= '/obtenerProductos';
 static obtenerProductosLike= '/obtenerProductosLike?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
+static calcularPrecioProducto= '/calcularNuevoPrecio';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerHistoriaIngresoProducto='/obtenerHistoriaIngresoProducto?';
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';

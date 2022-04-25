@@ -6,6 +6,7 @@ import { ClienteService } from '../../service/cliente.service';
 import { Clientes } from '../../interfaces/clientes';
 import { FormGroup, FormBuilder, Validators, FormControl, FormsModule } from '@angular/forms';
 import { TokenService } from '../../../shared/service/token.service';
+import { TcRegimenFiscal } from '../../../productos/model/TcRegimenFiscal';
 
 
 
@@ -45,15 +46,24 @@ export class ClienteComponent implements OnInit {
   credito: boolean;
   cliente: Clientes;
   formulario: FormGroup;
+  listaRegimenFiscal:TcRegimenFiscal[];
 
   constructor(private messageService: MessageService,
     private confirmationService: ConfirmationService, private clienteService: ClienteService, private fb: FormBuilder,
     private tokenService: TokenService) {
     this.crearFormulario();
+    this.listaRegimenFiscal=[];
+
   }
 
   ngOnInit() {
     this.obtenerClientes();
+    this.obtenerRegimenFiscal();
+  }
+  obtenerRegimenFiscal(){
+this.clienteService.obtenerRegimenFiscal().subscribe(data=>{
+  this.listaRegimenFiscal=data;
+})
   }
 
   // Crear formulario con sus validaciones de clientes
@@ -66,7 +76,8 @@ export class ClienteComponent implements OnInit {
       sCorreo: ['', [Validators.required, Validators.email]],
       nCp: ['', [Validators.required,  Validators.minLength(5), Validators.maxLength(5), Validators.pattern('^[0-9]{5}') ]],
       nId: ['', []],
-      sClave: ['', []]
+      sClave: ['', []],
+      nIdRegimenFiscal: ['', [Validators.required]],
     })
   }
 
@@ -88,6 +99,9 @@ export class ClienteComponent implements OnInit {
   }
   get validaCp() {
     return this.formulario.get('nCp').invalid && this.formulario.get('nCp').touched;
+  }
+  get validaRegimenfiscal() {
+    return this.formulario.get('nIdRegimenFiscal').invalid && this.formulario.get('nIdRegimenFiscal').touched;
   }
 
   // Carga de clientes inicial(Todos)
@@ -114,6 +128,7 @@ export class ClienteComponent implements OnInit {
     this.fclientes.sRfc.setValue("");
     this.fclientes.sClave.setValue("");
     this.fclientes.nCp.setValue("");
+    this.fclientes.nIdRegimenFiscal.setValue("");
   }
 
 
@@ -136,6 +151,7 @@ export class ClienteComponent implements OnInit {
     this.fclientes.sRfc.setValue(cliente.sRfc);
     this.fclientes.sClave.setValue(cliente.sClave);
     this.fclientes.nCp.setValue(cliente.nCp);
+    this.fclientes.nIdRegimenFiscal.setValue(cliente.tcRegimenFiscal.nId); 
 
   }
 

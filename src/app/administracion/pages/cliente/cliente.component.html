@@ -116,6 +116,12 @@
 
                     </div>
                     <div class="p-field">
+                        <label for="marca">Regimen Fiscal</label>
+                        <p-dropdown [options]="listaRegimenFiscal" formControlName="nIdRegimenFiscal" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaRegimenfiscal" placeholder="Seleccine un Regimen Fiscal"
+                            [showClear]="true"></p-dropdown>
+                        <small class="p-error" *ngIf="validaRegimenfiscal">*Regimen Fiscal requerido.</small>
+                    </div>
+                    <div class="p-field">
                         <label for="name">Dirección</label>
                         <input type="text" pInputText formControlName="sDireccion"
                             [class.is-invalid]="validaDireccion" />

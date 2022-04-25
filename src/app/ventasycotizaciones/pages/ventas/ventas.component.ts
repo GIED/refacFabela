@@ -52,6 +52,7 @@ export class VentasComponent implements OnInit {
 
   datosRegistraVenta:DatosVenta;
   cotizacionData: TwCotizacion;
+  productoNuevoPrecio:TcProducto;
   
 
   mostrarSugerenciasCliente:boolean=false;
@@ -67,6 +68,8 @@ export class VentasComponent implements OnInit {
   total: number = 0;
   nIdProducto:number;
   stockTotal: number = 0;
+
+  incremento:number=0;
 
   constructor(
     private clienteService:ClienteService,
@@ -95,7 +98,8 @@ export class VentasComponent implements OnInit {
       productoCtrl: new FormControl('',[Validators.minLength(3)]),
       clienteSeleccionadoCtrl: new FormControl('', []),
       productoSelecionadoCtrl: new FormControl('', []),
-      nCantidadCtrl: new FormControl( 0 , [ ])
+      nCantidadCtrl: new FormControl( 0 , [ ]),
+      nIncrementoCtrl:  new FormControl( '' , [ ])
     });
     
   }
@@ -117,6 +121,10 @@ export class VentasComponent implements OnInit {
   get nCantidadCtrl(){
     return this.formGrp.get('nCantidadCtrl') as FormControl;
   }
+  get nIncrementoCtrl(){
+    return this.formGrp.get('nIncrementoCtrl') as FormControl;
+  }
+
 
   
 
@@ -172,6 +180,8 @@ valorSeleccionadoCliente(){
   
 }
 
+
+
 inputProducto(){
   this.productosFiltrados=[];
     if (this.productoCtrl.valid && this.productoCtrl.value != '') {
@@ -213,6 +223,46 @@ valorSeleccionadoProducto(){
     this.mostrarSugerenciasProducto=false;
     this.productoCtrl.setValue('');
   });
+}
+
+sumarIncremento(tvStockProducto :TvStockProducto){
+ this.incremento=this.nIncrementoCtrl.value;
+
+
+if( this.incremento>0){
+  let suma;
+  console.log("el precio en pesos es:",tvStockProducto.tcProducto.nPrecioPeso)
+  suma=tvStockProducto.tcProducto.nPrecioPeso+this.incremento;
+  tvStockProducto.tcProducto.nPrecioPeso=suma;
+ console.log("Este el el incremento:"+this.nIncrementoCtrl.value);
+ console.log("el precio con el incremento es :",tvStockProducto.tcProducto.nPrecioPeso)
+
+ console.log(tvStockProducto);
+ this.calcularPrecio(tvStockProducto);
+
+}
+
+}
+
+calcularPrecio(tvStockProducto :TvStockProducto){
+
+
+
+ this.productoService.calcularPrecioProducto(tvStockProducto.tcProducto).subscribe(data=>{
+   this.productoNuevoPrecio=data;
+   
+  for (let index = 0; index < this.productosFiltrados.length; index++) {
+    this.productosFiltrados[index].tcProducto.nPrecioPeso=this.productoNuevoPrecio.nPrecioPeso;
+     this.productosFiltrados[index].tcProducto.nPrecioConIva=this.productoNuevoPrecio.nPrecioConIva;
+     this.productosFiltrados[index].tcProducto.nPrecioSinIva=this.productoNuevoPrecio.nPrecioSinIva;
+    
+  }
+
+   console.log(this.productoNuevoPrecio)
+ })
+
+  
+
 }
 
 ubicacionProducto(nId: number){
@@ -411,6 +461,7 @@ limpiaFormulario(){
   this.mostrarDetalleCliente=false;
   this.mostrarOpcionesVenta=false;
   this.muestraProductos = false;
+  this.nIncrementoCtrl.setValue(0);
 
 
 }

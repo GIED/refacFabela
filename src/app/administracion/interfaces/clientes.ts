@@ -1,3 +1,4 @@
+import { TcRegimenFiscal } from '../../productos/model/TcRegimenFiscal';
 export interface Clientes {
    
     nId?: number;
@@ -12,4 +13,5 @@ export interface Clientes {
     sTelefono?: string;
     sClave?:string;
     nCp?:number;
+    tcRegimenFiscal?:TcRegimenFiscal;
 }
