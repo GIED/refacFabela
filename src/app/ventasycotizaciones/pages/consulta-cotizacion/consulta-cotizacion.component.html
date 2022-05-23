@@ -5,7 +5,7 @@
                 <h2>Consulta de Cotizaciones</h2>
             </div>
             <p-table #dt [value]="listaCotizaciones" [rows]="10" [paginator]="true" [globalFilterFields]="[
-          'sFolioCotizacion',
+          'nId',
           'tcCliente.sRfc',
           'tcCliente.sRazonSocial',
           'nTotalCotizacion',
@@ -60,7 +60,7 @@
                 <ng-template pTemplate="body" let-cotizacion>
                     <tr>
                         <td>
-                            <span class="p-column-title">Name</span> {{ cotizacion.sFolioCotizacion }}
+                            <span class="p-column-title">Name</span> {{ cotizacion.nId }}
                         </td>
                         <td>
                             <span class="p-column-title">Name</span> {{ cotizacion.tcCliente.sRfc }}

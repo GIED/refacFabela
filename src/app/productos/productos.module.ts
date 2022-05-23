@@ -17,6 +17,7 @@ import { AltaPedidosComponent } from './components/alta-pedidos/alta-pedidos.com
 import { ModalProductosBodegaInternoComponent } from './components/modal-productos-bodega-interno/modal-productos-bodega-interno.component';
 import { ModalProductoBodegaExternoComponent } from './components/modal-producto-bodega-externo/modal-producto-bodega-externo.component';
 import { ModalProductosBodegaComponent } from './components/modal-productos-bodega/modal-productos-bodega.component';
+import { VentaStockCeroComponent } from './pages/venta-stock-cero/venta-stock-cero.component';
 
 
 
@@ -37,7 +38,8 @@ import { ModalProductosBodegaComponent } from './components/modal-productos-bode
     AltaPedidosComponent,
     ModalProductosBodegaInternoComponent,
     ModalProductoBodegaExternoComponent,
-    ModalProductosBodegaComponent    
+    ModalProductosBodegaComponent,
+    VentaStockCeroComponent    
     
   ],
   imports: [
@@ -61,6 +63,7 @@ import { ModalProductosBodegaComponent } from './components/modal-productos-bode
     RegistroPedidosComponent,
     PedidoProductosComponent,
     AltaPedidosComponent,
+    VentaStockCeroComponent
 
   ]
 })

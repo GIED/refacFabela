@@ -46,6 +46,8 @@ export class VentasComponent implements OnInit {
   listaProductoSugerencia: TcProducto[]=[];
   listaProductos: TvStockProducto[];
   productosFiltrados: TvStockProducto[]=[];
+  productosAlternativos: TvStockProducto[]=[];
+
   listaCotización: CotizacionDto[]=[];
   estatusList: any[];
   listaProductoBodega: TwProductoBodega[];
@@ -64,6 +66,7 @@ export class VentasComponent implements OnInit {
   muestraProductosBodega:boolean=false;
 
   saldoGeneralCliente:SaldoGeneralCliente;
+  tvStockProducto: TvStockProducto;
   
   total: number = 0;
   nIdProducto:number;
@@ -83,6 +86,7 @@ export class VentasComponent implements OnInit {
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
       this.cotizacionData= new TwCotizacion();
+      this.productosAlternativos=[];
     }
 
   ngOnInit(): void {
@@ -210,10 +214,17 @@ buscaProducto(){
       });
 }
 
+limpiarlistas(){
+  this.productosAlternativos=[];
+}
+
 valorSeleccionadoProducto(){
+  this.limpiarlistas();
+  
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
   this.ubicacionProducto(this.productoSeleccionado.nId);
-  this.nIdProducto=this.productoSeleccionado.nId;
+  this.nIdProducto=this.productoSeleccionado.nId;  
+  this.obtenerProductosAlternativos(this.productoSeleccionado.nId);
   this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
     console.log(productoStock);
     if (productoStock.nCantidadTotal === 0) {
@@ -288,6 +299,28 @@ hideDialogBodega(){
   this.muestraProductosBodega=false;
 }
 
+obtenerProductosAlternativos(nId:number ) {
+    
+  this.productoService.obtenerProductosAlternativos(this.nIdProducto)
+    .subscribe((productosAlter) => {
+       productosAlter;
+      console.log("Alternativos");
+      console.log(productosAlter);
+      for (const producto of productosAlter) {
+        this.tvStockProducto = new TvStockProducto();
+        this.productoService.obtenerTotalBodegasIdProducto(producto.nIdProductoAlternativo).subscribe(productoStock =>{
+          if (productoStock != null) {
+            this.tvStockProducto=productoStock;
+            this.productosAlternativos.push(this.tvStockProducto);
+          }
+        });
+        
+      }
+      console.log(this.productosFiltrados);
+      
+    });
+}
+
 
 
 
@@ -299,6 +332,7 @@ agregarProduct(producto: TvStockProducto) {
     this.listaProductoBodega=[];
     this.productosFiltrados=[];
     this.nIdProducto=null;
+    this.limpiarlistas();
   }
   
   

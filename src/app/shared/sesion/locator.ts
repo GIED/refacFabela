@@ -41,6 +41,8 @@ static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerHistoriaIngresoProducto='/obtenerHistoriaIngresoProducto?';
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
 static obtenerTotalBodegasIdProducto='/obtenerTotalBodegasIdProducto?';
+static obtenerVentaStockFecha='/obtenerVentasStockFecha?';
+
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';
 static guardarProductoAlternativo = '/guardarProductoAlternativo';

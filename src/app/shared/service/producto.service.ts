@@ -7,6 +7,7 @@ import { TcHistoriaPrecioProducto } from '../../productos/model/TcHistoriaPrecio
 import { TwProductoAlternativo } from 'src/app/productos/model/TwProductoAlternativo';
 import { TvStockProducto } from '../../productos/model/TvStockProducto';
 import { TwHistoriaIngresoProducto } from 'src/app/productos/model/TwHistoriaIngresoProducto';
+import { TvVentaStock } from '../../productos/model/TvVentaStock';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,12 @@ export class ProductoService {
     let url =environment.servicios.apiRefacFabela + locator.obtenerTotalBodegasIdProducto+'id='+nId;
     console.log(url);
     return this.http.get<TvStockProducto>(url);
+  }
+  
+  obtenerVentaStock(fechaInicio: Date, fechaFinal:Date){
+    let url =environment.servicios.apiRefacFabela + locator.obtenerVentaStockFecha+'dFechaInicio='+fechaInicio+'&dFechaFinal='+fechaFinal;
+    console.log(url);
+    return this.http.get<TvVentaStock>(url);
   }
 
   obtenerProductosAlternativos(nId:number){

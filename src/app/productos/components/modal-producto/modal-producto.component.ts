@@ -123,7 +123,7 @@ export class ModalProductoComponent implements OnInit {
         nEstatus:['',[]],
         dFecha:['',[]],
         nIdclavesat:['',[Validators.required]],
-        sIdBar:['',[Validators.required, Validators.minLength(3)]],
+        sIdBar:['',[]],
         
     })
     this.formulario.get('nIdCategoria').disable();
