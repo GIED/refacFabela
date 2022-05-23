@@ -31,10 +31,10 @@ export class ProductoService {
     return this.http.get<TvStockProducto>(url);
   }
   
-  obtenerVentaStock(fechaInicio: Date, fechaFinal:Date){
+  obtenerVentaStock(fechaInicio: string, fechaFinal:string){
     let url =environment.servicios.apiRefacFabela + locator.obtenerVentaStockFecha+'dFechaInicio='+fechaInicio+'&dFechaFinal='+fechaFinal;
     console.log(url);
-    return this.http.get<TvVentaStock>(url);
+    return this.http.get<TvVentaStock[]>(url);
   }
 
   obtenerProductosAlternativos(nId:number){

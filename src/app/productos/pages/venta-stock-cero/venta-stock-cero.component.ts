@@ -5,6 +5,7 @@ import * as moment from 'moment';
 
 
 import { ProductoService } from 'src/app/shared/service/producto.service';
+import { TvVentaStock } from '../../model/TvVentaStock';
 
 
 @Component({
@@ -17,8 +18,11 @@ export class VentaStockCeroComponent implements OnInit {
   calFechaFinal:Date;
   calFechaInicio:Date;
   defDateInicio:string;
-  defDateFin:string;
-
+  defDateFin:string;  
+  date2:Date;
+  fechaInicio:Date;
+  fechaTermino:Date;
+  listaVentaStock : TvVentaStock[];
 
 
   constructor(     
@@ -26,47 +30,59 @@ export class VentaStockCeroComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,)
      { 
-
+      
 
 
      }
 
   ngOnInit(): void {
   
-    
-let now=moment('2022-05-15','YYYY-MM-DD');
-console.log(now.format('YYYY-MM-YY'));
-
-
-
-/*
-    
-    let calFechaFinal = moment("2013-02-08T09", "DD-MM-YYYY");
-    this.calFechaInicio = moment("2022-05-13", "YYYY-MM-DD", true).toDate();
-    
-    console.log(moment(calFechaFinal, "YYYY-MM-DDTHH:mm:ss", true).toDate());
-
-    
-  
-  
-
-
-     this.defDateInicio = this.calFechaInicio.getFullYear().toString()  + '-' + (this.calFechaInicio.getMonth() + 1).toString().padStart(2, "0") + '-' + this.calFechaInicio.getDate().toString().padStart(2, "0");
-     this.defDateFin =  this.calFechaFinal.getFullYear().toString() + '-' + (this.calFechaFinal.getMonth() + 1).toString().padStart(2, "0") + '-' + this.calFechaFinal.getDate().toString().padStart(2, "0") ;
-
-     console.log(new Date(this.defDateInicio));
-     console.log(new Date(this.defDateFin));
-*/
    
 
 
-  this.productosService.obtenerVentaStock(new Date(now.format('YYYY-MM-DD')),new Date(now.format('YYYY-MM-DD'))).subscribe(data=>{
-
-    console.log(data);
-
-  });
 
 
+  }
+
+  obtenerVentaStock(fecha1:string, fecha2:string){
+
+    this.productosService.obtenerVentaStock(fecha1, fecha2).subscribe(data=>{
+      this.listaVentaStock=data;
+
+      if(data.length==0){
+        this.messageService.add({ severity: 'info', summary: 'Mensaje', detail: 'No se encontro información', life: 3000 });
+
+
+      }
+      console.log(data);
+    
+  
+    });
+
+  }
+
+  consultar(){
+
+    this.listaVentaStock=[];
+
+   
+   
+    console.log(this.defDateInicio);
+    console.log(this.defDateFin);
+
+    if(this.fechaInicio!=null && this.fechaInicio != null ){
+      this.defDateInicio = this.fechaInicio.getFullYear().toString()  + '-' + (this.fechaInicio.getMonth() + 1).toString().padStart(2, "0") + '-' + this.fechaInicio.getDate().toString().padStart(2, "0");
+      this.defDateFin =  this.fechaTermino.getFullYear().toString() + '-' + (this.fechaTermino.getMonth() + 1).toString().padStart(2, "0") + '-' + this.fechaTermino.getDate().toString().padStart(2, "0") ;
+  
+      this.obtenerVentaStock(this.defDateInicio,this.defDateFin);
+    }
+    else{
+  
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Debe seleccionar fecha de inicio y fecha de termino', life: 3000 });
+     
+    }
+
+    
   }
 
 }

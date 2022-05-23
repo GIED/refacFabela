@@ -1,1 +1,123 @@
-<p>venta-stock-cero works!</p>
+<div class="p-grid p-fluid">
+    <!--Campos de filtro-->
+    <div class="p-col-12 ">
+        <div class="card">
+            <h3 class="p-mb-3 p-text-center">Venta Productos-Stock</h3>
+            <br>
+            <div _ngcontent-iho-c213="" class="p-grid p-formgrid">
+                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-6 p-lg-6 p-mb-lg-0">
+                    <div class="p-field p-col-12 p-md-12">
+                        <label for="dateformat">Fecha  de Inicio</label>
+                        <p-calendar [(ngModel)]="fechaInicio" dateFormat="yy-mm-dd" inputId="dateformat"></p-calendar>
+                    </div>
+                  
+
+                </div>
+                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-6 p-lg-6 p-mb-lg-0">
+                    <div class="p-field p-col-12 p-md-12">
+                        <label for="dateformat">Fecha de Termino</label>
+                        <p-calendar [(ngModel)]="fechaTermino" dateFormat="yy-mm-dd" inputId="dateformat"></p-calendar>
+                    </div>
+                </div>
+                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
+                    <button pButton pRipple type="button" label="Consultar" class="p-button-success" (click)="consultar()"></button>
+                </div>
+
+
+
+               
+                
+
+               
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+
+<p-table #dt [value]="listaVentaStock" [rows]="10" [paginator]="true"
+[globalFilterFields]="['tcProducto.sNoParte','tcProducto.sProducto','twVenta.tcCliente.sRazonSocial', 'twVenta.tcUsuario.sNombreUsuario']"
+[rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+[showCurrentPageReport]="true">
+<ng-template pTemplate="caption">
+    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+        <h5 class="p-m-0">Administración de clientes</h5>
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar Cliente" />
+        </span>
+    </div>
+</ng-template>
+<ng-template pTemplate="header">
+    <tr>
+        <th style="width: 3rem">
+        </th>
+        <th pSortableColumn="tcProducto.sNoParte">No parte
+              <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon>    </th>
+                         
+        <th pSortableColumn="tcProducto.sProducto">Producto
+            <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
+        </th>
+          <th pSortableColumn="tcProducto.sDescripcion">Descripcion
+            <p-sortIcon field="tcProducto.sDescripcion"></p-sortIcon>
+        </th>
+        <th pSortableColumn="twVenta.tcCliente.sRazonSocial">Cliente
+            <p-sortIcon field="twVenta.tcCliente.sRazonSocial"></p-sortIcon>
+        </th>
+        <th pSortableColumn="twVenta.tcUsuario.sNombreUsuario">Usuario
+            <p-sortIcon field="twVenta.tcUsuario.sNombreUsuario"></p-sortIcon>
+        </th>
+        <th pSortableColumn="twVenta.dFechaVenta">Fecha Venta
+            <p-sortIcon field="twVenta.dFechaVenta"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nCantidad">Vendidos
+            <p-sortIcon field="nCantidad"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nCantidadTotal">Stock Actual
+            <p-sortIcon field="nCantidadTotal"></p-sortIcon>
+        </th>
+      
+       
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-venta>
+    <tr>
+        <td>
+        </td>
+        <td><span class="p-column-title">Name</span> {{venta.tcProducto.sNoParte}}
+        </td>
+        <td><span class="p-column-title">Price</span> {{venta.tcProducto.sProducto}}
+        </td>
+        <td><span class="p-column-title">Price</span> {{venta.tcProducto.sDescripcion}}
+        </td>
+        <td><span class="p-column-title">Price</span> {{venta.twVenta.tcCliente.sRazonSocial}}
+        </td>
+        <td><span class="p-column-title">Price</span> {{venta.twVenta.tcUsuario.sNombreUsuario}}
+        </td>
+        <td><span class="p-column-title">Price</span> {{venta.twVenta.dFechaVenta | date}}
+        </td>
+        <td class="p-text-center"><span class="p-column-title p-text-center">Price</span> {{venta.nCantidad}}
+        </td>
+        <td><span class="p-column-title">Price</span> 
+            <div *ngIf="venta.nCantidadTotal==0" style="background: red; border-radius: 30px; color:white; text-align: center;">{{venta.nCantidadTotal}}</div><div *ngIf="venta.nCantidadTotal>0" style="background: green; border-radius: 30px; color:white; text-align: center;">{{venta.nCantidadTotal}}</div>
+        </td>
+       
+    </tr>
+</ng-template>
+<ng-template pTemplate="summary">
+    <div class="p-d-flex p-ai-center p-jc-between">
+        En total hay {{listaVentaStock ? listaVentaStock.length : 0 }} Registros.
+    </div>
+</ng-template>
+</p-table>
+
+
+
+
+
+
