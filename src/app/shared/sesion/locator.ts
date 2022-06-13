@@ -69,6 +69,7 @@ static consultaVentaDetalle='/obtenerVentasDetalle';
 static consultaVentaDetalleCajaVigente='/obtenerVentasCajaVigente';
 static consultaVentaDetalleEntrega='/obtenerVentasDetalleEntrega'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
+static obtenerVentaCobroParcial='/obtenerPagosParciales?';
 static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
 static guardaVentaDetalle= '/guardarVentaDetalle';
@@ -86,6 +87,7 @@ static generarVentaPedidoPdf='/getVentaPedido?';
 static guardaCotizacion= '/guardarCotizacion';
 static consultaCotizaciones='/consultaCotizaciones';
 static consultaCotizacionId='/consultaCotizacionId?';
+static obtenerVentaIdcotizacon='/obtenerVentaIdCotizacion?';
 static generarCotizacionPdf='/getCotizacion?';
 
 //ventasPorInternet

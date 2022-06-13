@@ -8,7 +8,7 @@
 
         <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
             [paginator]="true"
-            [globalFilterFields]="['sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
+            [globalFilterFields]="['nId','sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
             [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
             currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
             [showCurrentPageReport]="true">
@@ -52,7 +52,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-venta let-expanded="expanded">
                 <tr>
-                    <td><span class="p-column-title"></span> {{venta.sFolioVenta}}
+                    <td><span class="p-column-title"></span> {{venta.nId}}
                     </td>
                     <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc}}
                     </td>

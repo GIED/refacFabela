@@ -11,6 +11,7 @@ import { TvVentaProductoMes } from 'src/app/productos/model/TvVentaProductoMes';
 import { TwVenta } from '../../productos/model/TwVenta';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { TrVentaCobro } from '../../productos/model/TrVentaCobro';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,10 @@ export class VentasService {
   obtenerAbonosVentaId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaAbonoId+'nId='+id;
     return this.http.get<TwAbono[]>(url);
+  }
+  obtenerCobroParcial(id:number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerVentaCobroParcial+'nIdVenta='+id;
+    return this.http.get<TrVentaCobro[]>(url);
   }
   
   obtenerProductoVentaId(id:number){

@@ -20,6 +20,7 @@ nTotalVenta?:number;
 nTotalAbono?:number;
 nSaldoTotal?:number;
 nAvancePago?:number;
+nAnticipo?:number;
 sEstatus?:string;
 tcCliente?:Clientes;
 tcUsuario?:Usuarios;
