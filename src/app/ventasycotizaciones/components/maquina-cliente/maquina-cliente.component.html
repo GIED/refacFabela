@@ -1,0 +1,58 @@
+
+
+
+
+<p-table #dt [value]="listaMaquinaCliente" responsiveLayout="scroll"  [rows]="10"
+[paginator]="true"
+[globalFilterFields]="['nId','nIdCliente','sSerie','sMarca','sObservaciones']"
+ [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Maquinas"
+[showCurrentPageReport]="true">
+<ng-template pTemplate="caption">
+    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar Maquina" />
+        </span>
+    </div>
+</ng-template>
+<ng-template pTemplate="header">
+    <tr>
+        <th pSortableColumn="sSerie">Serie<p-sortIcon field="sSerie"></p-sortIcon>
+        </th>
+        <th pSortableColumn="sMarca">Marca<p-sortIcon field="sMarca"></p-sortIcon>
+        </th>
+        <th pSortableColumn="sObservaciones">Observaciones<p-sortIcon field="sObservaciones"></p-sortIcon>
+        </th>
+       <th></th>
+       
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-maquina let-expanded="expanded">
+    <tr>
+        <td><span class="p-column-title"></span> {{maquina.sSerie}}
+        </td>
+        <td><span class="p-column-title"></span> {{maquina.sMarca}}
+        </td>
+        <td><span class="p-column-title"></span> {{maquina.sObservaciones}}
+        </td>
+
+        <td><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+            (click)="abrirFormularioMaquinaClienteEdita(maquina)"></button></td>
+     
+       
+    </tr>
+</ng-template>
+</p-table>
+
+<p-dialog [(visible)]="mostrarFormularioMaquinasClienteEdita" header="Maquinas del Cliente" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <app-form-maquina-cliente  [twMaquinaCliente]="maquinaCliente" (cierraformulario)="cerrarVentanas($event)" ></app-form-maquina-cliente>
+    </ng-template>
+    <ng-template pTemplate="footer">
+
+    </ng-template>
+</p-dialog>
+

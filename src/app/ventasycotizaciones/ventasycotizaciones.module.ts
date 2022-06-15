@@ -20,6 +20,8 @@ import { DescuentoVentaComponent } from './pages/descuento-venta/descuento-venta
 import { FormCompraInternetComponent } from './components/form-compra-internet/form-compra-internet.component';
 import { PagoVentaInternetComponent } from './pages/pago-venta-internet/pago-venta-internet.component';
 import { FormCargaComprobanteComponent } from './components/form-carga-comprobante/form-carga-comprobante.component';
+import { MaquinaClienteComponent } from './components/maquina-cliente/maquina-cliente.component';
+import { FormMaquinaClienteComponent } from './components/form-maquina-cliente/form-maquina-cliente.component';
 
 
 
@@ -27,7 +29,7 @@ import { FormCargaComprobanteComponent } from './components/form-carga-comproban
 @NgModule({
   declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,
 
-    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, FormCompraInternetComponent, PagoVentaInternetComponent, FormCargaComprobanteComponent, DescuentoVentaComponent],
+    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, FormCompraInternetComponent, PagoVentaInternetComponent, FormCargaComprobanteComponent, DescuentoVentaComponent, MaquinaClienteComponent, FormMaquinaClienteComponent],
 
   imports: [
     VentasycotizacionesRoutingModule,

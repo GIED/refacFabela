@@ -22,13 +22,19 @@
                         <p-accordionTab header="Datos del crédito del cliente">
                             <div class="p-col-12">
                                 <ng-template [ngIf]="mostrarDetalleCliente">
-                                    <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>
+                                    <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>   
+                                                               
                                 </ng-template>
+                                <div class="p-formgroup-inline p-d-flex p-jc-between">
+                                <p-button icon="pi pi-search " (click)="obtenerMaquinasCliente()" label="Ver Maquinas del Cliente" styleClass="p-button-text"></p-button>
+                               <p-button icon="pi pi-plus" (click)="abrirFormularioMaquinaCliente()" label="Agregar Maquina " styleClass="p-button-text"></p-button>
                             </div>
+                        </div>
                         </p-accordionTab>
+                        
                     </p-accordion>
-
-
+                    
+               
 
 
                 </div>
@@ -293,6 +299,26 @@
 
         </ng-template>
     </p-dialog>
+
+    <p-dialog [(visible)]="mostrarMaquinasCliente" header="Maquinas del Cliente" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <app-maquina-cliente  [nICliente]="clienteSeleccionado.nId" ></app-maquina-cliente>
+        </ng-template>
+        <ng-template pTemplate="footer">
+
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="mostrarFormularioMaquinasCliente" header="Maquinas del Cliente" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <app-form-maquina-cliente  [twMaquinaCliente]="maquinaCliente" (cierraformulario)="cerrarVentanas($event)"  ></app-form-maquina-cliente>
+        </ng-template>
+        <ng-template pTemplate="footer">
+
+        </ng-template>
+    </p-dialog>
+
+    
     
 
 </div>
