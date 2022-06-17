@@ -1,5 +1,6 @@
 import { TwCaja } from './TwCaja';
 import { TwVenta } from './TwVenta';
+import { TcFormaPago } from './TcFormaPago';
 export class TrVentaCobro{
     nId:number;
     nIdVenta:number;
@@ -10,4 +11,5 @@ export class TrVentaCobro{
     nIdFormaPago:number;
     twCaja: TwCaja;
     twVenta:TwVenta;
+    tcFormapago: TcFormaPago;
 }
