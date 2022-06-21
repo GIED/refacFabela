@@ -81,6 +81,9 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros
         <th pSortableColumn="nCantidadTotal">Stock Actual
             <p-sortIcon field="nCantidadTotal"></p-sortIcon>
         </th>
+        <th pSortableColumn="nCantidadTotal">Comprobante
+            <p-sortIcon field="nCantidadTotal"></p-sortIcon>
+        </th>
       
        
     </tr>
@@ -105,6 +108,11 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros
         </td>
         <td><span class="p-column-title">Price</span> 
             <div *ngIf="venta.nCantidadTotal==0" style="background: red; border-radius: 30px; color:white; text-align: center;">{{venta.nCantidadTotal}}</div><div *ngIf="venta.nCantidadTotal>0" style="background: green; border-radius: 30px; color:white; text-align: center;">{{venta.nCantidadTotal}}</div>
+        </td>
+        <td class="p-text-center">
+           
+            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                (click)="generarVentaPdf(venta.twVenta.nId)"></button>
         </td>
        
     </tr>

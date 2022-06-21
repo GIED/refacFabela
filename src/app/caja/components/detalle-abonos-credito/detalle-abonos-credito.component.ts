@@ -34,6 +34,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
   twCaja: TwCaja;
   tcUsuario: TcUsuario;
   twAbono:TwAbono;
+  diferencia:number;
 
   constructor(private fb: FormBuilder, private catalogo: CatalogoService, private ventasService: VentasService, private catalogoService: CatalogoService, private usuarioService: UsuarioService, private tokenService: TokenService,  private messageService: MessageService) {
 
@@ -134,6 +135,14 @@ export class DetalleAbonosCreditoComponent implements OnInit {
          console.log(this.twAbono);
  
          if(this.twAbono.twVenta!==null && this.twAbono.tcFormapago!==null && this.twAbono.twCaja.nId!==null &&  this.twAbono.tcUsuario!==null){
+
+         this.diferencia= this.tvVentasDetalle.nSaldoTotal-this.twAbono.nAbono
+         
+          if( this.diferencia<0.1){
+
+            this.twAbono.nAbono=this.tvVentasDetalle.nSaldoTotal;
+
+          }
          this.ventasService.guardaAbono(this.twAbono).subscribe(data =>{
          this.listaAbonosVenta.push(data);
            this.abrirformulario=false;

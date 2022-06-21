@@ -24,6 +24,7 @@ import { producto } from '../../../productos/interfaces/producto.interfaces';
 import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { TokenService } from 'src/app/shared/service/token.service';
+import { TwMaquinaCliente } from '../../../productos/model/TwMaquinaCliente';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class VentasComponent implements OnInit {
   formGrp: FormGroup;
 
   clienteSeleccionado:Clientes;
+  maquinaCliente:TwMaquinaCliente;
   cliente:string;
   productoSeleccionado:TcProducto;
   producto:string;
@@ -64,6 +66,8 @@ export class VentasComponent implements OnInit {
   muestraProductos:boolean=false;
   mostrarAlternativos:boolean=false;
   muestraProductosBodega:boolean=false;
+  mostrarMaquinasCliente:boolean=false;
+  mostrarFormularioMaquinasCliente:boolean=false;
 
   saldoGeneralCliente:SaldoGeneralCliente;
   tvStockProducto: TvStockProducto;
@@ -87,6 +91,7 @@ export class VentasComponent implements OnInit {
       this.listaProductos=[];
       this.cotizacionData= new TwCotizacion();
       this.productosAlternativos=[];
+      this.maquinaCliente=new TwMaquinaCliente;
     }
 
   ngOnInit(): void {
@@ -182,6 +187,26 @@ valorSeleccionadoCliente(){
     this.muestraProductos=true;
   });
   
+}
+
+obtenerMaquinasCliente(){
+
+  this.mostrarMaquinasCliente=true;
+  
+
+}
+cerrarVentanas(valor:boolean){
+  
+  this.mostrarFormularioMaquinasCliente=valor;
+ 
+}
+
+abrirFormularioMaquinaCliente(){
+
+  this.maquinaCliente.nIdCliente=this.clienteSeleccionado.nId;
+ 
+  
+  this.mostrarFormularioMaquinasCliente=true;
 }
 
 

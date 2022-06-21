@@ -166,7 +166,7 @@
 		</div>
 		<p-dialog [(visible)]="productDialog" [style]="{width: '900px'}" header="Notas de crédito del cliente" [modal]="true"
 			styleClass="p-fluid">
-            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['sFolioVenta','nTotalVenta','nTotalAbono','nSaldoTotal','dFechaTerminoCredito','sEstatus','nAvancePago']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['nId','sFolioVenta','nTotalVenta','nTotalAbono','nSaldoTotal','dFechaTerminoCredito','sEstatus','nAvancePago']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
@@ -181,7 +181,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                        
-						<th pSortableColumn="sFolioVenta">No. Venta<p-sortIcon field="sFolioVenta"></p-sortIcon> </th>
+						<th pSortableColumn="nId">No. Venta<p-sortIcon field="nId"></p-sortIcon> </th>
 						<th pSortableColumn="nTotalVenta">Saldo Inicial<p-sortIcon field="nTotalVenta"></p-sortIcon> </th>
 						<th pSortableColumn="nTotalAbono">TotalAbono<p-sortIcon field="nTotalAbono"></p-sortIcon> </th>
 						<th pSortableColumn="descuento">Descuento<p-sortIcon field="descuento"></p-sortIcon> </th>
@@ -197,7 +197,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-venta let-expanded="expanded">
                     <tr>
-						<td><span class="p-column-title"></span> {{venta.sFolioVenta}}
+						<td><span class="p-column-title"></span> {{venta.nId}}
                         </td>
                         <td><span class="p-column-title"></span> {{venta.nTotalVenta | number}}
                         </td>

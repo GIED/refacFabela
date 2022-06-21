@@ -16,7 +16,7 @@
           
             <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
                 [paginator]="true"
-                [globalFilterFields]="['sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
+                [globalFilterFields]="['nId','sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
                 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
                 [showCurrentPageReport]="true">
@@ -32,7 +32,7 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="sFolioVenta">No. Venta<p-sortIcon field="sFolioVenta"></p-sortIcon>
+                        <th pSortableColumn="nId">No. Venta<p-sortIcon field="nId"></p-sortIcon>
                         </th>
                         <th pSortableColumn="tcCliente.sRfc">Rfc<p-sortIcon field="tcCliente.sRfc"></p-sortIcon>
                         </th>
@@ -64,7 +64,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-venta let-expanded="expanded">
                     <tr>
-                        <td><span class="p-column-title"></span> {{venta.sFolioVenta}}
+                        <td><span class="p-column-title"></span> {{venta.nId}}
                         </td>
                         <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc}}
                         </td>
@@ -99,8 +99,8 @@
                         </td>
 
                         <td>
-                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
-                                (click)="detalleVentaProductos(venta)"></button>
+                            <!--<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="detalleVentaProductos(venta)"></button>-->
                             <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                                 (click)="generarVentaPdf(venta)"></button>
                             <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
@@ -155,6 +155,12 @@
                             <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago"
                                 [showClear]="true"></p-dropdown>
                             <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>
+                        </div>
+
+                        <div class="p-field p-col-12">
+                            <label for="name">Monto</label>
+                            <input type="text" pInputText name="monto" formControlName="monto" [class.is-invalid]="validaMonto"  />
+                            <small class="p-error" *ngIf="validaMonto">Monto requerido</small>
                         </div>
 
                     </div>

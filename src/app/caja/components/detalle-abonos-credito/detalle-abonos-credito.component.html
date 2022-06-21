@@ -1,6 +1,6 @@
 
- <div><h3>Venta a crédito: VC-{{tvVentasDetalle.nId}}</h3></div>
- <div><h3>El monto total para cubrir la venta es de: {{tvVentasDetalle.nSaldoTotal}}</h3></div>
+ <div><h3>Venta a crédito: VC-{{tvVentasDetalle.nId }}</h3></div>
+ <div><h3>El monto total para cubrir la venta es de: {{tvVentasDetalle.nSaldoTotal | number:'1.1-3'}}</h3></div>
  <button type="button" pButton pRipple icon="pi pi-dollar" label="Nuevo Abono"
  class="p-button-success p-mb-2"    (click)="hideDialog2()"></button>
  <p-table #dt [value]="listaAbonosVenta" responsiveLayout="scroll"  [rows]="5" [paginator]="true" [globalFilterFields]="['sFolioVenta']"  [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"

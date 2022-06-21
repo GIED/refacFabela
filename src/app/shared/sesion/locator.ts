@@ -70,14 +70,17 @@ static consultaVentaDetalle='/obtenerVentasDetalle';
 static consultaVentaDetalleCajaVigente='/obtenerVentasCajaVigente';
 static consultaVentaDetalleEntrega='/obtenerVentasDetalleEntrega'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
+static obtenerVentaCobroParcial='/obtenerPagosParciales?';
 static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
 static guardaVentaDetalle= '/guardarVentaDetalle';
 static guardaVentaProductoId= '/guardaVentaProductoId';
 static guardaVentaProductoEntrega= '/guardaVentasProducto';
 static guardaAbono= '/guardarAbono';
+static guardarMaquina= '/guardarMaquina';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultarVentaId='/obtenerVentaId?';
+static consultarMaquinaCliente='/obtenerMaquinasCliente?';
 static generarVentaPdf='/getVenta?';
 static generarAbonoVentaPdf='/getAbonoVentaId?';
 static generarHistorialAbonoVentaPdf='/getAbonoVentaIdCliente?';
@@ -87,6 +90,7 @@ static generarVentaPedidoPdf='/getVentaPedido?';
 static guardaCotizacion= '/guardarCotizacion';
 static consultaCotizaciones='/consultaCotizaciones';
 static consultaCotizacionId='/consultaCotizacionId?';
+static obtenerVentaIdcotizacon='/obtenerVentaIdCotizacion?';
 static generarCotizacionPdf='/getCotizacion?';
 
 //ventasPorInternet

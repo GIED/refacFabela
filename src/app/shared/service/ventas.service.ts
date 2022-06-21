@@ -11,6 +11,8 @@ import { TvVentaProductoMes } from 'src/app/productos/model/TvVentaProductoMes';
 import { TwVenta } from '../../productos/model/TwVenta';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { TrVentaCobro } from '../../productos/model/TrVentaCobro';
+import { TwMaquinaCliente } from '../../productos/model/TwMaquinaCliente';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +46,10 @@ export class VentasService {
   obtenerAbonosVentaId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaAbonoId+'nId='+id;
     return this.http.get<TwAbono[]>(url);
+  }
+  obtenerCobroParcial(id:number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerVentaCobroParcial+'nIdVenta='+id;
+    return this.http.get<TrVentaCobro[]>(url);
   }
   
   obtenerProductoVentaId(id:number){
@@ -132,10 +138,18 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.consultarVentaId+'nIdVenta='+id;
     return this.http.get<any>(url);
   }
+  obtenerMaquinasCliente(id:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultarMaquinaCliente+'nIdCliente='+id;
+    return this.http.get<TwMaquinaCliente[]>(url);
+  }
 
   guardaAbono(twAbono:TwAbono){
     let url = environment.servicios.apiRefacFabela + locator.guardaAbono;
     return this.http.post<any>(url,twAbono);
+  }
+  guardarMaquina(twMaquinaCliente:TwMaquinaCliente){
+    let url = environment.servicios.apiRefacFabela + locator.guardarMaquina;
+    return this.http.post<any>(url,twMaquinaCliente);
   }
 
 

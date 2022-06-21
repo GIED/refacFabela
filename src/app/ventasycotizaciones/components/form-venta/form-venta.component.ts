@@ -7,6 +7,7 @@ import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { MessageService } from 'primeng/api';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { DatosVenta } from '../../interfaces/DatosVenta';
+import { TokenService } from '../../../shared/service/token.service';
 
 @Component({
   selector: 'app-form-venta',
@@ -29,7 +30,7 @@ export class FormVentaComponent implements OnInit {
   muestraCredito:boolean;
   
 
-  constructor(private productoService:ProductoService, private messageService: MessageService,) {
+  constructor(private productoService:ProductoService, private messageService: MessageService, private tokenService:TokenService) {
     this.listaValidada=[];
     this.muestraCredito=false;
     this.datosVenta= { tipoPago: null, listaValidada: null};
@@ -105,6 +106,7 @@ export class FormVentaComponent implements OnInit {
 
       this.datosVenta.tipoPago = parseInt(this.tipoPagoCtrl.value);
       this.datosVenta.listaValidada=this.listaValidada;
+      this.datosVenta.idUsuario=this.tokenService.getIdUser();
 
       //console.log(this.datosVenta);
 

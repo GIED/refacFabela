@@ -1,21 +1,21 @@
 <form [formGroup]="formVentas" autocomplete="off">
 
     <div class="p-grid">
-        <div class="p-col-12 p-text-center">
-            <p>La Cotización se registro correctamente, Si Desea Generar la venta seleccione las siguientes opciones</p>
+        <div class="p-col-12 ">
+            <p>La Cotización se registro correctamente, Si desea generar la venta seleccione alguna de las siguientes opciones de pago: </p>
         </div>
         <div class="p-formgroup-inline">
-            <label for="">Tipo de pago: &nbsp;</label>
+           
             <div class="p-field-checkbox">
                 <div class="p-field-radiobutton">
                     <p-radioButton name="tipoPagoCtrl" value="0" formControlName="tipoPagoCtrl" inputId="tipoPago1"></p-radioButton>
-                    <label for="tipoPago1">contado</label>
+                    <label for="tipoPago1">Contado</label>
                 </div>
             </div>
             <div class="p-field-checkbox" *ngIf="muestraCredito">
                 <div class="p-field-radiobutton">
                     <p-radioButton name="tipoPagoCtrl" value="1" formControlName="tipoPagoCtrl" inputId="tipoPago2"></p-radioButton>
-                    <label for="tipoPago2">credito</label>
+                    <label for="tipoPago2">Crédito</label>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                     <tr>
 
                         <th pSortableColumn="noParte">No.Parte</th>
-                        <th pSortableColumn="descripcion">Descripcións</th>
+                        <th pSortableColumn="descripcion">Descripción</th>
                         <th pSortableColumn="precio">Precio</th>
                         <th pSortableColumn="stock">Stock</th>
                         <th pSortableColumn="stock">Estatus stock</th>
@@ -73,6 +73,6 @@
 </form>
 
 <div class="p-formgroup-inline p-d-flex p-jc-end">
-    <p-button icon="pi pi-times" (click)="cotizacion()" label="Solo cotización" styleClass="p-button-text"></p-button>
-    <p-button icon="pi pi-check" (click)="generarVenta()" label="Generar venta" styleClass="p-button-text"></p-button>
+    <p-button icon="pi pi-times" (click)="cotizacion()" label="Solo Cotización" styleClass="p-button-text"></p-button>
+    <p-button icon="pi pi-check" (click)="generarVenta()" label="Generar Venta" styleClass="p-button-text"></p-button>
 </div>

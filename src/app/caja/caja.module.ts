@@ -12,6 +12,8 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AdministracionModule } from '../administracion/administracion.module';
 import { FormAbonosComponent } from './components/form-abonos/form-abonos.component';
 import { BalanceCajaComponent } from './components/balance-caja/balance-caja.component';
+import { VentaProductosDetalleComponent } from '../ventasycotizaciones/components/venta-productos-detalle/venta-productos-detalle.component';
+import { VentasycotizacionesRoutingModule } from '../ventasycotizaciones/ventasycotizaciones-routing.module';
 
 
 
@@ -30,7 +32,9 @@ import { BalanceCajaComponent } from './components/balance-caja/balance-caja.com
     CommonModule,
     PrimeModule,
     CajaRoutingModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule,
+    VentasycotizacionesRoutingModule,
+    
    
    
   ],

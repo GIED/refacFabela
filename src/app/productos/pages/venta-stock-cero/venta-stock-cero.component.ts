@@ -6,6 +6,7 @@ import * as moment from 'moment';
 
 import { ProductoService } from 'src/app/shared/service/producto.service';
 import { TvVentaStock } from '../../model/TvVentaStock';
+import { VentasService } from '../../../shared/service/ventas.service';
 
 
 @Component({
@@ -28,7 +29,9 @@ export class VentaStockCeroComponent implements OnInit {
   constructor(     
     private productosService: ProductoService,  
     private messageService: MessageService,
-    private confirmationService: ConfirmationService,)
+    private confirmationService: ConfirmationService,
+    private ventasService:VentasService
+    )
      { 
       
 
@@ -83,6 +86,31 @@ export class VentaStockCeroComponent implements OnInit {
     }
 
     
+  }
+
+
+  generarVentaPdf(nId:number){
+
+    this.ventasService.generarVentaPdf(nId).subscribe(resp => {
+  
+      
+        const file = new Blob([resp], { type: 'application/pdf' });
+        console.log('file: ' + file.size);
+        if (file != null && file.size > 0) {
+          const fileURL = window.URL.createObjectURL(file);
+          const anchor = document.createElement('a');
+          anchor.download = 'venta_' + nId + '.pdf';
+          anchor.href = fileURL;
+          anchor.click();
+          this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+          //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+         
+        } else {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+        }
+  
+    });
+  
   }
 
 }

@@ -8,6 +8,7 @@ import { TvStockProducto } from '../../productos/model/TvStockProducto';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TwPagoComprobanteInternet } from '../../ventasycotizaciones/model/TwPagoComprobanteInternet';
+import { TwVenta } from '../../productos/model/TwVenta';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,10 @@ export class VentasCotizacionesService {
   obtenerCotizacionId(id: number){
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionId+'id='+id;
     return this.http.get<TvStockProducto[]>(url);
+  }
+  obtenerVentaIdCotizacion(id: number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerVentaIdcotizacon+'nIdCotizacion='+id;
+    return this.http.get<TwVenta>(url);
   }
 
   generarCotizacionPdf(nIdCotizacion: number){

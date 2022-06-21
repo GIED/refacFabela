@@ -9,6 +9,7 @@ import { DatosVenta } from '../../interfaces/DatosVenta';
 import { VentasService } from 'src/app/shared/service/ventas.service';
 import { MessageService } from 'primeng/api';
 import { TokenService } from '../../../shared/service/token.service';
+import { TwVenta } from '../../../productos/model/TwVenta';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class ConsultaCotizacionComponent implements OnInit {
   total:number;
   datosRegistraVenta:DatosVenta;
   cotizacionData: TwCotizacion;
+  venta:TwVenta
 
 
   
@@ -42,15 +44,16 @@ constructor(private clienteService: ClienteService,private ventaService:VentasSe
   }
 
 ngOnInit(){
-
-    this.consultaCotizaciones(); 
+  this.obtenerCotizaciones();
+ 
 }
 
-consultaCotizaciones(){
+obtenerCotizaciones(){
   this.ventasCotizacionesService.obtenerCotizaciones().subscribe(data => {
     this.listaCotizaciones=data;
     console.log(this.listaCotizaciones);
-  });
+  }); 
+
 }
 
 
@@ -116,16 +119,50 @@ generarVenta(datosVenta: DatosVenta){
 
  this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
     console.log(resp);
+    this.generarVentaPdf(resp.nId);
     this.mostrarOpcionesVenta=false;
-    this.consultaCotizaciones();
-    this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'venta Generada correctamente', life: 3000});
-
+    this.obtenerCotizaciones();
   });
-  
-  
+}
+
+
+obtenerVenta(nId:number){
+
+
+  this.ventasCotizacionesService.obtenerVentaIdCotizacion(nId).subscribe(resp=>{
+    this.venta=resp;
+   this.generarVentaPdf(this.venta.nId);
+
+  })
+
 
 
 }
+
+generarVentaPdf(nId:number){
+
+  this.ventaService.generarVentaPdf(nId).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'venta_' + nId + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Comprobante de venta generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+      }
+
+  });
+
+}
+
 
 
 

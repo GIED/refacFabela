@@ -1,0 +1,36 @@
+<form [formGroup]="formMaquinas" autocomplete="off">
+
+    <div class="p-grid">      
+        <div class="p-formgroup-inline">
+           
+            <div class="p-field p-col-6">
+                <label for="name">Serie</label>
+                <input type="text" pInputText name="serieCtrl" formControlName="serieCtrl" [class.is-invalid]="validaSerieCtrl" />
+                <small class="p-error" *ngIf="validaSerieCtrl">*Campo requerido.</small>
+            </div>
+            <div class="p-field p-col-12">
+                <label for="description">Marca</label>
+                <input id="description" pInputText name="marcaCtrl" formControlName="marcaCtrl" rows="2" cols="20"  [class.is-invalid]="validaMarcaCtrl">
+                <small class="p-error" *ngIf="validaMarcaCtrl">*Campo requerido.</small>
+            </div>
+            <div class="p-field p-col-12">
+                <label for="description">observacionesCtrl</label>
+                <textarea id="description" pInputTextarea name="observacionesCtrl" formControlName="observacionesCtrl" rows="2" cols="20" maxlength="1999"  [class.is-invalid]="validaObservacionesCtrl"></textarea>
+                <small class="p-error" *ngIf="validaObservacionesCtrl">*Campo requerido.</small>
+            </div>
+
+            <div class="p-col-2">
+                <div class="box">
+                    <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarMaquina()"></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+   
+
+
+       
+
+</form>
+
