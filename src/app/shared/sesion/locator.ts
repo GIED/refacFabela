@@ -31,6 +31,7 @@ static consultaFormaPago='/catalogoFormaPago';
 static consultaFormaPagoId='/catalogoFormaPagoId?';
 static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';
+static consultarUsoCfdi='/catalogoUsoCfdi';
 //api productos
 static obtenerProductos= '/obtenerProductos';
 static obtenerProductosLike= '/obtenerProductosLike?';
@@ -101,6 +102,10 @@ static obtenerTotalesGeneralesTablero='/totales-generales-tablero';
 //traspasos
 static movimientoInterno='/movimientoInterno';
 static movimientoExterno='/movimientoExterno';
+
+//factura
+static consultaVentaFactura='/facturacion/ventasParaFactura';
+static facturarVenta='/facturacion/venta?';
 
 
 

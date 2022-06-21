@@ -32,6 +32,7 @@ export class VentasService {
     return this.http.get<TvVentasDetalle[]>(url);
   }
 
+
   obtenerVentaDetalleCajaVigente(){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleCajaVigente;
     return this.http.get<TvVentasDetalle[]>(url);

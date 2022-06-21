@@ -8,6 +8,7 @@ import { forkJoin } from 'rxjs';
 import { DatosVenta } from '../../interfaces/DatosVenta';
 import { VentasService } from 'src/app/shared/service/ventas.service';
 import { MessageService } from 'primeng/api';
+import { TokenService } from '../../../shared/service/token.service';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class ConsultaCotizacionComponent implements OnInit {
 
   
 constructor(private clienteService: ClienteService,private ventaService:VentasService,  private messageService: MessageService,
-  private ventasCotizacionesService: VentasCotizacionesService) { 
+  private ventasCotizacionesService: VentasCotizacionesService, private tokenService:TokenService) { 
     this.listaCotizaciones=[];
     this.saldoGeneralCliente = new SaldoGeneralCliente();
     this.mostrarOpcionesVenta = false;
@@ -42,10 +43,14 @@ constructor(private clienteService: ClienteService,private ventaService:VentasSe
 
 ngOnInit(){
 
+    this.consultaCotizaciones(); 
+}
+
+consultaCotizaciones(){
   this.ventasCotizacionesService.obtenerCotizaciones().subscribe(data => {
     this.listaCotizaciones=data;
     console.log(this.listaCotizaciones);
-  }); 
+  });
 }
 
 
@@ -92,6 +97,7 @@ generarVenta(datosVenta: DatosVenta){
 
   this.datosRegistraVenta=datosVenta;
   this.datosRegistraVenta.idCliente=this.cotizacionData.nIdCliente;
+  this.datosRegistraVenta.idUsuario=this.tokenService.getIdUser();
   this.datosRegistraVenta.sFolioVenta=this.createFolio();
   this.datosRegistraVenta.idTipoVenta=1;
   if (this.datosRegistraVenta.tipoPago === 1) {
@@ -110,6 +116,10 @@ generarVenta(datosVenta: DatosVenta){
 
  this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
     console.log(resp);
+    this.mostrarOpcionesVenta=false;
+    this.consultaCotizaciones();
+    this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'venta Generada correctamente', life: 3000});
+
   });
   
   

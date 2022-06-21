@@ -12,24 +12,16 @@
                 <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center ">
                     <input type="text" pInputText placeholder="RFC del Cliente">
                 </div>
-                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center"> <button pButton pRipple type="button"
-                        label="Consultar" class="p-button-success p-mr-2 p-mb-2"></button></div>
-               
+                <div class="p-col-12 p-xl-3 p-md-6 p-d-flex p-jc-center"> <button pButton pRipple type="button" label="Consultar" class="p-button-success p-mr-2 p-mb-2"></button></div>
+
             </p-toolbar>
-           
-            <p-table #dt [value]="products" [columns]="cols" [rows]="10" [paginator]="true"
-                [globalFilterFields]="['id', 'name','status']" [(selection)]="selectedProducts" [rowHover]="true"
-                dataKey="id" styleClass="p-datatable-customers"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+
+            <p-table #dt [value]="listaVentas" [rows]="10" [paginator]="true" [globalFilterFields]="['id', 'name','status']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
                         <h5 class="p-m-0">Ventas cobradas por facturar</h5>
-                        <span class="p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                                placeholder="Buscar Nota..." />
-                        </span>
+
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header">
@@ -38,143 +30,61 @@
                         <th>RFC</th>
                         <th>Razón Social</th>
                         <th>Vendedor</th>
-                        <th>Fecha Cobrada</th>
                         <th>Estatus</th>
                         <th>Total</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-product>
+                <ng-template pTemplate="body" let-venta>
                     <tr>
-                        <td><span class="p-column-title"></span> {{product.id}}
+                        <td><span class="p-column-title"></span> {{venta.nId}}
                         </td>
-                        <td><span class="p-column-title"></span> {{product.id}}
+                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc}}
                         </td>
-                        <td><span class="p-column-title"></span> {{product.name}}
+                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRazonSocial}}
                         </td>
-                        <td><span class="p-column-title"></span> Mabiel
+                        <td><span class="p-column-title"></span> {{venta.tcUsuario.sNombreUsuario}}
                         </td>
-                        <td><span class="p-column-title"></span>
-                            01/10/2021:12:20:26 pm
+                        <td><span class="p-column-title"></span> {{venta.tcEstatusVenta.sDescripcion}}
                         </td>
-                        <td><span class="p-column-title"></span>
-                            POR COBRAR
-                        </td>
-                        <td><span class="p-column-title">Status</span>
-                            {{product.price | currency:'USD'}}
+                        <td><span class="p-column-title"></span> {{venta.nTotalVenta | currency:'USD'}}
                         </td>
                         <td>
-                            
-                            <button pButton pRipple icon="pi pi-file-o" class="p-button-rounded p-button-warning"
-                                (click)="alternativosProduct(product)"></button>
-                            <button pButton pRipple icon="pi pi-file-pdf"
-                                class="p-button-rounded p-button-danger p-mr-2" (click)="dt.exportCSV()"></button>
-                            <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                                (click)="deleteProduct(product)"></button> -->
+                            <tr>
+                                <td *ngIf="venta.nEstatus ==2 || venta.nEstatus==3">
+                                    <button pButton pRipple icon="pi pi-file-o" pTooltip="Generar Factura" class="p-button-rounded p-button-warning" (click)="openDialog(venta)"></button>
+                                </td>
+                                <td *ngIf="venta.idFactura!=0">
+                                    <button pButton pRipple icon="pi pi-file-pdf" pTooltip="Descargar Factura" class="p-button-rounded p-button-danger p-mr-2" (click)="dt.exportCSV()"></button>
+                                </td>
+                            </tr>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
                     <div class="p-d-flex p-ai-center p-jc-between">
-                        Total de Ventas: {{products ? products.length : 0 }}
+
                     </div>
                 </ng-template>
             </p-table>
         </div>
-        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [modal]="true"
-            styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <div class="p-grid">
-                    <div class="p-field p-col-6">
-                        <label for="name">No. de parte</label>
-                        <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-                        <small class="p-invalid" *ngIf="submitted && !product.name">Name is required.</small>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="name">Nombre del producto</label>
-                        <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-                        <small class="p-invalid" *ngIf="submitted && !product.name">Name is required.</small>
-                    </div>
-                    <div class="p-field p-col-12">
-                        <label for="description">Descripcion</label>
-                        <textarea id="description" pInputTextarea [(ngModel)]="product.description" required rows="2"
-                            cols="20"></textarea>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="marca">Marca</label>
-                        <p-dropdown [options]="marca" [(ngModel)]="selectedDrop" placeholder="Seleccine una marca"
-                            [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="marca">Categoria General</label>
-                        <p-dropdown [options]="ListaCategoriaGeneral" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine una categoria general" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="marca">Categoria </label>
-                        <p-dropdown [options]="ListaCategoria" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="moneda">Moneda</label>
-                        <p-dropdown [options]="ListaMoneda" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine una moneda" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="estatus">Estatus</label>
-                        <p-dropdown [options]="ListaEstatus" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine el estatus" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="price">clave SAT</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
-                            locale="en-US"></p-inputNumber>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="price">Precio</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
-                            locale="en-US"></p-inputNumber>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="ganancia">Ganancia</label>
-                        <p-dropdown [options]="ListaGanancias" [(ngModel)]="selectedDrop"
-                            placeholder="Seleccine una Ganancia" [showClear]="true"></p-dropdown>
-                    </div>
-                    <div class="p-field p-col-6">
-                        <label for="price">Precio Final</label>
-                        <p-inputNumber id="price" [(ngModel)]="product.price" mode="currency" currency="USD"
-                            locale="en-US" [disabled]="true"></p-inputNumber>
-                    </div>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-                    (click)="hideDialog()"></button>
-                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-                    (click)="saveProduct()"></button>
-            </ng-template>
-        </p-dialog>
-        
-        <p-dialog [(visible)]="alternativosDialog" [style]="{width: '700px'}" header="Facturación de la Nota"
-            [modal]="true" styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <div class="card">
-                    <div class="p-col-12 p-lg-12">
-                        <div class="card">
-                            <h5>El número de Nota a Facturar es: <strong>1520</strong></h5>
-                            <p-dropdown [options]="usoCfdi" [(ngModel)]="selectedDrop" placeholder="Selecciona uso CFDI"
-                                [showClear]="true"></p-dropdown>
-                            <h5>El monto a Facturar es: <strong> 5,555.00</strong></h5>
-                        </div>
-                    </div>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-                    (click)="hideDialog()"></button>
-                <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-text"
-                    (click)="saveProduct()"></button>
-            </ng-template>
-        </p-dialog>
-        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
     </div>
 </div>
+
+<p-dialog [(visible)]="formFactura" [style]="{width: '700px'}" header="Facturación de la Nota" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="card">
+            <div class="p-col-12 p-lg-12">
+                <div class="card">
+                    <h5>El número de Nota a Facturar es: <strong>{{idVenta}}</strong></h5>
+                    <p-dropdown [options]="listaUsoCfdi" optionValue="sClave" optionLabel="sDescripcion" [(ngModel)]="cfdiSeleccionado" placeholder="Selecciona uso CFDI" [showClear]="true"></p-dropdown>
+                    <h5>El monto a Facturar es: <strong>{{totalVenta | number: '1.0-2'}}</strong></h5>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-text" (click)="generarFactura()"></button>
+    </ng-template>
+</p-dialog>

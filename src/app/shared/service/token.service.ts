@@ -26,6 +26,7 @@ export class TokenService {
 
   public getRoles(){
     if (!this.isLogged()) {
+      this.logout();
       return null;
     }
     const token = this.getToken();
@@ -50,6 +51,7 @@ export class TokenService {
 
   public getNameUser(){
     if (!this.isLogged()) {
+      this.logout();
       return null;
     }
     const token = this.getToken();
@@ -64,6 +66,7 @@ export class TokenService {
   //obtener id del usuario
   public getIdUser(){
     if (!this.isLogged()) {
+      this.logout();
       return null;
     }
     const token = this.getToken();

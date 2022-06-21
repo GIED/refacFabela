@@ -1,7 +1,7 @@
 export interface Usuarios {
     nId?:number;   
     nPerfil?:number;
-    sNombreusuario?:string;   
+    sNombreUsuario?:string;   
     sUsuario?:string;  
     sPassword?:string;
     sClaveuser?:string;

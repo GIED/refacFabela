@@ -115,7 +115,7 @@ export class UsuarioComponent implements OnInit {
         this.fUsuario.nId.setValue(usuario.nId);
         this.fUsuario.nEstatus.setValue(usuario.nEstatus);
         this.fUsuario.sClaveUser.setValue(usuario.sClaveuser);
-        this.fUsuario.sNombreUsuario.setValue(usuario.sNombreusuario);
+        this.fUsuario.sNombreUsuario.setValue(usuario.sNombreUsuario);
         this.fUsuario.sUsuario.setValue(usuario.sUsuario);
         this.fUsuario.sPassword.setValue(usuario.sPassword);
 
@@ -133,7 +133,7 @@ export class UsuarioComponent implements OnInit {
 
     deleteUsuario(usuario: Usuarios) {
         this.confirmationService.confirm({
-            message: 'Estas seguro que deseas desactivar al usuario ' + usuario.sNombreusuario + '?',
+            message: 'Estas seguro que deseas desactivar al usuario ' + usuario.sNombreUsuario + '?',
             header: 'Confirmar',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
