@@ -37,12 +37,15 @@ export class CobrarComponent implements OnInit {
   total: number;
   aCuenta:number;
   restan:number;
+  displayListaVentas:boolean;
+  displayListaAbonoVenta:boolean;
 
   constructor(private messageService: MessageService, private ventasService: VentasService,
     private confirmationService: ConfirmationService, private fb: FormBuilder, private catalogo: CatalogoService) {
 
     this.listaCobrosParciales = [];
-
+    this.displayListaVentas=false;
+    this.displayListaAbonoVenta=false;
 
   }
 
@@ -61,6 +64,11 @@ export class CobrarComponent implements OnInit {
 
     this.ventasService.obtenerVentaDetalleEstatusVenta(1).subscribe(data => {
       this.listaVentasDetalleCliente = data;
+      if (this.listaVentasDetalleCliente.length > 0) {
+        this.displayListaVentas=false;
+      }else{
+        this.displayListaVentas=true;
+      }
       console.log(this.listaVentasDetalleCliente);
 
     });
@@ -108,27 +116,21 @@ export class CobrarComponent implements OnInit {
     });
   }
 
-  obtenberCobroParcial (nId:number){
-    this.ventasService.obtenerCobroParcial(nId).subscribe(resp => {
-
-      this.listaCobrosParciales = resp;
-      console.log('listaCobroParcial',this.listaCobrosParciales);
-
-    });
-
-  }
-
 
   abrir(tvVentasDetalle: TvVentasDetalle) {
     this.abrirformulario = true;
    
-    /*Se obtiene la lista de pagos parciales*/
-  this.obtenberCobroParcial(tvVentasDetalle.nId)
 
   this.ventasService.obtenerCobroParcial(tvVentasDetalle.nId).subscribe(resp => {
 
     this.listaCobrosParciales = resp;
     console.log('listaCobroParcial',this.listaCobrosParciales);
+
+    if (this.listaCobrosParciales.length >0) {
+      this.displayListaAbonoVenta=false;
+    } else {
+      this.displayListaAbonoVenta=true;
+    }
 
     /* Se bloquea el campo de monto con el total de la venta sin opción a modificar el monto  */
     if (tvVentasDetalle.tcTipoVenta.nId !== 3) {

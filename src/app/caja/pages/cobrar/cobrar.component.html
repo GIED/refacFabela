@@ -114,6 +114,11 @@
                         </td>
                     </tr>
                 </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <div *ngIf="displayListaVentas" class="p-d-flex p-ai-center p-jc-center">
+                        No se encontraron resultados
+                    </div>
+                </ng-template>
             </p-table>
 
             <p-dialog [(visible)]="mostrarBalance" header="Productos de la Venta" [style]="{width: '1200px'}" [closable]="false" styleClass="p-fluid">
@@ -141,7 +146,7 @@
             </p-toolbar>
 
             <!--formulario de cobro de caja-->
-            <p-dialog [(visible)]="abrirformulario" [style]="{width: '800px'}" header="Cobro de Ventas" [modal]="true" styleClass="p-fluid">
+            <p-dialog [(visible)]="abrirformulario" [style]="{width: '900px'}" header="Cobro de Ventas" [modal]="true" styleClass="p-fluid">
                 <div class="p-grid p-col-12">
                     <div class="p-col-6">
                         <p-panel header="Datos de la Venta">
@@ -173,6 +178,11 @@
                                         <td>{{cobro.dFecha | date}}</td>
                                         <td>{{cobro.tcFormapago.sDescripcion}}</td>
                                     </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <div *ngIf="displayListaAbonoVenta" class="p-d-flex p-ai-center p-jc-center">
+                                        <strong> No se encontraron abonos para esta venta</strong>
+                                    </div>
                                 </ng-template>
                             </p-table>
 
