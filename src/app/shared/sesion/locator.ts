@@ -31,6 +31,8 @@ static consultaFormaPago='/catalogoFormaPago';
 static consultaFormaPagoId='/catalogoFormaPagoId?';
 static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';
+static consultarCajas='/consultaCajas';
+static abrirCajaNueva= '/nuevaCaja?';
 static consultarUsoCfdi='/catalogoUsoCfdi';
 //api productos
 static obtenerProductos= '/obtenerProductos';

@@ -2,14 +2,15 @@
 import { Usuarios } from '../../administracion/interfaces/usuarios';
 export class TwCaja {
     nId?:number;
-    d_fechaApertura?:Date;
-    d_fechaCierre?:Date;
+    dFechaApertura?:Date;
+    dFechaCierre?:Date;
     nEstatus?:number;
-    n_pagoEfectivo?:number;
-    n_pagoElectronico?:number;
-    n_saldoCierre?:number;
-    n_saldoFinal?:number;
-    n_saldoInicial?:number;
+    nPagoEfectivo?:number;
+    nPagoElectronico?:number;
+    nSaldoCierre?:number;
+    nSaldoFinal?:number;
+    nSaldoInicial?:number;
+    nIdUsuario?:number;
     tcUsuario?:Usuarios;
    
 }

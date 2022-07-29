@@ -66,6 +66,15 @@ export class CatalogoService {
     let url= environment.servicios.apiRefacFabela + locator.consultarCajaActiva;
     return this.http.get<TwCaja>(url);
   }
+  obtenerCajas(){
+    let url= environment.servicios.apiRefacFabela + locator.consultarCajas;
+    return this.http.get<TwCaja[]>(url);
+  }
+
+  abrirCajaNueva(saldoInicial:number, nIdUsuario:number){
+    let url= environment.servicios.apiRefacFabela + locator.abrirCajaNueva+'saldoInicial='+saldoInicial+'&nIdUsuario='+nIdUsuario;
+    return this.http.get<TwCaja>(url);
+  }
 
 
   

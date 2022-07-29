@@ -54,6 +54,9 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'valida comprobantes', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/validaComprobante']
                     },
+                    {
+                        label: 'Administración Caja', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/admin-caja']
+                    },
 
                     
                    
