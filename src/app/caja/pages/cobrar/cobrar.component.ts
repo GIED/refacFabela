@@ -35,6 +35,8 @@ export class CobrarComponent implements OnInit {
   mostrarBalance: boolean;
   listaCobrosParciales: TrVentaCobro[];
   total: number;
+  aCuenta:number;
+  restan:number;
 
   constructor(private messageService: MessageService, private ventasService: VentasService,
     private confirmationService: ConfirmationService, private fb: FormBuilder, private catalogo: CatalogoService) {
@@ -110,6 +112,7 @@ export class CobrarComponent implements OnInit {
     this.ventasService.obtenerCobroParcial(nId).subscribe(resp => {
 
       this.listaCobrosParciales = resp;
+      console.log('listaCobroParcial',this.listaCobrosParciales);
 
     });
 
@@ -122,40 +125,46 @@ export class CobrarComponent implements OnInit {
     /*Se obtiene la lista de pagos parciales*/
   this.obtenberCobroParcial(tvVentasDetalle.nId)
 
-  
+  this.ventasService.obtenerCobroParcial(tvVentasDetalle.nId).subscribe(resp => {
+
+    this.listaCobrosParciales = resp;
+    console.log('listaCobroParcial',this.listaCobrosParciales);
 
     /* Se bloquea el campo de monto con el total de la venta sin opción a modificar el monto  */
     if (tvVentasDetalle.tcTipoVenta.nId !== 3) {
-
+  
       this.fProducto.monto.setValue(tvVentasDetalle.nSaldoTotal.toFixed(3));
       this.formulario.controls.monto.disable();
+      
     }   
-
-
+  
+  
     /*Se valida que no hay registro de pago de apartado y se habilita el campo de comto para escribir el monto a pagar considerando que sea mayor al 50% */
-    if (tvVentasDetalle.tcTipoVenta.nId === 3 && this.listaCobrosParciales.length === 0) {
-
+    if (tvVentasDetalle.tcTipoVenta.nId === 3 && this.listaCobrosParciales.length == 0) {
+  
       console.log("Entre a asignar el valor de anticipo");
       this.fProducto.monto.setValue(tvVentasDetalle.nAnticipo.toFixed(3));
+      this.formulario.controls.monto.enable();
     }
-
+  
     /*Con este modulo se valida si ya hay un registro de anticipo en la caja y se asigna ñla diferecia para su cobro */
     if (tvVentasDetalle.tcTipoVenta.nId === 3 && this.listaCobrosParciales.length > 0) {
-
-      for (let index = 0; index < this.listaCobrosParciales.length; index++) {
-        this.total = this.total + this.listaCobrosParciales[index].nMonto;
-        this.formulario.controls.monto.disable();
-
-      }   
-      this.fProducto.monto.setValue((tvVentasDetalle.nAnticipo - this.total).toFixed(3));
-
+  
+      this.fProducto.monto.setValue((tvVentasDetalle.nSaldoTotal).toFixed(3));
+      this.formulario.controls.monto.enable();
+  
     }
+  });
+
+
 
    /*Se obtiene  el catalogo de formas de pago */
     this.obtenerCatalogoFormPago();
 
     this.noVenta = tvVentasDetalle.nId;
-    this.totalVenta = tvVentasDetalle.nSaldoTotal;
+    this.totalVenta = tvVentasDetalle.nTotalVenta;
+    this.aCuenta=tvVentasDetalle.nAvancePago;
+    this.restan=tvVentasDetalle.nSaldoTotal;
     this.VentaDescuentoDto = tvVentasDetalle; 
   
 

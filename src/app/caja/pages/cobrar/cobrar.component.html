@@ -8,18 +8,13 @@
 
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="left">
-                    <button pButton pRipple label="Ver Balance de la caja" icon="pi pi-plus"
-                        class="p-button-success p-mr-2 p-mb-2" (click)="verBalance()"></button>
+                    <button pButton pRipple label="Ver Balance de la caja" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="verBalance()"></button>
                 </ng-template>
             </p-toolbar>
-           
-          
-            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
-                [paginator]="true"
-                [globalFilterFields]="['nId','sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
-                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
-                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
-                [showCurrentPageReport]="true">
+
+
+            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['nId','sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
+                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
 
@@ -32,32 +27,45 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="nId">No. Venta<p-sortIcon field="nId"></p-sortIcon>
+                        <th pSortableColumn="nId">No. Venta
+                            <p-sortIcon field="nId"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="tcCliente.sRfc">Rfc<p-sortIcon field="tcCliente.sRfc"></p-sortIcon>
+                        <th pSortableColumn="tcCliente.sRfc">Rfc
+                            <p-sortIcon field="tcCliente.sRfc"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="tcCliente.sRazonSocial">Razón Social<p-sortIcon
-                                field="tcCliente.sRazonSocial"></p-sortIcon>
+                        <th pSortableColumn="tcCliente.sRazonSocial">Razón Social
+                            <p-sortIcon field="tcCliente.sRazonSocial"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="nTotalVenta">Total Venta<p-sortIcon field="nTotalVenta"></p-sortIcon>
+                        <th pSortableColumn="nTotalVenta">Total Venta
+                            <p-sortIcon field="nTotalVenta"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="nTotalAbono">Total Abonos<p-sortIcon field="nTotalAbono"></p-sortIcon>
+                        <th pSortableColumn="nTotalAbono">Total Abonos
+                            <p-sortIcon field="nTotalAbono"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="descuento">Descuento<p-sortIcon field="descuento"></p-sortIcon>
+                        <th pSortableColumn="descuento">Descuento
+                            <p-sortIcon field="descuento"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="nSaldoTotal">Saldo Final<p-sortIcon field="nSaldoTotal"></p-sortIcon>
+                        <th pSortableColumn="Anticipo">Anticipo Inicial
+                            <p-sortIcon field="descuento"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="avancePago">Avance Pagos
+                            <p-sortIcon field="descuento"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nSaldoTotal">Saldo Final
+                            <p-sortIcon field="nSaldoTotal"></p-sortIcon>
                         </th>
 
-                        <th pSortableColumn="dFechaVenta">Fecha Venta<p-sortIcon field="dFechaVenta"></p-sortIcon>
+                        <th pSortableColumn="dFechaVenta">Fecha Venta
+                            <p-sortIcon field="dFechaVenta"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
-                                field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+                        <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta
+                            <p-sortIcon field="tcEstatusVenta.sDescripcion"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="tcEstatusVenta.sDescripcion">Origen Venta<p-sortIcon
-                            field="tcEstatusVenta.sDescripcion"></p-sortIcon>
-                    </th>
-                        <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor<p-sortIcon
-                                field="tcUsuario.sNombreusuario"></p-sortIcon>
+                        <th pSortableColumn="tcEstatusVenta.sDescripcion">Origen Venta
+                            <p-sortIcon field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor
+                            <p-sortIcon field="tcUsuario.sNombreusuario"></p-sortIcon>
                         </th>
                         <th></th>
                     </tr>
@@ -76,97 +84,120 @@
                         </td>
                         <td><span class="p-column-title"></span>{{venta.descuento | number}}
                         </td>
+                        <td><span class="p-column-title"></span>{{venta.nAnticipo | number}}
+                        </td>
+                        <td><span class="p-column-title"></span>{{venta.nAvancePago | number}}
+                        </td>
                         <td><span class="p-column-title"></span>
                             <p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
                         </td>
 
                         <td><span class="p-column-title"></span> {{venta.dFechaVenta | date}}
                         </td>
-                        <td class="p-text-center"><span class="p-column-title">Status</span>
-
-                            {{venta.tcEstatusVenta.sDescripcion}}
+                        <td class="p-text-center"><span class="p-column-title">Status</span> {{venta.tcEstatusVenta.sDescripcion}}
                         </td>
-                        
-                        <td class="p-text-center"><span class="p-column-title">Status</span>
 
-                            {{venta.tcTipoVenta.sDescripcion}}
+                        <td class="p-text-center"><span class="p-column-title">Status</span> {{venta.tcTipoVenta.sDescripcion}}
                         </td>
-                        
 
-                        <td class="p-text-center"><span class="p-column-title">Status</span>
 
-                            {{venta.tcUsuario.sNombreUsuario}}
+                        <td class="p-text-center"><span class="p-column-title">Status</span> {{venta.tcUsuario.sNombreUsuario}}
                         </td>
 
                         <td>
                             <!--<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
                                 (click)="detalleVentaProductos(venta)"></button>-->
-                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
-                                (click)="generarVentaPdf(venta)"></button>
-                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
-                                (click)="abrir(venta)"></button>
+                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="generarVentaPdf(venta)"></button>
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help" (click)="abrir(venta)"></button>
                         </td>
                     </tr>
                 </ng-template>
             </p-table>
 
-            <p-dialog [(visible)]="mostrarBalance" header="Productos de la Venta" [style]="{width: '1200px'}"
-                [closable]="false" styleClass="p-fluid">
+            <p-dialog [(visible)]="mostrarBalance" header="Productos de la Venta" [style]="{width: '1200px'}" [closable]="false" styleClass="p-fluid">
                 <ng-template pTemplate="content">
-                    <app-balance-caja > </app-balance-caja>
+                    <app-balance-caja> </app-balance-caja>
                 </ng-template>
                 <ng-template pTemplate="footer">
-                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text"
-                        (click)="cerrarBalance()"></button>
+                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="cerrarBalance()"></button>
                 </ng-template>
             </p-dialog>
 
-            <p-dialog [(visible)]="mostrarProductos" header="Productos de la Venta" [style]="{width: '900px'}"
-                [closable]="false" styleClass="p-fluid">
+            <p-dialog [(visible)]="mostrarProductos" header="Productos de la Venta" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
                 <ng-template pTemplate="content">
                     <app-venta-productos-detalle [listaProductosVenta]="listaProductosVenta">
                     </app-venta-productos-detalle>
                 </ng-template>
                 <ng-template pTemplate="footer">
-                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text"
-                        (click)="hideDialogAlter()"></button>
+                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
                 </ng-template>
             </p-dialog>
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="right">
-                    <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
-                        class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                    <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
                 </ng-template>
             </p-toolbar>
 
             <!--formulario de cobro de caja-->
-            <p-dialog [(visible)]="abrirformulario" [style]="{width: '800px'}" header="Cobro de Ventas"
-                [modal]="true" styleClass="p-fluid">
+            <p-dialog [(visible)]="abrirformulario" [style]="{width: '800px'}" header="Cobro de Ventas" [modal]="true" styleClass="p-fluid">
+                <div class="p-grid p-col-12">
+                    <div class="p-col-6">
+                        <p-panel header="Datos de la Venta">
+                            <div>La venta a cobrar es la No. <strong>{{noVenta}}</strong> </div>
 
-                <div class="p-text-center">La venta a cobrar es la {{noVenta}}, con un monto de <strong>$ {{totalVenta | number}}</strong> </div>    
-                       
+                            <div>Monto total de venta <strong>$ {{totalVenta | number}}</strong> </div>
+
+                            <div>A cuenta <strong>$ {{aCuenta | number}}</strong> </div>
+
+                            <div>Restan <strong>$ {{restan | number}}</strong> </div>
+
+                        </p-panel>
+                    </div>
+
+                    <div class="p-col-6">
+                        <p-panel header="Abonos Realizados">
+                            <p-table [value]="listaCobrosParciales" [scrollable]="true" scrollHeight="150px">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Monto</th>
+                                        <th>fecha</th>
+                                        <th>Forma pago</th>
+
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-cobro>
+                                    <tr>
+                                        <td>{{cobro.nMonto}}</td>
+                                        <td>{{cobro.dFecha | date}}</td>
+                                        <td>{{cobro.tcFormapago.sDescripcion}}</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+
+                        </p-panel>
+                    </div>
+                </div>
 
                 <form [formGroup]="formulario" autocomplete="off">
 
                     <div class="p-grid">
-                       
-                        <div class="p-field p-col-12">
+
+                        <div class="p-field p-col-6">
                             <label for="marca">Forma de pago</label>
-                            <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago"
-                                [showClear]="true"></p-dropdown>
+                            <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago" [showClear]="true"></p-dropdown>
                             <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>
                         </div>
 
-                        <div class="p-field p-col-12">
+                        <div class="p-field p-col-6">
                             <label for="name">Monto</label>
-                            <input type="text" pInputText name="monto" formControlName="monto" [class.is-invalid]="validaMonto"  />
+                            <input type="text" pInputText name="monto" formControlName="monto" [class.is-invalid]="validaMonto" />
                             <small class="p-error" *ngIf="validaMonto">Monto requerido</small>
                         </div>
 
                     </div>
-                   
-                   
-               
+
+
+
                 </form>
 
                 <div class="p-grid p-jc-end">
@@ -175,14 +206,12 @@
                     </div>
                     <div class="p-col-2">
                         <div class="box">
-                            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
-                                (click)="cerrarModal()"></button>
+                            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="cerrarModal()"></button>
                         </div>
                     </div>
                     <div class="p-col-2">
                         <div class="box">
-                            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-                                (click)="cobrarVenta()"></button>
+                            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="cobrarVenta()"></button>
                         </div>
                     </div>
                 </div>

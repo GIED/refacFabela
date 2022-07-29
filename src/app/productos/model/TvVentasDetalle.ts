@@ -26,7 +26,7 @@ tcCliente?:Clientes;
 tcUsuario?:Usuarios;
 tcEstatusVenta?:TcEstatusVenta;
 descuento?:number;
-tcFormapago?:TcFormaPago = new TcFormaPago ;
+tcFormapago?:TcFormaPago;
 twCaja?:TwCaja;
 tcTipoVenta?: TcTipoVenta;
     
