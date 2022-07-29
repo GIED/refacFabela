@@ -1,0 +1,115 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Nueva Caja" icon="pi pi-plus"
+                        class="p-button-success p-mr-2 p-mb-2" (click)="abrirFormularioCaja()"></button>
+
+                </ng-template>
+
+
+            </p-toolbar>
+            <p-table #dt [value]="listaCajas" [rows]="10" [paginator]="true"
+                [globalFilterFields]="['nId','dFechaCierre', 'dFechaCierre']" 
+                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <h5 class="p-m-0">Administración de clientes</h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar Cliente" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                        </th>
+                        <th pSortableColumn="nId">Id Caja 
+                              <p-sortIcon field="nId"></p-sortIcon>    </th>
+                                         
+                        <th pSortableColumn="dFechaApertura">Fecha Apertura
+                            <p-sortIcon field="dFechaApertura"></p-sortIcon>
+                        </th>
+
+                        <th pSortableColumn="dFechaCierre">Fecha Cierre
+                            <p-sortIcon field="dFechaCierre"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="category">Saldo Inicial
+                           
+                        </th>
+                        <th pSortableColumn="rating">Saldo Cierre
+                           
+                        </th>
+                        <th pSortableColumn="rating">Saldo Final
+                           
+                        </th>
+                        <th pSortableColumn="inventoryStatus">Estatus
+                          
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-caja>
+                    <tr>
+                        <td>
+                        </td>
+                        <td><span class="p-column-title">Name</span> {{caja.nId}}
+                        </td>
+                        <td><span class="p-column-title">Price</span> {{caja.dFechaApertura | date}}
+                        </td>
+                        <td><span class="p-column-title">Category</span> {{caja.dFechaCierre | date}}
+                        </td>
+                        <td><span class="p-column-title">Reviews</span> {{caja.nSaldoInicial | number }}
+                        </td>
+                        <td><span class="p-column-title">Status</span> {{caja.nSaldoCierre | number}}
+                        </td>
+                        <td><span class="p-column-title">Status</span> {{caja.nSaldoFinal | number}}
+                        </td>
+                        <td *ngIf="caja.nEstatus==1"><span class="p-column-title">Status</span> ABIERTA
+                        </td>
+                        <td *ngIf="caja.nEstatus==0"><span class="p-column-title">Status</span> CERRADA
+                        </td>
+                        <td>
+                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                                (click)="generarBalance(caja)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{listaClientes ? listaClientes.length : 0 }} Registros.
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
+
+        
+       
+        <p-dialog [(visible)]="mostrarRegistroCaja" [style]="{width: '600px'}" header="Datos de la caja" [modal]="true"
+            styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <form [formGroup]="formulario">                  
+
+                    <div class="p-field">
+                        <label for="name">Saldo inicial de la caja</label>
+                        <p-inputNumber mode="decimal" formControlName="n_saldoInicial" [class.is-invalid]="validan_saldoInicial" ></p-inputNumber>
+                        <small *ngIf="validan_saldoInicial" class="p-error">Número no valido.</small>
+                    </div>                   
+                </form>
+                      
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="nuevaCaja()"></button>
+            </ng-template>
+        </p-dialog>
+        <p-confirmDialog [style]="{width: '600px'}"></p-confirmDialog>
+    </div>
+</div>
