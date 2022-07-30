@@ -54,7 +54,11 @@
                                     <button pButton pRipple icon="pi pi-file-o" pTooltip="Generar Factura" class="p-button-rounded p-button-warning" (click)="openDialog(venta)"></button>
                                 </td>
                                 <td *ngIf="venta.idFactura!=0">
-                                    <button pButton pRipple icon="pi pi-file-pdf" pTooltip="Descargar Factura" class="p-button-rounded p-button-danger p-mr-2" (click)="dt.exportCSV()"></button>
+                                    <button pButton pRipple icon="pi pi-file-pdf" pTooltip="Descargar Factura" class="p-button-rounded p-button-danger p-mr-2" (click)="descargarFactura(venta.nId)"></button>
+                                </td>
+
+                                <td *ngIf="venta.idFactura!=0">
+                                    <button pButton pRipple icon="pi pi-book" pTooltip="Descargar xml" class="p-button-rounded p-button-info p-mr-2" (click)="descargarXML(venta.nId)"></button>
                                 </td>
                             </tr>
                         </td>

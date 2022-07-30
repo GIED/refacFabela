@@ -6,6 +6,7 @@ import { FacturaService } from '../../../shared/service/factura.service';
 import { TvVentasFactura } from '../../../productos/model/TvVentasFactura';
 import { TcUsoCfdi } from '../../../productos/model/TcUsoCfdi';
 import { CatalogoService } from '../../../shared/service/catalogo.service';
+import { TipoDoc } from 'src/app/shared/utils/TipoDoc.enum';
 
 @Component({
   selector: 'app-facturacion',
@@ -22,7 +23,7 @@ export class FacturacionComponent implements OnInit {
     cfdiSeleccionado:string;
     
 
-  constructor(private facturaService: FacturaService, private catalogoService:CatalogoService) {
+  constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService,) {
         this.listaVentas=[];
         this.listaUsoCfdi=[];
         this.formFactura=false;
@@ -57,6 +58,59 @@ export class FacturacionComponent implements OnInit {
 
     this.facturaService.facturarVenta(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
       console.log(resp.mensaje);
+    });
+
+  }
+
+
+  descargarFactura(nIdVenta:number){
+
+    console.log();
+
+    this.facturaService.descargarDocumento(nIdVenta, TipoDoc.PDF_FACTURA ).subscribe(resp => {
+
+
+      const file = new Blob([resp], { type: 'application/pdf' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'factura_' + nIdVenta + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'comprobante de factura Generado', life: 3000 });
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+
+      } else {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de factura', life: 3000 });
+      }
+
+    });
+
+  }
+
+  descargarXML(nIdVenta:number){
+
+    console.log();
+
+    this.facturaService.descargarDocumento(nIdVenta, TipoDoc.XML_FACTURA ).subscribe(resp => {
+
+
+      const file = new Blob([resp], { type: 'application/xml' });
+      console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'factura_' + nIdVenta + '.xml';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'comprobante de factura Generado', life: 3000 });
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+
+      } else {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de factura', life: 3000 });
+      }
+
     });
 
   }

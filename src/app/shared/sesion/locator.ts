@@ -84,6 +84,7 @@ static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultarVentaId='/obtenerVentaId?';
 static consultarMaquinaCliente='/obtenerMaquinasCliente?';
 static generarVentaPdf='/getVenta?';
+static descargarDocuemento='/facturacion/getDocumento?';
 static generarReporteCajaPdf='/getReporteCaja?';
 static generarAbonoVentaPdf='/getAbonoVentaId?';
 static generarHistorialAbonoVentaPdf='/getAbonoVentaIdCliente?';
