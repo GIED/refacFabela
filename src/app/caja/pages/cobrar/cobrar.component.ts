@@ -9,6 +9,7 @@ import { VentasService } from 'src/app/shared/service/ventas.service';
 import { forkJoin } from 'rxjs';
 import { TrVentaCobro } from '../../../productos/model/TrVentaCobro';
 import { TwVenta } from '../../../productos/model/TwVenta';
+import { TwCaja } from '../../../productos/model/TwCaja';
 
 @Component({
   selector: 'app-cobrar',
@@ -39,6 +40,7 @@ export class CobrarComponent implements OnInit {
   restan:number;
   displayListaVentas:boolean;
   displayListaAbonoVenta:boolean;
+  cajaActiva:TwCaja;
 
   constructor(private messageService: MessageService, private ventasService: VentasService,
     private confirmationService: ConfirmationService, private fb: FormBuilder, private catalogo: CatalogoService) {
@@ -55,6 +57,7 @@ export class CobrarComponent implements OnInit {
 
     this.crearFormulario();
     this.consultaVentas();
+    this.cajaActual();
 
 
   }
@@ -279,9 +282,21 @@ export class CobrarComponent implements OnInit {
 
   }
 
+  cajaActual(){
+
+      this.catalogo.obtenerCajaActiva().subscribe(data=>{
+
+        this.cajaActiva=data;
+
+    })
+
+  }
+
   generarBalance(){
 
-    this.ventasService.generarBalanceCajaPdf(1).subscribe(resp => {
+  
+
+    this.ventasService.generarBalanceCajaPdf(this.cajaActiva.nId).subscribe(resp => {
 
 
       const file = new Blob([resp], { type: 'application/pdf' });
