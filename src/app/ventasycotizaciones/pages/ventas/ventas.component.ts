@@ -203,10 +203,9 @@ cerrarVentanas(valor:boolean){
 
 abrirFormularioMaquinaCliente(){
 
-  this.maquinaCliente.nIdCliente=this.clienteSeleccionado.nId;
- 
-  
+  this.maquinaCliente.nIdCliente=this.clienteSeleccionado.nId; 
   this.mostrarFormularioMaquinasCliente=true;
+  
 }
 
 
@@ -441,7 +440,7 @@ guardarCotizacion(){
     cotizacionDto.nIdProducto=producto.nIdProducto;
     cotizacionDto.nCantidad=producto.nCantidad;
     cotizacionDto.nPrecioUnitario=producto.tcProducto.nPrecioSinIva;
-    cotizacionDto.nIvaUnitario=producto.tcProducto.nPrecioConIva-producto.tcProducto.nPrecioSinIva;
+    cotizacionDto.nIvaUnitario=producto.tcProducto.nPrecioIva;
     cotizacionDto.nTotalUnitario=producto.tcProducto.nPrecioConIva;
 
     productoCotizado.push(JSON.parse(JSON.stringify(cotizacionDto)));

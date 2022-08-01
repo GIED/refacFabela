@@ -27,4 +27,5 @@ nPrecioPeso:number;
 nPrecioSinIva:number;
 nPrecioConIva:number;
 sIdBar:string;
+nPrecioIva:number;
 }
