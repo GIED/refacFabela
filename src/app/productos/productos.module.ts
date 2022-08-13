@@ -7,7 +7,6 @@ import { HistorialProductoComponent } from './pages/historial-producto/historial
 import { AlternativosProductoComponent } from './pages/alternativos-producto/alternativos-producto.component';
 import { PrimeModule } from '../shared/prime/prime.module';
 import { ModalProductoComponent } from './components/modal-producto/modal-producto.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { HistoriaPrecioProductoComponent } from './components/historia-precio-producto/historia-precio-producto.component';
 import { InputBusquedaComponent } from './components/input-busqueda/input-busqueda.component';
 import { ModalProductosAlternativosComponent } from './components/modal-productos-alternativos/modal-productos-alternativos.component';
@@ -18,6 +17,8 @@ import { ModalProductosBodegaInternoComponent } from './components/modal-product
 import { ModalProductoBodegaExternoComponent } from './components/modal-producto-bodega-externo/modal-producto-bodega-externo.component';
 import { ModalProductosBodegaComponent } from './components/modal-productos-bodega/modal-productos-bodega.component';
 import { VentaStockCeroComponent } from './pages/venta-stock-cero/venta-stock-cero.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 
@@ -46,7 +47,12 @@ import { VentaStockCeroComponent } from './pages/venta-stock-cero/venta-stock-ce
     CommonModule,
     ProductosRoutingModule,
     PrimeModule,
-    ReactiveFormsModule,  
+    ReactiveFormsModule, 
+    FormsModule, 
+    NgxSpinnerModule,
+  
+  
+  
     
   ],
   exports:[

@@ -45,6 +45,9 @@ export class PedidoProductosComponent implements OnInit {
     nIdProducto: number;
     sProducto: string;
     traspaso:boolean=false;
+    mostrarEntrega:boolean=false;
+    submitted:boolean=false;
+    pedido:TwPedidoProducto;
     
 
     constructor(private pedidosService: PedidosService,  private productosService: ProductoService,
@@ -106,6 +109,19 @@ detalleProduct(nId: number) {
 
   
 }
+
+
+mostrarRegistroEntrada(pedidos:TwPedidoProducto ) {
+  
+  this.pedido=pedidos;
+this.mostrarEntrega=true;
+this.submitted = false;
+
+console.log(pedidos);
+
+
+
+}
 saveProduct(producto: TcProducto) {
 
   console.log(producto);
@@ -126,7 +142,22 @@ saveProduct(producto: TcProducto) {
   
 }
 
+guardarIngresoProducto(){
+
+  this.entregaProducto(this.pedido);
+
+}
+cerrar(){
+  this.mostrarEntrega=false;
+
+}
+
 entregaProducto(producto:TwPedidoProducto){
+
+  if(producto.nCantidadPedida==producto.nCantidaRecibida){
+    producto.nEstatus=true;
+
+  }
 
  this.pedidosService.guardaIngresoProductoPedido(producto).subscribe(data=>{
 
@@ -138,6 +169,7 @@ entregaProducto(producto:TwPedidoProducto){
       
       
     }
+    this.mostrarEntrega=false;
     
   }
 
