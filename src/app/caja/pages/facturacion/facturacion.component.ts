@@ -7,6 +7,7 @@ import { TvVentasFactura } from '../../../productos/model/TvVentasFactura';
 import { TcUsoCfdi } from '../../../productos/model/TcUsoCfdi';
 import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TipoDoc } from 'src/app/shared/utils/TipoDoc.enum';
+import { SpinnerComponent } from '../../../shared/spinner/spinner.component';
 
 @Component({
   selector: 'app-facturacion',
@@ -23,23 +24,30 @@ export class FacturacionComponent implements OnInit {
     cfdiSeleccionado:string;
     
 
-  constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService,) {
+  constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService) {
         this.listaVentas=[];
         this.listaUsoCfdi=[];
         this.formFactura=false;
      }
 
   ngOnInit(){
-   this.facturaService.obtenerVentaFactura().subscribe(resp =>{
-       this.listaVentas=resp;
-   });
-
+   this.obtenerFacruras();
    this.catalogoService.obtenerUsoCfdi().subscribe(resp =>{
      this.listaUsoCfdi=resp;
    });
 
 
     
+  }
+
+  obtenerFacruras(){
+
+    this.facturaService.obtenerVentaFactura().subscribe(resp =>{
+      this.listaVentas=resp;
+
+      console.log(this.listaVentas);
+  });
+
   }
 
   openDialog(tvVentasFactura:TvVentasFactura){
@@ -57,6 +65,8 @@ export class FacturacionComponent implements OnInit {
     console.log(this.idVenta);
 
     this.facturaService.facturarVenta(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
+      this.formFactura=false;
+      this.obtenerFacruras();
       console.log(resp.mensaje);
     });
 

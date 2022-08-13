@@ -417,6 +417,7 @@ a {
   -webkit-box-shadow: 3px 0 5px 0 rgba(33, 35, 39, 0.15);
   -moz-box-shadow: 3px 0 5px 0 rgba(33, 35, 39, 0.15);
   box-shadow: 3px 0 5px 0 rgba(33, 35, 39, 0.15);
+  text-decoration: none;
 }
 .layout-sidebar .sidebar-logo {
   height: 76px;

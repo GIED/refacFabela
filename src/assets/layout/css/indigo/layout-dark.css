@@ -790,6 +790,7 @@ a {
     vertical-align: middle;
     margin-left: 8px;
     order: 2;
+    text-decoration: none;
   }
   .layout-wrapper.layout-horizontal .layout-sidebar .layout-menu-container .layout-menu > li > a i {
     position: static;

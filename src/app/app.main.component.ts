@@ -4,6 +4,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { PrimeNGConfig } from 'primeng/api';
 import {AppComponent} from './app.component';
 
+
 @Component({
     selector: 'app-main',
     templateUrl: './app.main.component.html',
@@ -18,6 +19,7 @@ import {AppComponent} from './app.component';
             transition('* => *', animate('250ms cubic-bezier(0, 0, 0.2, 1)'))
         ])
     ]
+  
 })
 export class AppMainComponent {
 

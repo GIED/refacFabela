@@ -9,9 +9,9 @@ import { TokenService } from './shared/service/token.service';
 			<div class="layout-topbar-wrapper">
                 <div class="layout-topbar-left">
 					<div class="layout-topbar-logo-wrapper">
-						<a href="#" class="layout-topbar-logo">
+						<a href="#/inicio/inicio-general" class="layout-topbar-logo">
 							<img src="assets/layout/images/LOGO.png" alt="mirage-layout" />
-							<span class="app-name">Mirage</span>
+							<span class="app-name">Refacciones Fabela</span>
 						</a>
 					</div>
 
@@ -19,9 +19,7 @@ import { TokenService } from './shared/service/token.service';
 						<i class="pi pi-bars"></i>
 					</a>
 
-					<a href="#" class="megamenu-mobile-button" (click)="appMain.onMegaMenuMobileButtonClick($event)">
-						<i class="pi pi-align-right megamenu-icon"></i>
-					</a>
+					
 
 					<a href="#" class="topbar-menu-mobile-button" (click)="appMain.onTopbarMobileMenuButtonClick($event)">
 						<i class="pi pi-ellipsis-v"></i>
@@ -32,7 +30,7 @@ import { TokenService } from './shared/service/token.service';
                 <div class="layout-topbar-right fadeInDown">
 					<ul class="layout-topbar-actions">
 						<li>
-							<p style="color:white;">Bienvenida(o): {{nombreUsuario}} </p>
+							<div style="background: white; color: #aa7ea2; height:23px; border-radius:20px; width:220px; text-align:center;"><strong><p style="color:#aa7ea2;">Bienvenida(o): {{nombreUsuario}} </p></strong></div>
 						</li>
 						
 						<li #profile class="topbar-item profile-item" [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === profile}">

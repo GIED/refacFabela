@@ -29,7 +29,7 @@ export class AppMenuComponent implements OnInit {
             }
           });
         this.model = [
-            {label: 'Inicio', icon: 'pi pi-fw pi-home',  visible:this.realRol==='admin',  routerLink: ['/inicio/tablero']},
+            {label: 'Inicio', icon: 'pi pi-fw pi-home',  visible:this.realRol==='admin',  routerLink: ['/inicio/inicio-general']},
             {
                 label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.realRol==='admin',
                 items: [
@@ -56,6 +56,9 @@ export class AppMenuComponent implements OnInit {
                     },
                     {
                         label: 'Administración Caja', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/admin-caja']
+                    },
+                    {
+                        label: 'Tablero de Control', icon: 'pi pi-fw pi-credit-card', routerLink: ['../inicio/tablero']
                     },
 
                     

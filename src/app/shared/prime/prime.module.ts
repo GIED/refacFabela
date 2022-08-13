@@ -26,7 +26,7 @@ import {DynamicDialogModule} from 'primeng/dynamicdialog';
 import {DividerModule} from 'primeng/divider';
 import {DragDropModule} from 'primeng/dragdrop';
 import {DropdownModule} from 'primeng/dropdown';
-import {FieldsetModule} from 'primeng/fieldset';
+import {Fieldset, FieldsetModule} from 'primeng/fieldset';
 import {FileUploadModule} from 'primeng/fileupload';
 import {FullCalendarModule} from '@fullcalendar/angular';
 import {GalleriaModule} from 'primeng/galleria';
@@ -86,6 +86,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { FormsModule } from '@angular/forms';
+
 
 
 FullCalendarModule.registerPlugins([
@@ -179,7 +180,9 @@ FullCalendarModule.registerPlugins([
         TreeModule,
         TreeTableModule,
         VirtualScrollerModule,
-        FormsModule,
+        FormsModule
+     
+        
      
         
   ]

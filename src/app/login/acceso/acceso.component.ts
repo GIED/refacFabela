@@ -34,7 +34,7 @@ export class AccesoComponent{
     this.authService.login(this.loginUsuario).subscribe(data =>{
       
       this.tokenService.setToken(data.token);
-      this.router.navigate(['/inicio'])
+      this.router.navigate(['/inicio/inicio-general'])
       this.messageService.add({ severity: 'success', summary: 'Acceso Correcto', detail: "Inicio de sesión correcto", life: 3000 });
 
     },error =>{
