@@ -59,6 +59,15 @@ this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data =>
 
 }
 
+cancelaVentaProducto(ventaProductoDto:VentaProductoDto){
+  
+  this.ventasService.cancelarVentaProducto(ventaProductoDto).subscribe(data => {
+ this.mostrarProductos=false;
+ this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Se cancelo la partida con éxito', life: 3000});
+  })
+  
+  }
+
 hideDialogAlter(){
 this.mostrarProductos=false;
 }

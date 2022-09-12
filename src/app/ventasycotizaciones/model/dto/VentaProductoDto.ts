@@ -14,6 +14,8 @@ export class VentaProductoDto{
     sBodega?:string;
     sAnaquel?:string;
     sNivel?:string;
+    nEstatus:number;
+    nIdVenta:number;
 
 
 }

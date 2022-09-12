@@ -75,6 +75,7 @@ static consultaVentaAbonoId='/obtenerAbonosVentaId?';
 static obtenerVentaCobroParcial='/obtenerPagosParciales?';
 static consultaProductoVentaId='/consultaProductoVentaId?';
 static guardaVenta= '/guardarVenta';
+static cancelaProductoVenta= '/cancelaVentaProducto';
 static guardaVentaDetalle= '/guardarVentaDetalle';
 static guardaVentaProductoId= '/guardaVentaProductoId';
 static guardaVentaProductoEntrega= '/guardaVentasProducto';

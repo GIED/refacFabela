@@ -56,6 +56,10 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.consultaProductoVentaId+'id='+id;
     return this.http.get<VentaProductoDto>(url);
   }
+ cancelarVentaProducto(ventaProductoDto:VentaProductoDto){
+    let url = environment.servicios.apiRefacFabela + locator.cancelaProductoVenta;
+    return this.http.post<VentaProductoDto>(url,ventaProductoDto);
+  }
   obtenerProductoVentaMesId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaProductoVentaMesId+'id='+id;
     return this.http.get<TvVentaProductoMes[]>(url);
