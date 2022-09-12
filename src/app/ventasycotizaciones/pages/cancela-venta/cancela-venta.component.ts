@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
+import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
+import { VentasService } from 'src/app/shared/service/ventas.service';
+import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
 
 @Component({
   selector: 'app-cancela-venta',
@@ -11,186 +14,58 @@ import { ProductService } from 'src/app/demo/service/productservice';
 export class CancelaVentaComponent implements OnInit {
 
   productDialog: boolean;
-
-  products: Product[];
-
-  product: Product;
-
   selectedProducts: Product[];
-
+  selectedProducts2:VentaProductoDto;
   submitted: boolean;
-
   cols: any[];
-  detalleDialog: boolean;
-  lineOptions:any;
-  lineData: any;
-  alternativosDialog: boolean;
+  detalleDialog: boolean;   
   titulo:string;
   formaPago:any;
   usoCfdi:any;
+  mostrarProductos:boolean;
 
-constructor(private productService: ProductService, private messageService: MessageService,
-  private confirmationService: ConfirmationService) { }
+  listaVentasDetalleCliente: TvVentasDetalle[];
+  listaProductosVenta:VentaProductoDto;
+
+constructor(  private ventasService:VentasService,  private messageService: MessageService,  ) {
+
+  this.cols = [
+    { field: 'sFolioVenta', header: 'Folio' },
+    { field: 'tcCliente.sRfc', header: 'RFC' },
+    { field: 'tcCliente.sRazonSocial', header: 'Razón Social' },
+    { field: 'nTotalVenta', header: 'Total Venta' },
+    { field: 'dFechaVenta', header: 'Fecha de Venta' },
+    { field: 'tcUsuario.sNombreUsuario', header: 'Vendedor' },
+   
+]
+ }
 
 ngOnInit(){
-  this.productService.getProducts().then(data => this.products = data);
-  this.formaPago = [
-      {label: 'Efectivo'},
-      {label: 'Tarjeta de Crédito'},
-      {label: 'Tarjeta de Débito'},
-      {label: 'Transferencia'},
-      {label: 'Cheque'},
-      {label: 'Depósito'},
-
-  ];
-  this.usoCfdi = [
-      {label: 'Gastos en general'},
-      {label: 'Adquisisción de Mercancias'},
-     
-
-  ];
-}
-openNew() {
-  this.product = {};
-  this.submitted = false;
-  this.productDialog = true;
-  this.titulo="Registro de Productos"
-}
-
-deleteSelectedProducts() {
-  this.confirmationService.confirm({
-      message: 'Are you sure you want to delete the selected products?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-          this.selectedProducts = null;
-          this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
-      }
-  });
+   this.ventasService.obtenerVentaDetalle().subscribe(data=>{
+   this.listaVentasDetalleCliente=data; 
+   console.log(this.listaVentasDetalleCliente);      
+  
+  }); 
 }
 
 
-editProduct(product: Product) {
-  this.product = {...product};
-  this.productDialog = true;
-  this.titulo="Actualización de Producto"
-}
-alternativosProduct(product: Product) {
-  this.product = {...product};
-  this.alternativosDialog = true;
- 
-}
-registroAlternativos(){
-  this.product = {};
-  this.submitted = false;
-  this.productDialog = true;
-  this.titulo="Registro de Productos Alternativos"
-}
-detalleProduct(product: Product) {
-  this.product = {...product};
-  this.detalleDialog = true;
-  this.lineData = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-          {
-              label: 'First Dataset',
-              data: [65, 59, 80, 81, 56, 55, 40],
-              fill: false,
-              backgroundColor: 'rgb(255, 205, 86)',
-              borderColor: 'rgb(255, 205, 86)',
-              tension: .4
-          },
-          {
-              label: 'Second Dataset',
-              data: [28, 48, 40, 19, 86, 27, 90],
-              fill: false,
-              backgroundColor: 'rgb(75, 192, 192)',
-              borderColor: 'rgb(75, 192, 192)',
-              tension: .4
-          }
-      ]
-  };
+detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
 
-  this.lineOptions = {
-      plugins: {
-          legend: {
-              labels: {
-                  fontColor: '#A0A7B5'
-              }
-          }
-      },
-      scales: {
-          x: {
-              ticks: {
-                  color: '#A0A7B5'
-              },
-              grid: {
-                  color:  'rgba(160, 167, 181, .3)',
-              }
-          },
-          y: {
-              ticks: {
-                  color: '#A0A7B5'
-              },
-              grid: {
-                  color:  'rgba(160, 167, 181, .3)',
-              }
-          },
-      }
-  };
+this.mostrarProductos=true;
+
+this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
+    this.listaProductosVenta=data;
+})
+
 }
 
-deleteProduct(product: Product) {
-  this.confirmationService.confirm({
-      message: 'Desea borrar el producto ' + product.name + '?',
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          this.products = this.products.filter(val => val.id !== product.id);
-          this.product = {};
-          this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
-      }
-  });
+hideDialogAlter(){
+this.mostrarProductos=false;
 }
 
-hideDialog() {
-  this.productDialog = false;
-  this.submitted = false;
-}
 
-saveProduct() {
-  this.submitted = true;
 
-  if (this.product.name.trim()) {
-      if (this.product.id) {
-          this.products[this.findIndexById(this.product.id)] = this.product;
-          this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto actualizado', life: 3000});
-      }
-      else {
-          this.product.id = this.createId();
-          this.product.image = 'product-placeholder.svg';
-          this.products.push(this.product);
-          this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Guardado', life: 3000});
-      }
 
-      this.products = [...this.products];
-      this.productDialog = false;
-      this.product = {};
-  }
-}
-
-findIndexById(id: string): number {
-  let index = -1;
-  for (let i = 0; i < this.products.length; i++) {
-      if (this.products[i].id === id) {
-          index = i;
-          break;
-      }
-  }
-
-  return index;
-}
 
 createId(): string {
   let id = '';
@@ -200,6 +75,32 @@ createId(): string {
   }
   return id;
 }
+
+generarVentaPdf(tvVentasDetalle:TvVentasDetalle){
+
+this.ventasService.generarVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
+
+  
+    const file = new Blob([resp], { type: 'application/pdf' });
+    console.log('file: ' + file.size);
+    if (file != null && file.size > 0) {
+      const fileURL = window.URL.createObjectURL(file);
+      const anchor = document.createElement('a');
+      anchor.download = 'venta_' + tvVentasDetalle.nId + '.pdf';
+      anchor.href = fileURL;
+      anchor.click();
+      this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+      //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+     
+    } else {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+    }
+
+});
+
+}
+
+
 
 }
 
