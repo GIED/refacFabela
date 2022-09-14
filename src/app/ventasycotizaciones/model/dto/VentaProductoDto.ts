@@ -16,6 +16,7 @@ export class VentaProductoDto{
     sNivel?:string;
     nEstatus:number;
     nIdVenta:number;
+    sCondicionEntrega:string;
 
 
 }
