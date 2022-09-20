@@ -1,6 +1,6 @@
 <div class="p-grid p-fluid">
     <div class="p-col-12 p-text-center">
-        <h3>Ventas y Cotizaciones</h3>       
+        <h3>Ventas y Cotizaciones</h3>
     </div>
     <div class="p-col-12 p-xl-12 p-md-12">
         <form [formGroup]="formGrp" autocomplete="off">
@@ -22,19 +22,19 @@
                         <p-accordionTab header="Datos del crédito del cliente">
                             <div class="p-col-12">
                                 <ng-template [ngIf]="mostrarDetalleCliente">
-                                    <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>   
-                                                               
+                                    <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>
+
                                 </ng-template>
                                 <div class="p-formgroup-inline p-d-flex p-jc-between">
-                                <p-button icon="pi pi-search " (click)="obtenerMaquinasCliente()" label="Ver Maquinas del Cliente" styleClass="p-button-text"></p-button>
-                               <p-button icon="pi pi-plus" (click)="abrirFormularioMaquinaCliente()" label="Agregar Maquina " styleClass="p-button-text"></p-button>
+                                    <p-button icon="pi pi-search " (click)="obtenerMaquinasCliente()" label="Ver Maquinas del Cliente" styleClass="p-button-text"></p-button>
+                                    <p-button icon="pi pi-plus" (click)="abrirFormularioMaquinaCliente()" label="Agregar Maquina " styleClass="p-button-text"></p-button>
+                                </div>
                             </div>
-                        </div>
                         </p-accordionTab>
-                        
+
                     </p-accordion>
-                    
-               
+
+
 
 
                 </div>
@@ -59,10 +59,10 @@
                                                             <div>{{producto.sNoParte}}-{{producto.sProducto}}--{{producto.sDescripcion}}</div>
                                                         </div>
                                                     </ng-template>
-                                                   
+
                                                 </p-listbox>
                                             </div>
-                                          
+
                                         </div>
 
                                         <p-toast></p-toast>
@@ -87,7 +87,7 @@
                                             <th pSortableColumn="Incremento">Incremento
 
                                             </th>
-                                          
+
                                             <th pSortableColumn="stock">stock
 
                                             </th>
@@ -105,10 +105,10 @@
                                             <td>{{producto.tcProducto.sMarca}}</td>
                                             <td>${{producto.tcProducto.nPrecioConIva | number:'1.1-3' }}</td>
                                             <td>
-                                                <p-inputNumber  formControlName="nIncrementoCtrl"  (focusout)="sumarIncremento(producto)" >
-                                            </p-inputNumber>
+                                                <p-inputNumber formControlName="nIncrementoCtrl" (focusout)="sumarIncremento(producto)">
+                                                </p-inputNumber>
                                             </td>
-                                            
+
                                             <td (click)="ubicacionProducto(producto)">{{producto.nCantidadTotal}}</td>
                                             <td>
                                                 <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="1000">
@@ -128,96 +128,99 @@
 
                         <br>
                         <br>
-                       
-                       
-                                <app-modal-productos-bodega  [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>
-                                </app-modal-productos-bodega>
-                         
+
+
+                        <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>
+                        </app-modal-productos-bodega>
+
 
 
                     </div>
                     <!--Productos alternativos-->
-                
+
                     <div class="p-col-12 p-lg-12 p-md-12 fondo-content ">
 
                         <p-scrollPanel [style]="{width: '100%', height: '400px'}">
-                      
 
-                        <div class="p-col-12 p-lg-12 p-md-12 ">
-   
-                            <form [formGroup]="formGrp" autocomplete="off">
-                                <div class="p-col-12 ">
-                                    <p-table  #dt [value]="productosAlternativos"
-                                    [globalFilterFields]="['tcProducto.sProducto','nCantidadTotal']"
-                                    [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"  
-                                    currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-                                    [showCurrentPageReport]="true"> 
-                                    <ng-template pTemplate="caption">
-                                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                                           
-                                            <span class="p-input-icon-left">
+
+                            <div class="p-col-12 p-lg-12 p-md-12 ">
+
+                                <form [formGroup]="formGrp" autocomplete="off">
+                                    <div class="p-col-12 ">
+                                        <p-table #dt [value]="productosAlternativos" [globalFilterFields]="['tcProducto.sProducto','nCantidadTotal']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                                            [showCurrentPageReport]="true">
+                                            <ng-template pTemplate="caption">
+                                                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+
+                                                    <span class="p-input-icon-left">
                                                 <i class="pi pi-search"></i>
                                                 <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
                                                     placeholder="Buscar Alternativo" />
                                             </span>
-                                        </div>
-                                    </ng-template>
-                                        <ng-template pTemplate="header">
-                                            <tr>
-                    
-                                               
-                                              
-                                                <th pSortableColumn="descripcion">No. Parte
-                    
-                                                </th>
-                                                <th pSortableColumn="tcProducto.sProducto">Producto 
-                                                    <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>    </th>
+                                                </div>
+                                            </ng-template>
+                                            <ng-template pTemplate="header">
+                                                <tr>
+
+
+
+                                                    <th pSortableColumn="descripcion">No. Parte
+
+                                                    </th>
+                                                    <th pSortableColumn="tcProducto.sProducto">Producto
+                                                        <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
+                                                    </th>
                                                     <th pSortableColumn="precio">Descripción
                                                         <th pSortableColumn="precio">Marca
-                                                <th pSortableColumn="precio">Precio
-                    
-                                                </th>
-                                               <th pSortableColumn="nCantidadTotal">Stock
-                                                    <p-sortIcon field="nCantidadTotal"></p-sortIcon>    </th>
-                                                <th pSortableColumn="stock">Cantidad
-                    
-                                                </th>
-                                                
-                                                <th></th>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="body" let-producto>
-                                            <tr>
-                                                <td>{{producto.tcProducto.sNoParte}}</td>
-                                                <td>{{producto.tcProducto.sProducto}}</td>
-                                                <td>{{producto.tcProducto.sDescripcion}}</td>
-                                                <td>{{producto.tcProducto.sMarca}}</td>
-                                                <td>${{producto.tcProducto.nPrecioConIva | number:'1.1-3' }}</td>
-                                               
-                                                <td class="p-text-center"><div *ngIf="producto.nCantidadTotal==0" style="background: red; border-radius: 30px;">{{producto.nCantidadTotal}}</div><div *ngIf="producto.nCantidadTotal>0" style="background: green; border-radius: 30px;">{{producto.nCantidadTotal}}</div></td>
-                                                <td>
-                                                    <p-inputNumber formControlName="nCantidadCtrl" [min]="0" [max]="100">
-                                                    </p-inputNumber>
-                                                </td>
-                                                <td>
-                                                    <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
-                                                </td>
-                                            </tr>
-                                        </ng-template>                   
-                                    </p-table>
-                                   
-                                </div>
-                    
-                                <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
-                    
-                            </form>
-                        
-                    </div>
-                   
-              
-                </p-scrollPanel></div>
+                                                            <th pSortableColumn="precio">Precio
 
-                    <div  class="p-col-12 p-lg-12 p-md-12 fondo-content2 ">
+                                                            </th>
+                                                            <th pSortableColumn="nCantidadTotal">Stock
+                                                                <p-sortIcon field="nCantidadTotal"></p-sortIcon>
+                                                            </th>
+                                                            <th pSortableColumn="stock">Cantidad
+
+                                                            </th>
+
+                                                            <th></th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-producto>
+                                                <tr>
+                                                    <td>{{producto.tcProducto.sNoParte}}</td>
+                                                    <td>{{producto.tcProducto.sProducto}}</td>
+                                                    <td>{{producto.tcProducto.sDescripcion}}</td>
+                                                    <td>{{producto.tcProducto.sMarca}}</td>
+                                                    <td>${{producto.tcProducto.nPrecioConIva | number:'1.1-3' }}</td>
+
+                                                    <td class="p-text-center">
+                                                        <div *ngIf="producto.nCantidadTotal==0" style="background: red; border-radius: 30px;">{{producto.nCantidadTotal}}</div>
+                                                        <div *ngIf="producto.nCantidadTotal>0" style="background: green; border-radius: 30px;">{{producto.nCantidadTotal}}</div>
+                                                    </td>
+                                                    <td>
+                                                        <p-inputNumber formControlName="nCantidadCtrl" [min]="0" [max]="100">
+                                                        </p-inputNumber>
+                                                    </td>
+                                                    <td>
+                                                        <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+
+                                    </div>
+
+                                    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+                                </form>
+
+                            </div>
+
+
+                        </p-scrollPanel>
+                    </div>
+
+                    <div class="p-col-12 p-lg-12 p-md-12 fondo-content2 ">
                         <div class="p-col-12 p-mt-3">
                             <span class="p-input-icon-left">
 							<h5 class="p-text-center" >Carrito de compras <i class="pi pi-shopping-cart"></i></h5>
@@ -242,7 +245,7 @@
                                             <th pSortableColumn="cantidad">Cantidad</th>
                                             <th pSortableColumn="cantidad">Total</th>
                                             <th></th>
-                                           
+
 
                                         </tr>
                                     </ng-template>
@@ -259,8 +262,8 @@
                                             <td>
                                                 <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(productoVenta)" class="p-button-rounded p-button-danger p-mr-2"></button>
                                             </td>
-                                          
-                                          
+
+
                                         </tr>
                                     </ng-template>
 
@@ -289,8 +292,8 @@
             </div>
         </form>
     </div>
- 
-   
+
+
     <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta" [style]="{width: '700px'}" [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
             <app-form-venta [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente" [total]="total" (emitirVenta)="generarVenta($event)" (soloCotizacion)="soloCotizacion()"></app-form-venta>
@@ -302,7 +305,7 @@
 
     <p-dialog [(visible)]="mostrarMaquinasCliente" header="Maquinas del Cliente" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
         <ng-template pTemplate="content">
-            <app-maquina-cliente  [nICliente]="clienteSeleccionado.nId" ></app-maquina-cliente>
+            <app-maquina-cliente [nICliente]="clienteSeleccionado.nId"></app-maquina-cliente>
         </ng-template>
         <ng-template pTemplate="footer">
 
@@ -311,14 +314,14 @@
 
     <p-dialog [(visible)]="mostrarFormularioMaquinasCliente" header="Maquinas del Cliente" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
         <ng-template pTemplate="content">
-            <app-form-maquina-cliente  [twMaquinaCliente]="maquinaCliente" (cierraformulario)="cerrarVentanas($event)"  ></app-form-maquina-cliente>
+            <app-form-maquina-cliente [twMaquinaCliente]="maquinaCliente" (cierraformulario)="cerrarVentanas($event)"></app-form-maquina-cliente>
         </ng-template>
         <ng-template pTemplate="footer">
 
         </ng-template>
     </p-dialog>
 
-    
-    
+
+
 
 </div>

@@ -309,8 +309,7 @@ calculaPrecioFinal():void{
    this.productosService.simuladorPrecioProducto(this.tcProductoCalculo=this.formulario.value).subscribe(resp=>{
     this.tcProductoCalculo=resp;
     this.precioFinal=this.tcProductoCalculo.nPrecioConIva;
-
-     this.precioFinal.toFixed(2);
+    this.precioFinal.toFixed(2);
 
    });
   

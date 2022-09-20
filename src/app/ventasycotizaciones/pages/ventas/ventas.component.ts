@@ -1,18 +1,13 @@
 import { TcProducto } from './../../../productos/model/TcProducto';
 
 import { Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
-import { Product } from 'src/app/demo/domain/product';
-import { ProductService } from 'src/app/demo/service/productservice';
-import { CountryService } from '../../../demo/service/countryservice';
+import { ConfirmationService, ConfirmEventType, MessageService, PrimeNGConfig, SelectItem } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { Clientes } from 'src/app/administracion/interfaces/clientes';
 import { ClienteService } from '../../../administracion/service/cliente.service';
 import { ProductoService } from '../../../shared/service/producto.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
-import { ThirdPartyDraggable } from '@fullcalendar/interaction';
 import { TvStockProducto } from '../../../productos/model/TvStockProducto';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CotizacionDto } from '../../model/dto/CotizacionDto';
@@ -20,7 +15,6 @@ import { VentasCotizacionesService } from '../../../shared/service/ventas-cotiza
 import { DatosVenta } from '../../interfaces/DatosVenta';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TwCotizacion } from '../../../productos/model/TcCotizacion';
-import { producto } from '../../../productos/interfaces/producto.interfaces';
 import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { TokenService } from 'src/app/shared/service/token.service';
@@ -85,7 +79,8 @@ export class VentasComponent implements OnInit {
     private ventasCotizacionService: VentasCotizacionesService,
     private ventaService:VentasService,
     private bodegasService: BodegasService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private confirmationService: ConfirmationService,
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -253,6 +248,8 @@ valorSeleccionadoProducto(){
     console.log(productoStock);
     if (productoStock.nCantidadTotal === 0) {
       this.messageService.add({severity: 'warn', summary: 'sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
+    }else{
+
     }
     this.productosFiltrados.push(productoStock);
     this.mostrarSugerenciasProducto=false;
@@ -306,6 +303,32 @@ ubicacionProducto(nId: number){
     for (const key in productoBodega) {
         this.stockTotal += this.listaProductoBodega[key].nCantidad;
     }
+
+    for (const objBodega of productoBodega) {
+
+      if (objBodega.nCantidad>0 && objBodega.nIdBodega==2 || objBodega.nIdBodega==3) {
+        this.confirmationService.confirm({
+          message: 'Este producto requiere un traslado de bodega?',
+          header: 'Confirmar',
+          icon: 'pi pi-exclamation-triangle',
+          accept: () => {
+              this.messageService.add({severity:'info', summary:'Aceptado', detail:'Traslado Aceptado'});
+          },
+          reject: (type) => {
+              switch(type) {
+                  case ConfirmEventType.REJECT:
+                      this.messageService.add({severity:'error', summary:'Cancelado', detail:'Traslado no Aceptado'});
+                  break;
+                  case ConfirmEventType.CANCEL:
+                      this.messageService.add({severity:'warn', summary:'Cancelled', detail:'Cancelar'});
+                  break;
+              }
+          }
+      });
+      }
+      
+    }
+
 });
 this.muestraProductosBodega=true;
 }
