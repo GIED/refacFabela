@@ -94,6 +94,7 @@ static generarVentaPedidoPdf='/getVentaPedido?';
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';
 static consultaCotizaciones='/consultaCotizaciones';
+static consultaCotizacionesBusqueda='/consultaCotizacionesLike?';
 static consultaCotizacionId='/consultaCotizacionId?';
 static obtenerVentaIdcotizacon='/obtenerVentaIdCotizacion?';
 static generarCotizacionPdf='/getCotizacion?';

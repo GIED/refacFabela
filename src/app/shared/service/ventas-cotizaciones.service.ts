@@ -26,6 +26,10 @@ export class VentasCotizacionesService {
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizaciones;
     return this.http.get<TwCotizacion[]>(url);
   }
+  obtenerCotizacionesBusqueda(busqueda:string){   
+    let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionesBusqueda+'buscar='+busqueda;
+    return this.http.get<TwCotizacion[]>(url);
+  }
 
   obtenerCotizacionDistribuidor(idUsuario: number){   
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionDistribuidor + 'idUsuario='+idUsuario;

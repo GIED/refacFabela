@@ -30,6 +30,7 @@ export class ConsultaCotizacionComponent implements OnInit {
   datosRegistraVenta:DatosVenta;
   cotizacionData: TwCotizacion;
   venta:TwVenta
+  buscar:string;
 
 
   
@@ -53,6 +54,24 @@ obtenerCotizaciones(){
     this.listaCotizaciones=data;
     console.log(this.listaCotizaciones);
   }); 
+
+}
+
+consultar(){
+
+  if(this.buscar !== undefined && this.buscar.length >=1 ){
+    this.ventasCotizacionesService.obtenerCotizacionesBusqueda(this.buscar).subscribe(data => {
+      this.listaCotizaciones=data;
+      console.log(this.listaCotizaciones);
+    }); 
+
+  }
+  else 
+  {
+   
+  }
+
+ 
 
 }
 
