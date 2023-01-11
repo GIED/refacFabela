@@ -300,34 +300,80 @@ calcularPrecio(tvStockProducto :TvStockProducto){
 ubicacionProducto(nId: number){
   this.bodegasService.obtenerProductoBodegas(nId).subscribe(productoBodega => {
     this.listaProductoBodega = productoBodega;
-    for (const key in productoBodega) {
-        this.stockTotal += this.listaProductoBodega[key].nCantidad;
-    }
 
-    for (const objBodega of productoBodega) {
+    
+    // for (const key in productoBodega) {
+      //     this.stockTotal += this.listaProductoBodega[key].nCantidad;
+      // }
 
-      if (objBodega.nCantidad>0 && objBodega.nIdBodega==2 || objBodega.nIdBodega==3) {
-        this.confirmationService.confirm({
-          message: 'Este producto requiere un traslado de bodega?',
-          header: 'Confirmar',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.messageService.add({severity:'info', summary:'Aceptado', detail:'Traslado Aceptado'});
-          },
-          reject: (type) => {
-              switch(type) {
-                  case ConfirmEventType.REJECT:
-                      this.messageService.add({severity:'error', summary:'Cancelado', detail:'Traslado no Aceptado'});
-                  break;
-                  case ConfirmEventType.CANCEL:
-                      this.messageService.add({severity:'warn', summary:'Cancelled', detail:'Cancelar'});
-                  break;
-              }
-          }
-      });
-      }
+      let bodega1:number=0;
+      let cantidad1:number=0;
+      let bodega2:number=0;
+      let cantidad2:number=0;
+      let bodega3:number=0;
+      let cantidad3:number=0;
       
-    }
+      for (const objBodega of productoBodega) {
+
+        console.log('obj bodega', objBodega);
+
+        if (objBodega.nIdBodega==1) {
+          bodega1=1;
+          cantidad1=objBodega.nCantidad;
+        }else if (objBodega.nIdBodega==2) {
+          bodega2=2;
+          cantidad2=objBodega.nCantidad;
+        }else{
+          bodega3=3;
+          cantidad3=objBodega.nCantidad;
+        }
+    
+      }
+      if (cantidad1==0 && cantidad2>0 || cantidad3>0) {
+        if (cantidad2>0 && bodega2==2 ) {
+          this.confirmationService.confirm({
+            message: 'Este producto requiere un traslado de la bodega de casa?',
+            header: 'Confirmar',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                this.messageService.add({severity:'info', summary:'Aceptado', detail:'Traslado Aceptado'});
+            },
+            reject: (type) => {
+                switch(type) {
+                    case ConfirmEventType.REJECT:
+                        this.messageService.add({severity:'error', summary:'Cancelado', detail:'Traslado no Aceptado'});
+                    break;
+                    case ConfirmEventType.CANCEL:
+                        this.messageService.add({severity:'warn', summary:'Cancelled', detail:'Cancelar'});
+                    break;
+                }
+            }
+        });
+        }else{
+          this.confirmationService.confirm({
+            message: 'Este producto requiere un traslado de la bodega de Tenango?',
+            header: 'Confirmar',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                this.messageService.add({severity:'info', summary:'Aceptado', detail:'Traslado Aceptado'});
+            },
+            reject: (type) => {
+                switch(type) {
+                    case ConfirmEventType.REJECT:
+                        this.messageService.add({severity:'error', summary:'Cancelado', detail:'Traslado no Aceptado'});
+                    break;
+                    case ConfirmEventType.CANCEL:
+                        this.messageService.add({severity:'warn', summary:'Cancelled', detail:'Cancelar'});
+                    break;
+                }
+            }
+        });
+        }
+      }
+
+      
+      
+      console.log('saliendo del for: ',bodega1,cantidad1,bodega2,cantidad2,bodega3,cantidad3);
 
 });
 this.muestraProductosBodega=true;
