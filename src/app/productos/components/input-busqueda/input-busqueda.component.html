@@ -8,7 +8,7 @@
 <p-listbox *ngIf="mostrarSugerencias" [options]="listaNoParte"  [(ngModel)]="nId" optionLabel="sNoParte" (onClick)="valorSeleccionado()" optionValue="nId" [listStyle]="{'max-height':'250px'}">
     <ng-template let-producto pTemplate="item">
         <div>
-            <div>{{producto.sNoParte}}->{{producto.sProducto}}->{{producto.sDescripcion}}</div>
+            <div>{{producto.sNoParte}}->{{producto.sMarca}}->{{producto.sProducto}}->{{producto.sDescripcion}}</div>
         </div>
     </ng-template>
 
