@@ -128,7 +128,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Caja', icon: 'pi pi-fw pi-id-card', visible:this.realRol==='admin' || this.realRol==='ventas',
+                label: 'Caja', icon: 'pi pi-fw pi-id-card', visible:this.realRol==='admin' || this.realRol==='caja',
                 items: [
                     {
                         label: 'Cobrar', icon: 'pi pi-fw pi-dollar', routerLink: ['../caja/cobrar']

@@ -329,7 +329,7 @@ ubicacionProducto(nId: number){
         }
     
       }
-      if (cantidad1==0 && cantidad2>0 || cantidad3>0) {
+      if (cantidad1==0 && (cantidad2>0 || cantidad3>0)) {
         if (cantidad2>0 && bodega2==2 ) {
           this.confirmationService.confirm({
             message: 'Este producto requiere un traslado de la bodega de casa?',
