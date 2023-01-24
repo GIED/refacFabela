@@ -23,6 +23,7 @@ export class ConsultaVentaComponent implements OnInit {
     formaPago:any;
     usoCfdi:any;
     mostrarProductos:boolean;
+    buscar:string;
 
     listaVentasDetalleCliente: TvVentasDetalle[];
     listaProductosVenta:VentaProductoDto;
@@ -41,7 +42,7 @@ export class ConsultaVentaComponent implements OnInit {
    }
 
   ngOnInit(){
-     this.ventasService.obtenerVentaDetalle().subscribe(data=>{
+     this.ventasService.obtenerVentasTop().subscribe(data=>{
      this.listaVentasDetalleCliente=data; 
      console.log(this.listaVentasDetalleCliente);      
     
@@ -62,6 +63,42 @@ detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
 hideDialogAlter(){
   this.mostrarProductos=false;
 }
+
+consultar(){
+
+  if(this.buscar !== undefined && this.buscar.length >=1 ){
+    this.ventasService.obtenerVentasLike(this.buscar).subscribe(data => {
+      this.listaVentasDetalleCliente=data;
+      console.log(this.listaVentasDetalleCliente);
+    }); 
+
+  }
+  else 
+  {
+   
+  }
+
+  
+
+ 
+
+}
+
+consultarTodas(){
+
+  if(this.buscar !== undefined && this.buscar.length >=1 ){
+    this.ventasService.obtenerVentaDetalle().subscribe(data => {
+      this.listaVentasDetalleCliente=data;
+      console.log(this.listaVentasDetalleCliente);
+    }); 
+
+  }
+  else 
+  {
+   
+  }
+}
+
 
 
 
