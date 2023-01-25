@@ -96,64 +96,17 @@
                     (click)="guardarLineaCredito()"></button>
             </ng-template>
         </p-dialog>
+
         <p-dialog [(visible)]="clienteDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true"
             styleClass="p-fluid">
             <ng-template pTemplate="content">
-                <form [formGroup]="formulario">
-                    <input type="text" pInputText formControlName="nId" hidden />
-                    <input type="text" pInputText formControlName="sClave" hidden />
+        <app-form-cliente (cerrar)="hideDialog($event)" [objCliente]="objCliente" >   </app-form-cliente>
+    </ng-template>
+  
 
-                    <div class="p-field">
-                        <label for="name">RFC</label>
-                        <input type="text" pInputText formControlName="sRfc" [class.is-invalid]="validaRfc" />
-                        <small *ngIf="validaRfc" class="p-error">Rfc invalido favor de verificar.</small>
-                    </div>
+   
+    </p-dialog>
 
-                    <div class="p-field">
-                        <label for="name">Razón Social</label>
-                        <input type="text" pInputText formControlName="sRazonSocial" [class.is-invalid]="validaRS" />
-                        <small *ngIf="validaRS" class="p-error">Razón social invalido, favor de verificar.</small>
-
-                    </div>
-                    <div class="p-field">
-                        <label for="marca">Regimen Fiscal</label>
-                        <p-dropdown [options]="listaRegimenFiscal" formControlName="nIdRegimenFiscal" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaRegimenfiscal" placeholder="Seleccine un Regimen Fiscal"
-                            [showClear]="true"></p-dropdown>
-                        <small class="p-error" *ngIf="validaRegimenfiscal">*Regimen Fiscal requerido.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="name">Dirección</label>
-                        <input type="text" pInputText formControlName="sDireccion"
-                            [class.is-invalid]="validaDireccion" />
-                        <small *ngIf="validaDireccion" class="p-error">Dirección invalida, favor de verificar.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="name">Código postal</label>
-
-                        <input type="text" pInputText formControlName="nCp"
-                            [class.is-invalid]="validaCp" />
-                        <small *ngIf="validaCp" class="p-error">Cp invalida, favor de verificar.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="name">Teléfono</label>
-                        <input type="tel" pInputText formControlName="sTelefono" [class.is-invalid]="validaTelefono" />
-                        <small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="name">Correo</label>
-                        <input type="email" pInputText formControlName="sCorreo" [class.is-invalid]="validaCorreo" />
-                        <small *ngIf="validaCorreo" class="p-error">Dirección invalida, favor de verificar.</small>
-                    </div>
-                </form>
-                <hr>            
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-                    (click)="hideDialog()"></button>
-                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-                    (click)="guardar()"></button>
-            </ng-template>
-        </p-dialog>
         <p-confirmDialog [style]="{width: '600px'}"></p-confirmDialog>
     </div>
 </div>

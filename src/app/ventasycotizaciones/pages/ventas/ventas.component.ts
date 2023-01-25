@@ -9,7 +9,7 @@ import { ClienteService } from '../../../administracion/service/cliente.service'
 import { ProductoService } from '../../../shared/service/producto.service';
 import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { TvStockProducto } from '../../../productos/model/TvStockProducto';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CotizacionDto } from '../../model/dto/CotizacionDto';
 import { VentasCotizacionesService } from '../../../shared/service/ventas-cotizaciones.service';
 import { DatosVenta } from '../../interfaces/DatosVenta';
@@ -19,6 +19,7 @@ import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { TwMaquinaCliente } from '../../../productos/model/TwMaquinaCliente';
+
 
 
 @Component({
@@ -37,6 +38,7 @@ export class VentasComponent implements OnInit {
   producto:string;
   debuncerCliente: Subject<string> = new Subject();
   debuncerProducto: Subject<string> = new Subject();
+  clienteDialog: boolean;
 
   listaCliente: Clientes[]=[];
   listaProductoSugerencia: TcProducto[]=[];
@@ -71,6 +73,7 @@ export class VentasComponent implements OnInit {
   stockTotal: number = 0;
 
   incremento:number=0;
+  objCliente:Clientes=undefined;
 
   constructor(
     private clienteService:ClienteService,
@@ -81,15 +84,19 @@ export class VentasComponent implements OnInit {
     private bodegasService: BodegasService,
     private tokenService: TokenService,
     private confirmationService: ConfirmationService,
+    private fb: FormBuilder
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
       this.cotizacionData= new TwCotizacion();
       this.productosAlternativos=[];
       this.maquinaCliente=new TwMaquinaCliente;
+      this.clienteDialog=false;
+      this.objCliente=undefined;
     }
 
   ngOnInit(): void {
+    
     this.buscaCliente();
     this.buscaProducto();
     this._initFormGroup();
@@ -141,6 +148,13 @@ export class VentasComponent implements OnInit {
     }else{
       this.mostrarSugerenciasCliente=false;
     }  
+  }
+
+  openNew() { 
+
+    this.clienteDialog = true;
+    this.objCliente=null; 
+   
   }
 
   buscaCliente(){
@@ -573,6 +587,12 @@ soloCotizacion(){
   this.muestraProductos = false;
 
 
+}
+hideDialog(event:boolean) {
+    
+  this.clienteDialog = false;
+ 
+  
 }
 
 limpiaFormulario(){

@@ -13,13 +13,14 @@ import { VentasycotizacionesModule } from '../ventasycotizaciones/ventasycotizac
 import { ValidaComprobanteComponent } from './pages/valida-comprobante/valida-comprobante.component';
 import { MuestraComprobantePagoComponent } from './components/muestra-comprobante-pago/muestra-comprobante-pago.component';
 import { AdminCajaComponent } from './pages/admin-caja/admin-caja.component';
+import { FormClienteComponent } from './components/form-cliente/form-cliente.component';
 
 
 
 
 @NgModule({
     
-  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent],
+  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent],
   imports: [
     AdministracionRoutingModule,   
     PrimeModule,
@@ -27,12 +28,12 @@ import { AdminCajaComponent } from './pages/admin-caja/admin-caja.component';
     ReactiveFormsModule,
     NgxSpinnerModule,
     CajaModule,
-    VentasycotizacionesModule
+    
     
     
   ],
   exports:[
-    CreditosComponent 
+    CreditosComponent, FormClienteComponent,ClienteComponent
    
   ]
 })

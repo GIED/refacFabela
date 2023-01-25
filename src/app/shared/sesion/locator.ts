@@ -5,6 +5,7 @@ static obtenerClientes='/obtenerClientes';
 static obtenerClienteLike='/consultaClienteLike?';
 static obtenerSaldoGeneral='/consultaClienteIdSaldo?';
 static consultaClienteIdUsuario='/consultaClienteIdUsuario?';
+static consultaClienteRfc='/consultaClienteRfc?';
 static guardarClientes='/guardarCliente';
 static consultaClientesSaldos='/consultaClienteSaldo'
 static consultaRegimenFiscal='/catalogoRegimenFiscal'

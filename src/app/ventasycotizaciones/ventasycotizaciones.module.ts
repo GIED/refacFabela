@@ -9,7 +9,7 @@ import { VentasComponent } from './pages/ventas/ventas.component';
 import { VentasPorPedidoComponent } from './pages/ventas-por-pedido/ventas-por-pedido.component';
 import { ProductosModule } from '../productos/productos.module';
 import { DetalleClienteComponent } from './components/detalle-cliente/detalle-cliente.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormVentaComponent } from './components/form-venta/form-venta.component';
 import { DetalleCotizacionComponent } from './components/detalle-cotizacion/detalle-cotizacion.component';
 import { ProductosAlternativosVentaComponent } from './components/productos-alternativos-venta/productos-alternativos-venta.component';
@@ -22,6 +22,9 @@ import { PagoVentaInternetComponent } from './pages/pago-venta-internet/pago-ven
 import { FormCargaComprobanteComponent } from './components/form-carga-comprobante/form-carga-comprobante.component';
 import { MaquinaClienteComponent } from './components/maquina-cliente/maquina-cliente.component';
 import { FormMaquinaClienteComponent } from './components/form-maquina-cliente/form-maquina-cliente.component';
+import { AdministracionModule } from '../administracion/administracion.module';
+import { AdministracionRoutingModule } from '../administracion/administracion-routing.module';
+import { FormClienteComponent } from '../administracion/components/form-cliente/form-cliente.component';
 
 
 
@@ -34,8 +37,11 @@ import { FormMaquinaClienteComponent } from './components/form-maquina-cliente/f
   imports: [
     VentasycotizacionesRoutingModule,
     PrimeModule,
+    FormsModule, 
     ProductosModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AdministracionModule
+    
   ],
   exports:[VentaProductosDetalleComponent, DescuentoVentaComponent, ProductosAlternativosVentaComponent]
 })

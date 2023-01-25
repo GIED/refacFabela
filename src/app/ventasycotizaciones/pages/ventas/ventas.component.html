@@ -7,8 +7,8 @@
             <div class="card">
                 <div class="p-grid">
 
-                    <div class="p-col-12">
-                        <h6>Favor de Elegir un cliente</h6>
+                    <div class="p-col-11">
+                        <h6>Favor de Elegir un cliente </h6> 
                         <input type="text" pInputText name="cliente" formControlName="clienteCtrl" (input)="inputCliente()" />
                         <p-listbox *ngIf="mostrarSugerenciasCliente" [options]="listaCliente" formControlName="clienteSeleccionadoCtrl" optionLabel="sRazonSocial" (onClick)="valorSeleccionadoCliente()">
                             <ng-template let-cliente pTemplate="item">
@@ -18,6 +18,30 @@
                             </ng-template>
                         </p-listbox>
                     </div>
+                    <div class="p-col-1">
+                        
+                        <br>
+                           
+                                <button pButton pRipple type="button" icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined" (click)="openNew()"></button>
+
+
+                      
+                
+                </div>
+                
+                
+
+                
+                        
+                        <p-dialog [(visible)]="clienteDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true"  styleClass="p-fluid">             
+                             <app-form-cliente (cerrar)="hideDialog($event)" [objCliente]=null >   </app-form-cliente>
+                        <ng-template pTemplate="content">
+                    
+                </ng-template>
+
+            
+               
+                </p-dialog>
                     <p-accordion class="p-col-12" *ngIf="mostrarDetalleCliente">
                         <p-accordionTab header="Datos del crédito del cliente">
                             <div class="p-col-12">

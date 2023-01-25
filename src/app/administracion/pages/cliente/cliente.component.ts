@@ -47,6 +47,7 @@ export class ClienteComponent implements OnInit {
   cliente: Clientes;
   formulario: FormGroup;
   listaRegimenFiscal:TcRegimenFiscal[];
+  objCliente:Clientes;
 
   constructor(private messageService: MessageService,
     private confirmationService: ConfirmationService, private clienteService: ClienteService, private fb: FormBuilder,
@@ -58,13 +59,9 @@ export class ClienteComponent implements OnInit {
 
   ngOnInit() {
     this.obtenerClientes();
-    this.obtenerRegimenFiscal();
+   
   }
-  obtenerRegimenFiscal(){
-this.clienteService.obtenerRegimenFiscal().subscribe(data=>{
-  this.listaRegimenFiscal=data;
-})
-  }
+
 
   // Crear formulario con sus validaciones de clientes
   crearFormulario() {
@@ -116,6 +113,7 @@ this.clienteService.obtenerRegimenFiscal().subscribe(data=>{
     this.cliente = {};
     this.submitted = false;
     this.clienteDialog = true;
+    this.objCliente={}; 
     this.limpiarFormulario();
   }
 
@@ -143,16 +141,7 @@ this.clienteService.obtenerRegimenFiscal().subscribe(data=>{
   //edita los daros del cliente
   editar(cliente: Clientes) {
     this.clienteDialog = true;
-    this.fclientes.nId.setValue(cliente.nId);
-    this.fclientes.sCorreo.setValue(cliente.sCorreo);
-    this.fclientes.sTelefono.setValue(cliente.sTelefono);
-    this.fclientes.sDireccion.setValue(cliente.sDireccion);
-    this.fclientes.sRazonSocial.setValue(cliente.sRazonSocial);
-    this.fclientes.sRfc.setValue(cliente.sRfc);
-    this.fclientes.sClave.setValue(cliente.sClave);
-    this.fclientes.nCp.setValue(cliente.nCp);
-    this.fclientes.nIdRegimenFiscal.setValue(cliente.tcRegimenFiscal.nId); 
-
+    this.objCliente = cliente;
   }
 
   get fclientes() {
@@ -178,52 +167,15 @@ this.clienteService.obtenerRegimenFiscal().subscribe(data=>{
     });
   }
 
-  hideDialog() {
+  hideDialog(event:boolean) {
+    
     this.clienteDialog = false;
     this.credito = false;
     this.submitted = false;
+    this.obtenerClientes();
   }
 
-  //Guardar nuevo cliente 
-  guardar() {
-
-    if (this.formulario.invalid) {
-      return Object.values(this.formulario.controls).forEach(control => {
-        if (control instanceof FormGroup) {
-          // tslint:disable-next-line: no-shadowed-variable
-          Object.values(control.controls).forEach(control => control.markAsTouched());
-        } else {
-          control.markAsTouched();
-        }
-      });
-    }
-    else {
-      this.cliente = this.formulario.value;
-      console.log(this.cliente);
-
-      if (this.cliente.nId) {
-        this.cliente.nEstatus = 1;
-        this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
-          this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000 });
-        })
-
-
-      }
-      else {
-        this.cliente.sClave = this.crearId();
-        this.cliente.nEstatus = 1;
-        this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
-          this.listaClientes.push(respuesta);
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cliente guardado', life: 10000 });
-        })
-      }
-
-      this.listaClientes = [...this.listaClientes];
-      this.clienteDialog = false;
-      this.cliente = {};
-    }
-  }
+ 
   
   guardarLineaCredito() {
 

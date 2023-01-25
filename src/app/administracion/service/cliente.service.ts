@@ -32,6 +32,10 @@ export class ClienteService {
     let url = environment.servicios.apiRefacFabela + locator.consultaClienteIdUsuario+'id='+idUsuario;
     return this.http.get<TcCliente>(url);
   }
+  consultaClienteRfc(rfc: String){
+    let url = environment.servicios.apiRefacFabela + locator.consultaClienteRfc+'clienteBuscar='+rfc;
+    return this.http.get<TcCliente>(url);
+  }
   guardaCliente(cliente:Clientes){
     let url = environment.servicios.apiRefacFabela+locator.guardarClientes;
     return this.http.post<Clientes>(url,cliente);
