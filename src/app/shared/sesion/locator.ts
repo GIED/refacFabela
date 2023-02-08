@@ -15,6 +15,7 @@ static guardarProveedores='/guardarProveedores';
 //api para usuarios
 static obtenerUsuarios='/obtenerUsuarios';
 static nuevoUsuario = '/nuevo';
+static guardarUsuario = '/guardarUsuario';
 static obtenerUsuariosId='/consultarUsuarioId?';
 //api login
 static login = '/auth/login';

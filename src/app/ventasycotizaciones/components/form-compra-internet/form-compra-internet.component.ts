@@ -59,8 +59,7 @@ export class FormCompraInternetComponent implements OnInit {
 
      for (const producto of this.listaProductos) {
 
-      console.log("entro a valida stock");
-      console.log(producto.nIdProducto);
+    
 
 
       this.productoService.obtenerTotalBodegasIdProducto(producto.nIdProducto).subscribe(productoStock =>{
@@ -87,7 +86,7 @@ export class FormCompraInternetComponent implements OnInit {
   }
 
   quitarProducto(producto: TvStockProducto){
-    //console.log(producto);
+    ////console.log(producto);
     
     this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
     this.listaValidada.splice(this.findIndexById(producto.nIdProducto, this.listaValidada),1);
@@ -100,12 +99,12 @@ export class FormCompraInternetComponent implements OnInit {
     if (this.validaStatusStock(this.listaValidada)) {
       this.messageService.add({severity: 'warn', summary: 'Stock Insuficiente', detail: 'No se puede generar la venta, elimine por favor los productos con stock insuficiente', life: 3000});
     }else{
-      //console.log("lista para guardar");
+      ////console.log("lista para guardar");
 
       this.datosVenta.tipoPago = parseInt(this.tipoPagoCtrl.value);
       this.datosVenta.listaValidada=this.listaValidada;
 
-      //console.log(this.datosVenta);
+      ////console.log(this.datosVenta);
 
       this.emitirVenta.emit(this.datosVenta);
     }
@@ -140,7 +139,7 @@ export class FormCompraInternetComponent implements OnInit {
             break;
         }
     }
-    //console.log("index: "+index);
+    ////console.log("index: "+index);
     return index;
   }
   

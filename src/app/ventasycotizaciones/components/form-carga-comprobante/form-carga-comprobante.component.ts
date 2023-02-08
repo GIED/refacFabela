@@ -22,7 +22,7 @@ export class FormCargaComprobanteComponent implements OnInit {
 
   subirComprobante(event){
     this.comprobanteSeleccionado = event.target.files[0];
-    console.log(this.comprobanteSeleccionado);
+    //console.log(this.comprobanteSeleccionado);
   }
 
   enviarFoto(){

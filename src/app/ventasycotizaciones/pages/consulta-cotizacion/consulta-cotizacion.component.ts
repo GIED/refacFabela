@@ -52,7 +52,7 @@ ngOnInit(){
 obtenerCotizaciones(){
   this.ventasCotizacionesService.obtenerCotizaciones().subscribe(data => {
     this.listaCotizaciones=data;
-    console.log(this.listaCotizaciones);
+    //console.log(this.listaCotizaciones);
   }); 
 
 }
@@ -62,7 +62,7 @@ consultar(){
   if(this.buscar !== undefined && this.buscar.length >=1 ){
     this.ventasCotizacionesService.obtenerCotizacionesBusqueda(this.buscar).subscribe(data => {
       this.listaCotizaciones=data;
-      console.log(this.listaCotizaciones);
+      //console.log(this.listaCotizaciones);
     }); 
 
   }
@@ -132,12 +132,12 @@ generarVenta(datosVenta: DatosVenta){
     this.datosRegistraVenta.fechaFinCredito=null;
   }
   this.datosRegistraVenta.twCotizacion = this.cotizacionData;
-  console.log("Datos para venta en padre");
-  console.log(this.datosRegistraVenta);
-  console.log(this.cotizacionData);
+  //console.log("Datos para venta en padre");
+  //console.log(this.datosRegistraVenta);
+  //console.log(this.cotizacionData);
 
  this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(resp =>{
-    console.log(resp);
+    //console.log(resp);
     this.generarVentaPdf(resp.nId);
     this.mostrarOpcionesVenta=false;
     this.obtenerCotizaciones();
@@ -164,14 +164,14 @@ generarVentaPdf(nId:number){
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      //console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
         anchor.download = 'venta_' + nId + '.pdf';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Comprobante de venta generado', life: 3000});
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Comprobante de venta generado', life: 3000});
         //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
        
       } else {
@@ -201,14 +201,14 @@ generarCotizacionPdf(twCotizacion: TwCotizacion){
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      //console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
         anchor.download = 'cotizacion_' + twCotizacion.nId + '.pdf';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Cotizacion Generada', life: 3000});
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cotizacion Generada', life: 3000});
         
       } else {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar la Cotizacion', life: 3000});

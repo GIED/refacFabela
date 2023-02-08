@@ -4,6 +4,7 @@ import { locator } from 'src/app/shared/sesion/locator';
 import { environment } from 'src/environments/environment';
 import { NuevoUsuario } from '../model/nuevo-usuario';
 import { TcUsuario } from '../model/TcUsuario';
+import { Usuarios } from '../interfaces/usuarios';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,10 @@ export class UsuarioService {
   getUsuariosId(id:number) {
     let url = environment.servicios.apiRefacFabela + locator.obtenerUsuariosId+'id='+id;
     return this.http.get<TcUsuario>(url);
+  }
+
+  guardarUsuario(usuarios:Usuarios) {
+    return this.http.post<any>(environment.servicios.apiRefacFabela+locator.guardarUsuario, usuarios);
   }
 
 }

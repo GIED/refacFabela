@@ -99,9 +99,9 @@ export class CreditosComponent implements OnInit {
     this.clienteService.obtenerSaldosClientes().subscribe(data=>{
       this.listaClientesCredito=data;       
      this.totalesCreditos= this.obtenerTotalesCreditos(this.listaClientesCredito);       
-    console.log(this.totalesCreditos);
+    //console.log(this.totalesCreditos);
     this.generarGrafica(this.totalesCreditos);
-    console.log( this.listaClientesCredito);
+    //console.log( this.listaClientesCredito);
   });      
 
   }
@@ -112,18 +112,18 @@ export class CreditosComponent implements OnInit {
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      //console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
         anchor.download = 'abono_'+tvVentasDetalle.nId+'_'+tvVentasDetalle.nIdCliente+'.pdf';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de abono Generado', life: 3000});
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'comprobante de abono Generado', life: 3000});
         //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
        
       } else {
-        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de abono', life: 3000});
+        this.messageService.add({severity: 'error', summary: 'Se realizó con éxito', detail: 'Error al generar el comprobante de abono', life: 3000});
       }
 
   });
@@ -132,20 +132,20 @@ export class CreditosComponent implements OnInit {
 
   genenerHistorialAbonoVentaPDF(saldoGeneralCliente: SaldoGeneralCliente){
 
-    console.log("este es el el id del cliente"+saldoGeneralCliente.nIdCliente);
+    //console.log("este es el el id del cliente"+saldoGeneralCliente.nIdCliente);
  
     this.ventasService.generarHistorialAbonoVentaPdf(saldoGeneralCliente.nIdCliente).subscribe(resp => {
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      //console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
         anchor.download = 'historial_abono_'+saldoGeneralCliente.nIdCliente+'.pdf';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'historial de créditos del cliente generado', life: 3000});
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'historial de créditos del cliente generado', life: 3000});
         //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
        
       } else {
@@ -234,13 +234,13 @@ export class CreditosComponent implements OnInit {
   }
 
   obtenerAbonosVentaId(tvVentasDetalle:TvVentasDetalle) {
-     console.log(tvVentasDetalle);
+     //console.log(tvVentasDetalle);
       this.productDialog2 = true;
       this.tvVentasDetalle=tvVentasDetalle;
 
       this.ventasService.obtenerAbonosVentaId(this.tvVentasDetalle.nId).subscribe(data=>{
         this.listaAbonosVenta=data;       
-      console.log(this.listaAbonosVenta);
+      //console.log(this.listaAbonosVenta);
     });      
 
   }
@@ -253,19 +253,19 @@ export class CreditosComponent implements OnInit {
           accept: () => {
               this.products = this.products.filter(val => !this.selectedProducts.includes(val));
               this.selectedProducts = null;
-              this.messageService.add({severity: 'success', summary: 'Operación confirmda', detail: 'Clientes borrados', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Clientes borrados', life: 3000});
           }
       });
   }
 
   consultaVentaDetalleId(saldoGeneralCliente: SaldoGeneralCliente) {
-     console.log(saldoGeneralCliente);
+     //console.log(saldoGeneralCliente);
       this.productDialog = true;
      this.auxSaldoGeneralCliente=saldoGeneralCliente;
     this.ventasService.obtenerVentaDetalleTipoPago(saldoGeneralCliente.tcCliente.nId, 1).subscribe(data=>{
         this.listaVentasDetalleCliente=data;  
              
-      console.log(this.listaVentasDetalleCliente);
+      //console.log(this.listaVentasDetalleCliente);
     });      
 
 
@@ -280,7 +280,7 @@ export class CreditosComponent implements OnInit {
           accept: () => {
               this.products = this.products.filter(val => val.id !== product.id);
               this.product = {};
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente eliminado', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente eliminado', life: 3000});
           }
       });
   }
@@ -302,13 +302,13 @@ export class CreditosComponent implements OnInit {
       if (this.product.name.trim()) {
           if (this.product.id) {
               this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000});
+              this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000});
           }
           else {
               this.product.id = this.createId();
               this.product.image = 'product-placeholder.svg';
               this.products.push(this.product);
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente guardado', life: 10000});
+              this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente guardado', life: 10000});
           }
 
           this.products = [...this.products];

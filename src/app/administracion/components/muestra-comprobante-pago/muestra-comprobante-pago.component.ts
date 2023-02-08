@@ -47,7 +47,7 @@ export class MuestraComprobantePagoComponent implements OnInit {
   _initFormGroup(): void {
     let modelContainer: ModelContainer = this.config.data;
     this.twPagoComprobanteInternet = ObjectUtils.isEmpty(modelContainer.modelData) ? new TwPagoComprobanteInternet() : modelContainer.modelData as TwPagoComprobanteInternet;
-    console.log(this.twPagoComprobanteInternet);
+    //console.log(this.twPagoComprobanteInternet);
     this.formGrp = new FormGroup({
       validaCtrl: new FormControl(this.twPagoComprobanteInternet.nStatus, [Validators.required]),
       observaCtrl: new FormControl(this.twPagoComprobanteInternet.sObservaciones,[Validators.required])
@@ -92,7 +92,7 @@ export class MuestraComprobantePagoComponent implements OnInit {
 
       this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(venta =>{
         this.ref.close(venta);
-        this.messageService.add({ severity: 'success', summary: 'Actualización Estatus', detail: 'Estatus del comprobante, Actualizado Correctamente', life: 3000 });
+        this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Estatus del comprobante, Actualizado Correctamente', life: 3000 });
         });
       
     });
@@ -102,7 +102,7 @@ export class MuestraComprobantePagoComponent implements OnInit {
   onRechazarClicked(): void {
     this.ventasInternetService.actualizaEstatusComprobante(this._castFormGrp() as TwPagoComprobanteInternet).subscribe(resp =>{
       this.ref.close(resp);
-      this.messageService.add({ severity: 'success', summary: 'Actualización Estatus', detail: resp.mensaje, life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: resp.mensaje, life: 3000 });
     });
     
   }

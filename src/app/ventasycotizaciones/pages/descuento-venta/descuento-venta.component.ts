@@ -56,7 +56,7 @@ consultaVentas(){
 
   this.ventasService.obtenerVentaDetalleEstatusVenta(1).subscribe(data=>{
     this.listaVentasDetalleCliente=data; 
-    console.log(this.listaVentasDetalleCliente);      
+    //console.log(this.listaVentasDetalleCliente);      
    
    }); 
 }
@@ -87,7 +87,7 @@ abrir(tvVentasDetalle:TvVentasDetalle){
   if(tvVentasDetalle.descuento>0){
     this.fProducto.descuento.setValue(tvVentasDetalle.descuento);
   }
-  console.log(tvVentasDetalle);
+  //console.log(tvVentasDetalle);
   this.abrirformulario=true;
 
  
@@ -138,7 +138,7 @@ guardarDescuento() {
 
     this.VentaDescuentoDto.descuento= this.fProducto.descuento.value;
 
-    console.log(this.VentaDescuentoDto.descuento);
+    //console.log(this.VentaDescuentoDto.descuento);
 
     if(this.VentaDescuentoDto.nSaldoTotal>this.VentaDescuentoDto.descuento){
     
@@ -146,7 +146,7 @@ guardarDescuento() {
 
     this.consultaVentas();
      
-    this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Se guardo el descuento', life: 3000});
+    this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se guardo el descuento', life: 3000});
 
 
     });
@@ -183,7 +183,7 @@ this.ventasService.generarVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
 
   
     const file = new Blob([resp], { type: 'application/pdf' });
-    console.log('file: ' + file.size);
+    //console.log('file: ' + file.size);
     if (file != null && file.size > 0) {
       const fileURL = window.URL.createObjectURL(file);
       const anchor = document.createElement('a');

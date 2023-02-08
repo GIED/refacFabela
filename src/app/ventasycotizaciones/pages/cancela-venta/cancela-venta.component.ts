@@ -43,7 +43,7 @@ constructor(  private ventasService:VentasService,  private messageService: Mess
 ngOnInit(){
    this.ventasService.obtenerVentaDetalle().subscribe(data=>{
    this.listaVentasDetalleCliente=data; 
-   console.log(this.listaVentasDetalleCliente);      
+   //console.log(this.listaVentasDetalleCliente);      
   
   }); 
 }
@@ -63,7 +63,7 @@ cancelaVentaProducto(ventaProductoDto:VentaProductoDto){
   
   this.ventasService.cancelarVentaProducto(ventaProductoDto).subscribe(data => {
  this.mostrarProductos=false;
- this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Se cancelo la partida con éxito', life: 3000});
+ this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se cancelo la partida con éxito', life: 3000});
   })
   
   }
@@ -91,14 +91,14 @@ this.ventasService.generarVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
 
   
     const file = new Blob([resp], { type: 'application/pdf' });
-    console.log('file: ' + file.size);
+    //console.log('file: ' + file.size);
     if (file != null && file.size > 0) {
       const fileURL = window.URL.createObjectURL(file);
       const anchor = document.createElement('a');
       anchor.download = 'venta_' + tvVentasDetalle.nId + '.pdf';
       anchor.href = fileURL;
       anchor.click();
-      this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+      this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'comprobante de venta Generado', life: 3000});
       //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
      
     } else {

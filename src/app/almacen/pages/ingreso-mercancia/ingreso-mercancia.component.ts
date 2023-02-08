@@ -55,7 +55,7 @@ export class IngresoMercanciaComponent implements OnInit {
 
     this.pedidosService.obtenerProductosPedido(mId).subscribe(data=>{
    this.listaPedidos=data;
-   console.log(this.listaPedidos);
+   //console.log(this.listaPedidos);
 
 
     })

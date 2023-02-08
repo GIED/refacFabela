@@ -73,7 +73,7 @@ export class FormMaquinaClienteComponent implements OnInit {
         this.limpiaFormulario();
         this.cierraformulario.emit(false);      
 
-        this.messageService.add({severity: 'success', summary: 'Mensaje', detail: 'La maquina se guardo con éxito', life: 5000});
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'La maquina se guardo con éxito', life: 5000});
 
       });
      

@@ -89,7 +89,7 @@ export class TipoCambioComponent implements OnInit {
 	  this.tipoCambioService.obtenerTipoCambio(this.tipoCambio).subscribe(tipoCambio =>{		 
 			  this.fTipoCambio.nId.setValue(tipoCambio.nId);
 			  this.fTipoCambio.nValor.setValue(tipoCambio.nValor);
-			  console.log("el valor del tipo de cambio es:"+this.tipoCambio.nValor);
+			  //console.log("el valor del tipo de cambio es:"+this.tipoCambio.nValor);
 			  this.fTipoCambio.sClave.setValue(tipoCambio.sClave);
 			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);		
 	})
@@ -113,7 +113,7 @@ guardarTipoCambio(){
 			  this.fTipoCambio.nValor.setValue(tipoCambio.nValor);
 			  this.fTipoCambio.sClave.setValue(tipoCambio.sClave);
 			  this.fTipoCambio.sDescripcion.setValue(tipoCambio.sDescripcion);				  
-			  this.messageService.add({severity: 'success', summary: 'Successful', detail: 'tipo cambio actualizado', life: 10000});
+			  this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Tipo cambio actualizado', life: 10000});
 		})
 	}
 }

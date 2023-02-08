@@ -45,7 +45,7 @@ export class TraspasosComponent implements OnInit {
        width: '70%'
    })
    ref.onClose.subscribe((data:TwProductoBodega) =>{
-     //console.log('data que se recibe al cerrar',data);
+     ////console.log('data que se recibe al cerrar',data);
      this.obtenerBodegas(data.nIdProducto);
    })
   }
@@ -57,7 +57,7 @@ export class TraspasosComponent implements OnInit {
        width: '70%'
    })
    ref.onClose.subscribe((data:TwProductoBodegaDto) =>{
-     //console.log('data que se recibe al cerrar externo',data);
+     ////console.log('data que se recibe al cerrar externo',data);
      for (const valor of this.listaProductoBodega) {
 
         this.newProBod = new TwProductoBodega();

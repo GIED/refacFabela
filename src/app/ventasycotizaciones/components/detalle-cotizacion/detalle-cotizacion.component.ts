@@ -68,8 +68,8 @@ export class DetalleCotizacionComponent implements OnInit {
     this.consultaSaldo(twCotizacion);
     this.consultaProductos(twCotizacion.nId);
 
-    console.log(this.saldoGeneralCliente);
-    console.log(this.listaProductos);
+    //console.log(this.saldoGeneralCliente);
+    //console.log(this.listaProductos);
     //this.mostrarOpcionesVenta=true;
     
   }

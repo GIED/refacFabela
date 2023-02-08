@@ -67,14 +67,14 @@ export class AdminCajaComponent implements OnInit {
 
 
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      //console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
         anchor.download = 'reporte_caja_' + '1' + '.pdf';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Balance de caja Generado', life: 3000 });
+        this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Balance de caja Generado', life: 3000 });
         //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
 
       } else {

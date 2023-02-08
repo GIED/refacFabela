@@ -106,7 +106,7 @@ export class AbonosComponent implements OnInit {
           accept: () => {
               this.products = this.products.filter(val => !this.selectedProducts.includes(val));
               this.selectedProducts = null;
-              this.messageService.add({severity: 'success', summary: 'Operación confirmda', detail: 'Clientes borrados', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Clientes borrados', life: 3000});
           }
       });
   }
@@ -124,7 +124,7 @@ export class AbonosComponent implements OnInit {
           accept: () => {
               this.products = this.products.filter(val => val.id !== product.id);
               this.product = {};
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente eliminado', life: 3000});
+              this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente eliminado', life: 3000});
           }
       });
   }
@@ -140,13 +140,13 @@ export class AbonosComponent implements OnInit {
       if (this.product.name.trim()) {
           if (this.product.id) {
               this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000});
+              this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000});
           }
           else {
               this.product.id = this.createId();
               this.product.image = 'product-placeholder.svg';
               this.products.push(this.product);
-              this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Cliente guardado', life: 10000});
+              this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente guardado', life: 10000});
           }
 
           this.products = [...this.products];

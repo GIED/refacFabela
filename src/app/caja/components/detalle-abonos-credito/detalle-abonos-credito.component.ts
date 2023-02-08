@@ -50,7 +50,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
 
     this.crearFormulario();
-    console.log(this.tvVentasDetalle);
+    //console.log(this.tvVentasDetalle);
   }
 
   crearFormulario() {
@@ -131,8 +131,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
          this.twAbono.nIdVenta=this.tvVentasDetalle.nId;
          this.twAbono.nId=null;
          this.twAbono.dFecha=null;
-         console.log("Este es el objeto lleno");
-         console.log(this.twAbono);
+       
  
          if(this.twAbono.twVenta!==null && this.twAbono.tcFormapago!==null && this.twAbono.twCaja.nId!==null &&  this.twAbono.tcUsuario!==null){
 
@@ -146,7 +145,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
          this.ventasService.guardaAbono(this.twAbono).subscribe(data =>{
          this.listaAbonosVenta.push(data);
            this.abrirformulario=false;
-           this.messageService.add({ severity: 'success', summary: 'Abono Guardado', detail: 'El Abono se guardo', life: 3000 });
+           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El Abono se guardo', life: 3000 });
            this.listaAbonosVenta = [...this.listaAbonosVenta];
  
            this.tvVentasDetalle.nSaldoTotal-=this.twAbono.nAbono;
@@ -191,7 +190,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      //console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');

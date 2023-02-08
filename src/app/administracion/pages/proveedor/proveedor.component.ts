@@ -125,7 +125,7 @@ export class ProveedorComponent implements OnInit {
         this.proveedorService.guardaProveedores(proveedor).subscribe(respuesta => {
           this.listaProveedores = this.listaProveedores.filter(val => val.nId !== proveedor.nId);
           this.proveedor = {};
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Proveedor eliminado', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Proveedor eliminado', life: 3000 });
         })
       }
     });
@@ -152,20 +152,20 @@ export class ProveedorComponent implements OnInit {
     }
     else {
       this.proveedor = this.formulario.value;
-      console.log(this.proveedor);
+      //console.log(this.proveedor);
 
       if (this.proveedor.nId) {
         this.proveedor.nEstatus = 1;
         this.proveedorService.guardaProveedores(this.proveedor).subscribe(respuesta => {
           this.listaProveedores[this.findIndexById(respuesta.nId.toString())] = respuesta;
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Proveedor actualizado', life: 10000 });
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Proveedor actualizado', life: 10000 });
         })
       }
       else {
         this.proveedor.nEstatus = 1;
         this.proveedorService.guardaProveedores(this.proveedor).subscribe(respuesta => {
           this.listaProveedores.push(respuesta);
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Proveedor guardado', life: 10000 });
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Proveedor guardado', life: 10000 });
         })
 
       }

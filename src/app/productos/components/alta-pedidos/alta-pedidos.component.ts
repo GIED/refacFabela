@@ -143,7 +143,7 @@ producto:TcProducto;
       this.limpiaFormulario();
       this.tcPedidoProducto=new TwPedidoProducto;
 
-      this.messageService.add({ severity: 'success', summary: 'Producto agregado', detail: 'El producto fue agregado a la lista de compra', life: 6000 });
+      this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue agregado a la lista de compra', life: 6000 });
       
     }
   }
@@ -153,7 +153,7 @@ producto:TcProducto;
 console.log(tcPedidoProducto);
     
 this.listaProductosCompra.splice(this.findIndexById(tcPedidoProducto.nIdProducto, this.listaProductosCompra),1);
-this.messageService.add({ severity: 'success', summary: 'Producto eliminado', detail: 'El producto fue eliminado a la lista de compra', life: 6000 });
+this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue eliminado a la lista de compra', life: 6000 });
 
 
   }
@@ -198,7 +198,7 @@ this.messageService.add({ severity: 'success', summary: 'Producto eliminado', de
      console.log(this.pedidoDto);
 
      this.pedidosService.guardaPedido(this.pedidoDto).subscribe(data=>{
-      this.messageService.add({ severity: 'success', summary: 'Pedido registrado', detail: 'El pedido fue registrado con éxito', life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El pedido fue registrado con éxito', life: 3000 });
      this.pedidoDto=data;
      
       this.cerrarNuevoPedido();

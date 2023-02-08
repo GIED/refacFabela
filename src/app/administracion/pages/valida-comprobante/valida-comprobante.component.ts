@@ -44,7 +44,7 @@ export class ValidaComprobanteComponent implements OnInit {
 
 
   actualizaEstatus(){
-    console.log(this.fValidaPago.validaCtrl.value)
+    //console.log(this.fValidaPago.validaCtrl.value)
     if(this.fValidaPago.validaCtrl.value === '2'){
       this.mostrar=false;  
     }else{

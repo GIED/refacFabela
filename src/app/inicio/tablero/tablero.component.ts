@@ -47,7 +47,7 @@ export class TableroComponent implements OnInit {
         this.tableroService.obtenerTotalesGeneralesTablero().subscribe(data =>{
 
             this.toralesGeneralesTablero=data;
-            console.log(this.toralesGeneralesTablero);
+            //console.log(this.toralesGeneralesTablero);
 
         })
 

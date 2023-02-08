@@ -94,7 +94,7 @@ export class VentasPorPedidoComponent implements OnInit {
   obtenerProveedores() {
     this.proveedorService.getProveedores().subscribe(provedores => {
       this.listaProveedores = provedores;
-      console.log(this.listaProveedores);
+      ////console.log(this.listaProveedores);
     })
   }
 
@@ -149,21 +149,21 @@ export class VentasPorPedidoComponent implements OnInit {
       .pipe(debounceTime(500))
       .subscribe(valor => { 
         this.clienteService.obtenerClientesLike(valor).subscribe(cliente => {
-          //console.log(cliente.length);
+          //////console.log(cliente.length);
           if (cliente.length != 0) {
             this.listaCliente=cliente;
             this.mostrarSugerenciasCliente=true;
-            this.messageService.add({severity: 'info', summary: 'coincidencias', detail: 'clientes encontrados', life: 3000});
+            this.messageService.add({severity: 'info', summary: 'Se encontraron coincidencias', detail: 'clientes encontrados', life: 3000});
           }else{
             this.mostrarSugerenciasCliente=false;
-            this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'cliente no encontrado, Verifique la información.', life: 3000});
+            this.messageService.add({severity: 'warn', summary: 'No se encontraron coincidencias', detail: 'Cliente no encontrado, Verifique la información.', life: 3000});
           }      
         })
       });
 }
 
 valorSeleccionadoCliente(){
-  console.log(this.clienteSeleccionadoCtrl.value);
+  ////console.log(this.clienteSeleccionadoCtrl.value);
   this.clienteSeleccionado=this.clienteSeleccionadoCtrl.value;
   this.clienteCtrl.setValue(this.clienteSeleccionado.sRazonSocial);
   this.clienteService.obtenerSaldoGeneralCliente(this.clienteSeleccionado.nId).subscribe(saldoCliente=>{
@@ -200,7 +200,7 @@ buscaProducto(){
       .pipe(debounceTime(500))
       .subscribe(valor => { 
         this.productoService.obtenerProductosLike(valor).subscribe(productos => {
-         // console.log(productos.length);
+         // ////console.log(productos.length);
           if (productos.length != 0) {
             this.listaProductoSugerencia=productos;
             this.mostrarSugerenciasProducto=true;
@@ -216,7 +216,7 @@ buscaProducto(){
 valorSeleccionadoProducto(){
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
   this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
-    console.log(productoStock);
+    ////console.log(productoStock);
     if (productoStock.nCantidadTotal !== 0) {
       this.messageService.add({severity: 'warn', summary: 'Con existencias', detail: 'El producto seleccionado  cuenta con existencias.', life: 3000});
     }
@@ -237,7 +237,7 @@ this.muestraProductosBodega=true;
 }
 
 muestraAlternativo(producto: TvStockProducto){
-  console.log(producto);
+  ////console.log(producto);
   this.nIdProducto= producto.nIdProducto;
   this.mostrarAlternativos=true;
 }
@@ -252,19 +252,19 @@ hideDialogBodega(){
 
 
 agregarProduct(producto: TvStockProducto) {
-  console.log(producto);
+  ////console.log(producto);
   if (producto.nCantidad == 0 || producto.nCantidad == null) {
-    console.log("cantidad recibida: ",this.nCantidadCtrl.value)
+    ////console.log("cantidad recibida: ",this.nCantidadCtrl.value)
     producto.nCantidad=this.nCantidadCtrl.value;
     producto.nIdProveedor=this.nIdProveedorCtrl.value;
   }
   
   
   //verifica que se agrege una cantidad
-  console.log("Este es el valor del proveedor");
-  console.log(this.nIdProveedorCtrl.value, "valor");
+  ////console.log("Este es el valor del proveedor");
+  ////console.log(this.nIdProveedorCtrl.value, "valor");
   if (producto.nCantidad === 0 && this.nIdProveedorCtrl.value!==null) {
-    //console.log("entro a if");
+    //////console.log("entro a if");
     
     this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar cantidad y Proveedor', life: 3000});
 
@@ -295,15 +295,15 @@ agregarProduct(producto: TvStockProducto) {
   }
   //si entra a else el producto no existe en la lista
   else{
-    console.log("producto con cantidad agregada en else: ",producto);
+    ////console.log("producto con cantidad agregada en else: ",producto);
     this.listaProductos.push(producto);
     
   }
   //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
-  console.log("total a: "+this.total);
+  ////console.log("total a: "+this.total);
   this.total += producto.tcProducto.nPrecioConIva*this.nCantidadCtrl.value;
   producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
-  console.log("total d: "+this.total);
+  ////console.log("total d: "+this.total);
   
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.productosFiltrados=[];
@@ -317,10 +317,10 @@ agregarProduct(producto: TvStockProducto) {
 }
 
 quitarProducto(producto: TvStockProducto){
-  console.log(producto);
+  ////console.log(producto);
   
   this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
-  console.log("total: ",this.total);
+  ////console.log("total: ",this.total);
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
 }
@@ -332,8 +332,8 @@ muestraFormVentaPedido(){
 
 generarVenta(datosVenta: DatosVenta){
 
-  console.log("Datos para venta en padre");
-  console.log(datosVenta);
+  ////console.log("Datos para venta en padre");
+  ////console.log(datosVenta);
 
   this.datosRegistraVenta=datosVenta;
   this.datosRegistraVenta.idCliente=this.clienteSeleccionado.nId;
@@ -345,9 +345,9 @@ generarVenta(datosVenta: DatosVenta){
   this.datosRegistraVenta.tipoPago=0;
   
   this.datosRegistraVenta.twCotizacion = this.cotizacionData;
-  console.log("Datos para guardar");
-  console.log(this.datosRegistraVenta);
-  console.log(this.cotizacionData);
+  ////console.log("Datos para guardar");
+  ////console.log(this.datosRegistraVenta);
+  ////console.log(this.cotizacionData);
 
  this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(ventaPedido =>{
     this.generarVentaPdf(ventaPedido.nId);
@@ -361,7 +361,7 @@ generarVentaPdf(idVenta:number){
 
     
       const file = new Blob([resp], { type: 'productDialogapplication/pdf' });
-      console.log('file: ' + file.size);
+      ////console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');

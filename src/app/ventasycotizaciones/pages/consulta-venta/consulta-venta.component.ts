@@ -44,7 +44,7 @@ export class ConsultaVentaComponent implements OnInit {
   ngOnInit(){
      this.ventasService.obtenerVentasTop().subscribe(data=>{
      this.listaVentasDetalleCliente=data; 
-     console.log(this.listaVentasDetalleCliente);      
+     //console.log(this.listaVentasDetalleCliente);      
     
     }); 
   }
@@ -69,7 +69,7 @@ consultar(){
   if(this.buscar !== undefined && this.buscar.length >=1 ){
     this.ventasService.obtenerVentasLike(this.buscar).subscribe(data => {
       this.listaVentasDetalleCliente=data;
-      console.log(this.listaVentasDetalleCliente);
+      //console.log(this.listaVentasDetalleCliente);
     }); 
 
   }
@@ -89,7 +89,7 @@ consultarTodas(){
   if(this.buscar !== undefined && this.buscar.length >=1 ){
     this.ventasService.obtenerVentaDetalle().subscribe(data => {
       this.listaVentasDetalleCliente=data;
-      console.log(this.listaVentasDetalleCliente);
+      //console.log(this.listaVentasDetalleCliente);
     }); 
 
   }
@@ -119,14 +119,14 @@ generarVentaPdf(tvVentasDetalle:TvVentasDetalle){
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      //console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
         anchor.download = 'venta_' + tvVentasDetalle.nId + '.pdf';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'comprobante de venta Generado', life: 3000});
         //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
        
       } else {

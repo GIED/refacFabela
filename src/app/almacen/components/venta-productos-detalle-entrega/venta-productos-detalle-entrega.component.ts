@@ -21,9 +21,9 @@ export class VentaProductosDetalleEntregaComponent implements OnInit {
 
   onSaveClicked(ventaProductoDto: VentaProductoDto){
 
-    console.log(ventaProductoDto);
+    //console.log(ventaProductoDto);
     this.ventasService.guardaVentaProductoId(ventaProductoDto).subscribe(data =>{
-      this.messageService.add({ severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000 });
+      this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Producto actualizado correctamente', life: 3000 });
 
     });
 

@@ -270,13 +270,13 @@ buscaPorNoParte(){
           if (noParte.length != 0) {
             this.listaNoParte=noParte;
             this.mostrarSugerencias=true;
-            this.messageService.add({severity: 'info', summary: 'coincidencias', detail: 'hay números de parte que coincidan', life: 3000});
+            this.messageService.add({severity: 'info', summary: 'Se encontraron coincidencias', detail: 'Hay números de parte que coincidan', life: 3000});
            
   
           }else{
             this.fProducto.sNoParte.setValue(valor);
             this.mostrarSugerencias=false;
-            this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'el número de parte no existe en la base de datos.', life: 3000});
+            this.messageService.add({severity: 'warn', summary: 'No se encontraron coincidencias', detail: 'el número de parte no existe en la base de datos.', life: 3000});
           }
         })
       })

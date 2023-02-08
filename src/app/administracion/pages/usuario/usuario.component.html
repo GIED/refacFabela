@@ -11,7 +11,9 @@
 
             </p-toolbar>
 
-            <p-table #dt [value]="listaUsuarios" [rows]="10" [paginator]="true" [globalFilterFields]="['sNombreusuario','sUsuario']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+            <p-table #dt [value]="listaUsuarios" [rows]="10" [paginator]="true" [globalFilterFields]="['sNombreusuario','sUsuario', 'sClaveUser']" 
+            [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" 
+            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
@@ -25,28 +27,30 @@
                 <ng-template pTemplate="header">
                     <tr>
 
-                        <th pSortableColumn="name">Nombre Completo
-                            <p-sortIcon field="name"></p-sortIcon>
+                        <th pSortableColumn="sNombreusuario">Nombre Completo
+                            <p-sortIcon field="sNombreusuario"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="name">clave de identificación
-                            <p-sortIcon field="name"></p-sortIcon>
+                        <th pSortableColumn="sClaveUser">clave de identificación
+                            <p-sortIcon field="sClaveUser"></p-sortIcon>
                         </th>
                         <!--<th>Image</th>-->
-                        <th pSortableColumn="category">Usuario
-                            <p-sortIcon field="category"></p-sortIcon>
+                        <th pSortableColumn="sUsuario">Usuario
+                            <p-sortIcon field="sUsuario"></p-sortIcon>
+                           
                         </th>
-                        <th pSortableColumn="inventoryStatus">Estatus
-                            <p-sortIcon field="inventoryStatus"></p-sortIcon>
+                        <th pSortableColumn="nEstatus">Estatus
+                            <p-sortIcon field="nEstatus"></p-sortIcon>
+                           
                         </th>
                         <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-usuario>
                     <tr>
-                        <td>{{usuario.sNombreUsuario}}</td>
-                        <td>{{usuario.sClaveUser}}</td>
-                        <td>{{usuario.sUsuario}}</td>
-                        <td>{{usuario.nEstatus === 1 ? 'Activo': 'Inactivo'}}</td>
+                        <td><span class="p-column-title">Nombre</span>{{usuario.sNombreUsuario}}</td>
+                        <td><span class="p-column-title">Clave</span>{{usuario.sClaveUser}}</td>
+                        <td><span class="p-column-title">Nombre Usuario</span>{{usuario.sUsuario}}</td>
+                        <td><span class="p-column-title">Estatus</span>{{usuario.nEstatus === 1 ? 'Activo': 'Inactivo'}}</td>
                         <td>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editUsuario(usuario)"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteUsuario(usuario)"></button>

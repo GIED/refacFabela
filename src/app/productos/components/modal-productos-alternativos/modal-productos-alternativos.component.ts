@@ -73,17 +73,17 @@ export class ModalProductosAlternativosComponent implements OnInit {
 
             this.productosService.guardaProductoAlternativo(product).subscribe(productoEliminado =>{
                 this.listaProductoAlternativo = this.listaProductoAlternativo.filter(val => val.nId !== productoEliminado.nId);
-                this.messageService.add({severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000});
+                this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Producto Borrado', life: 3000});
                 this.muestraConfirmDialogAlter=false;
             })
         },reject: (type) => {
           switch(type) {
               case ConfirmEventType.REJECT:
-                  this.messageService.add({severity:'error', summary:'Rejected', detail:'no se borro el producto'});
+                  this.messageService.add({severity:'error', summary:'Error', detail:'No se borro el producto'});
                   this.muestraConfirmDialogAlter=false;
               break;
               case ConfirmEventType.CANCEL:
-                  this.messageService.add({severity:'warn', summary:'Cancelled', detail:'acción cancelada'});
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Acción cancelada'});
                   this.muestraConfirmDialogAlter=false;
               break;
           }

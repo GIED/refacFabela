@@ -104,7 +104,7 @@ export class VentasPorInternetComponent implements OnInit {
     
     this.clienteService.consultaClienteIdUsuario(this.tokenService.getIdUser()).subscribe(resp => {
         this.cliente=resp;  
-        console.log(this.cliente);   
+        ////console.log(this.cliente);   
         this.clienteService.obtenerSaldoGeneralCliente(this.cliente.nId).subscribe(saldoCliente=>{
           if (saldoCliente != null) {
             this.saldoGeneralCliente=saldoCliente;
@@ -142,14 +142,14 @@ export class VentasPorInternetComponent implements OnInit {
         .pipe(debounceTime(500))
         .subscribe(valor => { 
           this.productoService.obtenerProductosLike(valor).subscribe(productos => {
-            console.log(productos.length);
+            ////console.log(productos.length);
             if (productos.length != 0) {
               this.listaProductoSugerencia=productos;
               this.mostrarSugerenciasProducto=true;
-              this.messageService.add({severity: 'info', summary: 'coincidencias', detail: 'productos encontrados', life: 3000});
+              this.messageService.add({severity: 'info', summary: 'Se encontraron coincidenias', detail: 'Productos encontrados', life: 3000});
             }else{
               this.mostrarSugerenciasProducto=false;
-              this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'producto no encontrado, Verifique la información.', life: 3000});
+              this.messageService.add({severity: 'warn', summary: 'No se encontraron coincidencias', detail: 'Producto no encontrado, Verifique la información.', life: 3000});
             }        
           });
         });
@@ -158,9 +158,9 @@ export class VentasPorInternetComponent implements OnInit {
   valorSeleccionadoProducto(){
     this.productoSeleccionado=this.productoSelecionadoCtrl.value;
     this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
-      console.log(productoStock);
+      ////console.log(productoStock);
       if (productoStock.nCantidadTotal === 0) {
-        this.messageService.add({severity: 'warn', summary: 'sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
+        this.messageService.add({severity: 'warn', summary: 'Sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
       }
       this.productosFiltrados.push(productoStock);
       this.mostrarSugerenciasProducto=false;
@@ -169,16 +169,16 @@ export class VentasPorInternetComponent implements OnInit {
   }
 
   agregarProduct(producto: TvStockProducto) {
-    console.log(producto);
+    ////console.log(producto);
     if (producto.nCantidad == 0 || producto.nCantidad == null) {
-      console.log("cantidad recibida: ",this.nCantidadCtrl.value)
+      ////console.log("cantidad recibida: ",this.nCantidadCtrl.value)
       producto.nCantidad=this.nCantidadCtrl.value;
     }
     
     
     //verifica que se agrege una cantidad
     if (producto.nCantidad === 0) {
-      //console.log("entro a if");
+      //////console.log("entro a if");
       
       this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar una cantidad', life: 3000});
   
@@ -209,20 +209,20 @@ export class VentasPorInternetComponent implements OnInit {
     }
     //si entra a else el producto no existe en la lista
     else{
-      console.log("producto con cantidad agregada en else: ",producto);
+      ////console.log("producto con cantidad agregada en else: ",producto);
       this.listaProductos.push(producto);
       
     }
     //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
-    console.log("total a: "+this.total);
+  
     this.total += producto.tcProducto.nPrecioConIva*this.nCantidadCtrl.value;
     producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
-    console.log("total d: "+this.total);
+   
     
     //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
     this.productosFiltrados=[];
     this.nCantidadCtrl.setValue(0);
-    this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Producto Agregado Correctamente', life: 3000});
+    this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Producto Agregado Correctamente', life: 3000});
     this.muestraProductosBodega=false;
   
   }
@@ -231,10 +231,10 @@ export class VentasPorInternetComponent implements OnInit {
   }
   
   quitarProducto(producto: TvStockProducto){
-    console.log(producto);
+    ////console.log(producto);
     
     this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
-    console.log("total: ",this.total);
+    ////console.log("total: ",this.total);
     //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
     this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
   }
@@ -242,8 +242,8 @@ export class VentasPorInternetComponent implements OnInit {
 
   guardarCotizacion(){
 
-    //console.log(this.clienteSeleccionado);
-    //console.log(this.listaProductos);
+    //////console.log(this.clienteSeleccionado);
+    //////console.log(this.listaProductos);
   
     const productoCotizado: CotizacionDto[]=[];
   
@@ -265,15 +265,15 @@ export class VentasPorInternetComponent implements OnInit {
     }
   
     this.listaCotización = productoCotizado;
-    console.log("lista enviada");
-     console.log(this.listaCotización);
+    ////console.log("lista enviada");
+     ////console.log(this.listaCotización);
     
     //registra cotizacion en twCotizacion
     this.ventasCotizacionService.guardaCotizacion(this.listaCotización).subscribe(cotizacionRegistrada =>{
   
       if (cotizacionRegistrada.nId !== null) {
-        console.log(this.listaProductos);
-        console.log(this.saldoGeneralCliente);
+        ////console.log(this.listaProductos);
+        ////console.log(this.saldoGeneralCliente);
         this.cotizacionData = cotizacionRegistrada;
 
         this.comprobante.nIdCotizacion=this.cotizacionData.nId;
@@ -297,7 +297,7 @@ generarCotizacionPdf(idCotizacion:number){
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      ////console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
@@ -344,8 +344,8 @@ limpiaFormulario(){
 
 generarVenta(datosVenta: DatosVenta){
 
-  console.log("Datos para venta en padre");
-  console.log(datosVenta);
+  ////console.log("Datos para venta en padre");
+  ////console.log(datosVenta);
 
   this.datosRegistraVenta=datosVenta;
   this.datosRegistraVenta.idCliente=this.cliente.nId;
@@ -363,9 +363,9 @@ generarVenta(datosVenta: DatosVenta){
   }
   
   this.datosRegistraVenta.twCotizacion = this.cotizacionData;
-  console.log("Datos para guardar");
-  console.log(this.datosRegistraVenta);
-  console.log(this.cotizacionData);
+  ////console.log("Datos para guardar");
+  ////console.log(this.datosRegistraVenta);
+  ////console.log(this.cotizacionData);
 
  this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(venta =>{
   this.generarVentaPdf(venta.nId);    
@@ -382,7 +382,7 @@ generarVentaPdf(idVenta:number){
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      ////console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');

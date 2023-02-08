@@ -37,7 +37,7 @@ export class PagoVentaInternetComponent implements OnInit {
 
     this.ventasCotizacionesService.obtenerCotizacionDistribuidor(idUsuario).subscribe(data => {
       this.listaCotizaciones=data;
-      console.log(this.listaCotizaciones);
+      //console.log(this.listaCotizaciones);
     }); 
 
   }
@@ -51,14 +51,14 @@ export class PagoVentaInternetComponent implements OnInit {
   
       
         const file = new Blob([resp], { type: 'application/pdf' });
-        console.log('file: ' + file.size);
+        //console.log('file: ' + file.size);
         if (file != null && file.size > 0) {
           const fileURL = window.URL.createObjectURL(file);
           const anchor = document.createElement('a');
           anchor.download = 'cotizacion_' + idCotizacion + '.pdf';
           anchor.href = fileURL;
           anchor.click();
-          this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Cotizacion Generada', life: 3000});
+          this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cotizacion Generada', life: 3000});
           
         } else {
           this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar la Cotizacion', life: 3000});
@@ -80,21 +80,21 @@ export class PagoVentaInternetComponent implements OnInit {
     formData.append("archivo", comprobante);
     formData.append("id", this.cotizacion.nId.toString());
 
-    console.log('formData: ',formData)
+    //console.log('formData: ',formData)
 
     this.ventaInternetService.guardaVenta(formData).subscribe(respuesta =>{
       this.twPagoComprobanteInternet=respuesta.twPagoComprobanteInternet;
-      console.log(this.twPagoComprobanteInternet);
+      //console.log(this.twPagoComprobanteInternet);
       const index = this.listaCotizaciones.findIndex(t => t.nId == this.twPagoComprobanteInternet.nId);
 
-      console.log("index", index);
+      //console.log("index", index);
 
       this.listaCotizaciones[index]=this.twPagoComprobanteInternet;
       
-      this.messageService.add({severity: 'success', summary: 'Correcto', detail: respuesta.mensaje, life: 3000});
+      this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: respuesta.mensaje, life: 3000});
     	this.mostrarFormCarga=false;
     }, error=>{
-      this.messageService.add({severity: 'success', summary: 'Correcto', detail: error.mensaje, life: 3000});
+      this.messageService.add({severity: 'error', summary: 'Correcto', detail: error.mensaje, life: 3000});
     })
 
 

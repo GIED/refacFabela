@@ -4,13 +4,9 @@ import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { ClienteService } from '../../service/cliente.service';
 import { Clientes } from '../../interfaces/clientes';
-import { FormGroup, FormBuilder, Validators, FormControl, FormsModule } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { TokenService } from '../../../shared/service/token.service';
 import { TcRegimenFiscal } from '../../../productos/model/TcRegimenFiscal';
-
-
-
-
 
 
 
@@ -46,59 +42,20 @@ export class ClienteComponent implements OnInit {
   credito: boolean;
   cliente: Clientes;
   formulario: FormGroup;
-  listaRegimenFiscal:TcRegimenFiscal[];
-  objCliente:Clientes;
+  listaRegimenFiscal: TcRegimenFiscal[];
+  objCliente: Clientes;
 
   constructor(private messageService: MessageService,
-    private confirmationService: ConfirmationService, private clienteService: ClienteService, private fb: FormBuilder,
+    private confirmationService: ConfirmationService, private clienteService: ClienteService,
     private tokenService: TokenService) {
-    this.crearFormulario();
-    this.listaRegimenFiscal=[];
+
+    this.listaRegimenFiscal = [];
 
   }
 
   ngOnInit() {
     this.obtenerClientes();
-   
-  }
 
-
-  // Crear formulario con sus validaciones de clientes
-  crearFormulario() {
-    this.formulario = this.fb.group({
-      sRfc: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(14)]],
-      sRazonSocial: ['', [Validators.required]],
-      sDireccion: ['', [Validators.required]],
-      sTelefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-      sCorreo: ['', [Validators.required, Validators.email]],
-      nCp: ['', [Validators.required,  Validators.minLength(5), Validators.maxLength(5), Validators.pattern('^[0-9]{5}') ]],
-      nId: ['', []],
-      sClave: ['', []],
-      nIdRegimenFiscal: ['', [Validators.required]],
-    })
-  }
-
-  // Validación de campos Guardar Cliente
-  get validaRfc() {
-    return this.formulario.get('sRfc').invalid;
-  }
-  get validaRS() {
-    return this.formulario.get('sRazonSocial').invalid && this.formulario.get('sRazonSocial').touched;
-  }
-  get validaDireccion() {
-    return this.formulario.get('sDireccion').invalid && this.formulario.get('sDireccion').touched;
-  }
-  get validaTelefono() {
-    return this.formulario.get('sTelefono').invalid && this.formulario.get('sTelefono').touched;
-  }
-  get validaCorreo() {
-    return this.formulario.get('sCorreo').invalid && this.formulario.get('sCorreo').touched;
-  }
-  get validaCp() {
-    return this.formulario.get('nCp').invalid && this.formulario.get('nCp').touched;
-  }
-  get validaRegimenfiscal() {
-    return this.formulario.get('nIdRegimenFiscal').invalid && this.formulario.get('nIdRegimenFiscal').touched;
   }
 
   // Carga de clientes inicial(Todos)
@@ -113,25 +70,11 @@ export class ClienteComponent implements OnInit {
     this.cliente = {};
     this.submitted = false;
     this.clienteDialog = true;
-    this.objCliente={}; 
-    this.limpiarFormulario();
+    this.objCliente = {};
+
   }
-
-  limpiarFormulario() {
-    this.fclientes.nId.setValue("");
-    this.fclientes.sCorreo.setValue("");
-    this.fclientes.sTelefono.setValue("");
-    this.fclientes.sDireccion.setValue("");
-    this.fclientes.sRazonSocial.setValue("");
-    this.fclientes.sRfc.setValue("");
-    this.fclientes.sClave.setValue("");
-    this.fclientes.nCp.setValue("");
-    this.fclientes.nIdRegimenFiscal.setValue("");
-  }
-
-
   lineaCredito(clientes: Clientes) {
-    console.log(clientes);
+    //console.log(clientes);
     this.cliente = clientes;
 
     this.submitted = false;
@@ -144,9 +87,7 @@ export class ClienteComponent implements OnInit {
     this.objCliente = cliente;
   }
 
-  get fclientes() {
-    return this.formulario.controls
-  }
+
 
   //Elimina (cambia estatus de clieente como eliminación logica del registro)
   eliminar(cliente: Clientes) {
@@ -161,30 +102,30 @@ export class ClienteComponent implements OnInit {
 
           this.listaClientes = this.listaClientes.filter(val => val.nId !== cliente.nId);
           this.cliente = {};
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cliente eliminado', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente eliminado', life: 3000 });
         })
       }
     });
   }
 
-  hideDialog(event:boolean) {
-    
+  hideDialog(event: boolean) {
+
     this.clienteDialog = false;
     this.credito = false;
     this.submitted = false;
     this.obtenerClientes();
   }
 
- 
-  
+
+
   guardarLineaCredito() {
 
     if (this.cliente.nId) {
       this.cliente.nEstatus = 1;
-      this.cliente.n_idUsuarioCredito=this.tokenService.getIdUser();
+      this.cliente.n_idUsuarioCredito = this.tokenService.getIdUser();
       this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
         this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000 });
+        this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
         this.credito = false;
       })
     }

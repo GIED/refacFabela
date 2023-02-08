@@ -129,13 +129,13 @@ saveProduct(producto: TcProducto) {
   if (producto.nId) {
       this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
          
-          this.messageService.add({ severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Producto actualizado correctamente', life: 3000 });
       });
   }
   else {
       this.productosService.guardaProducto(producto).subscribe(productoNuevo => {
         
-          this.messageService.add({ severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Producto registrado correctamente', life: 3000 });
       });
   }
   this.productDialog = false;
@@ -173,7 +173,7 @@ entregaProducto(producto:TwPedidoProducto){
     
   }
 
-  this.messageService.add({ severity: 'success', summary: 'Registro Correcto', detail: 'Se registro el ingreso del producto', life: 3000 });
+  this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Se registro el ingreso del producto', life: 3000 });
   this.obtenerPedidoDetalle();
 
  });

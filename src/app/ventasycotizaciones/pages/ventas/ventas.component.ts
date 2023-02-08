@@ -162,21 +162,21 @@ export class VentasComponent implements OnInit {
       .pipe(debounceTime(500))
       .subscribe(valor => { 
         this.clienteService.obtenerClientesLike(valor).subscribe(cliente => {
-          //console.log(cliente.length);
+          ////console.log(cliente.length);
           if (cliente.length != 0) {
             this.listaCliente=cliente;
             this.mostrarSugerenciasCliente=true;
-            this.messageService.add({severity: 'info', summary: 'coincidencias', detail: 'clientes encontrados', life: 3000});
+            this.messageService.add({severity: 'info', summary: 'Se encontraron coincidenicas', detail: 'Clientes encontrados', life: 3000});
           }else{
             this.mostrarSugerenciasCliente=false;
-            this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'cliente no encontrado, Verifique la información.', life: 3000});
+            this.messageService.add({severity: 'warn', summary: 'No se encontraron coincidencias', detail: 'Cliente no encontrado, Verifique la información.', life: 3000});
           }      
         })
       });
 }
 
 valorSeleccionadoCliente(){
-  console.log(this.clienteSeleccionadoCtrl.value);
+  //console.log(this.clienteSeleccionadoCtrl.value);
   this.clienteSeleccionado=this.clienteSeleccionadoCtrl.value;
   this.clienteCtrl.setValue(this.clienteSeleccionado.sRazonSocial);
   this.clienteService.obtenerSaldoGeneralCliente(this.clienteSeleccionado.nId).subscribe(saldoCliente=>{
@@ -234,14 +234,14 @@ buscaProducto(){
       .pipe(debounceTime(500))
       .subscribe(valor => { 
         this.productoService.obtenerProductosLike(valor).subscribe(productos => {
-         // console.log(productos.length);
+         // //console.log(productos.length);
           if (productos.length != 0) {
             this.listaProductoSugerencia=productos;
             this.mostrarSugerenciasProducto=true;
-            this.messageService.add({severity: 'info', summary: 'coincidencias', detail: 'productos encontrados', life: 3000});
+            this.messageService.add({severity: 'info', summary: 'Se encontraron coincidencias', detail: 'Productos encontrados', life: 3000});
           }else{
             this.mostrarSugerenciasProducto=false;
-            this.messageService.add({severity: 'warn', summary: 'no encontrado', detail: 'producto no encontrado, Verifique la información.', life: 3000});
+            this.messageService.add({severity: 'warn', summary: 'No se encontraron coincidencias', detail: 'Producto no encontrado, Verifique la información.', life: 3000});
           }        
         });
       });
@@ -259,9 +259,9 @@ valorSeleccionadoProducto(){
   this.nIdProducto=this.productoSeleccionado.nId;  
   this.obtenerProductosAlternativos(this.productoSeleccionado.nId);
   this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
-    console.log(productoStock);
+    //console.log(productoStock);
     if (productoStock.nCantidadTotal === 0) {
-      this.messageService.add({severity: 'warn', summary: 'sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
+      this.messageService.add({severity: 'warn', summary: 'Sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
     }else{
 
     }
@@ -277,13 +277,10 @@ sumarIncremento(tvStockProducto :TvStockProducto){
 
 if( this.incremento>0){
   let suma;
-  console.log("el precio en pesos es:",tvStockProducto.tcProducto.nPrecioPeso)
+  
   suma=tvStockProducto.tcProducto.nPrecioPeso+this.incremento;
   tvStockProducto.tcProducto.nPrecioPeso=suma;
- console.log("Este el el incremento:"+this.nIncrementoCtrl.value);
- console.log("el precio con el incremento es :",tvStockProducto.tcProducto.nPrecioPeso)
-
- console.log(tvStockProducto);
+ 
  this.calcularPrecio(tvStockProducto);
 
 }
@@ -304,7 +301,7 @@ calcularPrecio(tvStockProducto :TvStockProducto){
     
   }
 
-   console.log(this.productoNuevoPrecio)
+  
  })
 
   
@@ -329,7 +326,7 @@ ubicacionProducto(nId: number){
       
       for (const objBodega of productoBodega) {
 
-        console.log('obj bodega', objBodega);
+       
 
         if (objBodega.nIdBodega==1) {
           bodega1=1;
@@ -387,14 +384,14 @@ ubicacionProducto(nId: number){
 
       
       
-      console.log('saliendo del for: ',bodega1,cantidad1,bodega2,cantidad2,bodega3,cantidad3);
+    
 
 });
 this.muestraProductosBodega=true;
 }
 
 muestraAlternativo(producto: TvStockProducto){
-  console.log(producto);
+  //console.log(producto);
   this.nIdProducto= producto.nIdProducto;
   this.mostrarAlternativos=true;
 }
@@ -411,8 +408,8 @@ obtenerProductosAlternativos(nId:number ) {
   this.productoService.obtenerProductosAlternativos(this.nIdProducto)
     .subscribe((productosAlter) => {
        productosAlter;
-      console.log("Alternativos");
-      console.log(productosAlter);
+      //console.log("Alternativos");
+      //console.log(productosAlter);
       for (const producto of productosAlter) {
         this.tvStockProducto = new TvStockProducto();
         this.productoService.obtenerTotalBodegasIdProducto(producto.nIdProductoAlternativo).subscribe(productoStock =>{
@@ -423,7 +420,7 @@ obtenerProductosAlternativos(nId:number ) {
         });
         
       }
-      console.log(this.productosFiltrados);
+      
       
     });
 }
@@ -432,9 +429,9 @@ obtenerProductosAlternativos(nId:number ) {
 
 
 agregarProduct(producto: TvStockProducto) {
-  console.log(producto);
+  //console.log(producto);
   if (producto.nCantidad == 0 || producto.nCantidad == null) {
-    console.log("cantidad recibida: ",this.nCantidadCtrl.value)
+    //console.log("cantidad recibida: ",this.nCantidadCtrl.value)
     producto.nCantidad=this.nCantidadCtrl.value;
     this.listaProductoBodega=[];
     this.productosFiltrados=[];
@@ -445,7 +442,7 @@ agregarProduct(producto: TvStockProducto) {
   
   //verifica que se agrege una cantidad
   if (producto.nCantidad === 0) {
-    //console.log("entro a if");
+    ////console.log("entro a if");
     
     this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar una cantidad', life: 3000});
 
@@ -476,15 +473,15 @@ agregarProduct(producto: TvStockProducto) {
   }
   //si entra a else el producto no existe en la lista
   else{
-    console.log("producto con cantidad agregada en else: ",producto);
+   
     this.listaProductos.push(producto);
     
   }
   //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
-  console.log("total a: "+this.total);
+ 
   this.total += producto.tcProducto.nPrecioConIva*this.nCantidadCtrl.value;
   producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
-  console.log("total d: "+this.total);
+ 
   
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.productosFiltrados=[];
@@ -498,18 +495,17 @@ agregarProduct(producto: TvStockProducto) {
 }
 
 quitarProducto(producto: TvStockProducto){
-  console.log(producto);
+ 
   
   this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
-  console.log("total: ",this.total);
+  //console.log("total: ",this.total);
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
 }
 
 guardarCotizacion(){
 
-  //console.log(this.clienteSeleccionado);
-  //console.log(this.listaProductos);
+
 
   const productoCotizado: CotizacionDto[]=[];
 
@@ -531,14 +527,13 @@ guardarCotizacion(){
   }
 
   this.listaCotización = productoCotizado;
-  console.log("lista enviada");
-   console.log(this.listaCotización);
+ 
 
   this.ventasCotizacionService.guardaCotizacion(this.listaCotización).subscribe(cotizacionRegistrada =>{
 
     if (cotizacionRegistrada.nId !== null) {
-      console.log(this.listaProductos);
-      console.log(this.saldoGeneralCliente);
+      //console.log(this.listaProductos);
+      //console.log(this.saldoGeneralCliente);
       this.cotizacionData = cotizacionRegistrada;
       this.mostrarOpcionesVenta=true;
     }
@@ -553,14 +548,14 @@ generarCotizacionPdf(idCotizacion:number){
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+     
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
         anchor.download = 'cotizacion_' + idCotizacion + '.pdf';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Cotizacion Generada', life: 3000});
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Cotizacion Generada', life: 3000});
         
       } else {
         this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar la Cotizacion', life: 3000});
@@ -615,8 +610,7 @@ limpiaFormulario(){
 
 generarVenta(datosVenta: DatosVenta){
 
-  console.log("Datos para venta en padre");
-  console.log(datosVenta);
+
 
   this.datosRegistraVenta=datosVenta;
   this.datosRegistraVenta.idCliente=this.clienteSeleccionado.nId;
@@ -634,9 +628,7 @@ generarVenta(datosVenta: DatosVenta){
   }
   
   this.datosRegistraVenta.twCotizacion = this.cotizacionData;
-  console.log("Datos para guardar");
-  console.log(this.datosRegistraVenta);
-  console.log(this.cotizacionData);
+ 
 
  this.ventaService.guardaVenta(this.datosRegistraVenta).subscribe(venta =>{
   this.generarVentaPdf(venta.nId);    
@@ -653,14 +645,14 @@ generarVentaPdf(idVenta:number){
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+      //console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
         anchor.download = 'venta_' + idVenta + '.pdf';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'comprobante de venta Generado', life: 3000});
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'comprobante de venta Generado', life: 3000});
         //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
         this.limpiaFormulario();
       } else {

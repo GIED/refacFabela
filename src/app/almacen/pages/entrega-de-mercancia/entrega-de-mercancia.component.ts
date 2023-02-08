@@ -42,7 +42,7 @@ export class EntregaDeMercanciaComponent implements OnInit {
   consultaVentas() {
     this.ventasService.obtenerVentaDetalleEstatusVenta(2).subscribe((data) => {
       this.listaVentasDetalleCliente = data;
-      console.log(this.listaVentasDetalleCliente);
+      //console.log(this.listaVentasDetalleCliente);
     });
   }
 
@@ -61,7 +61,7 @@ export class EntregaDeMercanciaComponent implements OnInit {
       .generarVentaPdf(tvVentasDetalle.nId)
       .subscribe((resp) => {
         const file = new Blob([resp], { type: "application/pdf" });
-        console.log("file: " + file.size);
+        //console.log("file: " + file.size);
         if (file != null && file.size > 0) {
           const fileURL = window.URL.createObjectURL(file);
           const anchor = document.createElement("a");
@@ -70,8 +70,8 @@ export class EntregaDeMercanciaComponent implements OnInit {
           anchor.click();
           this.messageService.add({
             severity: "success",
-            summary: "Correcto",
-            detail: "comprobante de venta Generado",
+            summary: "Se realizó con éxito",
+            detail: "Comprobante de venta Generado",
             life: 3000,
           });
           //una vez generado el reporte limpia el formulario para una nueva venta o cotización
@@ -91,14 +91,14 @@ export class EntregaDeMercanciaComponent implements OnInit {
   }
 
   entregaProducto(prod: VentaProductoDto) {
-    console.log(prod);
+    //console.log(prod);
 
     prod.nEstatusEntregaAlmacen = prod.nEstatusEntregaAlmacen? 1: 0;
 
     this.ventasService.guardaVentaProductoEntregaId(prod).subscribe(data => {
       this.messageService.add({
         severity: "success",
-        summary: "Correcto",
+        summary: "Se realizó con éxito",
         detail: "Se guardo la entrega del producto",
         life: 3000,
       });

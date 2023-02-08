@@ -130,7 +130,7 @@ export class FormClienteComponent implements OnInit {
     this.fclientes.sClave.setValue(this.objCliente.sClave);
     this.fclientes.nCp.setValue(this.objCliente.nCp);
     if (this.objCliente.tcRegimenFiscal !== null && this.objCliente.tcRegimenFiscal !== undefined ) {
-      console.log('entre');
+      //console.log('entre');
       this.fclientes.nIdRegimenFiscal.setValue(this.objCliente.tcRegimenFiscal.nId);
     }
 
@@ -168,7 +168,7 @@ export class FormClienteComponent implements OnInit {
         this.cliente.nEstatus = 1;
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000 });
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
         })
 
 
@@ -178,7 +178,7 @@ export class FormClienteComponent implements OnInit {
         this.cliente.nEstatus = 1;
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes.push(respuesta);
-          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cliente guardado', life: 10000 });
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente guardado', life: 10000 });
         })
       }
 
@@ -195,7 +195,7 @@ export class FormClienteComponent implements OnInit {
     if (this.fclientes.sRfc.value.length >= 5) {
       this.clienteService.consultaClienteRfc(this.fclientes.sRfc.value).subscribe(data => {
         if (data !== null) {
-          console.log('entre a asignar los valores para editar')
+          //console.log('entre a asignar los valores para editar')
           this.objCliente = data;
           this.editar();
         }
@@ -214,7 +214,7 @@ export class FormClienteComponent implements OnInit {
       this.cliente.n_idUsuarioCredito = this.tokenService.getIdUser();
       this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
         this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Cliente actualizado', life: 10000 });
+        this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
         this.credito = false;
       })
     }

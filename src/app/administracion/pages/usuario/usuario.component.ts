@@ -64,7 +64,7 @@ export class UsuarioComponent implements OnInit {
     obtenerUsuarios() {
         this.usuarioService.getUsuarios().subscribe(usuarios => {
 
-            console.log(usuarios);
+            //console.log(usuarios);
             for (const usuario of usuarios) {
                 this.nuevoUsuario = new NuevoUsuario(usuario.nId, usuario.sClaveUser,usuario.sUsuario,usuario.sPassword, usuario.sNombreUsuario, usuario.nEstatus, usuario.rfcDistribuidor);
                 this.listaUsuarios.push(this.nuevoUsuario);    
@@ -132,17 +132,22 @@ export class UsuarioComponent implements OnInit {
     }
 
     deleteUsuario(usuario: Usuarios) {
+
+
         this.confirmationService.confirm({
             message: 'Estas seguro que deseas desactivar al usuario ' + usuario.sNombreUsuario + '?',
             header: 'Confirmar',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 usuario.nEstatus = 0;
-                /*this.usuarioService.guardaUsuario(usuario).subscribe(usuarioDesactivado => {
-                    this.listaUsuarios[this.findIndexById(usuarioDesactivado.nId.toString())] = usuarioDesactivado;
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'usuario desactivado', life: 3000 });
-                })*/
+                this.usuarioService.guardarUsuario(usuario).subscribe(usuarioDesactivado => {
+                    this.listaUsuarios=[];
+                  this.obtenerUsuarios();
+                    this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Usuario desactivado', life: 3000 });
+                  
+                })
             }
+            
         });
     }
 
@@ -163,12 +168,12 @@ export class UsuarioComponent implements OnInit {
             });
         } else {
             this.nuevoUsuario = this.formulario.value; 
-            console.log(this.nuevoUsuario);          
+            //console.log(this.nuevoUsuario);          
                 this.nuevoUsuario.sClaveUser = this.createId();
                 this.nuevoUsuario.nEstatus = 1;
                 this.usuarioService.nuevo(this.nuevoUsuario).subscribe(usuarioNuevo => {
                     this.listaUsuarios.push(usuarioNuevo);
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'usuario guardado', life: 10000 });
+                    this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Usuario guardado', life: 10000 });
                 })
             
             this.listaUsuarios = [...this.listaUsuarios];
@@ -190,7 +195,7 @@ export class UsuarioComponent implements OnInit {
             this.muestraInput=false;
             this.fUsuario.rfcDistribuidor.setValue('no aplica');
             for (const valor of this.fUsuario.roles.value) {
-                //console.log(valor);
+                ////console.log(valor);
                     if (valor === 'distribuidor') {
                         this.muestraInput=true;
                         this.fUsuario.rfcDistribuidor.setValue('');

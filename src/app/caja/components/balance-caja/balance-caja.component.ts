@@ -43,11 +43,11 @@ export class BalanceCajaComponent implements OnInit {
   obtenerValores(){
 
     this.totalVentas=this.listaVentasDetalleCliente.length;
-    console.log(this.listaVentasDetalleCliente);
+    //console.log(this.listaVentasDetalleCliente);
     for (let ventas of this.listaVentasDetalleCliente){
      if(ventas.tcTipoVenta.nId==1){
 
-   console.log("entre a este tipo de venta");
+ 
       this.totalVentasMostrador=this.totalVentasMostrador+1
 
      }
