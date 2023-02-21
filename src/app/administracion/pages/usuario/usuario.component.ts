@@ -42,6 +42,8 @@ export class UsuarioComponent implements OnInit {
     muestraInput:boolean;
     nuevoUsuario: NuevoUsuario;
     roles: Roles[];
+    guarda:boolean=false;
+    actualizaUsiario:Usuarios;
 
     constructor(private usuarioService: UsuarioService, private fb: FormBuilder, private messageService: MessageService,
         private confirmationService: ConfirmationService) {
@@ -58,6 +60,7 @@ export class UsuarioComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.nuevoUsuario=null;
         this.obtenerUsuarios();
     }
 
@@ -105,19 +108,21 @@ export class UsuarioComponent implements OnInit {
     }
 
     openNew() {
+        this.guarda=true;
         this.limpiarFormulario();
         this.usuarioDialog = true;
     }
 
 
     editUsuario(usuario: Usuarios) {
+        this.guarda=false;
         this.usuarioDialog = true;
         this.fUsuario.nId.setValue(usuario.nId);
         this.fUsuario.nEstatus.setValue(usuario.nEstatus);
         this.fUsuario.sClaveUser.setValue(usuario.sClaveuser);
         this.fUsuario.sNombreUsuario.setValue(usuario.sNombreUsuario);
         this.fUsuario.sUsuario.setValue(usuario.sUsuario);
-        this.fUsuario.sPassword.setValue(usuario.sPassword);
+     
 
     }
 
@@ -151,6 +156,24 @@ export class UsuarioComponent implements OnInit {
         });
     }
 
+    actualizarUsuario() {
+
+        this.nuevoUsuario = this.formulario.value;        
+      console.log(  this.nuevoUsuario);          
+                
+                this.usuarioService.guardarUsuario(this.nuevoUsuario ).subscribe(usuarioDesactivado => {
+                    this.listaUsuarios=[];
+                  this.obtenerUsuarios();
+                    this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Usuario actualizado', life: 3000 });
+                    this.usuarioDialog=false;
+                  
+                  
+                })
+          
+            
+      
+    }
+
     hideDialog() {
         this.usuarioDialog = false;
         this.limpiarFormulario();
@@ -175,8 +198,10 @@ export class UsuarioComponent implements OnInit {
                     this.listaUsuarios.push(usuarioNuevo);
                     this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Usuario guardado', life: 10000 });
                 })
-            
-            this.listaUsuarios = [...this.listaUsuarios];
+
+                this.listaUsuarios=[];
+                this.obtenerUsuarios();      
+           
             this.limpiarFormulario();
             this.usuarioDialog = false;
             

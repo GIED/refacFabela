@@ -11,7 +11,8 @@
 
             </p-toolbar>
 
-            <p-table #dt [value]="listaUsuarios" [rows]="10" [paginator]="true" [globalFilterFields]="['sNombreusuario','sUsuario', 'sClaveUser']" 
+            <p-table #dt [value]="listaUsuarios" [rows]="25" [paginator]="false"
+             [globalFilterFields]="['sNombreusuario','sUsuario', 'sClaveUser','nEstatus']" 
             [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" 
             currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
                 [showCurrentPageReport]="true">
@@ -117,7 +118,9 @@
 
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="!formulario.valid" (click)="guardarUsuario()"></button>
+                <button *ngIf="guarda" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="!formulario.valid" (click)="guardarUsuario()"></button>
+                <button *ngIf="!guarda" pButton pRipple label="Actualizar" icon="pi pi-check" class="p-button-text" [disabled]="!formulario.valid" (click)="actualizarUsuario()"></button>
+
             </ng-template>
 
         </p-dialog>

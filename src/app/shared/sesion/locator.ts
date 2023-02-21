@@ -112,7 +112,8 @@ static actualizarEstatusComprobante= '/actualizarEstatusComprobante'
 
 //Tablero
 static obtenerTotalesGeneralesTablero='/totales-generales-tablero';
-
+static obtenerVentaMesAno='/totales-por-mes-ano?';
+static obtenerVentaProductoAno='/total_venta_producto-ano?';
 //traspasos
 static movimientoInterno='/movimientoInterno';
 static movimientoExterno='/movimientoExterno';

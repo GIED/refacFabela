@@ -64,10 +64,14 @@
                         <div class="p-col-6 p-md-8">
                             <h5>Ventas vs Cotizaciones</h5>
                         </div>
-                        <div class="p-col-6 p-md-4 dropdown">
-                            <p-dropdown [options]="dropdownYears" [(ngModel)]="selectedYear"></p-dropdown>
-                        </div>
+
+                        
+                       
                     </div>
+                    <div class="p-col-12 p-md-12 dropdown">
+                        <p-dropdown [options]="dropdownYears" optionLabel="label" optionValue="value" [(ngModel)]="selectedYear"
+                        (onChange)="consultarAno()"  [showClear]="true">
+                    </p-dropdown>                        </div>
                     <p-chart id="dashboard-chart" type="line" [data]="lineChartData" [options]="lineChartOptions"></p-chart>
                 </div>
             </div>
@@ -78,155 +82,66 @@
     <div class="p-col-12 p-lg-6 p-md-6">
         <div class="card widget-tasks">
             <div class="card-header">
-                <div class="title">
-                    <h5>Productos más vendidos</h5>
-                </div>
+              
 
             </div>
-            <ul class="checkboxes">
-                <li class="checkbox-row">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Cubeta de Aceite Roshfrans </p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">50</span>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li class="checkbox-row even">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Cubeta de Aceite Motor Craft</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">39</span>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li class="checkbox-row">
-                    <div class="p-grid">
-                        <div class="p-col-8 checkbox">
-
-                            <p>kit de sellos</p>
-                        </div>
-                        <div class="p-col-4 checkbox-row-info">
-                            <span class="time">38</span>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li class="checkbox-row even">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Llanta 205R 50 46</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">35</span>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li class="checkbox-row">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Bateria 30 celdas</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">33</span>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li class="checkbox-row even">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Marcha grande</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">30</span>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li class="checkbox-row">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Cuchilla motoniveladora</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">25</span>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li class="checkbox-row even">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Piston de trascabo pala</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">18</span>
-
-                        </div>
-                    </div>
-                </li>
-
-                <li class="checkbox-row">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Perno de carga</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">15</span>
-
-                        </div>
-                    </div>
-                </li>
-                <li class="checkbox-row">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Perno de carga</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">15</span>
-
-                        </div>
-                    </div>
-                </li>
-                <li class="checkbox-row">
-                    <div class="p-grid">
-                        <div class="p-col-6 checkbox">
-
-                            <p>Perno de carga</p>
-                        </div>
-                        <div class="p-col-6 checkbox-row-info">
-                            <span class="time">15</span>
-
-                        </div>
-                    </div>
-                </li>
 
 
-            </ul>
+            <p-table #dt [value]="ventaProductoAno" [rows]="7" [paginator]="true"
+            [globalFilterFields]="['sNoParte', 'sProducto','sMarca', 'nTotalVenta']" 
+            [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+            [showCurrentPageReport]="true">
+            <ng-template pTemplate="caption">
+                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                    <h5 class="p-m-0">Productos más vendidos</h5>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Buscar producto" />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>                   
+                    <th pSortableColumn="sNoParte">No. Parte 
+                          <p-sortIcon field="sNoParte"></p-sortIcon>    </th>
+                                     
+                    <th pSortableColumn="sProducto">Producto
+                        <p-sortIcon field="sProducto"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="sMarca">Marca
+                        <p-sortIcon field="sMarca"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="nTotalVenta">Total Venta
+                        <p-sortIcon field="nTotalVenta"></p-sortIcon>
+                    </th>
+                   
+                  
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-producto>
+                <tr>
+                    
+                    <td><span class="p-column-title">No. Parte</span> {{producto.sNoParte}}
+                    </td>
+                    <td><span class="p-column-title">Producto</span> {{producto.sProducto}}
+                    </td>
+                    <td><span class="p-column-title">Marca</span> {{producto.sMarca}}
+                    </td>
+                    <td><span class="p-column-title">Total Venta</span> {{producto.nTotalVenta}}
+                    </td>
+                   
+                   
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="p-d-flex p-ai-center p-jc-between">
+                    En total hay {{ventaProductoAno ? ventaProductoAno.length : 0 }} productos.
+                </div>
+            </ng-template>
+        </p-table>
+           
         </div>
     </div>
     <div class="p-col-12 p-lg-6 p-md-6 ">

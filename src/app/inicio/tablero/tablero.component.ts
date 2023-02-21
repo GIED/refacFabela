@@ -4,6 +4,7 @@ import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
 import { TotalesGeneralesTablero } from '../model/TotalesGeneralesTablero';
 import { TableroService } from '../../shared/service/tablero.service';
+import { VwVentaProductoAno } from '../model/VwVentraProductoAno';
 
 @Component({
   selector: 'app-tablero',
@@ -35,51 +36,38 @@ export class TableroComponent implements OnInit {
   //Esstos son los metodos que se tienen que quedar para la implementación definitiva
   toralesGeneralesTablero: TotalesGeneralesTablero;
 
+   mes:string[];
+   ventas:number[];
+   cotizaciones:number[];
+   ventaProductoAno:VwVentaProductoAno[];
+
 
 
   constructor(private productService: ProductService, private tableroService: TableroService) {
       this.toralesGeneralesTablero={};
+      this.mes=[];
+      this.cotizaciones=[];
+      this.ventas=[];
      }
 
   ngOnInit() {
 
+   
+    const moonLanding = new Date();   
+    this.obtenerVentasMesAno(moonLanding.getFullYear().toString());    
+    this.obtenerTotalesGenerales();
+    this.obtenerVentaProductoAno(moonLanding.getFullYear().toString());
 
-        this.tableroService.obtenerTotalesGeneralesTablero().subscribe(data =>{
 
-            this.toralesGeneralesTablero=data;
-            //console.log(this.toralesGeneralesTablero);
+      
 
-        })
+      
 
 
 
       this.productService.getProducts().then(data => this.products = data);
 
-      this.lineChartData = {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-          datasets: [
-              {
-                  label: 'Cotizaciones',
-                  data: [1, 2, 5, 3, 12, 7, 15],
-                  borderColor: [
-                      'red'
-                  ],
-                  borderWidth: 3,
-                  fill: false,
-                  tension: .4
-              },
-              {
-                  label: 'Ventas',
-                  data: [3, 7, 2, 17, 15, 13, 19],
-                  borderColor: [
-                      'blue'
-                  ],
-                  borderWidth: 3,
-                  fill: false,
-                  tension: .4
-              }
-          ]
-      };
+    
       this.lineChartData2 = {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
@@ -161,14 +149,96 @@ export class TableroComponent implements OnInit {
       };
 
       this.dropdownYears = [
-          {label: '2019', value: 2019},
-          {label: '2018', value: 2018},
-          {label: '2017', value: 2017},
-          {label: '2016', value: 2016},
-          {label: '2015', value: 2015},
-          {label: '2014', value: 2014}
+       
+        {label: '2023', value: 2023},
+        {label: '2022', value: 2022},
+        {label: '2021', value: 2021},
+        {label: '2020', value: 2020},
+        {label: '2019', value: 2019},
+        {label: '2018', value: 2018},
+         
       ];
      
   }
+
+  consultarAno(){
+    this.obtenerVentasMesAno(this.selectedYear);
+    this.obtenerVentaProductoAno(this.selectedYear);
+  }
+
+
+  obtenerVentasMesAno(ano:string){
+    this.mes=[];
+    this.cotizaciones=[];
+    this.ventas=[];
+
+    this.tableroService.obtenerVentasMesAno(ano).subscribe(data=>{
+
+        console.log(data);
+    
+
+        for (let index = 0; index < data.length; index++) {
+            this.mes.push(data[index].sMes); 
+            this.cotizaciones.push(data[index].nTotalCorizaciones);
+            this.ventas.push(data[index].nTotalVentas);
+            
+        }
+
+        this.lineChartData = {
+
+          
+            labels: this.mes,
+            datasets: [
+                {
+                    label: 'Cotizaciones',
+                    data: this.cotizaciones,
+                    borderColor: [
+                        'purple'
+                    ],
+                    borderWidth: 3,
+                    fill: false,
+                    tension: .4
+                },
+                {
+                    label: 'Ventas',
+                    data: this.ventas,
+                    borderColor: [
+                        'green'
+                    ],
+                    borderWidth: 3,
+                    fill: false,
+                    tension: .4
+                }
+            ]
+        };
+
+    });
+
+  }
+
+  obtenerTotalesGenerales(){
+
+    this.tableroService.obtenerTotalesGeneralesTablero().subscribe(data =>{
+
+        this.toralesGeneralesTablero=data;
+        //console.log(this.toralesGeneralesTablero);
+
+    })
+  }
+
+
+  obtenerVentaProductoAno(ano:string){
+    this.ventaProductoAno=[];
+
+    this.tableroService.obtenerVentasProductoAno(ano).subscribe(data=>{
+
+        this.ventaProductoAno=data;
+
+        
+
+    });
+
+  }
+  
 
 }
