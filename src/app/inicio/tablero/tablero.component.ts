@@ -5,240 +5,180 @@ import { ProductService } from 'src/app/demo/service/productservice';
 import { TotalesGeneralesTablero } from '../model/TotalesGeneralesTablero';
 import { TableroService } from '../../shared/service/tablero.service';
 import { VwVentaProductoAno } from '../model/VwVentraProductoAno';
+import { VwVentasAnoVendedor } from '../model/VwVentasAnoVendedor';
+import { TcUsuario } from '../../administracion/model/TcUsuario';
+import { UsuarioService } from '../../administracion/service/usuario.service';
+import { VwVentasAnoMesVendedor } from '../model/VwVentasAnoMesVendedor';
 
 @Component({
-  selector: 'app-tablero',
-  templateUrl: './tablero.component.html',
-  styleUrls: ['./tablero.component.scss']
+    selector: 'app-tablero',
+    templateUrl: './tablero.component.html',
+    styleUrls: ['./tablero.component.scss']
 })
 export class TableroComponent implements OnInit {
 
-  lineChartData: any;
-  lineChartData2: any;
+    lineChartData: any;
+    lineChartData2: any;
 
-  lineChartOptions: any;
+    lineChartOptions: any;
 
-  dropdownYears: SelectItem[];
-  dropdownYears2: SelectItem[];
+    dropdownYears: SelectItem[];
+    dropdownYears2: SelectItem[];
 
-  selectedYear: any;
+    selectedYear: any;
 
-  activeNews = 1;
+    activeNews = 1;
 
-  cars: any[];
+    cars: any[];
 
-  selectedCar: any;
+    selectedCar: any;
 
-  products: Product[];
+    products: Product[];
 
-  events: any[];
+    events: any[];
 
-  //Esstos son los metodos que se tienen que quedar para la implementación definitiva
-  toralesGeneralesTablero: TotalesGeneralesTablero;
+    selectedUsuario: any;
 
-   mes:string[];
-   ventas:number[];
-   cotizaciones:number[];
-   ventaProductoAno:VwVentaProductoAno[];
+    //Esstos son los metodos que se tienen que quedar para la implementación definitiva
+    toralesGeneralesTablero: TotalesGeneralesTablero;
+    mes: string[];
+    ventas: number[];
+    cotizaciones: number[];
+    ventaProductoAno: VwVentaProductoAno[];
+    ventasAnoVendedor: VwVentasAnoVendedor[]
+    usuarios: TcUsuario[];
+    ventasAnoMesVendedor: VwVentasAnoMesVendedor[]
+    mes2:string[];
+    ventas2:number[];
+    vendedor:string[];
+    anoSelect:string;
 
+    constructor(private productService: ProductService, private tableroService: TableroService, private usuarioService: UsuarioService) {
+        this.toralesGeneralesTablero = {};
+        this.mes = [];
+        this.cotizaciones = [];
+        this.ventas = [];
+        this.ventasAnoVendedor = [];
+        this.usuarios = [];
+        this.ventasAnoMesVendedor = [];
+    }
+    ngOnInit() {
+        const moonLanding = new Date();
+        this.obtenerVentasMesAno(this.obteterAno());
+        this.obtenerTotalesGenerales();
+        this.obtenerVentaProductoAno(this.obteterAno());
+        this.obtenerVentasAnoVendedor(this.obteterAno());
+        this.usuarioService.getUsuarios().subscribe(data => {
+            this.usuarios = data;
+            console.log(this.usuarios);
 
-
-  constructor(private productService: ProductService, private tableroService: TableroService) {
-      this.toralesGeneralesTablero={};
-      this.mes=[];
-      this.cotizaciones=[];
-      this.ventas=[];
-     }
-
-  ngOnInit() {
-
-   
-    const moonLanding = new Date();   
-    this.obtenerVentasMesAno(moonLanding.getFullYear().toString());    
-    this.obtenerTotalesGenerales();
-    this.obtenerVentaProductoAno(moonLanding.getFullYear().toString());
-
-
-      
-
-      
-
-
-
-      this.productService.getProducts().then(data => this.products = data);
-
-    
-      this.lineChartData2 = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'Mabiel',
-                data: [2, 8, 5, 1, 20, 25, 15],
-                borderColor: [
-                    'purple'
-                ],
-                borderWidth: 3,
-                fill: false,
-                tension: .4
-            },
-            {
-                label: 'Veronica',
-                data: [7, 6, 5, 4, 3, 2, 1],
-                borderColor: [
-                    'green'
-                ],
-                borderWidth: 3,
-                fill: false,
-                tension: .4
-            },
-            {
-              label: 'Cristian',
-              data: [1, 2, 3, 4, 5, 6, 7],
-              borderColor: [
-                  'orange'
-              ],
-              borderWidth: 3,
-              fill: false,
-              tension: .4
-          },
-          {
-            label: 'Jesus',
-            data: [2, 3, 1, 10, 14, 15, 16],
-            borderColor: [
-                'blue'
-            ],
-            borderWidth: 3,
-            fill: false,
-            tension: .4
-        }
-        ]
-    };
-      this.lineChartOptions = {
-          responsive: true,
-          maintainAspectRatio: true,
-          fontFamily: '\'Candara\', \'Calibri\', \'Courier\', \'serif\'',
-          hover: {
-              mode: 'index'
-          },
-          scales: {
-              x: {
-                  grid: {
-                      display: false
-                  },
-                  ticks: {
-                      color: '#1199a9'
-                  }
-              },
-              y: {
-                  grid: {
-                      display: false
-                  },
-                  ticks: {
-                      color: '#1199a9'
-                  }
-              }
-          },
-          plugins: {
-              legend: {
-                  display: true,
-                  labels: {
-                      color: '#1199a9'
-                  }
-              }
-          }
-      };
-
-      this.dropdownYears = [
-       
-        {label: '2023', value: 2023},
-        {label: '2022', value: 2022},
-        {label: '2021', value: 2021},
-        {label: '2020', value: 2020},
-        {label: '2019', value: 2019},
-        {label: '2018', value: 2018},
-         
-      ];
-     
-  }
-
-  consultarAno(){
-    this.obtenerVentasMesAno(this.selectedYear);
-    this.obtenerVentaProductoAno(this.selectedYear);
-  }
-
-
-  obtenerVentasMesAno(ano:string){
-    this.mes=[];
-    this.cotizaciones=[];
-    this.ventas=[];
-
-    this.tableroService.obtenerVentasMesAno(ano).subscribe(data=>{
-
-        console.log(data);
-    
-
-        for (let index = 0; index < data.length; index++) {
-            this.mes.push(data[index].sMes); 
-            this.cotizaciones.push(data[index].nTotalCorizaciones);
-            this.ventas.push(data[index].nTotalVentas);
-            
-        }
-
-        this.lineChartData = {
-
-          
-            labels: this.mes,
-            datasets: [
-                {
-                    label: 'Cotizaciones',
-                    data: this.cotizaciones,
-                    borderColor: [
-                        'purple'
-                    ],
-                    borderWidth: 3,
-                    fill: false,
-                    tension: .4
-                },
-                {
-                    label: 'Ventas',
-                    data: this.ventas,
-                    borderColor: [
-                        'green'
-                    ],
-                    borderWidth: 3,
-                    fill: false,
-                    tension: .4
-                }
-            ]
-        };
-
-    });
-
-  }
-
-  obtenerTotalesGenerales(){
-
-    this.tableroService.obtenerTotalesGeneralesTablero().subscribe(data =>{
-
-        this.toralesGeneralesTablero=data;
-        //console.log(this.toralesGeneralesTablero);
-
-    })
-  }
-
-
-  obtenerVentaProductoAno(ano:string){
-    this.ventaProductoAno=[];
-
-    this.tableroService.obtenerVentasProductoAno(ano).subscribe(data=>{
-
-        this.ventaProductoAno=data;
-
-        
-
-    });
-
-  }
-  
-
+        });
+        this.obtenerVentaAnoMesVendedor(this.obteterAno(),8);
+        this.dropdownYears = [
+            { label: '2023', value: 2023 },
+            { label: '2022', value: 2022 },
+            { label: '2021', value: 2021 },
+            { label: '2020', value: 2020 },
+            { label: '2019', value: 2019 },
+            { label: '2018', value: 2018 },
+        ];
+    }
+    obteterAno() {
+        const moonLanding = new Date();
+        return moonLanding.getFullYear().toString();
+    }
+    consultarAno() {
+        this.obtenerVentasMesAno(this.selectedYear);
+        this.obtenerVentaProductoAno(this.selectedYear);
+        this.obtenerVentasAnoVendedor(this.selectedYear);
+        this.obtenerVentaAnoMesVendedor(this.selectedYear,8);   
+        this.anoSelect=this.selectedYear;
+    }
+    consultarUsuario() {
+        this.obtenerVentaAnoMesVendedor(this.selectedYear,this.selectedUsuario);
+    }
+    obtenerVentasMesAno(ano: string) {
+        this.mes = [];
+        this.cotizaciones = [];
+        this.ventas = [];
+        this.tableroService.obtenerVentasMesAno(ano).subscribe(data => {         
+            for (let index = 0; index < data.length; index++) {
+                this.mes.push(data[index].sMes);
+                this.cotizaciones.push(data[index].nTotalCorizaciones);
+                this.ventas.push(data[index].nTotalVentas);
+            }
+            this.lineChartData = {
+                labels: this.mes,
+                datasets: [
+                    {
+                        label: 'Cotizaciones',
+                        data: this.cotizaciones,
+                        borderColor: [
+                            'purple'
+                        ],
+                        borderWidth: 3,
+                        fill: false,
+                        tension: .4
+                    },
+                    {
+                        label: 'Ventas',
+                        data: this.ventas,
+                        borderColor: [
+                            'green'
+                        ],
+                        borderWidth: 3,
+                        fill: false,
+                        tension: .4
+                    }
+                ]
+            };
+        });
+    }
+    obtenerGraficaVentaAnoMes() {
+        this.mes2 = [];
+        this.vendedor = [];
+        this.ventas2 = [];  
+            for (let index = 0; index < this.ventasAnoMesVendedor.length; index++) {
+                this.mes2.push(this.ventasAnoMesVendedor[index].sMes);
+                this.vendedor.push(this.ventasAnoMesVendedor[index].sNombreUsuario);               
+                this.ventas2.push(this.ventasAnoMesVendedor[index].nTotalVentas);
+            }
+            this.lineChartData2 = {
+                labels: this.mes2,
+                datasets: [
+                    {
+                        label: this.vendedor[0],
+                        data: this.ventas2,
+                        borderColor: [
+                            'purple'
+                        ],
+                        borderWidth: 3,
+                        fill: false,
+                        tension: .4
+                    },                   
+                ]
+            };  
+    }
+    obtenerTotalesGenerales() {
+        this.tableroService.obtenerTotalesGeneralesTablero().subscribe(data => {
+        this.toralesGeneralesTablero = data;       
+        })
+    }
+    obtenerVentaAnoMesVendedor(ano:string, id: number) {
+        this.tableroService.obtenerVentasAnoMesVendedor(ano, id).subscribe(data => {
+            this.ventasAnoMesVendedor = data;
+            this.obtenerGraficaVentaAnoMes();
+        })
+    }
+    obtenerVentasAnoVendedor(ano: string) {
+        this.tableroService.obtenerVentasAnoVendedor(ano).subscribe(data => {
+            this.ventasAnoVendedor = data;
+        })
+    }
+    obtenerVentaProductoAno(ano: string) {
+        this.ventaProductoAno = [];
+        this.tableroService.obtenerVentasProductoAno(ano).subscribe(data => {
+            this.ventaProductoAno = data;
+        });
+    }
 }
