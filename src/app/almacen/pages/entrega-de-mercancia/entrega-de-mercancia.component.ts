@@ -58,7 +58,7 @@ export class EntregaDeMercanciaComponent implements OnInit {
 
   generarVentaPdf(tvVentasDetalle: TvVentasDetalle) {
     this.ventasService
-      .generarVentaPdf(tvVentasDetalle.nId)
+      .generarVentaAlmacenPdf(tvVentasDetalle.nId)
       .subscribe((resp) => {
         const file = new Blob([resp], { type: "application/pdf" });
         //console.log("file: " + file.size);

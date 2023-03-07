@@ -108,6 +108,19 @@ export class VentasService {
 
   }
 
+  generarVentaAlmacenPdf(nIdVenta: number){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarVentaAlmacenPdf + 'nIdVenta=' + nIdVenta, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+
+  }
+
   generarBalanceCajaPdf(nIdCaja: number){
     const httpOptions = {
       responseType: 'arraybuffer' as 'json'
