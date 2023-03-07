@@ -264,8 +264,13 @@ valorSeleccionadoProducto(){
       this.messageService.add({severity: 'warn', summary: 'Sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
     }else{
 
-    }
+    }   
     this.productosFiltrados.push(productoStock);
+   
+this.calcularPrecio(productoStock);
+
+
+ 
     this.mostrarSugerenciasProducto=false;
     this.productoCtrl.setValue('');
   });
@@ -293,6 +298,8 @@ calcularPrecio(tvStockProducto :TvStockProducto){
 
  this.productoService.calcularPrecioProducto(tvStockProducto.tcProducto).subscribe(data=>{
    this.productoNuevoPrecio=data;
+
+   console.log(this.productoNuevoPrecio);
    
   for (let index = 0; index < this.productosFiltrados.length; index++) {
     this.productosFiltrados[index].tcProducto.nPrecioPeso=this.productoNuevoPrecio.nPrecioPeso;
@@ -304,8 +311,16 @@ calcularPrecio(tvStockProducto :TvStockProducto){
   
  })
 
-  
+  return this.productoNuevoPrecio;
 
+}
+
+ trunc (x, posiciones = 0) {
+  var s = x.toString()
+  var l = s.length
+  var decimalLength = s.indexOf('.') + 1
+  var numStr = s.substr(0, decimalLength + posiciones)
+  return Number(numStr)
 }
 
 ubicacionProducto(nId: number){
