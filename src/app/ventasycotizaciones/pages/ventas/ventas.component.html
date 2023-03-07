@@ -123,7 +123,7 @@
                                     </ng-template>
                                     <ng-template pTemplate="body" let-producto>
                                         <tr>
-                                            <td (click)="muestraAlternativo(producto)">{{producto.tcProducto.sNoParte}}</td>
+                                            <td>{{producto.tcProducto.sNoParte}}</td>
                                             <td>{{producto.tcProducto.sProducto}}</td>
                                             <td>{{producto.tcProducto.sDescripcion}}</td>
                                             <td>{{producto.tcProducto.sMarca}}</td>
@@ -133,7 +133,7 @@
                                                 </p-inputNumber>
                                             </td>
 
-                                            <td (click)="ubicacionProducto(producto)">{{producto.nCantidadTotal}}</td>
+                                            <td>{{producto.nCantidadTotal}}</td>
                                             <td>
                                                 <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="1000">
                                                 </p-inputNumber>
