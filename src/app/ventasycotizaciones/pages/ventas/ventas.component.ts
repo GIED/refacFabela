@@ -277,18 +277,32 @@ this.calcularPrecio(productoStock);
 }
 
 sumarIncremento(tvStockProducto :TvStockProducto){
- this.incremento=this.nIncrementoCtrl.value;
 
+   if(this.nIncrementoCtrl.value>=0){ 
 
-if( this.incremento>0){
+  this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
+   this.incremento=this.nIncrementoCtrl.value;
+
   let suma;
   
-  suma=tvStockProducto.tcProducto.nPrecioPeso+this.incremento;
-  tvStockProducto.tcProducto.nPrecioPeso=suma;
+  suma=productoStock.tcProducto.nPrecio+this.incremento;
+  tvStockProducto.tcProducto.nPrecio=suma;
  
  this.calcularPrecio(tvStockProducto);
 
+
+
+  });
 }
+
+else{
+
+  this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar un aumento igual ó superior 0', life: 3000});
+
+}
+
+
+
 
 }
 
