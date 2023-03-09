@@ -8,11 +8,9 @@ import { CierreDeCajaComponent } from './pages/cierre-de-caja/cierre-de-caja.com
 import { AbonosComponent } from './pages/abonos/abonos.component';
 import { PrimeModule } from '../shared/prime/prime.module';
 import { DetalleAbonosCreditoComponent } from './components/detalle-abonos-credito/detalle-abonos-credito.component';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AdministracionModule } from '../administracion/administracion.module';
+import {  ReactiveFormsModule } from '@angular/forms';
 import { FormAbonosComponent } from './components/form-abonos/form-abonos.component';
 import { BalanceCajaComponent } from './components/balance-caja/balance-caja.component';
-import { VentaProductosDetalleComponent } from '../ventasycotizaciones/components/venta-productos-detalle/venta-productos-detalle.component';
 import { VentasycotizacionesRoutingModule } from '../ventasycotizaciones/ventasycotizaciones-routing.module';
 
 
