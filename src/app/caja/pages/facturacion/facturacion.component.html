@@ -77,20 +77,63 @@
     </div>
 </div>
 
-<p-dialog [(visible)]="formFactura" [style]="{width: '700px'}" header="Facturación" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="formFactura" [style]="{width: '700px'}" header=" NOTA A FACTURAR ES: {{idVenta}}" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <div class="card">
-            <div class="p-col-12 p-lg-12">
-                <div class="card">
-                    <h5>El número de Nota a Facturar es: <strong>{{idVenta}}</strong></h5>
-                    <p-dropdown [options]="listaUsoCfdi" optionValue="sClave" optionLabel="sDescripcion" [(ngModel)]="cfdiSeleccionado" placeholder="Selecciona uso CFDI" [showClear]="true"></p-dropdown>
-                    <h5>El monto a Facturar es: <strong>{{totalVenta | number: '1.0-2'}}</strong></h5>
+            <div class="p-grid p-col-12 p-md-12">
+                <div class="p-col-12 p-md-12 ">
+                    <p-card header="DATOS DEL FACTURACIÓN">
+                        <div class="p-grid">
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong>RFC: </strong> {{tvVentasFactura.tcCliente.sRfc}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong>Razón social: </strong> {{tvVentasFactura.tcCliente.sRazonSocial}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong>Dirección: </strong> {{tvVentasFactura.tcCliente.sDireccion}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong>Código Postal: </strong> {{tvVentasFactura.tcCliente.nCp == null ? 'SIN INFORMACIÓN' : tvVentasFactura.tcCliente.nCp}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong>Correo electrónico: </strong> {{tvVentasFactura.tcCliente.sCorreo}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong> Teléfono: </strong> {{tvVentasFactura.tcCliente.sTelefono == null ? 'SIN INFORMACIÓN' : tvVentasFactura.tcCliente.sTelefono}}</label>
+                                </span>
+                            </div>
+                        </div>
+                    </p-card>
+                </div>
+                <div class="p-col-12 p-md-12 ">
+                    <p-card header="USO CFDI">
+                        <div class="p-field p-col-12 p-md-12">
+                            <p-dropdown [options]="listaUsoCfdi" optionValue="sClave" optionLabel="sDescripcion" [(ngModel)]="cfdiSeleccionado" placeholder="Selecciona una opción" [showClear]="true"></p-dropdown>
+                            
+                        </div>
+                        <div class="p-field p-col-12 p-md-12 p-text-right">
+                            <h5>EL MONTO A FACTURAR ES: <strong>{{totalVenta | number: '1.0-2'}}</strong></h5>
+                        </div>
+                    </p-card>
+                    
                 </div>
             </div>
-        </div>
+        
     </ng-template>
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
         <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-text" (click)="generarFactura()"></button>
     </ng-template>
 </p-dialog>
+
