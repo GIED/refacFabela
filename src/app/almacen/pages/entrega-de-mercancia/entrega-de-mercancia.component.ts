@@ -7,6 +7,7 @@ import { TvVentasDetalle } from "src/app/productos/model/TvVentasDetalle";
 
 import { VentasService } from "src/app/shared/service/ventas.service";
 import { VentaProductoDto } from "src/app/ventasycotizaciones/model/dto/VentaProductoDto";
+import { TwVentasProductosTraer } from '../../../productos/model/TwVentasProductosTraer';
 
 @Component({
   selector: "app-entrega-de-mercancia",
@@ -28,12 +29,19 @@ export class EntregaDeMercanciaComponent implements OnInit {
   noVenta: number;
   totalVenta: number;
   selectedProducts2: VentaProductoDto;
+  listaVentasProductosTraer: TwVentasProductosTraer[];
+  botonProductosTraer:boolean=false;
+  mostrarDialogTraer:boolean=false;
 
   constructor(
     private messageService: MessageService,
     private ventasService: VentasService,
     private fb: FormBuilder
-  ) {}
+  ) {
+  this.listaVentasProductosTraer=[];
+  this.botonProductosTraer=false;
+    this.mostrarDialogTraer=false;
+  }
 
   ngOnInit() {
     this.consultaVentas();
@@ -54,6 +62,37 @@ export class EntregaDeMercanciaComponent implements OnInit {
       .subscribe((data) => {
         this.listaProductosVenta = data;
       });
+
+      console.log(tvVentasDetalle.nId);
+
+
+      this.ventasService
+      .obtenerProductosVentaTraer(tvVentasDetalle.nId)
+      .subscribe((data) => {
+        this.listaVentasProductosTraer = data;
+        if( this.listaVentasProductosTraer.length>0){
+          this.botonProductosTraer=true;
+        }
+        else{
+          this.botonProductosTraer=false;
+
+        }
+
+
+        console.log( this.listaVentasProductosTraer );
+      });
+      
+
+
+      
+
+
+
+  }
+
+
+  mostrarProductosTraer(){
+    this.mostrarDialogTraer=true;
   }
 
   generarVentaPdf(tvVentasDetalle: TvVentasDetalle) {
@@ -89,6 +128,10 @@ export class EntregaDeMercanciaComponent implements OnInit {
   hideDialogAlter() {
     this.mostrarProductos = false;
   }
+  cerrarTraer(){
+    this.mostrarDialogTraer = false;
+  }
+
 
   entregaProducto(prod: VentaProductoDto) {
     //console.log(prod);

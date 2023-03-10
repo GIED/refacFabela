@@ -107,8 +107,22 @@
                                 <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
                                     placeholder="Buscar producto vendido" />
                             </span>
+                           
+                           
+                        </div>
+
+                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                    
+                           
+                            <button *ngIf="botonProductosTraer" pButton pRipple label="Mostrar traspasos" icon="pi pi-times" class="p-button-danger" 
+                            (click)="mostrarProductosTraer()"></button>
+                           
                         </div>
                     </ng-template>
+                   <ng-template>
+                    <button *ngIf="botonProductosTraer" pButton pRipple label="Mostrar traspasos" icon="pi pi-times" class="p-button-danger" 
+                    (click)="hideDialogAlter()"></button>
+                   </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
                             <th pSortableColumn="sNoParte">No. Parte<p-sortIcon field="sNoParte"></p-sortIcon>
@@ -171,6 +185,85 @@
                     <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text"
                         (click)="hideDialogAlter()"></button>
                 </ng-template>
+
+                     
+
+
+
+            </p-dialog>
+
+            <p-dialog [(visible)]="mostrarDialogTraer" header="Productos por traer" [style]="{width: '900px'}"
+                [closable]="false" styleClass="p-fluid">
+                <ng-template pTemplate="content">
+                  
+                    <p-table #dt [value]="listaVentasProductosTraer" responsiveLayout="scroll" [rows]="10"
+                    [paginator]="true"
+                    [globalFilterFields]="['nCantidad','tcProducto.sProducto','tcProducto.sDescripcion','sUbicacion']"
+                    [(selection)]="selectedProducts2" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                    currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros"
+                    [showCurrentPageReport]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                    
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Buscar producto vendido" />
+                            </span>
+                           
+                           
+                        </div>
+
+                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                    
+                           
+                         
+                           
+                        </div>
+                    </ng-template>
+                 
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="nCantidad">No. Parte<p-sortIcon field="nCantidad"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="tcProducto.sProducto">Producto<p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="tcProducto.sDescripcion">Descripción<p-sortIcon field="tcProducto.sDescripcion"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="sUbicacion">Marca<p-sortIcon field="sMarca"></p-sortIcon>
+                            </th>
+                           
+                            
+                           
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-venta let-expanded="expanded">
+                        <tr>
+                    
+                           
+                            <td><span class="p-column-title"></span> {{venta.nCantidad}}
+                            </td>
+                           <td><span class="p-column-title"></span> {{venta.tcProducto.sProducto}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.tcProducto.sDescripcion}}
+                            </td>
+                            <td><span class="p-column-title"></span>{{venta.sUbicacion}}
+                            </td>
+                            
+                            
+                           
+                        </tr>
+                    </ng-template>
+                    </p-table>
+                </ng-template>
+              
+                     
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text"
+                        (click)="cerrarTraer()"></button>
+                </ng-template>
+
+
             </p-dialog>
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="right">

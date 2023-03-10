@@ -13,6 +13,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TrVentaCobro } from '../../productos/model/TrVentaCobro';
 import { TwMaquinaCliente } from '../../productos/model/TwMaquinaCliente';
+import { TwVentasProductosTraer } from '../../productos/model/TwVentasProductosTraer';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,11 @@ export class VentasService {
   obtenerProductoVentaId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaProductoVentaId+'id='+id;
     return this.http.get<VentaProductoDto>(url);
+  }
+
+  obtenerProductosVentaTraer(nId:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaProductoVentasTraer+'nIdVenta='+nId;
+    return this.http.get<TwVentasProductosTraer[]>(url);
   }
  cancelarVentaProducto(ventaProductoDto:VentaProductoDto){
     let url = environment.servicios.apiRefacFabela + locator.cancelaProductoVenta;
