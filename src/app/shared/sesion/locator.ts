@@ -125,6 +125,7 @@ static movimientoExterno='/movimientoExterno';
 //factura
 static consultaVentaFactura='/facturacion/ventasParaFactura';
 static facturarVenta='/facturacion/venta?';
+static consultaFacturas='/facturacion/ventasFacturadas';
 
 
 

@@ -39,12 +39,17 @@ export class FacturacionComponent implements OnInit {
 
   ngOnInit(){
    this.obtenerFacruras();
-   this.catalogoService.obtenerUsoCfdi().subscribe(resp =>{
-     this.listaUsoCfdi=resp;
-   });
+   this.obtenerUsocfdi();
 
 
     
+  }
+
+  obtenerUsocfdi(){
+    this.catalogoService.obtenerUsoCfdi().subscribe(resp =>{
+      this.listaUsoCfdi=resp;
+    });
+
   }
 
   obtenerFacruras(){
@@ -54,8 +59,20 @@ export class FacturacionComponent implements OnInit {
 
       console.log(this.listaVentas);
   });
+  this.obtenerUsocfdi();
 
   }
+  obtenerVentasFacturadas(){
+
+    this.facturaService.obtenerFacturas().subscribe(resp =>{
+      this.listaVentas=resp;
+
+      console.log(this.listaVentas);
+  });
+
+  }
+
+
 
   openDialog(tvVentasFactura:TvVentasFactura){
     console.log('tvVentasFactura',tvVentasFactura);

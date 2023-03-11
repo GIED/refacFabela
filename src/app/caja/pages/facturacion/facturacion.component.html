@@ -6,6 +6,8 @@
                 <h3>Módulo de Facturación</h3>
             </div>
            
+            <button pButton pRipple type="button" label="Para Facturar" class="p-button-danger" (click)="obtenerFacruras()"></button>
+            <button pButton pRipple pRipple type="button" label="Ventas Facturadas" class="p-button-success" (click)="obtenerVentasFacturadas()"></button>
 
             <p-table #dt [value]="listaVentas" [rows]="10" [paginator]="true"
             [globalFilterFields]="['nId','tcCliente.sRfc', 'tcCliente.sRazonSocial']" 
