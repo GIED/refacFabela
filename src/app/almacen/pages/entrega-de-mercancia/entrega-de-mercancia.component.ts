@@ -32,6 +32,7 @@ export class EntregaDeMercanciaComponent implements OnInit {
   listaVentasProductosTraer: TwVentasProductosTraer[];
   botonProductosTraer:boolean=false;
   mostrarDialogTraer:boolean=false;
+  buscar:string;
 
   constructor(
     private messageService: MessageService,
@@ -52,6 +53,26 @@ export class EntregaDeMercanciaComponent implements OnInit {
       this.listaVentasDetalleCliente = data;
       //console.log(this.listaVentasDetalleCliente);
     });
+  }
+
+  consultar(){
+
+    if(this.buscar !== undefined && this.buscar.length >=1 ){
+      this.ventasService.obtenerVentasLike(this.buscar).subscribe(data => {
+        this.listaVentasDetalleCliente=data;
+        //console.log(this.listaVentasDetalleCliente);
+      }); 
+  
+    }
+    else 
+    {
+     
+    }
+  
+    
+  
+   
+  
   }
 
   detalleVentaProductos(tvVentasDetalle: TvVentasDetalle) {

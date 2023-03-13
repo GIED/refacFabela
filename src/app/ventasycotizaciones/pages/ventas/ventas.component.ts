@@ -67,6 +67,7 @@ export class VentasComponent implements OnInit {
 
   saldoGeneralCliente:SaldoGeneralCliente;
   tvStockProducto: TvStockProducto;
+  mostrarDistribucionBodega:boolean=false;;
   
   total: number = 0;
   nIdProducto:number;
@@ -155,6 +156,15 @@ export class VentasComponent implements OnInit {
     this.clienteDialog = true;
     this.objCliente=null; 
    
+  }
+
+  mostrarditribucionBodegas(nId:number){
+    this.bodegasService.obtenerProductoBodegas(nId).subscribe(data=>{
+      this.listaProductoBodega=data;
+      this.mostrarDistribucionBodega=true;
+
+    })
+
   }
 
   buscaCliente(){
