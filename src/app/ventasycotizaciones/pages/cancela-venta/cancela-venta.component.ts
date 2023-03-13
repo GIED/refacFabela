@@ -23,6 +23,7 @@ export class CancelaVentaComponent implements OnInit {
   formaPago:any;
   usoCfdi:any;
   mostrarProductos:boolean;
+  buscar:string;
 
   listaVentasDetalleCliente: TvVentasDetalle[];
   listaProductosVenta:VentaProductoDto;
@@ -41,7 +42,7 @@ constructor(  private ventasService:VentasService,  private messageService: Mess
  }
 
 ngOnInit(){
-   this.ventasService.obtenerVentaDetalle().subscribe(data=>{
+   this.ventasService.obtenerVentasTop().subscribe(data=>{
    this.listaVentasDetalleCliente=data; 
    //console.log(this.listaVentasDetalleCliente);      
   
@@ -56,6 +57,41 @@ this.mostrarProductos=true;
 this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
     this.listaProductosVenta=data;
 })
+
+}
+
+consultarTodas(){
+
+  if(this.buscar !== undefined && this.buscar.length >=1 ){
+    this.ventasService.obtenerVentaDetalle().subscribe(data => {
+      this.listaVentasDetalleCliente=data;
+      //console.log(this.listaVentasDetalleCliente);
+    }); 
+
+  }
+  else 
+  {
+   
+  }
+}
+
+consultar(){
+
+  if(this.buscar !== undefined && this.buscar.length >=1 ){
+    this.ventasService.obtenerVentasLike(this.buscar).subscribe(data => {
+      this.listaVentasDetalleCliente=data;
+      //console.log(this.listaVentasDetalleCliente);
+    }); 
+
+  }
+  else 
+  {
+   
+  }
+
+  
+
+ 
 
 }
 

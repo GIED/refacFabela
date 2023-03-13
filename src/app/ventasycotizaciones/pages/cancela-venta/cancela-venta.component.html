@@ -1,3 +1,22 @@
+<div class="p-grid p-fluid">
+    <!--Campos de filtro-->
+    <div class="p-col-12 ">
+        <div class="card">
+            
+               
+            <br>
+                <div class="p-field p-col-12 p-md-12">
+                        <label for="dateformat" class="p-field p-col-12 p-md-12">Buscar venta </label>
+                        <input [(ngModel)]="buscar"  pInputText >
+                </div>
+                                
+                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
+                    <button pButton pRipple type="button" label="Consultar" class="p-button-success" (click)="consultar()"></button>
+                </div>             
+        </div>
+    </div>
+</div>
+
 <div class="p-grid">
     
     <div class="p-col-12">
@@ -19,6 +38,11 @@
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
                             placeholder="Buscar Venta" />
+                    </span>
+                    <span class="p-input-icon-right">
+                        <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
+                            <button pButton pRipple type="button" label="Ver todas" class="p-button-success" (click)="consultarTodas()"></button>
+                        </div>  
                     </span>
                 </div>
             </ng-template>
