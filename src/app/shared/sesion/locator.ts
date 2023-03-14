@@ -91,6 +91,7 @@ static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultarVentaId='/obtenerVentaId?';
 static consultarMaquinaCliente='/obtenerMaquinasCliente?';
 static generarVentaPdf='/getVenta?';
+static generarInventarioPdf='/getReporteInventario?';
 static generarVentaAlmacenPdf='/getVentaAlmacen?'
 static descargarDocuemento='/facturacion/getDocumento?';
 static generarReporteCajaPdf='/getReporteCaja?';
