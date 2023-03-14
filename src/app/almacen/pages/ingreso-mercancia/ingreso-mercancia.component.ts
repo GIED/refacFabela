@@ -93,6 +93,10 @@ export class IngresoMercanciaComponent implements OnInit {
 
 hideDialog(valor: boolean) {
   this.productDialog = valor;
+
+  this.obtenerPedidosEstatus();
+
+
 }
 hideDialogAlternativos() {
   this.alternativosDialog = false;

@@ -21,6 +21,11 @@ export class PedidosService {
       let url = environment.servicios.apiRefacFabela + locator.obtenerProductosPedido+"nIdPedido="+nEstatus;
       return this.http.get<TwPedidoProducto[]>(url);
     }
+
+    borrarProductoPedido(twPedidoProducto:TwPedidoProducto){
+      let url = environment.servicios.apiRefacFabela + locator.borrarProductoPedido;
+      return this.http.post<any>(url,twPedidoProducto);
+    }
     obtenerPedidosDetalleEstatus(nEstatus:number){
         let url = environment.servicios.apiRefacFabela + locator.obtenerPedidosEstatus+"nEstatus="+nEstatus;
         return this.http.get<TvPedidoDetalle[]>(url);

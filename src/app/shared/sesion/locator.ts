@@ -63,6 +63,7 @@ static obtenerProductosPedido='/obtenerProductosPedido?';
 static obtenerPedidosEstatus='/obtenerPedidosEstatus?';
 static guardaPedido= '/guardarPedido';
 static guardaIngresoProductoPedido= '/ingresoProductoPedido';
+static borrarProductoPedido= '/borrarPedidoProducto';
 static generarPedidoPdf='/getPedidoId?';
 
 //Inventario
