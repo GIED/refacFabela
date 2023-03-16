@@ -58,6 +58,9 @@ export class AppMenuComponent implements OnInit {
                         label: 'Administración Caja', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/admin-caja']
                     },
                     {
+                        label: 'venta a credito', icon: 'pi pi-sliders-h', routerLink: ['../administracion/traspaso-venta-credito']
+                    },
+                    {
                         label: 'Tablero de Control', icon: 'pi pi-fw pi-credit-card', routerLink: ['../inicio/tablero']
                     },
 

@@ -7,6 +7,7 @@ import { CreditosComponent } from "./pages/creditos/creditos.component";
 import { TipoCambioComponent } from "./pages/tipo-cambio/tipo-cambio.component";
 import { ValidaComprobanteComponent } from './pages/valida-comprobante/valida-comprobante.component';
 import { AdminCajaComponent } from './pages/admin-caja/admin-caja.component';
+import { TraspasoVentaACreditoComponent } from './pages/traspaso-venta-acredito/traspaso-venta-acredito.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,10 @@ const routes: Routes = [
       {
         path: "admin-caja",
         component: AdminCajaComponent,
+      },
+      {
+        path: "traspaso-venta-credito",
+        component: TraspasoVentaACreditoComponent,
       },
     ],
   },

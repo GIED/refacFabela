@@ -180,7 +180,7 @@ export class VentasService {
 
   obtnerVentaId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultarVentaId+'nIdVenta='+id;
-    return this.http.get<any>(url);
+    return this.http.get<TwVenta>(url);
   }
   obtenerMaquinasCliente(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultarMaquinaCliente+'nIdCliente='+id;
@@ -194,6 +194,11 @@ export class VentasService {
   guardarMaquina(twMaquinaCliente:TwMaquinaCliente){
     let url = environment.servicios.apiRefacFabela + locator.guardarMaquina;
     return this.http.post<any>(url,twMaquinaCliente);
+  }
+
+  cambiarVentaACredito(twVenta: TwVenta){
+    let url = environment.servicios.apiRefacFabela + locator.cambiarVentaACredito;
+    return this.http.post<any>(url,twVenta);
   }
 
 

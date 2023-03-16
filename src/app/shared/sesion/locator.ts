@@ -3,6 +3,7 @@ export class locator{
 // api para clientes
 static obtenerClientes='/obtenerClientes';
 static obtenerClienteLike='/consultaClienteLike?';
+static consultaClienteId='/consultaClienteId?'
 static obtenerSaldoGeneral='/consultaClienteIdSaldo?';
 static consultaClienteIdUsuario='/consultaClienteIdUsuario?';
 static consultaClienteRfc='/consultaClienteRfc?';
@@ -96,6 +97,7 @@ static generarReporteCajaPdf='/getReporteCaja?';
 static generarAbonoVentaPdf='/getAbonoVentaId?';
 static generarHistorialAbonoVentaPdf='/getAbonoVentaIdCliente?';
 static generarVentaPedidoPdf='/getVentaPedido?';
+static cambiarVentaACredito='/cambiarVentaACredito'
 
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';

@@ -28,6 +28,10 @@ export class ClienteService {
     let url = environment.servicios.apiRefacFabela + locator.obtenerSaldoGeneral+'id='+id;
     return this.http.get<SaldoGeneralCliente>(url);
   }
+  consultaClienteId(id: number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaClienteId+'id='+id;
+    return this.http.get<TcCliente>(url);
+  }
   consultaClienteIdUsuario(idUsuario: number){
     let url = environment.servicios.apiRefacFabela + locator.consultaClienteIdUsuario+'id='+idUsuario;
     return this.http.get<TcCliente>(url);

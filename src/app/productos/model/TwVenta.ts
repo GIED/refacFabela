@@ -10,12 +10,13 @@ export class TwVenta{
     nIdUsuario?:number;
     sFolioVenta?: string;
     dFechaVenta?: Date;
-    nEstatusVenta?:number;
+    nIdEstatusVenta?:number;
     nIdFacturacion?: number;
     nIdTipoVenta?:number;
     nTipoPago?:number;
     nIdCaja?:number;
     dFechaInicioCredito?:Date;
+    dFechaTerminoCredito?:Date;
     dFechaPagoCredito?:Date;
     credito?:number;
     tcCliente?:Clientes
