@@ -86,8 +86,10 @@
                             <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
                                 (click)="detalleProduct(pedido.tcProducto.nId)"></button>   
                                 <button *ngIf="pedido.nEstatus==false" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2"
-                                (click)="mostrarRegistroEntrada(pedido)"></button>     
-                              
+                                (click)="mostrarRegistroEntrada(pedido)"></button> 
+                                <button  *ngIf="banIngreso" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="coancelaPedidoProducto(pedido)"></button>                          
+    
+                               
                           
                         </td>
                     </tr>

@@ -114,6 +114,19 @@ export class VentasService {
 
   }
 
+  generarInventarioPdf(bodega:number, nivel:number, anaquel:number){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarInventarioPdf + 'nIdBodega=' + bodega+"&nIdNivel="+nivel+"&nIdAnaquel="+anaquel, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+
+  }
+
   generarVentaAlmacenPdf(nIdVenta: number){
     const httpOptions = {
       responseType: 'arraybuffer' as 'json'

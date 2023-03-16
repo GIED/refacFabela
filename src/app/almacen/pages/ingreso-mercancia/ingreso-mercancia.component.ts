@@ -8,6 +8,7 @@ import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { ProductoService } from 'src/app/shared/service/producto.service';
 import { PedidosService } from '../../../shared/service/pedidos.service';
+import { VentasService } from '../../../shared/service/ventas.service';
 
 
 @Component({
@@ -43,7 +44,8 @@ export class IngresoMercanciaComponent implements OnInit {
   constructor(private pedidosService: PedidosService,  private productosService: ProductoService,
     private bodegasService: BodegasService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService, ) { }
+    private confirmationService: ConfirmationService,
+    private ventasService: VentasService ) { }
 
   ngOnInit(): void {
   
@@ -93,12 +95,41 @@ export class IngresoMercanciaComponent implements OnInit {
 
 hideDialog(valor: boolean) {
   this.productDialog = valor;
+
+  this.obtenerPedidosEstatus();
+
+
 }
 hideDialogAlternativos() {
   this.alternativosDialog = false;
 }
 hideDialogDetalle() {
   this.detalleDialog = false;
+}
+
+
+generarListadoPdf(){
+
+  this.ventasService.generarInventarioPdf(1,1,1).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      //console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'inventario'+ '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Listado generado con éxito', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el listado', life: 3000});
+      }
+
+  });
+
 }
 
 

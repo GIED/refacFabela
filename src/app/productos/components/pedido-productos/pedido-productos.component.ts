@@ -48,6 +48,7 @@ export class PedidoProductosComponent implements OnInit {
     mostrarEntrega:boolean=false;
     submitted:boolean=false;
     pedido:TwPedidoProducto;
+    mensaje:string;
     
 
     constructor(private pedidosService: PedidosService,  private productosService: ProductoService,
@@ -72,6 +73,30 @@ export class PedidoProductosComponent implements OnInit {
 
 
   }
+
+
+coancelaPedidoProducto(twPedidoProducto: TwPedidoProducto){
+
+
+  console.log(twPedidoProducto);
+
+  this.pedidosService.borrarProductoPedido(twPedidoProducto).subscribe(data=>{
+
+    this.mensaje=data;
+ 
+    this.listaPedidos =  this.listaPedidos.filter(nId => nId != twPedidoProducto);
+
+
+  })
+
+
+}
+
+
+
+
+
+
 
 
   openNew() {

@@ -10,6 +10,7 @@ import { TcAnaquel } from '../../../productos/model/TcAnaquel';
 import { TcNivel } from 'src/app/productos/model/TcNivel';
 import { BodegaProductosService } from '../../../shared/service/bodega-productos.service';
 import { TwProductoBodega } from '../../../productos/model/TwProductoBodega';
+import { VentasService } from '../../../shared/service/ventas.service';
 
 @Component({
     selector: 'app-inventario',
@@ -27,12 +28,15 @@ export class InventarioComponent implements OnInit {
     anaquel: number;
     nivel: number;
     cols: any[];
+    banderaMostrarPdf:boolean=false;
 
 
     constructor(private bodegasService: BodegasService,
         private anaquelService: AnaquelService,
         private nivelService: NivelService,
         private bodegasProductosService: BodegaProductosService,
+        private ventasService:VentasService,
+      private messageService: MessageService,
         ) {
 
         this.listaProductos = [];
@@ -69,6 +73,7 @@ export class InventarioComponent implements OnInit {
     consultaProducto() {
 
         if (this.bodega != undefined && this.anaquel != undefined && this.nivel != undefined) {
+            this.banderaMostrarPdf=true;
 
                 this.bodegasProductosService.consultaInventario(this.bodega, this.anaquel, this.nivel).subscribe(productos => {
                 this.listaProductos = productos;
@@ -77,6 +82,42 @@ export class InventarioComponent implements OnInit {
         }
 
     }
+
+    generarListadoPdf(){
+
+
+
+console.log()
+
+if (this.bodega != undefined && this.anaquel != undefined && this.nivel != undefined) {
+    this.banderaMostrarPdf=true;
+
+  this.ventasService.generarInventarioPdf(this.bodega, this.anaquel, this.nivel).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      //console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'inventario'+ '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Listado generado con éxito', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el listado', life: 3000});
+      }
+
+  });
+}
+else{
+    this.messageService.add({severity: 'error', summary: 'Error', detail: 'Debes seleccionar todos los valores', life: 3000});
+}
+
+}
+
 
 
 }

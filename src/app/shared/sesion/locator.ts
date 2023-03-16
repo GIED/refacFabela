@@ -64,6 +64,7 @@ static obtenerProductosPedido='/obtenerProductosPedido?';
 static obtenerPedidosEstatus='/obtenerPedidosEstatus?';
 static guardaPedido= '/guardarPedido';
 static guardaIngresoProductoPedido= '/ingresoProductoPedido';
+static borrarProductoPedido= '/borrarPedidoProducto';
 static generarPedidoPdf='/getPedidoId?';
 
 //Inventario
@@ -91,6 +92,7 @@ static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultarVentaId='/obtenerVentaId?';
 static consultarMaquinaCliente='/obtenerMaquinasCliente?';
 static generarVentaPdf='/getVenta?';
+static generarInventarioPdf='/getReporteInventario?';
 static generarVentaAlmacenPdf='/getVentaAlmacen?'
 static descargarDocuemento='/facturacion/getDocumento?';
 static generarReporteCajaPdf='/getReporteCaja?';
