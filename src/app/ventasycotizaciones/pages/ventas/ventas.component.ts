@@ -496,19 +496,30 @@ agregarProduct(producto: TvStockProducto) {
 
   // si la lista ya tiene datos entra a if para validar que el producto no se repita 
   if (this.listaProductos.length> 0) {
-    // si el indice retornado es -1 el producto no existe en la lista y se agrega
-    if (this.findIndexById(producto.nIdProducto, this.listaProductos) === -1 ) {
 
+    let productoEnLista: TvStockProducto = this.listaProductos.find(t => t.nIdProducto == producto.nIdProducto) as TvStockProducto;
+
+    console.log('productoen lista: ',productoEnLista);
+
+    if (productoEnLista != null || productoEnLista != undefined) {
+      //SI ENTRA ES POR QUE EL PRODUCTO YA ESTA EN LISTA
+      let actualizaProductoEnLista: TvStockProducto = new TvStockProducto();
+      
+      actualizaProductoEnLista.nIdProducto = producto.nIdProducto;
+      actualizaProductoEnLista.nCantidadTotal = producto.nCantidadTotal;
+      actualizaProductoEnLista.nCantidad = productoEnLista.nCantidad+producto.nCantidad;
+      actualizaProductoEnLista.tcProducto = producto.tcProducto;
+      actualizaProductoEnLista.nStatus = producto.nStatus;
+      actualizaProductoEnLista.nTipoPago = producto.nTipoPago;
+      actualizaProductoEnLista.nIdProveedor = producto.nIdProveedor;
+
+      let indx = this.listaProductos.findIndex(t => t.nIdProducto == actualizaProductoEnLista.nIdProducto);
+      this.listaProductos[indx] = actualizaProductoEnLista;
+
+    }else{
       this.listaProductos.push(producto);
+    }
 
-      
-    }
-    //si entra a else el producto ya existe en la lista y solo actualiza la cantidad
-    else{
-      
-      producto.nCantidad=this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)].nCantidad +producto.nCantidad;
-      this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
-    }
   }
   //si entra a else el producto no existe en la lista
   else{
