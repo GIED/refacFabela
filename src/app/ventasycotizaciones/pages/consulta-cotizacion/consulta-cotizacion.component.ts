@@ -98,6 +98,8 @@ detalleCotizacion(twCotizacion: TwCotizacion){
 
     this.listaProductos=results[1];
 
+    console.log('listaProductosCotizados: ',this.listaProductos);
+
     for (const producto of this.listaProductos) {
 
       this.total += producto.tcProducto.nPrecioConIva*producto.nCantidad;
