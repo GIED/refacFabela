@@ -24,7 +24,9 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros
         </th>
         <th pSortableColumn="sMarca">Marca<p-sortIcon field="sMarca"></p-sortIcon>
         </th>
-        <th pSortableColumn="nTotalUnitario">Precio Unitario<p-sortIcon field="nTotalUnitario"></p-sortIcon>
+        <th pSortableColumn="sUnitario">Precio Unitario<p-sortIcon field="nUnitario"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalUnitario">Precio Unitario con iva<p-sortIcon field="nTotalUnitario"></p-sortIcon>
         </th>
         <th pSortableColumn="nCantidad">Cantidad<p-sortIcon field="nCantidad"></p-sortIcon>
         </th>
@@ -45,6 +47,8 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros
         <td><span class="p-column-title"></span> {{venta.sDescripcion}}
         </td>
         <td><span class="p-column-title"></span>{{venta.sMarca}}
+        </td>
+        <td><span class="p-column-title"></span>{{venta.nUnitario}}
         </td>
          <td><span class="p-column-title"></span> {{venta.nTotalUnitario | number}}
         </td>

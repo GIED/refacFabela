@@ -33,6 +33,8 @@ export class VentaStockCeroComponent implements OnInit {
     private ventasService:VentasService
     )
      { 
+
+      this.listaVentaStock=[];
       
 
 
@@ -49,6 +51,8 @@ export class VentaStockCeroComponent implements OnInit {
 
   obtenerVentaStock(fecha1:string, fecha2:string){
 
+    this.listaVentaStock=null;
+
     this.productosService.obtenerVentaStock(fecha1, fecha2).subscribe(data=>{
       this.listaVentaStock=data;
 
@@ -57,7 +61,7 @@ export class VentaStockCeroComponent implements OnInit {
 
 
       }
-      console.log(data);
+      console.log( this.listaVentaStock);
     
   
     });
