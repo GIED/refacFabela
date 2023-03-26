@@ -98,8 +98,10 @@ export class FormVentaComponent implements OnInit {
 
 
   generarVenta(){
-
-    if (this.validaStatusStock(this.listaValidada)) {
+    if(this.listaValidada.length===0){
+      this.messageService.add({severity: 'warn', summary: 'Sin productos', detail: 'No se puede generar la venta, no se cuenta con productos para generar la venta', life: 3000});
+    }
+    else if (this.validaStatusStock(this.listaValidada)) {
       this.messageService.add({severity: 'warn', summary: 'Stock Insuficiente', detail: 'No se puede generar la venta, elimine por favor los productos con stock insuficiente', life: 3000});
     }else{
       //console.log("lista para guardar");
