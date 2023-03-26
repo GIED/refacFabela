@@ -26,6 +26,7 @@ export class FacturacionComponent implements OnInit {
     tvVentasFactura:TvVentasFactura;
     clienteDialog:boolean;
     objCliente: TcCliente;
+    creditosRestantes:number;
     
 
   constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService) {
@@ -35,11 +36,13 @@ export class FacturacionComponent implements OnInit {
         this.tvVentasFactura= new TvVentasFactura();
         this.clienteDialog= false;
         this.objCliente= new TcCliente();
+        this.creditosRestantes=0;
      }
 
   ngOnInit(){
    this.obtenerFacruras();
    this.obtenerUsocfdi();
+   this.consultaCreditos();
 
 
     
@@ -68,6 +71,13 @@ export class FacturacionComponent implements OnInit {
       this.listaVentas=resp;
 
       console.log(this.listaVentas);
+  });
+
+  }
+  consultaCreditos(){
+
+    this.facturaService.consultaCreditos().subscribe(resp =>{
+      this.creditosRestantes=resp;
   });
 
   }

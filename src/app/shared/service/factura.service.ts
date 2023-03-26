@@ -17,6 +17,10 @@ export class FacturaService {
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaFactura;
     return this.http.get<TvVentasFactura[]>(url);
   }
+  consultaCreditos(){
+    let url = environment.servicios.apiRefacFabela + locator.consultaCreditos;
+    return this.http.get<number>(url);
+  }
   obtenerFacturas(){
     let url = environment.servicios.apiRefacFabela + locator.consultaFacturas;
     return this.http.get<TvVentasFactura[]>(url);
