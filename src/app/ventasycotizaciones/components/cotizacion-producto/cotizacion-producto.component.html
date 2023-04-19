@@ -1,0 +1,59 @@
+<p-table #dt [value]="listaProductoCortizacion" responsiveLayout="scroll"  [rows]="5"
+[paginator]="true"
+[globalFilterFields]="['twCotizaciones.nId','tcProducto.sNoParte','tcProducto.sProducto','twCotizaciones.dFecha','nTotalUnitario', 'nCantidad','nTotalPartida' ]"
+ [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+[showCurrentPageReport]="true">
+<ng-template pTemplate="caption">
+    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar" />
+        </span>
+    </div>
+</ng-template>
+<ng-template pTemplate="header">
+    <tr>
+        <th pSortableColumn="twCotizaciones.nId">No. Cotizacion<p-sortIcon field="twCotizaciones.nId"></p-sortIcon>
+        </th>
+        <th pSortableColumn="tcProducto.sNoParte">No Parte<p-sortIcon field="tcProducto.sNoParte"></p-sortIcon>
+        </th>
+        <th pSortableColumn="tcProducto.sProducto">Producto<p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
+        </th>
+        <th pSortableColumn="twCotizaciones.dFecha">Fecha<p-sortIcon field="twCotizaciones.dFecha"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalUnitario">Precio Unitario<p-sortIcon field="nTotalUnitario"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalUnitario">Cantidad<p-sortIcon field="nCantidad"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalPartida">Total Partida<p-sortIcon field="nTotalPartida"></p-sortIcon>
+        </th>
+       <th></th>
+       
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-cotizacion let-expanded="expanded">
+    <tr>
+        <td><span class="p-column-title"></span> {{cotizacion.twCotizaciones.nId}}
+        </td>
+        <td><span class="p-column-title"></span> {{cotizacion.tcProducto.sNoParte}}
+        </td>
+        <td><span class="p-column-title"></span> {{cotizacion.tcProducto.sProducto}}
+        </td>
+        <td><span class="p-column-title"></span> {{cotizacion.twCotizaciones.dFecha || date}}
+        </td>
+        <td><span class="p-column-title"></span> {{cotizacion.nTotalUnitario}}
+        </td>
+        <td><span class="p-column-title"></span> {{cotizacion.nCantidad}}
+        </td>
+        <td><span class="p-column-title"></span> {{cotizacion.nTotalPartida}}
+        </td>
+
+      
+     
+       
+    </tr>
+</ng-template>
+</p-table>

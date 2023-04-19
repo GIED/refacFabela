@@ -82,7 +82,7 @@
                 <ng-template pTemplate="body" let-cotizacion>
                     <tr>
                         <td>
-                            <span class="p-column-title">Name</span> {{ cotizacion.nId }}
+                            <span class="p-column-title">Name</span> <strong (click)="cotizacionProducto(cotizacion.nId)">{{ cotizacion.nId }}</strong>
                         </td>
                         <td>
                             <span class="p-column-title">Name</span> {{ cotizacion.tcCliente.sRfc }}
@@ -116,7 +116,7 @@
 
                         </td>
 
-                        <td *ngIf="cotizacion.nEstatus == 2"> vendidó </td>
+                        <td *ngIf="cotizacion.nEstatus == 2">vendidó  </td>
                         <td> <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                             (click)="generarCotizacionPdf(cotizacion)"></button></td>
                         <td >  <button *ngIf="cotizacion.nEstatus == 2" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
@@ -159,6 +159,18 @@
     <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta" [style]="{width: '700px'}" [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
             <app-form-venta [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente" [total]="total" (emitirVenta)="generarVenta($event)" (soloCotizacion)="soloCotizacion()"></app-form-venta>
+        </ng-template>
+        <ng-template pTemplate="footer">
+
+        </ng-template>
+    </p-dialog>
+
+
+    <p-dialog [(visible)]="mostrarCotizacionProducto" header="Lista Cotizacion Productos" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="card widget-tasks">
+                <app-cotizacion-producto [nIdCotizacion]="nIdCotizacion"  >            </app-cotizacion-producto>
+            </div> 
         </ng-template>
         <ng-template pTemplate="footer">
 

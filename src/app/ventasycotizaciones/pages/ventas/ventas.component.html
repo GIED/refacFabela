@@ -123,7 +123,7 @@
                                     </ng-template>
                                     <ng-template pTemplate="body" let-producto>
                                         <tr>
-                                            <td>{{producto.tcProducto.sNoParte}}</td>
+                                            <td ><strong (click)="abrirCotizacionProductoCliente(producto.tcProducto.nId)">{{producto.tcProducto.sNoParte}}</strong></td>
                                             <td>{{producto.tcProducto.sProducto}}</td>
                                             <td>{{producto.tcProducto.sDescripcion}}</td>
                                             <td>{{producto.tcProducto.sMarca}}</td>
@@ -360,7 +360,16 @@
         </ng-template>
     </p-dialog>
 
+    <p-dialog [(visible)]="mostrarProductosCotizacionCliente" header="Lista Cotizaciones Producto" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="card widget-tasks">
+                <app-cotizacion-cliente-producto [nICliente]="clienteSeleccionado.nId"  [nIProducto]="nIdProductoConsulta" >            </app-cotizacion-cliente-producto>
+            </div> 
+        </ng-template>
+        <ng-template pTemplate="footer">
 
+        </ng-template>
+    </p-dialog>
     
 
 

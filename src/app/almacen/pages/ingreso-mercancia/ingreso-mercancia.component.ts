@@ -105,6 +105,7 @@ hideDialogAlternativos() {
 }
 hideDialogDetalle() {
   this.detalleDialog = false;
+  this.obtenerPedidosEstatus();
 }
 
 

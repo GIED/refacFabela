@@ -9,6 +9,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TwPagoComprobanteInternet } from '../../ventasycotizaciones/model/TwPagoComprobanteInternet';
 import { TwVenta } from '../../productos/model/TwVenta';
+import { TwCotizacionProducto } from 'src/app/productos/model/TwCotizacionProducto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,18 @@ export class VentasCotizacionesService {
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizaciones;
     return this.http.get<TwCotizacion[]>(url);
   }
+
+  obtenerCotizacionProductoCliente(nIdCliente:number, nIdProducto:number){   
+    let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionClienteProducto+'nIdCliente='+nIdCliente+'&nIdProducto='+nIdProducto;
+    return this.http.get<TwCotizacionProducto[]>(url);
+  }
+
+  obtenerCotizacionProducto(nIdCotizacion:number){   
+    let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionIdCotizacion+'id='+nIdCotizacion;
+    return this.http.get<TwCotizacionProducto[]>(url);
+  }
+
+
   obtenerCotizacionesBusqueda(busqueda:string){   
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionesBusqueda+'buscar='+busqueda;
     return this.http.get<TwCotizacion[]>(url);

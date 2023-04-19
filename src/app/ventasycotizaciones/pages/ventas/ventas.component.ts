@@ -68,6 +68,7 @@ export class VentasComponent implements OnInit {
   saldoGeneralCliente:SaldoGeneralCliente;
   tvStockProducto: TvStockProducto;
   mostrarDistribucionBodega:boolean=false;;
+  mostrarProductosCotizacionCliente=false;
   
   total: number = 0;
   nIdProducto:number;
@@ -75,6 +76,7 @@ export class VentasComponent implements OnInit {
 
   incremento:number=0;
   objCliente:Clientes=undefined;
+  nIdProductoConsulta:number;
 
   constructor(
     private clienteService:ClienteService,
@@ -135,6 +137,15 @@ export class VentasComponent implements OnInit {
   }
   get nIncrementoCtrl(){
     return this.formGrp.get('nIncrementoCtrl') as FormControl;
+  }
+
+  abrirCotizacionProductoCliente(nIdProducto:number){
+    this.maquinaCliente.nIdCliente=this.clienteSeleccionado.nId; 
+    this.nIdProductoConsulta=nIdProducto;
+
+this.mostrarProductosCotizacionCliente=true;
+
+
   }
 
 

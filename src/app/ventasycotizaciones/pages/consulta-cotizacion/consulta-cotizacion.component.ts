@@ -31,6 +31,8 @@ export class ConsultaCotizacionComponent implements OnInit {
   cotizacionData: TwCotizacion;
   venta:TwVenta
   buscar:string;
+  mostrarCotizacionProducto=false;
+  nIdCotizacion:number;
 
 
   
@@ -157,6 +159,13 @@ obtenerVenta(nId:number){
   })
 
 
+
+}
+cotizacionProducto(nIdCotizacion:number){
+  console.log
+
+  this.nIdCotizacion=nIdCotizacion;
+  this.mostrarCotizacionProducto=true;
 
 }
 
