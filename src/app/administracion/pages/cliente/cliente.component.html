@@ -11,7 +11,7 @@
 
             </p-toolbar>
             <p-table #dt [value]="listaClientes" [rows]="10" [paginator]="true"
-                [globalFilterFields]="['sRfc','sRazonSocial']" [(selection)]="selectedProducts"
+                [globalFilterFields]="['sRfc','sRazonSocial','nCp','tcRegimenFiscal.sDescripcion','n_limiteCredito']" [(selection)]="selectedProducts"
                 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
                 [showCurrentPageReport]="true">
@@ -35,15 +35,28 @@
                         <th pSortableColumn="sRazonSocial">Razón social
                             <p-sortIcon field="sRazonSocial"></p-sortIcon>
                         </th>
-                        <th pSortableColumn="category">Dirección
+                        <th pSortableColumn="sDireccion">Dirección
                            
                         </th>
-                        <th pSortableColumn="rating">Correo
+                        <th pSortableColumn="sCorreo">Correo
                            
                         </th>
-                        <th pSortableColumn="inventoryStatus">Telénono
+                        <th pSortableColumn="sTelefono">Telénono
                           
                         </th>
+                        <th pSortableColumn="nCp">CP
+                            <p-sortIcon field="nCp"></p-sortIcon>
+                          
+                        </th>
+                        <th pSortableColumn="tcRegimenFiscal.sDescripcion">Regimen Fiscal
+                            <p-sortIcon field="tcRegimenFiscal.sDescripcion"></p-sortIcon>
+                          
+                        </th>
+                        <th pSortableColumn="n_limiteCredito">Límite crédito
+                            <p-sortIcon field="n_limiteCredito"></p-sortIcon>
+                          
+                        </th>
+                       
                         <th></th>
                     </tr>
                 </ng-template>
@@ -61,6 +74,13 @@
                         </td>
                         <td><span class="p-column-title">Télefono</span> {{cliente.sTelefono}}
                         </td>
+                        <td><span class="p-column-title">CP</span> {{cliente.nCp}}
+                        </td>
+                        <td><span class="p-column-title">Regimen Fiscal</span>  {{cliente.tcRegimenFiscal!=null?cliente.tcRegimenFiscal.sDescripcion:''}}
+                        </td>
+                        <td><span class="p-column-title">Límite crédito</span>  {{cliente.n_limiteCredito}}
+                        </td>
+                       
                         <td>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
                                 (click)="editar(cliente)"></button>

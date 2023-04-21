@@ -62,6 +62,7 @@ static obtenerNivel= '/catalogoNivel';
 //api Pedidos
 static obtenerProductosPedido='/obtenerProductosPedido?';
 static obtenerPedidosEstatus='/obtenerPedidosEstatus?';
+static obtenerPedidos='/obtenerPedidos'
 static guardaPedido= '/guardarPedido';
 static guardaIngresoProductoPedido= '/ingresoProductoPedido';
 static borrarProductoPedido= '/borrarPedidoProducto';

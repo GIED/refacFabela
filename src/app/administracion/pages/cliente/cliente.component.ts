@@ -62,6 +62,7 @@ export class ClienteComponent implements OnInit {
   obtenerClientes() {
     this.clienteService.getClientes().subscribe(clientes => {
       this.listaClientes = clientes;
+    
     });
     ;
   }

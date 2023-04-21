@@ -87,6 +87,14 @@ export class IngresoMercanciaComponent implements OnInit {
 
  }
 
+ obtenerTodosPedidos(){
+
+this.pedidosService.obtenerPedidosDetalle().subscribe(data=>{
+  this.listaPedidoDetalle=data;
+})
+
+ }
+
 
  
 

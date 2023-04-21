@@ -30,6 +30,10 @@ export class PedidosService {
         let url = environment.servicios.apiRefacFabela + locator.obtenerPedidosEstatus+"nEstatus="+nEstatus;
         return this.http.get<TvPedidoDetalle[]>(url);
       }
+      obtenerPedidosDetalle(){
+        let url = environment.servicios.apiRefacFabela + locator.obtenerPedidos;
+        return this.http.get<TvPedidoDetalle[]>(url);
+      }
 
       guardaPedido(pedidoDto:PedidoDto){
         let url = environment.servicios.apiRefacFabela + locator.guardaPedido;

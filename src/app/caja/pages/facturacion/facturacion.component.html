@@ -57,7 +57,7 @@
                         </td>
                         <td>
                             <tr>
-                                <td *ngIf="venta.idFactura == 0">
+                                <td *ngIf="venta.idFactura == 0 && venta.tcCliente.nCp!=null && venta.tcCliente.tcRegimenFiscal!=null">
                                     <button pButton pRipple icon="pi pi-file-o" pTooltip="Generar Factura" class="p-button-rounded p-button-warning" (click)="openDialog(venta)"></button>
                                 </td>
                                 <td *ngIf="venta.idFactura!=0">
@@ -116,6 +116,11 @@
                             <div class="p-field p-col-12 p-md-12">
                                 <span class="p-float-label">
                                     <label for="float-input"><strong> Teléfono: </strong> {{tvVentasFactura.tcCliente.sTelefono == null ? 'SIN INFORMACIÓN' : tvVentasFactura.tcCliente.sTelefono}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong> Regimen Fiscal: </strong> {{tvVentasFactura.tcCliente.tcRegimenFiscal!=null ? tvVentasFactura.tcCliente.tcRegimenFiscal.sDescripcion:'' }}</label>
                                 </span>
                             </div>
                         </div>
