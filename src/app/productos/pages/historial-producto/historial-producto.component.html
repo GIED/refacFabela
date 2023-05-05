@@ -12,18 +12,37 @@
                         <hr>
                     </div>
 
-                    <div class="p-col-12 p-md-6 p-lg-3 "><strong>No parte:
-                        </strong>{{productoDetalle.tcProducto.sNoParte}} </div>
-                    <div class="p-col-12 p-md-6 p-lg-4 ">
-                        <strong>Producto:</strong>{{productoDetalle.tcProducto.sProducto}} </div>
-                    <div class="p-col-12 p-md-6 p-lg-5 ">
-                        <strong>Descripción:</strong>{{productoDetalle.tcProducto.sDescripcion}} </div>
-                    <div class="p-col-12 p-md-6 p-lg-4 "><strong>Marca:</strong>{{productoDetalle.tcProducto.sMarca}}
+                    <div class="p-grid">
+                        <div class="p-col-2">
+                        <div class="p-col">
+                            
+                            <div class="box"><strong>No parte:
+                            </strong>{{productoDetalle.tcProducto.sNoParte}}</div>
+                            </div>
+                        </div>
+                        <div class="p-col-3">
+                        <div class="p-col">
+                            <div class="box"> <strong>Producto:</strong>{{productoDetalle.tcProducto.sProducto}} </div>
+                        </div>
+                        </div>
+                        <div class="p-col-3">
+                        <div class="p-col">
+                            <div class="box"><strong>Descripción:</strong>{{productoDetalle.tcProducto.sDescripcion}}</div>
+                        </div>
+                        </div>
+                        <div class="p-col-2">
+                        <div class="p-col">
+                            <div class="box"> <strong>Precio:</strong>{{productoDetalle.tcProducto.nPrecioConIva}} </div>
+                        </div>
+                        </div>
+                        <div class="p-col-2">
+                        <div class="p-col">
+                            <div class="box"> <strong>Stock:</strong>{{productoDetalle.nCantidadTotal}} </div>
+                        </div>
+                        </div>
                     </div>
-                    <div class="p-col-12 p-md-6 p-lg-4 ">
-                        <strong>Precio:</strong>{{productoDetalle.tcProducto.nPrecioConIva}} </div>
-                    <div class="p-col-12 p-md-6 p-lg-4 "><strong>Stock:</strong>{{productoDetalle.nCantidadTotal}}
-                    </div>
+
+                    
                 </div>
             </div>
         </p-panel>
@@ -229,7 +248,37 @@
             </p-table>
 
         </div>
-    </div>
+
+        <div class="card" *ngIf="nIdProductoConsulta!=null">
+            <div class="p-text-center">
+                <h3>Historial de Stock</h3>
+            </div>
+        
+            <div class="card">
+        
+                <app-historial-stock-producto [nIProducto]="nIdProductoConsulta"></app-historial-stock-producto>
+            </div>
+        
+        </div>
+
+        <div class="card" *ngIf="nIdProductoConsulta!=null">
+            <div class="p-text-center">
+                <h3>Productos Cancelados</h3>
+            </div>
+        
+            <div class="card">
+        
+                <app-productos-cancelados [nIProducto]="nIdProductoConsulta"></app-productos-cancelados>
+            </div>
+        
+        </div>
+
+ 
+      
+
+   
+           
+ 
 
 
 

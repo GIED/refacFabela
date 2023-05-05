@@ -23,8 +23,6 @@ import { FormCargaComprobanteComponent } from './components/form-carga-comproban
 import { MaquinaClienteComponent } from './components/maquina-cliente/maquina-cliente.component';
 import { FormMaquinaClienteComponent } from './components/form-maquina-cliente/form-maquina-cliente.component';
 import { AdministracionModule } from '../administracion/administracion.module';
-import { AdministracionRoutingModule } from '../administracion/administracion-routing.module';
-import { FormClienteComponent } from '../administracion/components/form-cliente/form-cliente.component';
 import { CotizacionClienteProductoComponent } from './components/cotizacion-cliente-producto/cotizacion-cliente-producto.component';
 import { CotizacionProductoComponent } from './components/cotizacion-producto/cotizacion-producto.component';
 

@@ -8,6 +8,8 @@ import { TwProductoAlternativo } from 'src/app/productos/model/TwProductoAlterna
 import { TvStockProducto } from '../../productos/model/TvStockProducto';
 import { TwHistoriaIngresoProducto } from 'src/app/productos/model/TwHistoriaIngresoProducto';
 import { TvVentaStock } from '../../productos/model/TvVentaStock';
+import { TvStockProductoHist } from 'src/app/productos/model/TvStrockProductoHist';
+import { TwProductoCancela } from 'src/app/productos/model/TwProductoCancela';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +77,15 @@ export class ProductoService {
   guardaProductoAlternativo(productoAlternativo: TwProductoAlternativo){
     let url = environment.servicios.apiRefacFabela + locator.guardarProductoAlternativo;
     return this.http.post<TwProductoAlternativo>(url,productoAlternativo);
+  }
+
+  historiaStockProducto(nId: number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerHistorialStockProducto+'id='+nId;
+    return this.http.get<TvStockProductoHist[]>(url);
+  }
+  productosCanceladosId(nId: number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerProductosCaneladosId+'id='+nId;
+    return this.http.get<TwProductoCancela[]>(url);
   }
   
 

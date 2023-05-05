@@ -30,6 +30,8 @@ lineChartOptions:any;
   cargaInicial:boolean=true;
   labelsHistoriaIngresoProducto:string[];
   dataHistoriaIngresoProducto:number[];
+  mostrarHistoriaStockProducto:boolean=false;
+  nIdProductoConsulta:number;
 
   //Objetos para tabla de productos por bodega
   listaProductoBodega: TwProductoBodega[];
@@ -122,9 +124,11 @@ lineChartOptions:any;
 informacionProducto(nId:number) {
     this.labelsHistoriaIngresoProducto=[];
     this.dataHistoriaIngresoProducto=[];
+       this.nIdProductoConsulta=nId;
+ 
 
 
-    console.log("llegue"+ nId);
+
 
   
     //Consulta de historia de precios del producto
@@ -137,6 +141,10 @@ informacionProducto(nId:number) {
     let historiaIngreso=this.productosService.historiaIngresoProducto(nId)
   //Consulta de ventas del producto por mes
     let ventaMesProducto= this.ventasService.obtenerProductoVentaMesId(nId);
+
+
+
+
     
     //hace la consulta en orden y espera a realizar la recarga hasta que llegen todas las peticiones
     forkJoin([
@@ -153,7 +161,9 @@ informacionProducto(nId:number) {
         this.cargaInicial=true;
 
         this.listaIngresoProducto=resultado[4];
-        console.log(this.listaIngresoProducto);
+        console.log(resultado[4]);
+
+     
 
        
         this.graficaHistoriaPrecioProducto(this.listaHistoriaPrecioProducto);
@@ -168,7 +178,7 @@ graficaHistoriaPrecioProducto(listaHistoriaPrecioProducto?:TcHistoriaPrecioProdu
    
     for (let index = 0; index < listaHistoriaPrecioProducto.length; index++) {
         let fecha=new Date(listaHistoriaPrecioProducto[index].dFecha);   
-        console.log(fecha.getDate());   
+   
         this.labelsHistoriaIngresoProducto.push(fecha.getDate()+'/'+fecha.getMonth()+'/'+fecha.getFullYear());      
         this.dataHistoriaIngresoProducto.push(listaHistoriaPrecioProducto[index].nPrecio);
         
@@ -198,8 +208,7 @@ graficaproductoBodegas(listaProductoBodega?:TwProductoBodega[]){
         this.dataProductoBodega.push(listaProductoBodega[index].nCantidad);
         
     }
-    console.log("Lable de grafica"+this.laberProductoBodega);
-    console.log("data de grafica"+this.dataProductoBodega);
+
 
     this.productoBodegaGraf = {
         labels: this.laberProductoBodega,
@@ -241,8 +250,7 @@ graficaproductoBodegas(listaProductoBodega?:TwProductoBodega[]){
 graficaVentasMes(listaProductosVentaMes?:TvVentaProductoMes[]){ 
    
     for (let index = 0; index < listaProductosVentaMes.length; index++) {
-        console.log("Estos es la lista que esta llegando para la generacion de la grafica")
-        console.log(listaProductosVentaMes);
+       
        
         this.laberProductoVentaMes.push(listaProductosVentaMes[index].fechaVenta);      
         this.dataProductoVentaMes.push(listaProductosVentaMes[index].cantidad);

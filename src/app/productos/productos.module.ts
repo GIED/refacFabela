@@ -19,6 +19,8 @@ import { ModalProductosBodegaComponent } from './components/modal-productos-bode
 import { VentaStockCeroComponent } from './pages/venta-stock-cero/venta-stock-cero.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { HistorialStockProductoComponent } from './components/historial-stock-producto/historial-stock-producto.component';
+import { ProductosCanceladosComponent } from './components/productos-cancelados/productos-cancelados.component';
 
 
 
@@ -40,7 +42,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ModalProductosBodegaInternoComponent,
     ModalProductoBodegaExternoComponent,
     ModalProductosBodegaComponent,
-    VentaStockCeroComponent    
+    VentaStockCeroComponent,
+    HistorialStockProductoComponent,
+    ProductosCanceladosComponent    
     
   ],
   imports: [

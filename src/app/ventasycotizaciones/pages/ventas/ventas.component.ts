@@ -77,6 +77,7 @@ export class VentasComponent implements OnInit {
   incremento:number=0;
   objCliente:Clientes=undefined;
   nIdProductoConsulta:number;
+  mostrarHistoriaStockProducto:boolean=false;
 
   constructor(
     private clienteService:ClienteService,

@@ -1,0 +1,39 @@
+<p-table #dt [value]="listaProductosCancelados" [rows]="5" [paginator]="true"
+        [globalFilterFields]="['nIdVenta','tcUsuario.sNombreUsuario','nCantidad','dFecha']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+        currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true"
+        responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                <h5 class="p-m-0"></h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                        placeholder="Buscar en la tabla" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="nIdVenta">Venta <p-sortIcon field="nIdVenta"></p-sortIcon></th>                
+                <th pSortableColumn="tcUsuario.sNombreUsuario">Usuario Cancela<p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon></th>
+                <th pSortableColumn="nCantidad">Cancelados<p-sortIcon field="nCantidad"></p-sortIcon></th>
+                <th pSortableColumn="dFecha">Fecha Cancela<p-sortIcon field="dFecha"></p-sortIcon></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-producto>
+
+            <tr>
+                <td>{{producto.nIdVenta}}</td>
+                <td>{{producto.tcUsuario.sNombreUsuario}}</td>
+                <td>{{producto.nCantidad}}</td>
+                <td>{{producto.dFecha | date }}</td>
+            
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="p-d-flex p-ai-center p-jc-between">
+                En total hay {{listaHistoriaPrecioProducto ? listaHistoriaPrecioProducto.length : 0 }} registros.
+            </div>
+        </ng-template>
+    </p-table>
