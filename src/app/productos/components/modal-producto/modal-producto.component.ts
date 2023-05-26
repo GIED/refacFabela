@@ -62,6 +62,8 @@ export class ModalProductoComponent implements OnInit {
       {name: 'USD', code:'USD'},
       {name: 'PESO', code:'PESO'},
     ]
+    this.listaNoParte=[];
+ 
   }
 
   ngOnInit(): void {
@@ -195,9 +197,7 @@ export class ModalProductoComponent implements OnInit {
       this.tcProducto.nEstatus=1;
       this.tcProducto.nIdusuario=this.tokenService.getIdUser(); 
       this.guardarProducto.emit(this.tcProducto);
-      this.productDialog = false;
-      this.fProducto.sNoParte.setValue("");
-      this.limpiaFormulario();
+      this.cerrarModal();
     }
   
   }
@@ -222,6 +222,7 @@ export class ModalProductoComponent implements OnInit {
     this.formulario.get('nIdCategoria').enable();
     this.precioFinal=productoEditar.nPrecioConIva;
     this.fProducto.sIdBar.setValue(productoEditar.sIdBar);
+    this.listaNoParte=[];
 
 }
 
@@ -261,7 +262,7 @@ teclaPresionada(){
 
 buscaPorNoParte(){
 
-  
+  this.listaNoParte=[];
     this.debuncer
       .pipe(debounceTime(300))
       .subscribe(valor => {
@@ -283,19 +284,39 @@ buscaPorNoParte(){
   
   
 }
-
+/*
 valorSeleccionado(){
   console.log(this.fProducto.sNoParte.value);
   let noparte =this.fProducto.sNoParte.value;
   for (let i = 0; i < this.listaNoParte.length; i++) {
-    const producto = this.listaNoParte[i];
+    const producto = this.listaNoParte[i];     
+
     if (producto.sNoParte.indexOf(noparte) == 0) {
       console.log(producto);
         this.editProducto(producto);
         this.mostrarSugerencias=false;
     }
 }
+}*/
+
+valorSeleccionado(){
+  console.log(this.fProducto.sNoParte.value);
+  let noparte =this.fProducto.sNoParte.value;  
+  console.log('antes',this.listaNoParte);
+
+for (let index = 0; index < this.listaNoParte.length; index++) {
+  const producto = this.listaNoParte[index];   
+  if(producto.sNoParte==noparte){
+    this.editProducto(producto);
+    this.mostrarSugerencias=false;
+  } 
+  
 }
+
+ 
+ 
+}
+
 
 
 

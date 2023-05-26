@@ -8,6 +8,7 @@ import { ModalProductoBodegaExternoComponent } from '../../../productos/componen
 import { TwProductoBodegaDto } from '../../../productos/model/TwProductoBodegaDto';
 import { TraspasoService } from '../../../shared/service/traspaso.service';
 import { ModalProductosBodegaInternoComponent } from 'src/app/productos/components/modal-productos-bodega-interno/modal-productos-bodega-interno.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-traspasos',
@@ -58,32 +59,48 @@ export class TraspasosComponent implements OnInit {
    })
    ref.onClose.subscribe((data:TwProductoBodegaDto) =>{
      ////console.log('data que se recibe al cerrar externo',data);
-     for (const valor of this.listaProductoBodega) {
-
-        this.newProBod = new TwProductoBodega();
-
-        this.newProBod.nId=valor.nId;
-        this.newProBod.nIdBodega=valor.nIdBodega;
-        this.newProBod.nIdProducto=valor.nIdProducto;
-        if (valor.nIdBodega == data.nIdBodegaActual) {
-          this.newProBod.nCantidad=data.nCantidadActual-data.nCantidadDestino;
-        }else if (valor.nIdBodega==data.nIdBodegaDestino) {
-          this.newProBod.nCantidad=valor.nCantidad+data.nCantidadDestino;
-        }else{
-          this.newProBod.nCantidad=valor.nCantidad;
-        }
-        this.newProBod.nEstatus=valor.nEstatus;
-        this.newProBod.nIdNivel=valor.nIdNivel;
-        this.newProBod.nIdAnaquel=valor.nIdAnaquel;
+    this.bodegasService.obtenerProductoBodegas(dataBodega.nIdProducto).subscribe(respuesta=>{
+      this.listaProductoBodega=respuesta;
+      console.log(this.listaProductoBodega);
+     
+      for (const valor of this.listaProductoBodega) {    
+ 
+       console.log(valor.nCantidad);
+       console.log(valor.nIdBodega);
+  
+         this.newProBod = new TwProductoBodega();
+ 
+         this.newProBod.nId=valor.nId;
+         this.newProBod.nIdBodega=valor.nIdBodega;
+         this.newProBod.nIdProducto=valor.nIdProducto;
+         if (valor.nIdBodega == data.nIdBodegaActual) {
+           this.newProBod.nCantidad=valor.nCantidad-data.nCantidadDestino;
+         }else if (valor.nIdBodega==data.nIdBodegaDestino) {
+           this.newProBod.nCantidad=valor.nCantidad+data.nCantidadDestino;
+         }else{
+           this.newProBod.nCantidad=valor.nCantidad;
+         }
+         this.newProBod.nEstatus=valor.nEstatus;
+         this.newProBod.nIdNivel=valor.nIdNivel;
+         this.newProBod.nIdAnaquel=valor.nIdAnaquel;
+         
+         this.listaProductoBodegaAux.push(this.newProBod);
         
-        this.listaProductoBodegaAux.push(this.newProBod);
-       
-     }
-
-     this.traspasoService.guardarMovimientoExterno(this.listaProductoBodegaAux).subscribe(resp =>{
-       
+      }
+      this.traspasoService.guardarMovimientoExterno(this.listaProductoBodegaAux).subscribe(resp =>{
+        
        this.obtenerBodegas(resp.listaProductoBodega[0].nIdProducto);
      })
+
+    }) ;
+    
+
+    
+
+     
+
+
+     
 
      
    });
