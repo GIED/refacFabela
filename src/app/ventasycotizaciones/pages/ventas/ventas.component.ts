@@ -509,28 +509,42 @@ agregarProduct(producto: TvStockProducto) {
   // si la lista ya tiene datos entra a if para validar que el producto no se repita 
   if (this.listaProductos.length> 0) {
 
-    let productoEnLista: TvStockProducto = this.listaProductos.find(t => t.nIdProducto == producto.nIdProducto) as TvStockProducto;
+  
+   let index = 0;
+   let posicion=0;
+   let productoEncontrado:TvStockProducto;
+   
+    for ( index ; index < this.listaProductos.length; index++) {
+         let productoEnLista:TvStockProducto=new TvStockProducto();
+            if(this.listaProductos[index].nIdProducto==producto.nIdProducto){
+              productoEnLista = this.listaProductos[index];
+              posicion=index;
+              productoEncontrado=productoEnLista;
+              
+            }     
+        
+       }
 
-    console.log('productoen lista: ',productoEnLista);
+       if(productoEncontrado!=null || productoEncontrado!=undefined){
+        let actualizaProductoEnLista: TvStockProducto = new TvStockProducto();    
+        actualizaProductoEnLista.nIdProducto = producto.nIdProducto;
+        actualizaProductoEnLista.nCantidadTotal = producto.nCantidadTotal;
+        actualizaProductoEnLista.nCantidad = productoEncontrado.nCantidad+producto.nCantidad;
+        actualizaProductoEnLista.tcProducto = producto.tcProducto;
+        actualizaProductoEnLista.nStatus = producto.nStatus;
+        actualizaProductoEnLista.nTipoPago = producto.nTipoPago;
+        actualizaProductoEnLista.nIdProveedor = producto.nIdProveedor;
+        this.listaProductos[posicion] = actualizaProductoEnLista;
 
-    if (productoEnLista != null || productoEnLista != undefined) {
-      //SI ENTRA ES POR QUE EL PRODUCTO YA ESTA EN LISTA
-      let actualizaProductoEnLista: TvStockProducto = new TvStockProducto();
-      
-      actualizaProductoEnLista.nIdProducto = producto.nIdProducto;
-      actualizaProductoEnLista.nCantidadTotal = producto.nCantidadTotal;
-      actualizaProductoEnLista.nCantidad = productoEnLista.nCantidad+producto.nCantidad;
-      actualizaProductoEnLista.tcProducto = producto.tcProducto;
-      actualizaProductoEnLista.nStatus = producto.nStatus;
-      actualizaProductoEnLista.nTipoPago = producto.nTipoPago;
-      actualizaProductoEnLista.nIdProveedor = producto.nIdProveedor;
 
-      let indx = this.listaProductos.findIndex(t => t.nIdProducto == actualizaProductoEnLista.nIdProducto);
-      this.listaProductos[indx] = actualizaProductoEnLista;
+      }
+      else{
+    this.listaProductos.push(producto);
+       }
 
-    }else{
-      this.listaProductos.push(producto);
-    }
+  
+
+    
 
   }
   //si entra a else el producto no existe en la lista

@@ -1,4 +1,4 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, Renderer2, HostListener } from '@angular/core';
 import { MenuService } from './shared/menu/app.menu.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { PrimeNGConfig } from 'primeng/api';
@@ -22,6 +22,14 @@ import {AppComponent} from './app.component';
   
 })
 export class AppMainComponent {
+
+    @HostListener('document:keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }
 
     rightPanelClick: boolean;
 
