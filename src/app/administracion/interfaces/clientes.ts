@@ -14,4 +14,5 @@ export interface Clientes {
     sClave?:string;
     nCp?:number;
     tcRegimenFiscal?:TcRegimenFiscal;
+    nDescuento?:number;
 }

@@ -64,6 +64,16 @@
             </p-dropdown>
             <small class="p-error" *ngIf="validaGanancia">*Ganancia requerida</small>
         </div>
+
+        <div class="p-field p-col-6">
+            <label for="ganancia">Descuento</label>
+            <p-dropdown [options]="listaGanancia" formControlName="nIdDescuento" optionLabel="nId"  optionValue="nId" [class.is-invalid]="validaDescuento" placeholder="Seleccine un Descuento" [showClear]="true">
+                <ng-template let-ganancia2 pTemplate="item">
+                    {{ganancia2.nId}}%
+                </ng-template>
+            </p-dropdown>
+            <small class="p-error" *ngIf="validaDescuento">*Descuento requerida</small>
+        </div>
         <div class="p-field p-col-12 p-text-center">
             <label for="price">Precio Final</label>
             <br>

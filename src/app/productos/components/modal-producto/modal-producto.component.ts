@@ -108,6 +108,10 @@ export class ModalProductoComponent implements OnInit {
     return this.formulario.get('sIdBar').invalid && this.formulario.get('sIdBar').touched;
   }
 
+  get validaDescuento() {
+    return this.formulario.get('nIdDescuento').invalid && this.formulario.get('nIdDescuento').touched;
+  }
+
   crearFormulario() {
   
     this.formulario = this.fb.group({
@@ -126,6 +130,7 @@ export class ModalProductoComponent implements OnInit {
         dFecha:['',[]],
         nIdclavesat:['',[Validators.required]],
         sIdBar:['',[]],
+        nIdDescuento:['',[Validators.required]],
         
     })
     this.formulario.get('nIdCategoria').disable();
@@ -223,6 +228,7 @@ export class ModalProductoComponent implements OnInit {
     this.precioFinal=productoEditar.nPrecioConIva;
     this.fProducto.sIdBar.setValue(productoEditar.sIdBar);
     this.listaNoParte=[];
+    this.fProducto.nIdDescuento.setValue(productoEditar.nIdDescuento);
 
 }
 
@@ -241,6 +247,7 @@ limpiaFormulario() {
   this.fProducto.dFecha.setValue("");
   this.fProducto.nIdclavesat.setValue("");
   this.fProducto.sIdBar.setValue("");
+  this.fProducto.nIdDescuento.setValue("");
   
 
 

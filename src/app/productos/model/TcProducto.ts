@@ -3,6 +3,7 @@ import { TcCategoriaGeneral } from './TcCategoriaGeneral';
 import { TcGanancia } from './TcGanancia';
 import { Usuarios } from '../../administracion/interfaces/usuarios';
 import { TcClavesat } from './TcClavesat';
+import { TcDescuento } from './TcDescuento';
 export class TcProducto{
 nId: number;
 dFecha: Date;
@@ -28,4 +29,6 @@ nPrecioSinIva:number;
 nPrecioConIva:number;
 sIdBar:string;
 nPrecioIva:number;
+nIdDescuento:number;
+tcDescuento:TcDescuento;
 }

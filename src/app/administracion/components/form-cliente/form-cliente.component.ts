@@ -53,6 +53,8 @@ export class FormClienteComponent implements OnInit {
 
 
 
+
+
   }
   crearFormulario() {
     this.formulario = this.fb.group({
@@ -63,7 +65,6 @@ export class FormClienteComponent implements OnInit {
       sTelefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       sCorreo: ['', [Validators.required, Validators.email]],
       nCp: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern('^[0-9]{5}')]],
-
       sClave: ['', []],
       nIdRegimenFiscal: ['', [Validators.required]],
 
@@ -166,6 +167,7 @@ export class FormClienteComponent implements OnInit {
 
       if (this.cliente.nId) {
         this.cliente.nEstatus = 1;
+        this.cliente.nDescuento=this.objCliente.nDescuento;
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
@@ -176,6 +178,7 @@ export class FormClienteComponent implements OnInit {
       else {
         this.cliente.sClave = this.crearId();
         this.cliente.nEstatus = 1;
+        this.cliente.nDescuento=0;
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes.push(respuesta);
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente guardado', life: 10000 });

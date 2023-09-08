@@ -7,6 +7,7 @@ import { Clientes } from '../../interfaces/clientes';
 import { FormGroup } from '@angular/forms';
 import { TokenService } from '../../../shared/service/token.service';
 import { TcRegimenFiscal } from '../../../productos/model/TcRegimenFiscal';
+import { isEmpty } from 'rxjs/operators';
 
 
 
@@ -154,6 +155,24 @@ export class ClienteComponent implements OnInit {
       id += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return id;
+  }
+
+  guardarDescuento(cliente:Clientes){
+
+  console.log(cliente.nDescuento);
+
+
+
+
+
+this.clienteService.guardaCliente(cliente).subscribe(data=>{
+  this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
+
+})
+
+
+
+
   }
 
 

@@ -32,6 +32,8 @@
                         <th>Nombre parte</th>
                         <th>Marca</th>
                         <th>Precio</th>
+                        <th>Descuento</th>
+                        <th></th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-product>
@@ -40,11 +42,13 @@
                         </td>
                         <td><span class="p-column-title">No de parte</span> {{product.sNoParte}}
                         </td>
-                        <td><span class="p-column-title">producto</span> {{product.sProducto}}
+                        <td><span class="p-column-title">Producto</span> {{product.sProducto}}
                         </td>
-                        <td><span class="p-column-title">Descipcion</span> {{product.sMarca}}
+                        <td><span class="p-column-title">Marca</span> {{product.sMarca}}
                         </td>
-                        <td><span class="p-column-title">Status</span> {{product.nPrecioConIva | number:'1.0-2'}}
+                        <td><span class="p-column-title">Precio</span> {{product.nPrecioConIva | number:'1.0-2'}}
+                        </td>
+                        <td><span class="p-column-title">Descuento</span> {{product.nIdDescuento }}%
                         </td>
                         <td>
                             <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"

@@ -43,6 +43,7 @@ export class FormVentaComponent implements OnInit {
     this._initFormGroupVentas();
     this.validaStock();
     this.validaCredito();
+    console.log(this.listaProductos);
 
    
   }
@@ -110,7 +111,7 @@ export class FormVentaComponent implements OnInit {
       this.datosVenta.listaValidada=this.listaValidada;
       this.datosVenta.idUsuario=this.tokenService.getIdUser();
 
-      //console.log(this.datosVenta);
+      console.log(this.datosVenta);
 
       this.emitirVenta.emit(this.datosVenta);
     }

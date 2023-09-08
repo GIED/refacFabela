@@ -13,6 +13,7 @@ export class TwCotizacionProducto{
     nTotalPartida?:number;
     nTotalUnitario?:number;
     sCondicionEntrega?:string;
+    nIdDescuento:number;
     tcProducto?:TcProducto
     twCotizaciones?:TwCotizacion;
 

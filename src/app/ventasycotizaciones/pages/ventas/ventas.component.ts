@@ -19,6 +19,7 @@ import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { TwMaquinaCliente } from '../../../productos/model/TwMaquinaCliente';
+import { ProductoDescuentoDto } from '../../../productos/model/ProductoDescuentoDto';
 
 
 
@@ -78,6 +79,7 @@ export class VentasComponent implements OnInit {
   objCliente:Clientes=undefined;
   nIdProductoConsulta:number;
   mostrarHistoriaStockProducto:boolean=false;
+  productoDescuentoDto:ProductoDescuentoDto;
 
   constructor(
     private clienteService:ClienteService,
@@ -331,8 +333,13 @@ else{
 calcularPrecio(tvStockProducto :TvStockProducto){
 
 
+this.productoDescuentoDto=new ProductoDescuentoDto;
+this.productoDescuentoDto.tcProducto=tvStockProducto.tcProducto;
+this.productoDescuentoDto.tcCliente=this.clienteSeleccionado;
 
- this.productoService.calcularPrecioProducto(tvStockProducto.tcProducto).subscribe(data=>{
+
+ this.productoService.calcularPrecioProducto(this.productoDescuentoDto).subscribe(data=>{
+ 
    this.productoNuevoPrecio=data;
 
    console.log(this.productoNuevoPrecio);
@@ -341,6 +348,7 @@ calcularPrecio(tvStockProducto :TvStockProducto){
     this.productosFiltrados[index].tcProducto.nPrecioPeso=this.productoNuevoPrecio.nPrecioPeso;
      this.productosFiltrados[index].tcProducto.nPrecioConIva=this.productoNuevoPrecio.nPrecioConIva;
      this.productosFiltrados[index].tcProducto.nPrecioSinIva=this.productoNuevoPrecio.nPrecioSinIva;
+     this.productosFiltrados[index].tcProducto.sProducto=this.productoNuevoPrecio.sProducto;
     
   }
 
@@ -456,21 +464,32 @@ hideDialogBodega(){
 
 obtenerProductosAlternativos(nId:number ) {
     
-  this.productoService.obtenerProductosAlternativos(this.nIdProducto)
+  this.productoService.obtenerProductosAlternativosDescuento(this.nIdProducto, this.clienteSeleccionado.nId)
     .subscribe((productosAlter) => {
        productosAlter;
       //console.log("Alternativos");
-      //console.log(productosAlter);
-      for (const producto of productosAlter) {
+      console.log(productosAlter);
+
+       for (let index = 0; index < productosAlter.length; index++) {
+          
         this.tvStockProducto = new TvStockProducto();
-        this.productoService.obtenerTotalBodegasIdProducto(producto.nIdProductoAlternativo).subscribe(productoStock =>{
-          if (productoStock != null) {
+
+        this.productoService.obtenerTotalBodegasIdProducto(productosAlter[index].nIdProductoAlternativo).subscribe(productoStock =>{
+          if (productoStock != null) {   
+           
             this.tvStockProducto=productoStock;
+            this.tvStockProducto.tcProducto=productosAlter[index].tcProductoAlternativo;
+
             this.productosAlternativos.push(this.tvStockProducto);
           }
         });
+
         
-      }
+       }
+
+
+
+     
       
       
     });
@@ -597,6 +616,7 @@ guardarCotizacion(){
     cotizacionDto.nPrecioUnitario=producto.tcProducto.nPrecioSinIva;
     cotizacionDto.nIvaUnitario=producto.tcProducto.nPrecioIva;
     cotizacionDto.nTotalUnitario=producto.tcProducto.nPrecioConIva;
+    cotizacionDto.nInDescuento=producto.tcProducto.nIdDescuento;
 
     productoCotizado.push(JSON.parse(JSON.stringify(cotizacionDto)));
     

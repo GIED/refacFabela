@@ -54,6 +54,7 @@ static obtenerVentaStockFecha='/obtenerVentasStockFecha?';
 
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';
+static obtenerProductosalternativosIdDescuento='/obtenerProductosAlternativosDescuento?';
 static guardarProductoAlternativo = '/guardarProductoAlternativo';
 //api Bodegas
 static obtenerBodegas= '/catalogoBodegas';

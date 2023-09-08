@@ -10,6 +10,7 @@ import { TwHistoriaIngresoProducto } from 'src/app/productos/model/TwHistoriaIng
 import { TvVentaStock } from '../../productos/model/TvVentaStock';
 import { TvStockProductoHist } from 'src/app/productos/model/TvStrockProductoHist';
 import { TwProductoCancela } from 'src/app/productos/model/TwProductoCancela';
+import { ProductoDescuentoDto } from 'src/app/productos/model/ProductoDescuentoDto';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,10 @@ export class ProductoService {
     let url =environment.servicios.apiRefacFabela + locator.obtenerProductosalternativosId+'nId='+nId;
     return this.http.get<TwProductoAlternativo[]>(url);
   }
+  obtenerProductosAlternativosDescuento(nId:number, nIdCliente:number){
+    let url =environment.servicios.apiRefacFabela + locator.obtenerProductosalternativosIdDescuento+'nId='+nId+'&nIdCliente='+nIdCliente;
+    return this.http.get<TwProductoAlternativo[]>(url);
+  }
 
   obtenerNoParte(noParte: string){
     let url = environment.servicios.apiRefacFabela + locator.consultaNoParte+'No_Parte='+noParte;
@@ -54,9 +59,9 @@ export class ProductoService {
     return this.http.post<TcProducto>(url,producto);
   }
 
-  calcularPrecioProducto(producto: TcProducto){
+  calcularPrecioProducto(productoDescuentoDto: ProductoDescuentoDto ){
     let url = environment.servicios.apiRefacFabela + locator.calcularPrecioProducto;
-    return this.http.post<TcProducto>(url,producto);
+    return this.http.post<TcProducto>(url,productoDescuentoDto);
   }
 
   historiaPrecioProducto(nId: number){

@@ -56,6 +56,10 @@
                             <p-sortIcon field="n_limiteCredito"></p-sortIcon>
                           
                         </th>
+                        <th pSortableColumn="nDescuento">Descuento
+                            <p-sortIcon field="nDescuento"></p-sortIcon>
+                          
+                        </th>
                        
                         <th></th>
                     </tr>
@@ -79,6 +83,9 @@
                         <td><span class="p-column-title">Regimen Fiscal</span>  {{cliente.tcRegimenFiscal!=null?cliente.tcRegimenFiscal.sDescripcion:''}}
                         </td>
                         <td><span class="p-column-title">Límite crédito</span>  {{cliente.n_limiteCredito}}
+                        </td>
+                        <td>
+                            <p-checkbox [(ngModel)]="cliente.nDescuento" [binary]="true" inputId="cliente.nDescuento" (onChange)=guardarDescuento(cliente)></p-checkbox>
                         </td>
                        
                         <td>

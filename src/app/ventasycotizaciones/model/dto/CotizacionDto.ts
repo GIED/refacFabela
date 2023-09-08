@@ -7,4 +7,5 @@ export class CotizacionDto{
     nIvaUnitario:number;
     nTotalUnitario:number;
     sFolio: string;
+    nInDescuento:number;
 }

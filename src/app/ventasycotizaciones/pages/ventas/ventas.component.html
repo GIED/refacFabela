@@ -20,19 +20,10 @@
                     </div>
                     <div class="p-col-1">
                         
-                        <br>
-                           
+                        <br>                           
                                 <button pButton pRipple type="button" icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined" (click)="openNew()"></button>
-
-
-                      
-                
-                </div>
-                
-                
-
-                
-                        
+                                     
+                </div>                              
                         <p-dialog [(visible)]="clienteDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true"  styleClass="p-fluid">             
                              <app-form-cliente (cerrar)="hideDialog($event)" [objCliente]=null >   </app-form-cliente>
                         <ng-template pTemplate="content">
