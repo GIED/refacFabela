@@ -279,6 +279,8 @@ valorSeleccionadoProducto(){
   this.limpiarlistas();
   
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
+  
+  
   this.ubicacionProducto(this.productoSeleccionado.nId);
   this.nIdProducto=this.productoSeleccionado.nId;  
   this.obtenerProductosAlternativos(this.productoSeleccionado.nId);
@@ -289,12 +291,12 @@ valorSeleccionadoProducto(){
     }else{
 
     }   
-    this.productosFiltrados.push(productoStock);
-   
-this.calcularPrecio(productoStock);
+    console.log("ESTE ES EL PRODUCTO QUE SE CONSULTARA SU PRECIO", productoStock);
+    this.calcularPrecio(productoStock);
+    console.log("ESTE ES EL PRODUCTO DESPUES DE CONSULTAR SU PRECIO", productoStock);
 
 
- 
+    this.productosFiltrados.push(productoStock); 
     this.mostrarSugerenciasProducto=false;
     this.productoCtrl.setValue('');
   });
@@ -342,12 +344,15 @@ this.productoDescuentoDto.tcCliente=this.clienteSeleccionado;
  
    this.productoNuevoPrecio=data;
 
-   console.log(this.productoNuevoPrecio);
+   console.log("ESTE ES EL NUEVO PRECIO",this.productoNuevoPrecio);
    
   for (let index = 0; index < this.productosFiltrados.length; index++) {
-    this.productosFiltrados[index].tcProducto.nPrecioPeso=this.productoNuevoPrecio.nPrecioPeso;
+       
+
+     this.productosFiltrados[index].tcProducto.nPrecioPeso=this.productoNuevoPrecio.nPrecioPeso;
      this.productosFiltrados[index].tcProducto.nPrecioConIva=this.productoNuevoPrecio.nPrecioConIva;
      this.productosFiltrados[index].tcProducto.nPrecioSinIva=this.productoNuevoPrecio.nPrecioSinIva;
+     this.productosFiltrados[index].tcProducto.nPrecioIva=this.productoNuevoPrecio.nPrecioIva;
      this.productosFiltrados[index].tcProducto.sProducto=this.productoNuevoPrecio.sProducto;
     
   }
@@ -468,7 +473,7 @@ obtenerProductosAlternativos(nId:number ) {
     .subscribe((productosAlter) => {
        productosAlter;
       //console.log("Alternativos");
-      console.log(productosAlter);
+      //console.log(productosAlter);
 
        for (let index = 0; index < productosAlter.length; index++) {
           
@@ -499,7 +504,7 @@ obtenerProductosAlternativos(nId:number ) {
 
 
 agregarProduct(producto: TvStockProducto) {
-  //console.log(producto);
+  console.log(producto);
   if (producto.nCantidad == 0 || producto.nCantidad == null) {
     //console.log("cantidad recibida: ",this.nCantidadCtrl.value)
     producto.nCantidad=this.nCantidadCtrl.value;
@@ -558,6 +563,7 @@ agregarProduct(producto: TvStockProducto) {
 
       }
       else{
+       // console.log(producto);
     this.listaProductos.push(producto);
        }
 
@@ -568,7 +574,7 @@ agregarProduct(producto: TvStockProducto) {
   }
   //si entra a else el producto no existe en la lista
   else{
-   
+    //console.log(producto);
     this.listaProductos.push(producto);
     
   }
@@ -600,11 +606,14 @@ quitarProducto(producto: TvStockProducto){
 
 guardarCotizacion(){
 
+  console.log(this.listaProductos);
+
 
 
   const productoCotizado: CotizacionDto[]=[];
 
   let folio = this.createFolio();
+
 
   for (let producto of this.listaProductos) {
     const cotizacionDto= new CotizacionDto();
@@ -635,6 +644,9 @@ guardarCotizacion(){
     }
    
   });
+
+
+
 }
 
 generarCotizacionPdf(idCotizacion:number){
