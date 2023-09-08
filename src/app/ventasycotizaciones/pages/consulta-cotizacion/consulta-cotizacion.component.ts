@@ -83,10 +83,12 @@ detalleCotizacion(twCotizacion: TwCotizacion){
   let saldo =  this.clienteService.obtenerSaldoGeneralCliente(twCotizacion.tcCliente.nId);
 
   let productos =  this.ventasCotizacionesService.obtenerCotizacionId(twCotizacion.nId);
-
+  
   forkJoin([
     saldo,productos
   ]).subscribe(results => {
+
+   
 
     if (results[0] != null) {
       this.saldoGeneralCliente=results[0];
