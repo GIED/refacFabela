@@ -31,4 +31,5 @@ sIdBar:string;
 nPrecioIva:number;
 nIdDescuento:number;
 tcDescuento:TcDescuento;
+nIdMarca:number;
 }

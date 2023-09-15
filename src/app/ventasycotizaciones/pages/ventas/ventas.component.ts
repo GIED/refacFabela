@@ -201,6 +201,13 @@ this.mostrarProductosCotizacionCliente=true;
 
 valorSeleccionadoCliente(){
   //console.log(this.clienteSeleccionadoCtrl.value);
+  this.productosFiltrados=[];
+  this.listaProductoBodega=[];
+  this.productosAlternativos=[];
+  this.listaProductos=[];
+
+
+
   this.clienteSeleccionado=this.clienteSeleccionadoCtrl.value;
   this.clienteCtrl.setValue(this.clienteSeleccionado.sRazonSocial);
   this.clienteService.obtenerSaldoGeneralCliente(this.clienteSeleccionado.nId).subscribe(saldoCliente=>{
@@ -273,6 +280,7 @@ buscaProducto(){
 
 limpiarlistas(){
   this.productosAlternativos=[];
+  
 }
 
 valorSeleccionadoProducto(){
@@ -625,8 +633,12 @@ guardarCotizacion(){
     cotizacionDto.nPrecioUnitario=producto.tcProducto.nPrecioSinIva;
     cotizacionDto.nIvaUnitario=producto.tcProducto.nPrecioIva;
     cotizacionDto.nTotalUnitario=producto.tcProducto.nPrecioConIva;
+    if(this.clienteSeleccionado.nDescuento){
     cotizacionDto.nInDescuento=producto.tcProducto.nIdDescuento;
-
+     }
+     else{
+      cotizacionDto.nInDescuento=0;
+     }
     productoCotizado.push(JSON.parse(JSON.stringify(cotizacionDto)));
     
   }

@@ -21,13 +21,19 @@
         </div>
         <div class="p-field p-col-6">
             <label for="marca">Código</label>
-            <input type="text" pInputText name="sIdBar" formControlName="sIdBar" [class.is-invalid]="validaBar" />
+            <input type="text" pInputText name="sIdBar" formControlName="sIdBar" [class.is-invalid]="validaBar" disabled />
             <small class="p-error" *ngIf="validaBar">*código del producto requerida.</small>
         </div>
         <div class="p-field p-col-6">
             <label for="marca">Marca</label>
-            <input type="text" pInputText name="sMarca" formControlName="sMarca" [class.is-invalid]="validaMarca" />
+            <input type="text" pInputText name="sMarca" formControlName="sMarca" [class.is-invalid]="validaMarca"  disabled/>
             <small class="p-error" *ngIf="validaMarca">*marca del producto requerida.</small>
+        </div>
+        <div class="p-field p-col-6">
+            <label for="marca">Marca</label>
+            <p-dropdown [options]="listaMarca" formControlName="nIdMarca" optionLabel="sMarca" optionValue="nId"  [class.is-invalid]="validanIdMarca" placeholder="Seleccine una marca"
+                [showClear]="true"  (onChange)="asignarMarca()" ></p-dropdown>
+            <small class="p-error" *ngIf="validanIdMarca">*Categoria General requerida.</small>
         </div>
         <div class="p-field p-col-6">
             <label for="marca">Categoria General</label>
@@ -74,6 +80,7 @@
             </p-dropdown>
             <small class="p-error" *ngIf="validaDescuento">*Descuento requerida</small>
         </div>
+       
         <div class="p-field p-col-12 p-text-center">
             <label for="price">Precio Final</label>
             <br>

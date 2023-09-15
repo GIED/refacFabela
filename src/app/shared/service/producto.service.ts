@@ -58,6 +58,10 @@ export class ProductoService {
     let url = environment.servicios.apiRefacFabela + locator.guardarProducto;
     return this.http.post<TcProducto>(url,producto);
   }
+  guardaProductoGeneral(producto: TcProducto){
+    let url = environment.servicios.apiRefacFabela + locator.guardarProductoGeneral;
+    return this.http.post<TcProducto>(url,producto);
+  }
 
   calcularPrecioProducto(productoDescuentoDto: ProductoDescuentoDto ){
     let url = environment.servicios.apiRefacFabela + locator.calcularPrecioProducto;

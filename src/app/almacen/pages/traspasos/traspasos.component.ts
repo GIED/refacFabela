@@ -9,6 +9,8 @@ import { TwProductoBodegaDto } from '../../../productos/model/TwProductoBodegaDt
 import { TraspasoService } from '../../../shared/service/traspaso.service';
 import { ModalProductosBodegaInternoComponent } from 'src/app/productos/components/modal-productos-bodega-interno/modal-productos-bodega-interno.component';
 import { forkJoin } from 'rxjs';
+import { AjusteInventarioComponent } from '../../components/ajuste-inventario/ajuste-inventario.component';
+import { TokenService } from 'src/app/shared/service/token.service';
 
 @Component({
   selector: 'app-traspasos',
@@ -21,13 +23,26 @@ export class TraspasosComponent implements OnInit {
   listaProductoBodegaAux: TwProductoBodega[]=[];
   mostrar:boolean;
   newProBod:TwProductoBodega; 
+  IdUsuario:number;
+  mostrarAjustes:boolean;
   
   
-  constructor(private bodegasService: BodegasService, public dialogService: DialogService,private traspasoService:TraspasoService) {
+  constructor(private bodegasService: BodegasService, public dialogService: DialogService,private traspasoService:TraspasoService,    private tokenService: TokenService) {
     this.mostrar=false;
    }
 
   ngOnInit(): void {
+
+    this.IdUsuario=this.tokenService.getIdUser();
+
+    if(this.IdUsuario==19 || this.IdUsuario==23 || this.IdUsuario==29 || this.IdUsuario==8){
+
+      this.mostrarAjustes=true;
+
+    }
+    else{
+      this.mostrarAjustes=false;
+    }
    
   }
 
@@ -47,6 +62,18 @@ export class TraspasosComponent implements OnInit {
    })
    ref.onClose.subscribe((data:TwProductoBodega) =>{
      ////console.log('data que se recibe al cerrar',data);
+     this.obtenerBodegas(data.nIdProducto);
+   })
+  }
+
+  modalProductoAjuste(dataBodega:TwProductoBodega) {
+    const ref = this.dialogService.open(AjusteInventarioComponent, {
+       data: new ModelContainer(ModeActionOnModel.CREATING, dataBodega),
+       header: 'Ajuste de inventario',
+       width: '70%'
+   })
+   ref.onClose.subscribe((data:TwProductoBodega) =>{
+     
      this.obtenerBodegas(data.nIdProducto);
    })
   }

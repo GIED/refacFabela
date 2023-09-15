@@ -1,0 +1,53 @@
+
+
+<form [formGroup]="formulario" autocomplete="off">
+   
+    <div class="p-grid">
+        <div class="p-field p-col-6">
+            <label for="name">No. de parte</label>
+            <input type="text" pInputText name="sNoParte" formControlName="sNoParte"  [class.is-invalid]="validaNoParte" disabled />
+            <small class="p-error" *ngIf="validaNoParte">*Número de Parte requerido.</small>
+        </div>
+        
+        <div class="p-field p-col-6">
+            <label for="name">Nombre del producto</label>
+            <input type="text" pInputText name="sProducto" formControlName="sProducto" [class.is-invalid]="validaProducto" />
+            <small class="p-error" *ngIf="validaProducto">*nombre del producto requerido.</small>
+        </div>
+        
+        <div class="p-field p-col-6">
+            <label for="marca">Código</label>
+            <input type="text" pInputText name="sIdBar" formControlName="sIdBar" [class.is-invalid]="validaBar" />
+            <small class="p-error" *ngIf="validaBar">*código del producto requerida.</small>
+        </div>
+        <div class="p-field p-col-6">
+            <label for="marca">Marca</label>
+            <input type="text" pInputText name="sMarca" formControlName="sMarca" [class.is-invalid]="validaMarca" disabled />
+            <small class="p-error" *ngIf="validaMarca">*marca del producto requerida.</small>
+        </div>
+        <div class="p-field p-col-6">
+            <label for="marca">Marca</label>
+            <p-dropdown [options]="listaMarca" formControlName="nIdMarca" optionLabel="sMarca" optionValue="nId"  [class.is-invalid]="validanIdMarca" placeholder="Seleccine una marca"
+                [showClear]="true"  (onChange)="asignarMarca()" ></p-dropdown>
+            <small class="p-error" *ngIf="validanIdMarca">*Categoria General requerida.</small>
+        </div>
+        
+    </div>
+</form>
+<div class="p-grid p-jc-end">
+    <div class="p-col-8">
+        <div class="box"></div>
+    </div>
+    <div class="p-col-2">
+        <div class="box">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="cerrarModal()"></button>
+        </div>
+    </div>
+    <div class="p-col-2">
+        <div class="box">
+            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+        </div>
+    </div>
+</div>
+
+

@@ -36,12 +36,15 @@ static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';
 static consultarCajas='/consultaCajas';
 static abrirCajaNueva= '/nuevaCaja?';
+static consultarMarcas= '/catalogoMarca';
 static consultarUsoCfdi='/catalogoUsoCfdi';
 //api productos
 static obtenerProductos= '/obtenerProductos';
 static obtenerProductosLike= '/obtenerProductosLike?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
+static guardarProductoGeneral= '/guardarProductoGeneral';
+
 static calcularPrecioProducto= '/calcularNuevoPrecio';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerHistoriaIngresoProducto='/obtenerHistoriaIngresoProducto?';
@@ -132,6 +135,7 @@ static obtenerVentasAnoVendedor='/total_venta_ano_vendedor?';
 static obtenerVentasAnoMesVendedor='/total_venta_ano_mes_vendedor?';
 //traspasos
 static movimientoInterno='/movimientoInterno';
+static guardarAjusteInventario='/guardarAjusteInventario';
 static movimientoExterno='/movimientoExterno';
 
 //factura

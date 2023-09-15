@@ -15,6 +15,8 @@ import { ProductosModule } from '../productos/productos.module';
 import { VentasycotizacionesModule } from '../ventasycotizaciones/ventasycotizaciones.module';
 import { VentaProductosDetalleEntregaComponent } from './components/venta-productos-detalle-entrega/venta-productos-detalle-entrega.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ActualizaProductoAlmacenComponent } from './components/actualiza-producto-almacen/actualiza-producto-almacen.component';
+import { AjusteInventarioComponent } from './components/ajuste-inventario/ajuste-inventario.component';
 
 
 
@@ -24,7 +26,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     TraspasosComponent,
     InventarioComponent,
     EntregaDeMercanciaComponent,
-    VentaProductosDetalleEntregaComponent
+    VentaProductosDetalleEntregaComponent,
+    ActualizaProductoAlmacenComponent,
+    AjusteInventarioComponent
   ],
   imports: [
     AlmacenRoutingModule,

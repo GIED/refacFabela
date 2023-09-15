@@ -113,7 +113,7 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Productos', icon: 'pi pi-fw pi-briefcase', visible:this.realRol==='admin',
+                label: 'Productos', icon: 'pi pi-fw pi-briefcase', visible:this.realRol==='admin' ,
                 items: [
                     {
                         label: 'Registro', icon: 'pi pi-fw pi-external-link', routerLink: ['../productos/registro-producto']

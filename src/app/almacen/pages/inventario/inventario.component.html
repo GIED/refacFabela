@@ -101,7 +101,7 @@
                                 <div class="p-d-flex p-jc-between p-ai-center">
                                     Nivel
                                     <p-sortIcon field="tcNivel.sNivel"></p-sortIcon>
-                                    <p-columnFilter type="text" field="tcNivel.sNivel}" display="menu"
+                                    <p-columnFilter type="text" field="tcNivel.sNivel" display="menu"
                                         class="p-ml-auto"></p-columnFilter>
                                 </div>
                             </th>
@@ -110,6 +110,14 @@
                                     Cantidad
                                     <p-sortIcon field="nCantidad"></p-sortIcon>
                                     <p-columnFilter type="text" field="nCantidad" display="menu" class="p-ml-auto">
+                                    </p-columnFilter>
+                                </div>
+                            </th>
+                            <th pSortableColumn="sIdBar">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Código
+                                    <p-sortIcon field="sIdBar"></p-sortIcon>
+                                    <p-columnFilter type="text" field="sIdBar" display="sIdBar" class="p-ml-auto">
                                     </p-columnFilter>
                                 </div>
                             </th>
@@ -133,6 +141,10 @@
                             </td>
                             <td><span class="p-column-title">Cantidad</span> {{producto.nCantidad}}
                             </td>
+                            <td><span class="p-column-title">Código</span> {{producto.tcProducto.sIdBar}}
+                            </td>
+                            <td>  <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="editar(producto.tcProducto)"></button></td>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
@@ -165,4 +177,11 @@
             <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
         </div>
     </div>
+    <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+styleClass="p-fluid">
+<ng-template pTemplate="content">
+    <app-actualiza-producto-almacen [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
+        (guardarProducto)="saveProduct($event)"></app-actualiza-producto-almacen>
+</ng-template>
+</p-dialog>
 </div>

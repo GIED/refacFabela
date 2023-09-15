@@ -11,6 +11,8 @@ import { TcNivel } from 'src/app/productos/model/TcNivel';
 import { BodegaProductosService } from '../../../shared/service/bodega-productos.service';
 import { TwProductoBodega } from '../../../productos/model/TwProductoBodega';
 import { VentasService } from '../../../shared/service/ventas.service';
+import { producto } from '../../../productos/interfaces/producto.interfaces';
+import { TcProducto } from 'src/app/productos/model/TcProducto';
 
 @Component({
     selector: 'app-inventario',
@@ -29,6 +31,9 @@ export class InventarioComponent implements OnInit {
     nivel: number;
     cols: any[];
     banderaMostrarPdf:boolean=false;
+    productDialog:boolean;
+    titulo:string;
+    producto:TcProducto;
 
 
     constructor(private bodegasService: BodegasService,
@@ -52,6 +57,7 @@ export class InventarioComponent implements OnInit {
             { field: 'nCantidad', header: 'Cantidad' }
 
         ]
+        this.productDialog=false;
 
     }
 
@@ -68,6 +74,14 @@ export class InventarioComponent implements OnInit {
         this.nivelService.obtenerNivel().subscribe(nivel => {
             this.listaNivel = nivel;
         });
+    }
+
+    editar(tcProducto:TcProducto){
+        this.productDialog=true
+        this.titulo="Actualización del producto";
+        this.producto=tcProducto;
+
+
     }
 
     consultaProducto() {
@@ -116,6 +130,12 @@ else{
     this.messageService.add({severity: 'error', summary: 'Error', detail: 'Debes seleccionar todos los valores', life: 3000});
 }
 
+}
+
+hideDialog(){
+
+    this.productDialog=false;
+    
 }
 
 

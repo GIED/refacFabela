@@ -26,8 +26,11 @@ export class ModalProductosBodegaInternoComponent implements OnInit {
   listaNivel: TcNivel[];
 
 
-  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig, private anaquelService: AnaquelService,
-    private nivelService: NivelService, private traspasoService:TraspasoService) {
+  constructor(public ref: DynamicDialogRef,
+     public config: DynamicDialogConfig,
+      private anaquelService: AnaquelService,
+    private nivelService: NivelService, 
+    private traspasoService:TraspasoService) {
     this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
    }
 

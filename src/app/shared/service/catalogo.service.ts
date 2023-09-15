@@ -12,6 +12,7 @@ import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
 import { TwCaja } from '../../productos/model/TwCaja';
 import { TcEstatusVenta } from '../../productos/model/TcEstatusVenta';
 import { TcUsoCfdi } from '../../productos/model/TcUsoCfdi';
+import { TcMarca } from 'src/app/productos/model/TcMarca';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +75,10 @@ export class CatalogoService {
   abrirCajaNueva(saldoInicial:number, nIdUsuario:number){
     let url= environment.servicios.apiRefacFabela + locator.abrirCajaNueva+'saldoInicial='+saldoInicial+'&nIdUsuario='+nIdUsuario;
     return this.http.get<TwCaja>(url);
+  }
+  obtenerMarcas(){
+    let url= environment.servicios.apiRefacFabela + locator.consultarMarcas;
+    return this.http.get<TcMarca[]>(url);
   }
 
 

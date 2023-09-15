@@ -12,6 +12,7 @@ import { debounceTime } from 'rxjs/operators';
 import { ProductoService } from '../../../shared/service/producto.service';
 import { UsuarioService } from '../../../administracion/service/usuario.service';
 import { TokenService } from 'src/app/shared/service/token.service';
+import { TcMarca } from '../../model/TcMarca';
 
 interface Moneda {
   name: string,
@@ -49,6 +50,7 @@ export class ModalProductoComponent implements OnInit {
   mostrarSugerencias:boolean=false;
   ganancia:number;
   precioFinal: number;
+  listaMarca:TcMarca[];
 
   constructor(private fb: FormBuilder, 
               private catalogoService: CatalogoService, 
@@ -70,11 +72,89 @@ export class ModalProductoComponent implements OnInit {
     console.log(this.producto);
     if (this.producto != null) {
       this.editProducto(this.producto);
+
     }
     this.obtenerCategoriaGeneral();
     this.obtenerClaveSat();
     this.obtenerGanancia();
     this.buscaPorNoParte();
+    this.obtenerMarcas();
+  }
+  obtenerMarcas(){
+    this.catalogoService.obtenerMarcas().subscribe(data=> {
+
+      this.listaMarca=data;
+      console.log(this.listaMarca);
+
+    })
+     
+
+  }
+
+  editarProducto(){   
+    this.catalogoService.obtenerMarcas().subscribe(data=> {
+      this.listaMarca=data;
+      console.log(this.listaMarca);
+      if(this.producto.nIdMarca>0 ){
+    
+        for (let index = 0; index < this.listaMarca.length; index++) {
+          if(this.listaMarca[index].nId==this.producto.nIdMarca){
+    
+            this.fProducto.sMarca.setValue(this.listaMarca[index].sMarca);
+          }
+               
+        }
+        this.fProducto.sNoParte.setValue(this.producto.sNoParte);
+        this.fProducto.sProducto.setValue(this.producto.sProducto);
+        this.fProducto.sIdBar.setValue(this.producto.sIdBar);
+       this.fProducto.nIdMarca.setValue(this.producto.nIdMarca);
+       this.fProducto.sNoParte.enabled
+       this.fProducto.sMarca.enabled
+
+    
+       }
+       else{
+        this.fProducto.sNoParte.setValue(this.producto.sNoParte);
+        this.fProducto.sProducto.setValue(this.producto.sProducto);
+        this.fProducto.sMarca.setValue(this.producto.sMarca);
+        this.fProducto.sIdBar.setValue(this.producto.sIdBar);
+       this.fProducto.nIdMarca.setValue(this.producto.nIdMarca);
+           
+      
+        this.fProducto.sNoParte.enabled
+        this.fProducto.sMarca.enabled
+
+
+
+       }
+    })
+    
+    
+
+   
+
+ 
+  }
+
+  asignarMarca(){
+
+    if(this.fProducto.nIdMarca.value>0 ){
+      
+      for (let index = 0; index < this.listaMarca.length; index++) {
+        if(this.listaMarca[index].nId==this.fProducto.nIdMarca.value){
+  
+          this.fProducto.sMarca.setValue(this.listaMarca[index].sMarca);
+        }
+             
+      }
+      
+  
+  
+     }
+  
+    console.log("Este el valor seleccionado",this.fProducto.nIdMarca.value);
+  
+  
   }
 
   get validaNoParte() {
@@ -111,6 +191,9 @@ export class ModalProductoComponent implements OnInit {
   get validaDescuento() {
     return this.formulario.get('nIdDescuento').invalid && this.formulario.get('nIdDescuento').touched;
   }
+  get validanIdMarca() {
+    return this.formulario.get('nIdMarca').invalid && this.formulario.get('nIdMarca').touched;
+  }
 
   crearFormulario() {
   
@@ -131,6 +214,7 @@ export class ModalProductoComponent implements OnInit {
         nIdclavesat:['',[Validators.required]],
         sIdBar:['',[]],
         nIdDescuento:['',[Validators.required]],
+        nIdMarca:['',[Validators.required]],
         
     })
     this.formulario.get('nIdCategoria').disable();
@@ -229,6 +313,7 @@ export class ModalProductoComponent implements OnInit {
     this.fProducto.sIdBar.setValue(productoEditar.sIdBar);
     this.listaNoParte=[];
     this.fProducto.nIdDescuento.setValue(productoEditar.nIdDescuento);
+    this.fProducto.nIdMarca.setValue(productoEditar.nIdMarca);
 
 }
 
