@@ -166,14 +166,14 @@
 		</div>
 		<p-dialog [(visible)]="productDialog" [style]="{width: '900px'}" header="Notas de crédito del cliente" [modal]="true"
 			styleClass="p-fluid">
-            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['nId','sFolioVenta','nTotalVenta','nTotalAbono','nSaldoTotal','dFechaTerminoCredito','sEstatus','nAvancePago']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            <p-table #dt2 [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['nId','sFolioVenta','nTotalVenta','nTotalAbono','nSaldoTotal','dFechaTerminoCredito','sEstatus','nAvancePago']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
                        
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            <input pInputText type="text" (input)="dt2.filterGlobal($event.target.value, 'contains')"
                                 placeholder="Buscar Venta de Crédicto..." />
                         </span>
                     </div>
@@ -196,7 +196,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-venta let-expanded="expanded">
-                    <tr>
+                    <tr *ngIf="venta.nSaldoTotal>0">
 						<td><span class="p-column-title"></span> {{venta.nId}}
                         </td>
                         <td><span class="p-column-title"></span> {{venta.nTotalVenta | number}}
