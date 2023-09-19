@@ -120,13 +120,13 @@
                                             <td>{{producto.tcProducto.sMarca}}</td>
                                             <td>${{producto.tcProducto.nPrecioConIva | number:'1.1-3' }}</td>
                                             <td>
-                                                <p-inputNumber formControlName="nIncrementoCtrl" (focusout)="sumarIncremento(producto)">
+                                                <p-inputNumber mode="currency" currency="USD" locale="en-US"  formControlName="nIncrementoCtrl" (focusout)="sumarIncremento(producto)">
                                                 </p-inputNumber>
                                             </td>
 
                                             <td>{{producto.nCantidadTotal}}</td>
                                             <td>
-                                                <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="1000">
+                                                <p-inputNumber  formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="1000">
                                                 </p-inputNumber>
                                             </td>
                                             <td>
