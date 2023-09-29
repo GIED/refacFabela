@@ -96,7 +96,9 @@
                     </td>
                     <td class="p-text-center"><span class="p-column-title">Status</span>
                        
-                          {{venta.tcEstatusVenta.sDescripcion}}
+                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red"> {{venta.tcEstatusVenta.sDescripcion}}</strong>
+                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'" > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
+                         
                        
                     <td class="p-text-center"><span class="p-column-title">Status</span>
                        

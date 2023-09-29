@@ -14,6 +14,7 @@ import { throwError } from 'rxjs';
 import { TrVentaCobro } from '../../productos/model/TrVentaCobro';
 import { TwMaquinaCliente } from '../../productos/model/TwMaquinaCliente';
 import { TwVentasProductosTraer } from '../../productos/model/TwVentasProductosTraer';
+import { VwSaldoVentaFavorDisponible } from 'src/app/productos/model/VwSaldoVentaFavorDisponible';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,11 @@ export class VentasService {
     obtenerVentaDetalleEstatusVenta(nEstatusVenta:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleEstatusVenta+'nEstatusVenta='+nEstatusVenta;
     return this.http.get<TvVentasDetalle[]>(url);
+  }
+
+  obtenerSaldoVentaFavor(nIdVenta:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultarVentaSaldo+'nIdVenta='+nIdVenta;
+    return this.http.get<VwSaldoVentaFavorDisponible>(url);
   }
   obtenerVentaDetalle(){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalle;
@@ -106,6 +112,19 @@ export class VentasService {
       responseType: 'arraybuffer' as 'json'
     };
     return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarVentaPdf + 'nIdVenta=' + nIdVenta, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
+
+  }
+
+  generarSaldoFavorPdf(nIdVenta: number){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarSaldoFavorPdf + 'nIdVenta=' + nIdVenta, httpOptions).pipe(
       catchError(e => {
         console.error(e);
         return throwError(e);

@@ -155,8 +155,11 @@
                             <div>Monto total de venta <strong>$ {{totalVenta | number}}</strong> </div>
 
                             <div>A cuenta <strong>$ {{aCuenta | number}}</strong> </div>
+                          
+                            <div *ngIf="this.saldoDisponible>0">Saldo a favor <strong>$ {{this.saldoDisponible | number}}</strong> </div>
 
                             <div>Restan <strong>$ {{restan | number}}</strong> </div>
+                            <p-inputNumber name="saldoFavor" id="saldoFavor" [(ngModel)]="saldoFavor"  mode="decimal" inputId="withoutgrouping" [useGrouping]="false"  placeholder="Ingresa venta con saldo a favor" (focusout)=consultarVentaSaldo() [disabled]="state"></p-inputNumber>
 
                         </p-panel>
                     </div>
@@ -201,7 +204,7 @@
                         </div>
 
                         <div class="p-field p-col-6">
-                            <label for="name">Monto</label>
+                            <label for="name">Total a pagar</label>
                             <input type="text" pInputText name="monto" formControlName="monto" [class.is-invalid]="validaMonto" />
                             <small class="p-error" *ngIf="validaMonto">Monto requerido</small>
                         </div>

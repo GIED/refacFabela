@@ -80,6 +80,8 @@ static consultaInventario ='/obtenerInventarioEsp?';
 //Api ventas
 static consultaVentaDetalleEstatus='/obtenerVentasClienteDetalleEstatus?';
 static consultaVentaDetalleEstatusVenta='/obtenerVentasClienteDetalleEstatusVenta?';
+static consultarVentaSaldo='/obtenerSaldoVentaCancela?';
+
 static consultaVentaDetalle='/obtenerVentasDetalle';
 static consultaVentasLike='/obtenerVentaslike?';
 static consultaVentasTop='/obtenerVentasTop';
@@ -100,6 +102,7 @@ static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultarVentaId='/obtenerVentaId?';
 static consultarMaquinaCliente='/obtenerMaquinasCliente?';
 static generarVentaPdf='/getVenta?';
+static generarSaldoFavorPdf='/getSaldoFavor?';
 static generarInventarioPdf='/getReporteInventario?';
 static generarVentaAlmacenPdf='/getVentaAlmacen?'
 static descargarDocuemento='/facturacion/getDocumento?';

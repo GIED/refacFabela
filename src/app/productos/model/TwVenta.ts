@@ -24,6 +24,7 @@ export class TwVenta{
     tcUsuario?:Usuarios;
     twCaja?:TwCaja
     tcFormapago?: TcFormaPago;
+    nSaldo?:boolean;
 
 
 

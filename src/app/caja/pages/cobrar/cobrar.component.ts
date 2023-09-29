@@ -10,6 +10,7 @@ import { forkJoin } from 'rxjs';
 import { TrVentaCobro } from '../../../productos/model/TrVentaCobro';
 import { TwVenta } from '../../../productos/model/TwVenta';
 import { TwCaja } from '../../../productos/model/TwCaja';
+import { VwSaldoVentaFavorDisponible } from 'src/app/productos/model/VwSaldoVentaFavorDisponible';
 
 @Component({
   selector: 'app-cobrar',
@@ -41,6 +42,11 @@ export class CobrarComponent implements OnInit {
   displayListaVentas:boolean;
   displayListaAbonoVenta:boolean;
   cajaActiva:TwCaja;
+  saldoFavor:number;
+  saldoTotalFavor:VwSaldoVentaFavorDisponible;
+  saldoDisponible:number;
+  ventaSaldoFavor:TvVentasDetalle;
+  state:boolean;
 
   constructor(private messageService: MessageService, private ventasService: VentasService,
     private confirmationService: ConfirmationService, private fb: FormBuilder, private catalogo: CatalogoService) {
@@ -61,6 +67,65 @@ export class CobrarComponent implements OnInit {
 
 
   }
+
+  consultarVentaSaldo(){
+    this.saldoTotalFavor=null;
+   console.log('voy a consultar si hay un saldo a favor:', this.saldoFavor);
+
+   if(this.saldoFavor!=null || this.saldoFavor!=undefined){
+   this.ventasService.obtenerSaldoVentaFavor(this.saldoFavor).subscribe(data=>{
+      this.saldoTotalFavor=data;
+
+      if(this.saldoTotalFavor!=null || this.saldoTotalFavor!=undefined){
+        this.saldoDisponible=this.saldoTotalFavor.nSaldoDisponible;
+
+        if(this.ventaSaldoFavor.nSaldoTotal<=this.formulario.controls.monto.value){
+                if(this.saldoDisponible<=this.ventaSaldoFavor.nSaldoTotal){
+                this.fProducto.monto.setValue((this.ventaSaldoFavor.nSaldoTotal-this.saldoDisponible).toFixed(3));
+                this.restan= this.fProducto.monto.value;
+                this.VentaDescuentoDto.nSaldoFavor=this.saldoDisponible;
+                this.VentaDescuentoDto.nIdVentaUtilizado=this.saldoFavor;          
+                this.formulario.controls.monto.disable();
+              }
+              else{
+                this.fProducto.monto.setValue((0).toFixed(3));
+                this.restan=0;
+                this.VentaDescuentoDto.nSaldoFavor=this.ventaSaldoFavor.nSaldoTotal;
+                this.VentaDescuentoDto.nIdVentaUtilizado=this.saldoFavor; 
+                this.formulario.controls.monto.disable();  
+
+              }
+        }
+        else{
+
+          this.fProducto.monto.setValue((0).toFixed(3));
+          this.formulario.controls.monto.disable();
+          this.VentaDescuentoDto.nSaldoFavor=0;
+          this.VentaDescuentoDto.nIdVentaUtilizado=0;
+
+
+        }
+
+      }
+      else{
+        this.saldoDisponible=0;
+        this.restan=this.ventaSaldoFavor.nSaldoTotal;
+        this.fProducto.monto.setValue((this.ventaSaldoFavor.nSaldoTotal).toFixed(3));
+          this.formulario.controls.monto.disable();
+          this.VentaDescuentoDto.nSaldoFavor=0;
+          this.VentaDescuentoDto.nIdVentaUtilizado=0;
+        
+        
+
+
+      }  
+
+   })
+  }
+
+  }
+
+  
 
 
   consultaVentas() {
@@ -122,12 +187,26 @@ export class CobrarComponent implements OnInit {
 
   abrir(tvVentasDetalle: TvVentasDetalle) {
     this.abrirformulario = true;
+    console.log('Este es el objeto de información', tvVentasDetalle);
+    console.log('Este es el objeto de información', tvVentasDetalle.nSaldoFavor);
+
+
+    this.ventaSaldoFavor=tvVentasDetalle;
+
+    if(tvVentasDetalle.nIdTipoVenta===3){
+      this.state=true;
+
+    }
+    else{
+      this.state=false;
+
+    }
    
 
   this.ventasService.obtenerCobroParcial(tvVentasDetalle.nId).subscribe(resp => {
 
     this.listaCobrosParciales = resp;
-    console.log('listaCobroParcial',this.listaCobrosParciales);
+    //console.log('listaCobroParcial',this.listaCobrosParciales);
 
     if (this.listaCobrosParciales.length >0) {
       this.displayListaAbonoVenta=false;
@@ -147,14 +226,18 @@ export class CobrarComponent implements OnInit {
     /*Se valida que no hay registro de pago de apartado y se habilita el campo de comto para escribir el monto a pagar considerando que sea mayor al 50% */
     if (tvVentasDetalle.tcTipoVenta.nId === 3 && this.listaCobrosParciales.length == 0) {
   
-      console.log("Entre a asignar el valor de anticipo");
+      //console.log("Entre a asignar el valor de anticipo");
       this.fProducto.monto.setValue(tvVentasDetalle.nAnticipo.toFixed(3));
+      this.VentaDescuentoDto.nSaldoFavor=0;
+      this.VentaDescuentoDto.nIdVentaUtilizado=0;
       this.formulario.controls.monto.enable();
     }
   
     /*Con este modulo se valida si ya hay un registro de anticipo en la caja y se asigna ñla diferecia para su cobro */
     if (tvVentasDetalle.tcTipoVenta.nId === 3 && this.listaCobrosParciales.length > 0) {
   
+      this.VentaDescuentoDto.nSaldoFavor=0;
+      this.VentaDescuentoDto.nIdVentaUtilizado=0;
       this.fProducto.monto.setValue((tvVentasDetalle.nSaldoTotal).toFixed(3));
       this.formulario.controls.monto.enable();
   
@@ -191,6 +274,9 @@ export class CobrarComponent implements OnInit {
     this.abrirformulario = false;
 
     this.limpiaFormulario();
+    this.saldoFavor=null;
+    this.saldoTotalFavor=null;
+    this.saldoDisponible=null;
 
   }
   limpiaFormulario() {
@@ -264,10 +350,18 @@ export class CobrarComponent implements OnInit {
   guardarCobro() {
 
     console.log("Esto es el objeto que se estará insertando");
-    console.log(this.VentaDescuentoDto);
+    
     
     this.VentaDescuentoDto.nAnticipo= this.fProducto.monto.value;
+    console.log(this.VentaDescuentoDto);
 
+    if(this.VentaDescuentoDto.nSaldoFavor===null || this.VentaDescuentoDto.nSaldoFavor===undefined ){
+
+      this.VentaDescuentoDto.nSaldoFavor=0;
+
+    }
+
+    
     this.ventasService.guardaVentaDetalle(this.VentaDescuentoDto).subscribe(data => {
 
       this.consultaVentas();

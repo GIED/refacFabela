@@ -29,5 +29,8 @@ descuento?:number;
 tcFormapago?:TcFormaPago;
 twCaja?:TwCaja;
 tcTipoVenta?: TcTipoVenta;
+nSaldoFavor?:number;
+nIdVentaUtilizado?:number;
+nSaldo?:boolean;
     
 }

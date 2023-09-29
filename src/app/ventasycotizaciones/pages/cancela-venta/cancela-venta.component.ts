@@ -24,6 +24,7 @@ export class CancelaVentaComponent implements OnInit {
   usoCfdi:any;
   mostrarProductos:boolean;
   buscar:string;
+  borrar:boolean;
 
   listaVentasDetalleCliente: TvVentasDetalle[];
   listaProductosVenta:VentaProductoDto;
@@ -42,17 +43,32 @@ constructor(  private ventasService:VentasService,  private messageService: Mess
  }
 
 ngOnInit(){
-   this.ventasService.obtenerVentasTop().subscribe(data=>{
-   this.listaVentasDetalleCliente=data; 
-   //console.log(this.listaVentasDetalleCliente);      
+   this.obtenerVentasCliente();
+}
+
+obtenerVentasCliente(){
   
-  }); 
+  this.ventasService.obtenerVentasTop().subscribe(data=>{
+    this.listaVentasDetalleCliente=data; 
+    //console.log(this.listaVentasDetalleCliente);      
+   
+   }); 
+
 }
 
 
 detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
 
 this.mostrarProductos=true;
+
+if(tvVentasDetalle.nIdTipoVenta==3){
+  this.borrar=false;
+  
+
+}
+else{
+  this.borrar=true;
+}
 
 this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
     this.listaProductosVenta=data;
@@ -99,6 +115,11 @@ cancelaVentaProducto(ventaProductoDto:VentaProductoDto){
   
   this.ventasService.cancelarVentaProducto(ventaProductoDto).subscribe(data => {
  this.mostrarProductos=false;
+
+ this.obtenerVentasCliente();
+
+  
+
  this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se cancelo la partida con éxito', life: 3000});
   })
   
@@ -139,6 +160,31 @@ this.ventasService.generarVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
      
     } else {
       this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+    }
+
+});
+
+}
+
+
+generarsSaldoFacorPdf(tvVentasDetalle:TvVentasDetalle){
+
+  this.ventasService.generarSaldoFavorPdf(tvVentasDetalle.nId).subscribe(resp => {
+
+  
+    const file = new Blob([resp], { type: 'application/pdf' });
+    //console.log('file: ' + file.size);
+    if (file != null && file.size > 0) {
+      const fileURL = window.URL.createObjectURL(file);
+      const anchor = document.createElement('a');
+      anchor.download = 'saldo_favor_' + tvVentasDetalle.nId + '.pdf';
+      anchor.href = fileURL;
+      anchor.click();
+      this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'comprobante de saldo a favor generado', life: 3000});
+      //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+     
+    } else {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de saldo a favor', life: 3000});
     }
 
 });

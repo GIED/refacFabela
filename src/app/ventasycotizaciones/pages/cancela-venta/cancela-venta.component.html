@@ -66,6 +66,8 @@
                     <th pSortableColumn="dFechaVenta">Fecha Venta<p-sortIcon
                             field="dFechaVenta"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="tcEstatusVenta.sDescripcion">tipo venta<p-sortIcon
+                        field="tcEstatusVenta.sDescripcion"></p-sortIcon>
                     <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
                         field="tcEstatusVenta.sDescripcion"></p-sortIcon>
                 </th>
@@ -93,9 +95,13 @@
                    
                     <td><span class="p-column-title"></span> {{venta.dFechaVenta | date}}
                     </td>
-                    <td class="p-text-center"><span class="p-column-title">Status</span>
+                    <td><span class="p-column-title"></span> {{venta.tcTipoVenta.sDescripcion}}
+                    </td>
+                    <td  class="p-text-center"><span class="p-column-title">Status</span>
                        
-                          {{venta.tcEstatusVenta.sDescripcion}}
+                         <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red"> {{venta.tcEstatusVenta.sDescripcion}}</strong>
+                         <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'" > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
+                          
                        
                     <td class="p-text-center"><span class="p-column-title">Status</span>
                        
@@ -103,10 +109,12 @@
                     </td>
                          
                       <td>
-                        <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+                        <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA'" pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
                             (click)="detalleVentaProductos(venta)"></button>
-                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                        <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA'" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                             (click)="generarVentaPdf(venta)"></button>
+                            <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green"
+                            (click)="generarsSaldoFacorPdf(venta)"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -161,10 +169,11 @@
                         </td>                       
                         <td><span class="p-column-title"></span> {{venta.nCantidad | number}}
                         </td>
-                         <td><span class="p-column-title"></span> {{venta.nTotalPartida | number}}
+                        <td><span class="p-column-title"></span> {{venta.nCantidad | number}}
                         </td>
+                       
                         <td *ngIf="venta.nEstatus==1">                            
-                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="cancelaVentaProducto(venta)"></button>                          
+                         <button *ngIf="borrar" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="cancelaVentaProducto(venta)"></button>                          
                         </td>    
                         <td *ngIf="venta.nEstatus==0">                            
                              Partida cancelada                   
