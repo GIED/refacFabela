@@ -50,7 +50,7 @@
                                                 <p-listbox *ngIf="mostrarSugerenciasProducto" [options]="listaProductoSugerencia" formControlName="productoSelecionadoCtrl" optionLabel="sNoParte" (onClick)="valorSeleccionadoProducto()" [listStyle]="{'max-height':'200px'}">
                                                     <ng-template let-producto pTemplate="item">
                                                         <div>
-                                                            <div>{{producto.sNoParte}}-{{producto.sProducto}}</div>
+                                                            <div><strong>{{producto.sNoParte}}</strong> / <strong style="color: brown;">{{producto.sMarca}} </strong>  / <strong style="color:blue;"> {{producto.sProducto}} </strong>/ {{producto.sDescripcion}}</div>
                                                         </div>
                                                     </ng-template>
                                                 </p-listbox>

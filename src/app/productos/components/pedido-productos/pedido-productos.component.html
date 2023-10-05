@@ -72,11 +72,12 @@
                         </td> 
                         <td><span class="p-column-title">Status</span> {{pedido.nCantidadPedida}}
                         </td> 
-                        <td><span class="p-column-title">Status</span> {{pedido. nCantidaRecibida}}
+                        <td><span class="p-column-title">Status</span> {{pedido.nCantidaRecibida}}
                         </td> 
                         <td><span class="p-column-title">Status</span><div *ngIf="pedido.nCantidadPedida!=pedido. nCantidaRecibida" style="background: red ; color:white; text-align:center ; border-radius: 20px;">{{pedido.nCantidadPedida-pedido. nCantidaRecibida}}</div> 
                             <div *ngIf="pedido.nCantidadPedida==pedido. nCantidaRecibida" style="background: green ; color:white; text-align:center ; border-radius: 20px;">{{pedido.nCantidadPedida-pedido. nCantidaRecibida}}</div>
-                        </td> 
+                        </td>
+      
                         
                        
                         <td *ngIf="banIngreso"> <div *ngIf="pedido.nEstatus==true">Entregado</div> <div *ngIf="pedido.nEstatus==false">Pendiente de entrega</div> </td>
@@ -85,9 +86,9 @@
                         <td>
                             <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
                                 (click)="detalleProduct(pedido.tcProducto.nId)"></button>   
-                                <button *ngIf="pedido.nEstatus==false" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2"
+                                <button *ngIf="pedido.nEstatus==false || pedido.nEstatus==null " pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2"
                                 (click)="mostrarRegistroEntrada(pedido)"></button> 
-                                <button  *ngIf="banIngreso" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="coancelaPedidoProducto(pedido)"></button>                          
+                                <button  *ngIf="banIngreso" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="confirm(pedido)"></button>                          
     
                                
                           
@@ -108,6 +109,10 @@
                     (guardarProducto)="saveProduct($event)"></app-modal-producto>
             </ng-template>
         </p-dialog>
+
+        <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+     
 
         <!-- Formulario de Registro de entregas parciales -->
 

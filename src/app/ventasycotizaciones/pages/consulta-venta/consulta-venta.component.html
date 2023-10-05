@@ -92,7 +92,7 @@
                     <td><span class="p-column-title"></span><p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
                     </td>
                    
-                    <td><span class="p-column-title"></span> {{venta.dFechaVenta | date}}
+                    <td><span class="p-column-title"></span> {{venta.dFechaVenta | customDate:'dd/MM/yyyy HH:mm:ss':'America/Mexico_City' }}
                     </td>
                     <td class="p-text-center"><span class="p-column-title">Status</span>
                        

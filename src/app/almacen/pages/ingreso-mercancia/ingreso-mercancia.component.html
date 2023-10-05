@@ -99,11 +99,8 @@
 
         <p-dialog [(visible)]="detalleDialog" [style]="{width: '1200px'}" header="Detalle del Pedido" [modal]="true"
             styleClass="p-fluid" [closable]="false">
-            <ng-template pTemplate="content">
-              
-                
+            <ng-template pTemplate="content">      
                 <app-pedido-productos [listaPedidos]="listaPedidos"  [banIngreso]="true" (listaPedidoDetalle)="obtenerPedidosEstatusActualiza($event)"  >  </app-pedido-productos>
-
             </ng-template>
             <ng-template pTemplate="footer">
                 <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"

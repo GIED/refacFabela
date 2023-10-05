@@ -74,23 +74,27 @@ export class PedidoProductosComponent implements OnInit {
 
   }
 
+  confirm(twPedidoProducto: TwPedidoProducto) {
+    this.confirmationService.confirm({
+        message: 'Real mente quieres borrar el producto del pedido?',
+        accept: () => {
+          console.log(twPedidoProducto);
 
-coancelaPedidoProducto(twPedidoProducto: TwPedidoProducto){
-
-
-  console.log(twPedidoProducto);
-
-  this.pedidosService.borrarProductoPedido(twPedidoProducto).subscribe(data=>{
-
-    this.mensaje=data;
- 
-    this.listaPedidos =  this.listaPedidos.filter(nId => nId != twPedidoProducto);
-
-
-  })
-
-
+          this.pedidosService.borrarProductoPedido(twPedidoProducto).subscribe(data=>{
+        
+            this.mensaje=data;
+         
+            this.listaPedidos =  this.listaPedidos.filter(nId => nId != twPedidoProducto);
+        
+        
+          })
+        
+        }
+    });
 }
+
+
+
 
 
 
