@@ -14,7 +14,7 @@
         
         <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
             <label>Nuevo Stock</label>
-            <p-inputNumber formControlName="cantidadCtrl" min="1"  required></p-inputNumber>
+            <p-inputNumber formControlName="cantidadCtrl"  required></p-inputNumber>
             <div *ngIf="cantidadCtrl.invalid || (cantidadCtrl.dirty || cantidadCtrl.touched)">
                 <small class="p-error" *ngIf="cantidadCtrl.errors?.required">Campo obligatorio</small>
             </div>

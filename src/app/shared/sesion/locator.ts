@@ -40,6 +40,7 @@ static consultarMarcas= '/catalogoMarca';
 static consultarUsoCfdi='/catalogoUsoCfdi';
 //api productos
 static obtenerProductos= '/obtenerProductos';
+static obtenerProductoId= '/obtenerProductoId?';
 static obtenerProductosLike= '/obtenerProductosLike?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
@@ -54,6 +55,7 @@ static obtenerProductosCaneladosId='/obtenerProductosCancelaId?';
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
 static obtenerTotalBodegasIdProducto='/obtenerTotalBodegasIdProducto?';
 static obtenerVentaStockFecha='/obtenerVentasStockFecha?';
+static obtenerVentasCancelaFecha='/obtenerProductosCanceladosFecha?';
 
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';

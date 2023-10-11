@@ -11,6 +11,7 @@ import { TvVentaStock } from '../../productos/model/TvVentaStock';
 import { TvStockProductoHist } from 'src/app/productos/model/TvStrockProductoHist';
 import { TwProductoCancela } from 'src/app/productos/model/TwProductoCancela';
 import { ProductoDescuentoDto } from 'src/app/productos/model/ProductoDescuentoDto';
+import { TwVentaProductoCancela } from 'src/app/productos/model/TwVentaProductoCancela';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,11 @@ export class ProductoService {
     let url = environment.servicios.apiRefacFabela + locator.obtenerProductos;
     return this.http.get<TcProducto[]>(url);
   }
+  obtenerProductoId(nId:number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerProductoId+'nId='+nId;
+    return this.http.get<TcProducto[]>(url);
+  }
+  obt
   obtenerProductosLike(producto:string){
     let url = environment.servicios.apiRefacFabela + locator.obtenerProductosLike +'producto='+producto;
     return this.http.get<TcProducto[]>(url);
@@ -38,6 +44,11 @@ export class ProductoService {
     let url =environment.servicios.apiRefacFabela + locator.obtenerVentaStockFecha+'dFechaInicio='+fechaInicio+'&dFechaFinal='+fechaFinal;
     console.log(url);
     return this.http.get<TvVentaStock[]>(url);
+  }
+  obtenerVentasCancelaFecha(fechaInicio: string, fechaFinal:string){
+    let url =environment.servicios.apiRefacFabela + locator.obtenerVentasCancelaFecha+'fechaInicio='+fechaInicio+'&fechaTermino='+fechaFinal;
+    console.log(url);
+    return this.http.get<TwVentaProductoCancela[]>(url);
   }
 
   obtenerProductosAlternativos(nId:number){

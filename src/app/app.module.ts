@@ -25,6 +25,8 @@ import { interceptorProvider } from './shared/interceptors/prod-interceptor.serv
 import { DialogService } from 'primeng/dynamicdialog';
 
 
+
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -34,7 +36,10 @@ import { DialogService } from 'primeng/dynamicdialog';
         AppTopBarComponent,
         AppFooterComponent,
         AppRightPanelComponent,
-        SpinnerComponent,  
+        SpinnerComponent,
+     
+      
+        
     ],
     imports: [
         BrowserModule,
@@ -45,6 +50,7 @@ import { DialogService } from 'primeng/dynamicdialog';
         BrowserAnimationsModule,  
         PrimeModule,
         NgxSpinnerModule,
+        
               
      
         

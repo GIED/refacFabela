@@ -16,13 +16,14 @@ import { AdminCajaComponent } from './pages/admin-caja/admin-caja.component';
 import { FormClienteComponent } from './components/form-cliente/form-cliente.component';
 import { TraspasoVentaACreditoComponent } from './pages/traspaso-venta-acredito/traspaso-venta-acredito.component';
 import { FormTraspasoVentaACreditoComponent } from './components/form-traspaso-venta-acredito/form-traspaso-venta-acredito.component';
+import { ProductosCanceladosComponent } from './pages/productos-cancelados/productos-cancelados.component';
 
 
 
 
 @NgModule({
     
-  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent, TraspasoVentaACreditoComponent, FormTraspasoVentaACreditoComponent],
+  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent, TraspasoVentaACreditoComponent, FormTraspasoVentaACreditoComponent, ProductosCanceladosComponent],
   imports: [
     AdministracionRoutingModule,   
     PrimeModule,

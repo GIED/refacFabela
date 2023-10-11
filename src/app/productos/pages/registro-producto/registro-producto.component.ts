@@ -41,11 +41,25 @@ export class RegistroProductoComponent implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
     ) {
-        this.obtenerProductos();
+        
     }
 
 
     ngOnInit() {
+
+    }
+    informacionProducto(nId:number) {
+        this.listaProductos=null;
+     this.productosService.obtenerProductoId(nId).subscribe(data=>{
+        this.listaProductos=data;
+      
+       console.log(data);
+
+
+     })
+     
+
+
 
     }
 

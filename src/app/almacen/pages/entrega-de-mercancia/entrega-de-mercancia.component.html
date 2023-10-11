@@ -72,6 +72,9 @@
                         </th>
                         <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
                                 field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+
+                        <th pSortableColumn="tcTipoVenta.sDescripcion">Estatus Venta<p-sortIcon
+                                    field="tcTipoVenta.sDescripcion"></p-sortIcon>
                         </th>
                         <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor<p-sortIcon
                                 field="tcUsuario.sNombreusuario"></p-sortIcon>
@@ -101,7 +104,10 @@
                         </td>
                         <td class="p-text-center"><span class="p-column-title">Status</span>
 
-                            {{venta.tcEstatusVenta.sDescripcion}}
+                            {{venta.tcEstatusVenta.sDescripcion}}</td>
+                            <td class="p-text-center"><span class="p-column-title">Tipo Venta</span>
+
+                                {{venta.tcTipoVenta.sDescripcion}}</td>
 
                         <td class="p-text-center"><span class="p-column-title">Status</span>
 

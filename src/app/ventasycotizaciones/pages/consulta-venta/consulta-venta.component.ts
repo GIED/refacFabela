@@ -6,6 +6,8 @@ import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
 
+
+
 @Component({
   selector: 'app-consulta-venta',
   templateUrl: './consulta-venta.component.html',
@@ -24,11 +26,12 @@ export class ConsultaVentaComponent implements OnInit {
     usoCfdi:any;
     mostrarProductos:boolean;
     buscar:string;
+    myDate:Date;
 
     listaVentasDetalleCliente: TvVentasDetalle[];
     listaProductosVenta:VentaProductoDto;
 
-  constructor(  private ventasService:VentasService,  private messageService: MessageService,  ) {
+  constructor(  private ventasService:VentasService,  private messageService: MessageService,   ) {
 
     this.cols = [
       { field: 'sFolioVenta', header: 'Folio' },
@@ -44,7 +47,22 @@ export class ConsultaVentaComponent implements OnInit {
   ngOnInit(){
      this.ventasService.obtenerVentasTop().subscribe(data=>{
      this.listaVentasDetalleCliente=data; 
-     //console.log(this.listaVentasDetalleCliente);      
+     console.log( this.listaVentasDetalleCliente);
+
+    
+     for (let index = 0; index <  this.listaVentasDetalleCliente.length; index++) {
+
+      let fecha = new Date(this.listaVentasDetalleCliente[index].dFechaVenta);
+
+      fecha.setDate(fecha.getDate() + 1);
+
+      this.listaVentasDetalleCliente[index].dFechaVenta=fecha;
+
+      console.log(fecha);
+      
+  
+      
+     }     
     
     }); 
   }
@@ -139,4 +157,8 @@ generarVentaPdf(tvVentasDetalle:TvVentasDetalle){
 
 
 
+}
+
+function addDayToDate(dFechaVenta: Date, arg1: number): any {
+  throw new Error('Function not implemented.');
 }

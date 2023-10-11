@@ -8,6 +8,7 @@ import { TipoCambioComponent } from "./pages/tipo-cambio/tipo-cambio.component";
 import { ValidaComprobanteComponent } from './pages/valida-comprobante/valida-comprobante.component';
 import { AdminCajaComponent } from './pages/admin-caja/admin-caja.component';
 import { TraspasoVentaACreditoComponent } from './pages/traspaso-venta-acredito/traspaso-venta-acredito.component';
+import { ProductosCanceladosComponent } from "./pages/productos-cancelados/productos-cancelados.component";
 
 const routes: Routes = [
   {
@@ -48,6 +49,10 @@ const routes: Routes = [
       {
         path: "traspaso-venta-credito",
         component: TraspasoVentaACreditoComponent,
+      },
+      {
+        path: "productos-cancelados",
+        component: ProductosCanceladosComponent,
       },
     ],
   },
