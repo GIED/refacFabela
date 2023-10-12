@@ -56,6 +56,8 @@ static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
 static obtenerTotalBodegasIdProducto='/obtenerTotalBodegasIdProducto?';
 static obtenerVentaStockFecha='/obtenerVentasStockFecha?';
 static obtenerVentasCancelaFecha='/obtenerProductosCanceladosFecha?';
+static obtenerProductosAjustadosFecha='/obtenerProductosAjusteFecha?';
+
 
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';

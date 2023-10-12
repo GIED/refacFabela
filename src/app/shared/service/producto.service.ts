@@ -12,6 +12,7 @@ import { TvStockProductoHist } from 'src/app/productos/model/TvStrockProductoHis
 import { TwProductoCancela } from 'src/app/productos/model/TwProductoCancela';
 import { ProductoDescuentoDto } from 'src/app/productos/model/ProductoDescuentoDto';
 import { TwVentaProductoCancela } from 'src/app/productos/model/TwVentaProductoCancela';
+import { TwAjusteInventario } from 'src/app/productos/model/TwAjusteInventario';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,11 @@ export class ProductoService {
     let url =environment.servicios.apiRefacFabela + locator.obtenerVentasCancelaFecha+'fechaInicio='+fechaInicio+'&fechaTermino='+fechaFinal;
     console.log(url);
     return this.http.get<TwVentaProductoCancela[]>(url);
+  }
+  obtenerProductosAjustadosFecha(fechaInicio: string, fechaFinal:string){
+    let url =environment.servicios.apiRefacFabela + locator.obtenerProductosAjustadosFecha+'fechaInicio='+fechaInicio+'&fechaTermino='+fechaFinal;
+    console.log(url);
+    return this.http.get<TwAjusteInventario[]>(url);
   }
 
   obtenerProductosAlternativos(nId:number){

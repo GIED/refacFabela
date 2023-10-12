@@ -9,6 +9,7 @@ import { ValidaComprobanteComponent } from './pages/valida-comprobante/valida-co
 import { AdminCajaComponent } from './pages/admin-caja/admin-caja.component';
 import { TraspasoVentaACreditoComponent } from './pages/traspaso-venta-acredito/traspaso-venta-acredito.component';
 import { ProductosCanceladosComponent } from "./pages/productos-cancelados/productos-cancelados.component";
+import { ConsultaAjusteInventarioComponent } from "./pages/consulta-ajuste-inventario/consulta-ajuste-inventario.component";
 
 const routes: Routes = [
   {
@@ -53,6 +54,10 @@ const routes: Routes = [
       {
         path: "productos-cancelados",
         component: ProductosCanceladosComponent,
+      },
+      {
+        path: "consulta-ajuste-inventario",
+        component: ConsultaAjusteInventarioComponent,
       },
     ],
   },

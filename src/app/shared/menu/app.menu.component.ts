@@ -66,6 +66,9 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Productos Cancelados', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/productos-cancelados']
                     },
+                    {
+                        label: 'Ajuste Inventario', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/consulta-ajuste-inventario']
+                    },
 
                     
                    
