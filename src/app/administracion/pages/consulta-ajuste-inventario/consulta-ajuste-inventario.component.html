@@ -1,0 +1,121 @@
+<div class="p-grid p-fluid">
+    <!--Campos de filtro-->
+    <div class="p-col-12 ">
+        <div class="card">
+            <h3 class="p-mb-3 p-text-center">Ajuste de Inventario de Productos</h3>
+            <br>
+            <div _ngcontent-iho-c213="" class="p-grid p-formgrid">
+                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-6 p-lg-6 p-mb-lg-0">
+                    <div class="p-field p-col-12 p-md-12">
+                        <label for="dateformat">Fecha  de Inicio</label>
+                        <p-calendar [(ngModel)]="fechaInicio" dateFormat="yy-mm-dd" inputId="dateformat"></p-calendar>
+                    </div>
+                  
+
+                </div>
+                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-6 p-lg-6 p-mb-lg-0">
+                    <div class="p-field p-col-12 p-md-12">
+                        <label for="dateformat">Fecha de Termino</label>
+                        <p-calendar [(ngModel)]="fechaTermino" dateFormat="yy-mm-dd" inputId="dateformat"></p-calendar>
+                    </div>
+                </div>
+                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
+                    <button pButton pRipple type="button" label="Consultar" class="p-button-success" (click)="consultar()"></button>
+                </div>
+
+               
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+
+<div class="p-grid" *ngIf="bandera ">
+    
+    <div class="p-col-12">
+        <div class="card">	
+  
+        <p-toast></p-toast>
+      
+
+        <p-table  #ds [value]="listaProductosAjustados" [columns]="cols" [paginator]="true" responsiveLayout="scroll"  [rows]="10"
+            [paginator]="true"
+            [globalFilterFields]="['nId','tcProductos.sNoParte','tcProductos.sProducto','tcProductos.sMarca','nCantidadAnterior', 'nCantidadActual','nTotalAjustado','sFecha' ]"
+            [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
+            [showCurrentPageReport]="true">
+            <ng-template pTemplate="caption">
+                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Buscar" />
+                    </span>
+                   
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="nId">Id<p-sortIcon field="nId"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="tcProductos.sNoParte">No. Parte<p-sortIcon field="tcProductos.sNoParte"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="tcProductos.sProducto">Producto<p-sortIcon field="tcProductos.sProducto"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="tcProductos.sMarca">Marca<p-sortIcon field="tcProductos.sMarca"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="nCantidadAnterior">Stock Anterior<p-sortIcon field="nCantidadAnterior"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="nCantidadActual">Cantidad Quedo<p-sortIcon field="nCantidadActual"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="nTotalAjustado">Total ajustado<p-sortIcon field="nTotalAjustado"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="nTotalAjustado">Fecha<p-sortIcon field="sFecha"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="tcUsuario.sNombreUsuario">Fecha<p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon>
+                    </th>
+                    
+                    
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-producto let-expanded="expanded">
+                <tr>
+                    <td><span class="p-column-title"></span> {{producto.nId}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.tcProducto.sNoParte}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.tcProducto.sProducto}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.tcProducto.sMarca}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.nCantidadAnterior}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.nCantidadActual}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.nTotalAjustado}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.sFecha | date}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.tcUsuario.sNombreUsuario }}
+                    </td>
+                   
+                    
+                     
+                </tr>
+            </ng-template>
+        </p-table>
+
+        
+        <p-toolbar  styleClass="p-mb-4">
+            <ng-template pTemplate="right">
+                <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                    class="p-button-help p-mb-2" (click)="ds.exportCSV()"></button>
+            </ng-template>
+        </p-toolbar>
+    </div>
+</div>
+</div>
