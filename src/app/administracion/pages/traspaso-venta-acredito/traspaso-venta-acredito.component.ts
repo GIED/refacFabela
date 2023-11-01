@@ -88,18 +88,18 @@ export class TraspasoVentaACreditoComponent implements OnInit {
       acceptLabel: "Aceptar", acceptIcon: "pi pi-check", acceptButtonStyleClass: 'p-button-success p-button-sm p-button-raised',
       rejectLabel: "Rechazar", rejectIcon: "pi pi-times", rejectButtonStyleClass: 'p-button-outlined p-button-danger p-button-sm',
       accept: () => {
-            console.log(tvVentaDetalle);
+            //console.log(tvVentaDetalle);
 
             this._clienteService.consultaClienteId(tvVentaDetalle.nIdCliente).subscribe(resp =>{
                 this.tcCliente = resp;
-                console.log('cliente: ',this.tcCliente);
+              //  console.log('cliente: ',this.tcCliente);
                 if (this.tcCliente.n_limiteCredito > 0) {
 
                   this._clienteService.obtenerSaldoGeneralCliente(tvVentaDetalle.nIdCliente).subscribe(resp =>{
 
                     this.saldoGeneralCliente=resp;
 
-                    console.log('this.saldoGeneralCliente',this.saldoGeneralCliente);
+                //    console.log('this.saldoGeneralCliente',this.saldoGeneralCliente);
 
                     if (this.saldoGeneralCliente == null || (this.saldoGeneralCliente.nCreditoDisponible > tvVentaDetalle.nSaldoTotal)) {
 
@@ -116,7 +116,7 @@ export class TraspasoVentaACreditoComponent implements OnInit {
                         this.twVenta.nIdEstatusVenta=2;
     
                         this.ventasService.cambiarVentaACredito(this.twVenta).subscribe(resp =>{
-                          console.log('venta actualizada: ',resp);
+                         // console.log('venta actualizada: ',resp);
                           this._toastr.add({
                             severity: "success",
                             summary: "Venta Cambiada",

@@ -5,6 +5,7 @@ import { ProductService } from 'src/app/demo/service/productservice';
 import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { VentasService } from 'src/app/shared/service/ventas.service';
 import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
+import { VentaProductoCancelaDto } from '../../model/dto/VentaProductoCancelaDto';
 
 @Component({
   selector: 'app-cancela-venta',
@@ -28,6 +29,13 @@ export class CancelaVentaComponent implements OnInit {
 
   listaVentasDetalleCliente: TvVentasDetalle[];
   listaProductosVenta:VentaProductoDto;
+  mostrarCancela:Boolean=false;
+  producto:String;
+  totalVendidos:number;
+  totalCancelar:number;
+  ventaProductoDto:VentaProductoDto;
+  VentaProductoCancelaDto:VentaProductoCancelaDto;
+
 
 constructor(  private ventasService:VentasService,  private messageService: MessageService,  ) {
 
@@ -40,6 +48,7 @@ constructor(  private ventasService:VentasService,  private messageService: Mess
     { field: 'tcUsuario.sNombreUsuario', header: 'Vendedor' },
    
 ]
+this.VentaProductoCancelaDto=new VentaProductoCancelaDto();
  }
 
 ngOnInit(){
@@ -56,6 +65,11 @@ obtenerVentasCliente(){
 
 }
 
+cerrarDialogCancela(){
+
+this.mostrarCancela=false;
+
+}
 
 detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
 
@@ -78,17 +92,13 @@ this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data =>
 
 consultarTodas(){
 
-  if(this.buscar !== undefined && this.buscar.length >=1 ){
+  
     this.ventasService.obtenerVentaDetalle().subscribe(data => {
       this.listaVentasDetalleCliente=data;
       //console.log(this.listaVentasDetalleCliente);
     }); 
 
-  }
-  else 
-  {
-   
-  }
+ 
 }
 
 consultar(){
@@ -111,18 +121,53 @@ consultar(){
 
 }
 
-cancelaVentaProducto(ventaProductoDto:VentaProductoDto){
+cancelaVenta(ventaProductoDto:VentaProductoDto){
   
+  this.ventaProductoDto=ventaProductoDto;
+  this.mostrarCancela=true;
+  this.producto=ventaProductoDto.sNoParte+'-'+ventaProductoDto.sProducto;
+  this.totalVendidos=ventaProductoDto.nCantidad;
+  this.VentaProductoCancelaDto.VentaProductoDto=ventaProductoDto;
+
+ 
+  
+  }
+
+  concelarVentaProducto(){
+
+    if(this.totalCancelar!=undefined && this.totalCancelar!=null){
+
+      console.log('voy a cancelar:',this.totalCancelar,' productos de: ',this.totalVendidos,'vendidos');
+     this.VentaProductoCancelaDto.nCancela=this.totalCancelar;
+
+      this.ventasService.cancelarVentaProducto(this.VentaProductoCancelaDto).subscribe(data => {
+        this.mostrarProductos=false;
+       
+       // this.obtenerVentasCliente();  
+       
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se cancelo el producto con éxito', life: 3000});
+         })
+
+     
+
+    }
+    else{
+
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Debe registrar un númeor de productos a cancelar', life: 3000});
+    }
+
+/*
   this.ventasService.cancelarVentaProducto(ventaProductoDto).subscribe(data => {
  this.mostrarProductos=false;
 
- this.obtenerVentasCliente();
-
-  
+ this.obtenerVentasCliente();  
 
  this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se cancelo la partida con éxito', life: 3000});
-  })
-  
+  })*/
+
+
+
+
   }
 
 hideDialogAlter(){

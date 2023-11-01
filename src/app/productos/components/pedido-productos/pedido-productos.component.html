@@ -89,7 +89,8 @@
                                 <button *ngIf="pedido.nEstatus==false || pedido.nEstatus==null " pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2"
                                 (click)="mostrarRegistroEntrada(pedido)"></button> 
                                 <button  *ngIf="banIngreso" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="confirm(pedido)"></button>                          
-    
+                                <button pButton pRipple icon="pi pi-home" class="p-button-rounded p-button-success p-mr-2" (click)="modalProductoBodega(pedido)" pTooltip="Movimiento Interno"></button>
+
                                
                           
                         </td>

@@ -159,7 +159,7 @@ export class UsuarioComponent implements OnInit {
     actualizarUsuario() {
 
         this.nuevoUsuario = this.formulario.value;        
-      console.log(  this.nuevoUsuario);          
+      //console.log(  this.nuevoUsuario);          
                 
                 this.usuarioService.guardarUsuario(this.nuevoUsuario ).subscribe(usuarioDesactivado => {
                     this.listaUsuarios=[];

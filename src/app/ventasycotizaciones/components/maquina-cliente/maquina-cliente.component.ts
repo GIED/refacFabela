@@ -29,7 +29,7 @@ export class MaquinaClienteComponent implements OnInit {
 
       this.listaMaquinaCliente=data;
 
-      console.log(this.listaMaquinaCliente);
+      //console.log(this.listaMaquinaCliente);
 
 
     });

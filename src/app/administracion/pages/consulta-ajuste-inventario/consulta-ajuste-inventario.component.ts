@@ -78,8 +78,8 @@ export class ConsultaAjusteInventarioComponent implements OnInit {
 
   consultar(){
    
-    console.log(this.defDateInicio);
-    console.log(this.defDateFin);
+    //console.log(this.defDateInicio);
+    //console.log(this.defDateFin);
     this.bandera=false;
 
     if(this.fechaInicio!=null && this.fechaInicio != null ){

@@ -22,4 +22,8 @@ export class BodegasService {
       let url = environment.servicios.apiRefacFabela + locator.obtenerProductoBodegas+ 'id='+id;
       return this.http.get<TwProductoBodega[]>(url);
     }
+    obtenerProductoBodega(id: number, nIdBodega){
+      let url = environment.servicios.apiRefacFabela + locator.obtenerProductoBodega+ 'id='+id+'&idBodega='+nIdBodega;
+      return this.http.get<TwProductoBodega>(url);
+    }
 }

@@ -67,7 +67,7 @@ export class FormMaquinaClienteComponent implements OnInit {
       this.maquinaCliente.sSerie=this.fMaquina.serieCtrl.value;
       this.maquinaCliente.sObservaciones=this.fMaquina.observacionesCtrl.value;
 
-      console.log(this.maquinaCliente);
+      // console.log(this.maquinaCliente);
 
       this.ventasService.guardarMaquina(this.maquinaCliente).subscribe(data=>{
         this.limpiaFormulario();

@@ -53,7 +53,7 @@ export class ActualizaProductoAlmacenComponent implements OnInit {
    
     this.catalogoService.obtenerMarcas().subscribe(data=> {
       this.listaMarca=data;
-      console.log(this.listaMarca);
+      //console.log(this.listaMarca);
       if(this.producto.nIdMarca>0 ){
     
         for (let index = 0; index < this.listaMarca.length; index++) {
@@ -180,7 +180,7 @@ asignarMarca(){
 
    }
 
-  console.log("Este el valor seleccionado",this.fProducto.nIdMarca.value);
+  //console.log("Este el valor seleccionado",this.fProducto.nIdMarca.value);
 
 
 }

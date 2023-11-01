@@ -61,7 +61,7 @@ export class VentaStockCeroComponent implements OnInit {
 
 
       }
-      console.log( this.listaVentaStock);
+      // console.log( this.listaVentaStock);
     
   
     });
@@ -74,8 +74,8 @@ export class VentaStockCeroComponent implements OnInit {
 
    
    
-    console.log(this.defDateInicio);
-    console.log(this.defDateFin);
+    // console.log(this.defDateInicio);
+    // console.log(this.defDateFin);
 
     if(this.fechaInicio!=null && this.fechaInicio != null ){
       this.defDateInicio = this.fechaInicio.getFullYear().toString()  + '-' + (this.fechaInicio.getMonth() + 1).toString().padStart(2, "0") + '-' + this.fechaInicio.getDate().toString().padStart(2, "0");
@@ -99,7 +99,7 @@ export class VentaStockCeroComponent implements OnInit {
   
       
         const file = new Blob([resp], { type: 'application/pdf' });
-        console.log('file: ' + file.size);
+       // console.log('file: ' + file.size);
         if (file != null && file.size > 0) {
           const fileURL = window.URL.createObjectURL(file);
           const anchor = document.createElement('a');

@@ -45,7 +45,7 @@ export class ProductosAlternativosVentaComponent implements OnInit {
   }
 
   limpiar(){
-    console.log('llego a limpiar');
+    //console.log('llego a limpiar');
     this.nCantidadCtrl.setValue(0);
   }
 
@@ -54,8 +54,8 @@ export class ProductosAlternativosVentaComponent implements OnInit {
     this.productoService.obtenerProductosAlternativos(this.nIdProducto)
       .subscribe((productosAlter) => {
          productosAlter;
-        console.log("Alternativos");
-        console.log(productosAlter);
+        //console.log("Alternativos");
+        //console.log(productosAlter);
         for (const producto of productosAlter) {
           this.tvStockProducto = new TvStockProducto();
           this.productoService.obtenerTotalBodegasIdProducto(producto.nIdProductoAlternativo).subscribe(productoStock =>{
@@ -66,7 +66,7 @@ export class ProductosAlternativosVentaComponent implements OnInit {
           });
           
         }
-        console.log(this.productosFiltrados);
+        //console.log(this.productosFiltrados);
         
       });
   }

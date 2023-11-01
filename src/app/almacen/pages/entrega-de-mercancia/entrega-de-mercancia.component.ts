@@ -84,7 +84,7 @@ export class EntregaDeMercanciaComponent implements OnInit {
         this.listaProductosVenta = data;
       });
 
-      console.log(tvVentasDetalle.nId);
+     // console.log(tvVentasDetalle.nId);
 
 
       this.ventasService
@@ -100,7 +100,7 @@ export class EntregaDeMercanciaComponent implements OnInit {
         }
 
 
-        console.log( this.listaVentasProductosTraer );
+        //  console.log( this.listaVentasProductosTraer );
       });
       
 

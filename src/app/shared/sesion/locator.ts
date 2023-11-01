@@ -66,6 +66,8 @@ static guardarProductoAlternativo = '/guardarProductoAlternativo';
 //api Bodegas
 static obtenerBodegas= '/catalogoBodegas';
 static obtenerProductoBodegas = '/obtenerProductoBodegas?';
+static obtenerProductoBodega = '/obtenerProductoBodega?';
+
 //api Anaquel
 static obtenerAnaqueles= '/catalogoAnaquel';
 //api Nivel
@@ -98,6 +100,8 @@ static consultaProductoVentasTraer='/obtenerProductosTraer?';
 static guardaVenta= '/guardarVenta';
 static cancelaProductoVenta= '/cancelaVentaProducto';
 static guardaVentaDetalle= '/guardarVentaDetalle';
+static guardarVentaDescuento= '/guardarVentaDescuento';
+
 static guardaVentaProductoId= '/guardaVentaProductoId';
 static guardaVentaProductoEntrega= '/guardaVentasProducto';
 static guardaAbono= '/guardarAbono';
@@ -149,6 +153,7 @@ static movimientoExterno='/movimientoExterno';
 static consultaVentaFactura='/facturacion/ventasParaFactura';
 static consultaCreditos='/facturacion/consultaCreditos';
 static facturarVenta='/facturacion/venta?';
+static facturarComplemento='/facturacion/complemento?'
 static consultaFacturas='/facturacion/ventasFacturadas';
 
 

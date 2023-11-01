@@ -101,7 +101,7 @@ export class InventarioComponent implements OnInit {
 
 
 
-console.log()
+
 
 if (this.bodega != undefined && this.anaquel != undefined && this.nivel != undefined) {
     this.banderaMostrarPdf=true;

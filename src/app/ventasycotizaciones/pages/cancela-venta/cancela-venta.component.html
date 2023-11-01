@@ -173,7 +173,7 @@
                         </td>
                        
                         <td *ngIf="venta.nEstatus==1">                            
-                         <button *ngIf="borrar" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="cancelaVentaProducto(venta)"></button>                          
+                         <button *ngIf="borrar" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="cancelaVenta(venta)"></button>                          
                         </td>    
                         <td *ngIf="venta.nEstatus==0">                            
                              Partida cancelada                   
@@ -183,7 +183,7 @@
                 </p-table>                
             </ng-template>
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
+                <button pButton pRipple label="Cerrar" icon="pi pi-times"  class="p-button-danger" (click)="hideDialogAlter()"></button>
             </ng-template>
         </p-dialog>
         <p-toolbar styleClass="p-mb-4">
@@ -192,6 +192,27 @@
                     class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
             </ng-template>
         </p-toolbar>
+
+        <p-dialog [(visible)]="mostrarCancela" header="Cancelación de productos" [style]="{width: '700px', height:'300px'}" [closable]="true" styleClass="p-fluid red "  >
+                
+            <div class="card" style="background-color:lightgrey">
+                <div class="flex flex-column card-container green-container">
+                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">{{producto}}</div>
+                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Total Vendidos:{{totalVendidos}}</div>
+                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Total Cancelar:<p-inputNumber [(ngModel)]="totalCancelar" inputId="minmax" mode="decimal" [min]="1" [max]='totalVendidos'> </p-inputNumber>
+                    </div>
+                </div>
+            </div>
+
+             <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="cerrarDialogCancela()"></button>
+                <button pButton pRipple label="Cancelar Producto" icon="pi pi-save" class=" p-button-success" (click)="concelarVentaProducto()"></button>
+            </ng-template>
+
+        </p-dialog>
+
+
+
     </div>
 </div>
 </div>

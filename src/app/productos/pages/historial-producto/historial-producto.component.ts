@@ -161,7 +161,7 @@ informacionProducto(nId:number) {
         this.cargaInicial=true;
 
         this.listaIngresoProducto=resultado[4];
-        console.log(resultado[4]);
+       // console.log(resultado[4]);
 
      
 

@@ -21,34 +21,35 @@ export class ModalProductosBodegaInternoComponent implements OnInit {
   modelContainer: ModelContainer;
   formGrp: FormGroup;
   productoBodega:TwProductoBodega;
-
   listaAnaquel: TcAnaquel[];
   listaNivel: TcNivel[];
 
 
   constructor(public ref: DynamicDialogRef,
-     public config: DynamicDialogConfig,
-      private anaquelService: AnaquelService,
+    public config: DynamicDialogConfig,
+    private anaquelService: AnaquelService,
     private nivelService: NivelService, 
     private traspasoService:TraspasoService) {
-    this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
+      this.formGrp = new FormGroup({});
+      this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
+    this.productoBodega=new TwProductoBodega();
    }
 
   ngOnInit(): void {
-  this._initFormGroup();
-  this.anaquelService.obtenerAnanquel().subscribe(anaquel => {
-    this.listaAnaquel = anaquel;
-});
-
-this.nivelService.obtenerNivel().subscribe(nivel => {
-    this.listaNivel = nivel;
-});
+    this.anaquelService.obtenerAnanquel().subscribe(anaquel => {
+      this.listaAnaquel = anaquel;
+    });
+    
+    this.nivelService.obtenerNivel().subscribe(nivel => {
+      this.listaNivel = nivel;
+    });
+    this._initFormGroup();
   }
 
   _initFormGroup(): void {
     let modelContainer: ModelContainer = this.config.data;
     this.productoBodega = ObjectUtils.isEmpty(modelContainer.modelData) ? new TwProductoBodega() : modelContainer.modelData as TwProductoBodega;
-    //console.log(this.productoBodega);
+   //console.log( 'Esete es objeto que llega al modal',this.productoBodega )
     this.formGrp = new FormGroup({
       anaquelCtrl: new FormControl(this.productoBodega.nIdAnaquel, [Validators.required]),
       nivelCtrl: new FormControl(this.productoBodega.nIdNivel,[Validators.required])

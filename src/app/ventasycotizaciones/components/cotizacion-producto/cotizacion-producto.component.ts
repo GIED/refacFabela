@@ -22,7 +22,7 @@ export class CotizacionProductoComponent implements OnInit {
   }
 
   consulta(){
-    console.log(this.nIdCotizacion);
+   // console.log(this.nIdCotizacion);
 
     this.ventasCotizacionesService.obtenerCotizacionProducto(this.nIdCotizacion).subscribe(data=>{
       this.listaProductoCortizacion=data;

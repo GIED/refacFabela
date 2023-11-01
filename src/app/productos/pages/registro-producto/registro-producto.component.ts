@@ -53,7 +53,7 @@ export class RegistroProductoComponent implements OnInit {
      this.productosService.obtenerProductoId(nId).subscribe(data=>{
         this.listaProductos=data;
       
-       console.log(data);
+      // console.log(data);
 
 
      })

@@ -15,6 +15,7 @@ import { TrVentaCobro } from '../../productos/model/TrVentaCobro';
 import { TwMaquinaCliente } from '../../productos/model/TwMaquinaCliente';
 import { TwVentasProductosTraer } from '../../productos/model/TwVentasProductosTraer';
 import { VwSaldoVentaFavorDisponible } from 'src/app/productos/model/VwSaldoVentaFavorDisponible';
+import { VentaProductoCancelaDto } from 'src/app/ventasycotizaciones/model/dto/VentaProductoCancelaDto';
 
 @Injectable({
   providedIn: 'root'
@@ -76,9 +77,9 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.consultaProductoVentasTraer+'nIdVenta='+nId;
     return this.http.get<TwVentasProductosTraer[]>(url);
   }
- cancelarVentaProducto(ventaProductoDto:VentaProductoDto){
+ cancelarVentaProducto(ventaProductoCancelaDto:VentaProductoCancelaDto){
     let url = environment.servicios.apiRefacFabela + locator.cancelaProductoVenta;
-    return this.http.post<VentaProductoDto>(url,ventaProductoDto);
+    return this.http.post<VentaProductoDto>(url,ventaProductoCancelaDto);
   }
   obtenerProductoVentaMesId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaProductoVentaMesId+'id='+id;
@@ -91,6 +92,10 @@ export class VentasService {
   }
   guardaVentaDetalle(tvVentasDetalle:TvVentasDetalle){    
     let url = environment.servicios.apiRefacFabela + locator.guardaVentaDetalle;
+    return this.http.post<TvVentasDetalle>(url,tvVentasDetalle);
+  }
+  guardarVentaDescuento(tvVentasDetalle:TvVentasDetalle){    
+    let url = environment.servicios.apiRefacFabela + locator.guardarVentaDescuento;
     return this.http.post<TvVentasDetalle>(url,tvVentasDetalle);
   }
 

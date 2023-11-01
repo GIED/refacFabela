@@ -69,7 +69,7 @@ export class ModalProductoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.producto);
+    //console.log(this.producto);
     if (this.producto != null) {
       this.editProducto(this.producto);
 
@@ -84,7 +84,7 @@ export class ModalProductoComponent implements OnInit {
     this.catalogoService.obtenerMarcas().subscribe(data=> {
 
       this.listaMarca=data;
-      console.log(this.listaMarca);
+      //console.log(this.listaMarca);
 
     })
      
@@ -94,7 +94,7 @@ export class ModalProductoComponent implements OnInit {
   editarProducto(){   
     this.catalogoService.obtenerMarcas().subscribe(data=> {
       this.listaMarca=data;
-      console.log(this.listaMarca);
+     // console.log(this.listaMarca);
       if(this.producto.nIdMarca>0 ){
     
         for (let index = 0; index < this.listaMarca.length; index++) {
@@ -152,7 +152,7 @@ export class ModalProductoComponent implements OnInit {
   
      }
   
-    console.log("Este el valor seleccionado",this.fProducto.nIdMarca.value);
+   // console.log("Este el valor seleccionado",this.fProducto.nIdMarca.value);
   
   
   }
@@ -359,7 +359,7 @@ buscaPorNoParte(){
       .pipe(debounceTime(300))
       .subscribe(valor => {
         this.productosService.obtenerNoParte(valor).subscribe(noParte => {
-          console.log(noParte.length);
+     //     console.log(noParte.length);
           if (noParte.length != 0) {
             this.listaNoParte=noParte;
             this.mostrarSugerencias=true;
@@ -392,9 +392,9 @@ valorSeleccionado(){
 }*/
 
 valorSeleccionado(){
-  console.log(this.fProducto.sNoParte.value);
+  //console.log(this.fProducto.sNoParte.value);
   let noparte =this.fProducto.sNoParte.value;  
-  console.log('antes',this.listaNoParte);
+  //console.log('antes',this.listaNoParte);
 
 for (let index = 0; index < this.listaNoParte.length; index++) {
   const producto = this.listaNoParte[index];   

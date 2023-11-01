@@ -9,6 +9,10 @@ import { TcProducto } from '../../model/TcProducto';
 import { TwPedidoProducto } from '../../model/TwPedidoProducto';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
 import { TvPedidoDetalle } from '../../model/TvPedidoDetalle';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ModalProductosBodegaInternoComponent } from '../modal-productos-bodega-interno/modal-productos-bodega-interno.component';
+import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
+import { ModelContainer } from 'src/app/shared/utils/model-container';
 
 @Component({
   selector: 'app-pedido-productos',
@@ -49,16 +53,22 @@ export class PedidoProductosComponent implements OnInit {
     submitted:boolean=false;
     pedido:TwPedidoProducto;
     mensaje:string;
+    pedidoDto: TwPedidoProducto;
+    dataBodega:TwProductoBodega
     
 
     constructor(private pedidosService: PedidosService,  private productosService: ProductoService,
       private bodegasService: BodegasService,
       private messageService: MessageService,
-      private confirmationService: ConfirmationService, ) { }
+      private confirmationService: ConfirmationService,
+      public dialogService: DialogService,  ) {
+
+        this.dataBodega=new TwProductoBodega();
+       }
 
   ngOnInit(): void {
 
-    console.log(this.banIngreso);
+    //console.log(this.banIngreso);
     
   }
 
@@ -66,7 +76,7 @@ export class PedidoProductosComponent implements OnInit {
 
     this.pedidosService.obtenerProductosPedido(nId).subscribe(data=>{
    this.listaPedidos=data;
-   console.log(this.listaPedidos);
+   //console.log(this.listaPedidos);
 
 
     })
@@ -78,7 +88,7 @@ export class PedidoProductosComponent implements OnInit {
     this.confirmationService.confirm({
         message: 'Real mente quieres borrar el producto del pedido?',
         accept: () => {
-          console.log(twPedidoProducto);
+         // console.log(twPedidoProducto);
 
           this.pedidosService.borrarProductoPedido(twPedidoProducto).subscribe(data=>{
         
@@ -146,14 +156,14 @@ mostrarRegistroEntrada(pedidos:TwPedidoProducto ) {
 this.mostrarEntrega=true;
 this.submitted = false;
 
-console.log(pedidos);
+//console.log(pedidos);
 
 
 
 }
 saveProduct(producto: TcProducto) {
 
-  console.log(producto);
+  //console.log(producto);
 
   if (producto.nId) {
       this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
@@ -234,7 +244,7 @@ findIndexById(id: number): number {
 obtenerPedidoDetalle(){
   this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
       this.listaPedidoDetalle.emit(data);
-      console.log(data);
+     // console.log(data);
     });
 }
 createId(): string {
@@ -244,6 +254,43 @@ createId(): string {
       id += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return id;
+}
+
+
+modalProductoBodega(pedidoDto: TwPedidoProducto) {
+
+
+ // console.log(pedidoDto);
+
+  this.dataBodega=new TwProductoBodega();
+
+
+  this.bodegasService.obtenerProductoBodega(pedidoDto.nIdProducto,1).subscribe(data=>{
+
+    this.dataBodega=data;
+  //  console.log( this.dataBodega);
+if(this.dataBodega!=null && this.dataBodega!=undefined){
+ const ref = this.dialogService.open(ModalProductosBodegaInternoComponent, {
+     data: new ModelContainer(ModeActionOnModel.CREATING,   this.dataBodega),
+     header: 'Movimiento Interno de mercancía',
+     width: '70%'
+ })
+ ref.onClose.subscribe((data:TwProductoBodega) =>{
+   ////console.log('data que se recibe al cerrar',data);
+   //this.obtenerBodegas(data.nIdProducto);
+ })
+}
+
+
+  })
+
+  
+
+
+
+
+  
+ 
 }
 
 }

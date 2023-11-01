@@ -60,7 +60,7 @@ export class FacturacionComponent implements OnInit {
     this.facturaService.obtenerVentaFactura().subscribe(resp =>{
       this.listaVentas=resp;
 
-      console.log(this.listaVentas);
+      //console.log(this.listaVentas);
   });
   this.obtenerUsocfdi();
 
@@ -70,7 +70,7 @@ export class FacturacionComponent implements OnInit {
     this.facturaService.obtenerFacturas().subscribe(resp =>{
       this.listaVentas=resp;
 
-      console.log(this.listaVentas);
+      //console.log(this.listaVentas);
   });
 
   }
@@ -85,7 +85,7 @@ export class FacturacionComponent implements OnInit {
 
 
   openDialog(tvVentasFactura:TvVentasFactura){
-    console.log('tvVentasFactura',tvVentasFactura);
+   // console.log('tvVentasFactura',tvVentasFactura);
     this.tvVentasFactura=tvVentasFactura;
     this.formFactura=true;
     this.idVenta=tvVentasFactura.nId;
@@ -104,13 +104,25 @@ export class FacturacionComponent implements OnInit {
   }
 
   generarFactura(){
-    console.log(this.cfdiSeleccionado);
-    console.log(this.idVenta);
+    //console.log(this.cfdiSeleccionado);
+    // console.log(this.idVenta);
 
     this.facturaService.facturarVenta(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
       this.formFactura=false;
       this.obtenerFacruras();
-      console.log(resp.mensaje);
+     // console.log(resp.mensaje);
+    });
+
+  }
+
+  generarComplemento(){
+   // console.log(this.cfdiSeleccionado);
+   // console.log(this.idVenta);
+
+    this.facturaService.facturarComplemento(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
+      this.formFactura=false;
+      this.obtenerFacruras();
+    //  console.log(resp.mensaje);
     });
 
   }
@@ -118,13 +130,13 @@ export class FacturacionComponent implements OnInit {
 
   descargarFactura(nIdVenta:number){
 
-    console.log();
+    //console.log();
 
     this.facturaService.descargarDocumento(nIdVenta, TipoDoc.PDF_FACTURA ).subscribe(resp => {
 
 
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+    //  console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
@@ -144,13 +156,13 @@ export class FacturacionComponent implements OnInit {
 
   descargarXML(nIdVenta:number){
 
-    console.log();
+  
 
     this.facturaService.descargarDocumento(nIdVenta, TipoDoc.XML_FACTURA ).subscribe(resp => {
 
 
       const file = new Blob([resp], { type: 'application/xml' });
-      console.log('file: ' + file.size);
+     // console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');

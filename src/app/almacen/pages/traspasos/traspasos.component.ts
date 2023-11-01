@@ -88,12 +88,12 @@ export class TraspasosComponent implements OnInit {
      ////console.log('data que se recibe al cerrar externo',data);
     this.bodegasService.obtenerProductoBodegas(dataBodega.nIdProducto).subscribe(respuesta=>{
       this.listaProductoBodega=respuesta;
-      console.log(this.listaProductoBodega);
+     // console.log(this.listaProductoBodega);
      
       for (const valor of this.listaProductoBodega) {    
  
-       console.log(valor.nCantidad);
-       console.log(valor.nIdBodega);
+      // console.log(valor.nCantidad);
+       // console.log(valor.nIdBodega);
   
          this.newProBod = new TwProductoBodega();
  

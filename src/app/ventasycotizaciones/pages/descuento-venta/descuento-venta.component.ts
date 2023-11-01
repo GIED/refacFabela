@@ -142,7 +142,7 @@ guardarDescuento() {
 
     if(this.VentaDescuentoDto.nSaldoTotal>this.VentaDescuentoDto.descuento){
     
-    this.ventasService.guardaVentaDetalle(this.VentaDescuentoDto).subscribe(data=>{
+    this.ventasService.guardarVentaDescuento(this.VentaDescuentoDto).subscribe(data=>{
 
     this.consultaVentas();
      

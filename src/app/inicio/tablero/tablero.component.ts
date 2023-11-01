@@ -70,7 +70,7 @@ export class TableroComponent implements OnInit {
         this.obtenerVentasAnoVendedor(this.obteterAno());
         this.usuarioService.getUsuarios().subscribe(data => {
             this.usuarios = data;
-            console.log(this.usuarios);
+            //console.log(this.usuarios);
 
         });
         this.obtenerVentaAnoMesVendedor(this.obteterAno(),8);

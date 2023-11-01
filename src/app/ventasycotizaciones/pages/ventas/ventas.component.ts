@@ -299,9 +299,9 @@ valorSeleccionadoProducto(){
     }else{
 
     }   
-    console.log("ESTE ES EL PRODUCTO QUE SE CONSULTARA SU PRECIO", productoStock);
+    //console.log("ESTE ES EL PRODUCTO QUE SE CONSULTARA SU PRECIO", productoStock);
     this.calcularPrecio(productoStock);
-    console.log("ESTE ES EL PRODUCTO DESPUES DE CONSULTAR SU PRECIO", productoStock);
+    //console.log("ESTE ES EL PRODUCTO DESPUES DE CONSULTAR SU PRECIO", productoStock);
 
 
     this.productosFiltrados.push(productoStock); 
@@ -352,7 +352,7 @@ this.productoDescuentoDto.tcCliente=this.clienteSeleccionado;
  
    this.productoNuevoPrecio=data;
 
-   console.log("ESTE ES EL NUEVO PRECIO",this.productoNuevoPrecio);
+   //console.log("ESTE ES EL NUEVO PRECIO",this.productoNuevoPrecio);
    
   for (let index = 0; index < this.productosFiltrados.length; index++) {
        
@@ -512,7 +512,7 @@ obtenerProductosAlternativos(nId:number ) {
 
 
 agregarProduct(producto: TvStockProducto) {
-  console.log(producto);
+  // console.log(producto);
   if (producto.nCantidad == 0 || producto.nCantidad == null) {
     //console.log("cantidad recibida: ",this.nCantidadCtrl.value)
     producto.nCantidad=this.nCantidadCtrl.value;
@@ -614,7 +614,7 @@ quitarProducto(producto: TvStockProducto){
 
 guardarCotizacion(){
 
-  console.log(this.listaProductos);
+ // console.log(this.listaProductos);
 
 
 

@@ -8,6 +8,7 @@ import { FormGroup } from '@angular/forms';
 import { TokenService } from '../../../shared/service/token.service';
 import { TcRegimenFiscal } from '../../../productos/model/TcRegimenFiscal';
 import { isEmpty } from 'rxjs/operators';
+import { SaldoGeneralCliente } from '../../../ventasycotizaciones/model/TvSaldoGeneralCliente';
 
 
 
@@ -45,6 +46,7 @@ export class ClienteComponent implements OnInit {
   formulario: FormGroup;
   listaRegimenFiscal: TcRegimenFiscal[];
   objCliente: Clientes;
+  saldoGeneralCliente:SaldoGeneralCliente;
 
   constructor(private messageService: MessageService,
     private confirmationService: ConfirmationService, private clienteService: ClienteService,
@@ -121,17 +123,56 @@ export class ClienteComponent implements OnInit {
 
 
   guardarLineaCredito() {
+     
+    this.clienteService.obtenerSaldoGeneralCliente(this.cliente.nId).subscribe(data=>{
 
-    if (this.cliente.nId) {
-      this.cliente.nEstatus = 1;
-      this.cliente.n_idUsuarioCredito = this.tokenService.getIdUser();
-      this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
-        this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
-        this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
-        this.credito = false;
-      })
-    }
-    this.listaClientes = [...this.listaClientes];
+      this.saldoGeneralCliente=data;
+
+      if(    this.saldoGeneralCliente != null ||     this.saldoGeneralCliente != undefined){
+
+        if (this.cliente.nId && (this.cliente.n_limiteCredito>=this.saldoGeneralCliente.nSaldoTotal) ) {
+          this.cliente.nEstatus = 1;
+          this.cliente.n_idUsuarioCredito = this.tokenService.getIdUser();
+          this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
+            this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
+            this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
+            this.credito = false;
+          })
+          this.listaClientes = [...this.listaClientes];
+        }
+        else{
+          this.messageService.add({ severity: 'info', summary: 'El limite de crédito no puede ser menor al adeudo actual que es de:'+this.saldoGeneralCliente.nSaldoTotal, detail: 'Cliente no actualizado', life: 10000 });
+
+
+        }
+        
+      }
+
+      else{
+
+        this.cliente.nEstatus = 1;
+        this.cliente.n_idUsuarioCredito = this.tokenService.getIdUser();
+        this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
+          this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
+          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
+          this.credito = false;
+        })
+        this.listaClientes = [...this.listaClientes];
+
+
+
+
+      }
+
+
+
+
+    })
+
+
+
+    
+   
   }
 
 
@@ -159,11 +200,7 @@ export class ClienteComponent implements OnInit {
 
   guardarDescuento(cliente:Clientes){
 
-  console.log(cliente.nDescuento);
-
-
-
-
+ // console.log(cliente.nDescuento);
 
 this.clienteService.guardaCliente(cliente).subscribe(data=>{
   this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });

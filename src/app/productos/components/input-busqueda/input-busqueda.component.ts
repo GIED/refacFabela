@@ -48,7 +48,7 @@ export class InputBusquedaComponent implements OnInit {
       .subscribe(valor => {
         
         this.productosService.obtenerNoParte(this.sNoParte).subscribe(noParte => {
-          console.log(noParte.length);
+          //console.log(noParte.length);
           if (noParte.length != 0) {
             this.listaNoParte=noParte;          
             this.mostrarSugerencias=true;

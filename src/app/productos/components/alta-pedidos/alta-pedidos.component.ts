@@ -70,7 +70,7 @@ producto:TcProducto;
     if(producto!=null){
       this.muestraDetalleProducto=true;
         this.listaProducto.push(producto);
-     console.log(this.listaProducto);
+    // console.log(this.listaProducto);
      this.obtenerProveedores();
     }
   
@@ -132,7 +132,7 @@ producto:TcProducto;
 
 
 
-      console.log(this.listaProductosCompra);
+      //console.log(this.listaProductosCompra);
 
       if(this.listaProductosCompra.length>0){
       this.mostraarListaCompra=true;
@@ -150,7 +150,7 @@ producto:TcProducto;
 
   quitarProducto(tcPedidoProducto: TwPedidoProducto){
 
-console.log(tcPedidoProducto);
+//console.log(tcPedidoProducto);
     
 this.listaProductosCompra.splice(this.findIndexById(tcPedidoProducto.nIdProducto, this.listaProductosCompra),1);
 this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue eliminado a la lista de compra', life: 6000 });
@@ -171,7 +171,7 @@ this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito'
   obtenerProveedores() {
     this.proveedorService.getProveedores().subscribe(provedores => {
       this.listaProveedores = provedores;
-      console.log(this.listaProveedores);
+     // console.log(this.listaProveedores);
     })
   }
 
@@ -195,7 +195,7 @@ this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito'
      this.pedidoDto.twPedidoProducto=this.listaProductosCompra;
 
 
-     console.log(this.pedidoDto);
+    // console.log(this.pedidoDto);
 
      this.pedidosService.guardaPedido(this.pedidoDto).subscribe(data=>{
       this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El pedido fue registrado con éxito', life: 3000 });
@@ -203,7 +203,7 @@ this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito'
      
       this.cerrarNuevoPedido();
       this.generarPedidoPdf( this.pedidoDto.nId);
-      console.log(data);
+     // console.log(data);
      })
 
 
@@ -222,13 +222,13 @@ this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito'
 
   generarPedidoPdf(nId:number){
 
-    console.log("Se va a generar el comprobante");
+    //console.log("Se va a generar el comprobante");
 
     this.pedidosService.generarPedidoPdf(nId).subscribe(resp => {
   
       
         const file = new Blob([resp], { type: 'application/pdf' });
-        console.log('file: ' + file.size);
+       // console.log('file: ' + file.size);
         if (file != null && file.size > 0) {
           const fileURL = window.URL.createObjectURL(file);
           const anchor = document.createElement('a');

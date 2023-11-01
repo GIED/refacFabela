@@ -36,7 +36,7 @@ import { AjusteInventarioComponent } from './components/ajuste-inventario/ajuste
     ProductosModule,
     VentasycotizacionesModule,
     ReactiveFormsModule,  
-    ProductosModule
+  
   ], 
   exports:[
    

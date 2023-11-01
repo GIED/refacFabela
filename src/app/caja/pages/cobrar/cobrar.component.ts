@@ -70,7 +70,7 @@ export class CobrarComponent implements OnInit {
 
   consultarVentaSaldo(){
     this.saldoTotalFavor=null;
-   console.log('voy a consultar si hay un saldo a favor:', this.saldoFavor);
+   //console.log('voy a consultar si hay un saldo a favor:', this.saldoFavor);
 
    if(this.saldoFavor!=null || this.saldoFavor!=undefined){
    this.ventasService.obtenerSaldoVentaFavor(this.saldoFavor).subscribe(data=>{
@@ -137,7 +137,7 @@ export class CobrarComponent implements OnInit {
       }else{
         this.displayListaVentas=true;
       }
-      console.log(this.listaVentasDetalleCliente);
+      //console.log(this.listaVentasDetalleCliente);
 
     });
   }
@@ -149,7 +149,7 @@ export class CobrarComponent implements OnInit {
     this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
       this.listaProductosVenta = data;
       this.mostrarProductos = true;
-      console.log(this.listaProductosVenta);
+      //console.log(this.listaProductosVenta);
     })
 
   }
@@ -160,7 +160,7 @@ export class CobrarComponent implements OnInit {
 
 
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+     // console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');
@@ -187,8 +187,8 @@ export class CobrarComponent implements OnInit {
 
   abrir(tvVentasDetalle: TvVentasDetalle) {
     this.abrirformulario = true;
-    console.log('Este es el objeto de información', tvVentasDetalle);
-    console.log('Este es el objeto de información', tvVentasDetalle.nSaldoFavor);
+   // console.log('Este es el objeto de información', tvVentasDetalle);
+    // console.log('Este es el objeto de información', tvVentasDetalle.nSaldoFavor);
 
 
     this.ventaSaldoFavor=tvVentasDetalle;
@@ -317,7 +317,7 @@ export class CobrarComponent implements OnInit {
     else {
 
 
-      console.log(this.VentaDescuentoDto);
+     // console.log(this.VentaDescuentoDto);
 
 
       let con1 = this.catalogo.obtenerFormaPagoId(this.formulario.get('idFormaPago').value);
@@ -349,11 +349,11 @@ export class CobrarComponent implements OnInit {
 
   guardarCobro() {
 
-    console.log("Esto es el objeto que se estará insertando");
+    //console.log("Esto es el objeto que se estará insertando");
     
     
     this.VentaDescuentoDto.nAnticipo= this.fProducto.monto.value;
-    console.log(this.VentaDescuentoDto);
+   // console.log(this.VentaDescuentoDto);
 
     if(this.VentaDescuentoDto.nSaldoFavor===null || this.VentaDescuentoDto.nSaldoFavor===undefined ){
 
@@ -394,7 +394,7 @@ export class CobrarComponent implements OnInit {
 
 
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+     // console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');

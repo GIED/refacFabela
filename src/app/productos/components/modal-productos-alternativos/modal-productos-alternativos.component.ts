@@ -51,7 +51,7 @@ export class ModalProductosAlternativosComponent implements OnInit {
   saveProduct(producto: TcProducto) {
 
   let twProductoAlternativo = new TwProductoAlternativo(null,1,null,this.nIdProducto,producto);
-  console.log(twProductoAlternativo);
+  //console.log(twProductoAlternativo);
 
   this.productosService.guardaProductoAlternativo(twProductoAlternativo).subscribe(newProdAlt =>{
     this.obtenerProductosAlternativos();

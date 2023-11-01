@@ -30,6 +30,10 @@ export class FacturaService {
     let url = environment.servicios.apiRefacFabela + locator.facturarVenta+ 'nIdVenta='+idVenta + '&cveCfdi='+cveCfdi;
     return this.http.get<any>(url);
   }
+  facturarComplemento(idVenta:number, cveCfdi:string){
+    let url = environment.servicios.apiRefacFabela + locator.facturarComplemento+ 'nIdVenta='+idVenta + '&cveCfdi='+cveCfdi;
+    return this.http.get<any>(url);
+  }
 
   descargarDocumento(nIdVenta: number, tipoDoc:string){
     const httpOptions = {

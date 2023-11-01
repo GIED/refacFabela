@@ -55,7 +55,7 @@ export class RegistroPedidosComponent implements OnInit {
 
     this.pedidosService.obtenerProductosPedido(nId).subscribe(data=>{
    this.listaPedidos=data;
-   console.log(this.listaPedidos);
+   //console.log(this.listaPedidos);
    this.detalleDialog=true;
 
 
@@ -76,7 +76,7 @@ export class RegistroPedidosComponent implements OnInit {
 
   this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
   this.listaPedidoDetalle=data;
-  console.log(this.listaPedidoDetalle);
+  //console.log(this.listaPedidoDetalle);
 
     
   });
@@ -94,7 +94,7 @@ this.registroPedido=false;
 
 nuevoPedido(){
 
-  console.log("entre a ocultar el modal");
+  //console.log("entre a ocultar el modal");
   this.registroPedido=true;
   this.obtenerPedidosEstatus();
 }
@@ -113,13 +113,13 @@ hideDialogDetalle() {
 
 generarPedidoPdf(nId:number){
 
-  console.log("Se va a generar el comprobante");
+  //console.log("Se va a generar el comprobante");
 
   this.pedidosService.generarPedidoPdf(nId).subscribe(resp => {
 
     
       const file = new Blob([resp], { type: 'application/pdf' });
-      console.log('file: ' + file.size);
+     // console.log('file: ' + file.size);
       if (file != null && file.size > 0) {
         const fileURL = window.URL.createObjectURL(file);
         const anchor = document.createElement('a');

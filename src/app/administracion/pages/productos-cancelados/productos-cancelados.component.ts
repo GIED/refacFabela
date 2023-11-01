@@ -59,7 +59,7 @@ export class ProductosCanceladosComponent implements OnInit {
 
 
       }
-      console.log( this.listaProductosCanacelados);
+     // console.log( this.listaProductosCanacelados);
     
   
     });
@@ -68,8 +68,8 @@ export class ProductosCanceladosComponent implements OnInit {
 
   consultar(){
    
-    console.log(this.defDateInicio);
-    console.log(this.defDateFin);
+    //console.log(this.defDateInicio);
+    //console.log(this.defDateFin);
 
     if(this.fechaInicio!=null && this.fechaInicio != null ){
       this.defDateInicio = this.fechaInicio.getFullYear().toString()  + '-' + (this.fechaInicio.getMonth() + 1).toString().padStart(2, "0") + '-' + this.fechaInicio.getDate().toString().padStart(2, "0");

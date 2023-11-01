@@ -102,7 +102,8 @@ detalleCotizacion(twCotizacion: TwCotizacion){
 
     this.listaProductos=results[1];
 
-    console.log('listaProductosCotizados: ',this.listaProductos);
+    
+    //console.log('listaProductosCotizados: ',this.listaProductos);
 
     for (const producto of this.listaProductos) {
 
@@ -164,7 +165,7 @@ obtenerVenta(nId:number){
 
 }
 cotizacionProducto(nIdCotizacion:number){
-  console.log
+
 
   this.nIdCotizacion=nIdCotizacion;
   this.mostrarCotizacionProducto=true;

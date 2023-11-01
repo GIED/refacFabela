@@ -60,7 +60,7 @@ export class AjusteInventarioComponent implements OnInit {
   _initFormGroup(): void {
     let modelContainer: ModelContainer = this.config.data;
     this.productoBodega = ObjectUtils.isEmpty(modelContainer.modelData) ? new TwProductoBodega() : modelContainer.modelData as TwProductoBodega;
-    console.log(this.productoBodega);
+    //console.log(this.productoBodega);
     this.formGrp = new FormGroup({
       cantidadCtrl: new FormControl('', [Validators.required]),
       
@@ -84,8 +84,8 @@ export class AjusteInventarioComponent implements OnInit {
 
 
 
-    console.log(this.twAjusteInventario); 
-    console.log(this.cantidadCtrl.value)
+    //console.log(this.twAjusteInventario); 
+    //console.log(this.cantidadCtrl.value)
  
     this.twAjusteInventario.nIdProducto=this.productoBodega.nIdProducto;
     this.twAjusteInventario.nIdBodega=this.productoBodega.nIdBodega;
@@ -96,7 +96,7 @@ export class AjusteInventarioComponent implements OnInit {
     this.twAjusteInventario.nTotalAjustado=this.cantidadCtrl.value-this.productoBodega.nCantidad;
     this.twAjusteInventario.nIdUsuario=this.tokenService.getIdUser();
 
-    console.log("Este el objeto que mandare a registrase",this.twAjusteInventario);
+    //console.log("Este el objeto que mandare a registrase",this.twAjusteInventario);
     this.traspasoService.guardarAjusteInventario(this.twAjusteInventario).subscribe(data=>{
 
       this.traspasoService.guardarMovimientoInterno(this.castFormGrup()).subscribe(resp => {

@@ -20,8 +20,8 @@ export class CotizacionClienteProductoComponent implements OnInit {
   ngOnInit(): void {
     this.listaProductoCortizacion=[];
 
-    console.log(this.nICliente);
-    console.log(this.nIProducto);
+    //console.log(this.nICliente);
+    //console.log(this.nIProducto);
     this.consultar();
 
   }
@@ -30,7 +30,7 @@ export class CotizacionClienteProductoComponent implements OnInit {
     this.ventasCotizacionesService.obtenerCotizacionProductoCliente(this.nICliente,this.nIProducto).subscribe(data=>{
       this.listaProductoCortizacion=data;
 
-      console.log(this.listaProductoCortizacion);
+      // console.log(this.listaProductoCortizacion);
 
     });
   }
