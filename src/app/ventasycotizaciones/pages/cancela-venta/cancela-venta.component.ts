@@ -142,31 +142,19 @@ cancelaVenta(ventaProductoDto:VentaProductoDto){
 
       this.ventasService.cancelarVentaProducto(this.VentaProductoCancelaDto).subscribe(data => {
         this.mostrarProductos=false;
+        this.mostrarCancela=false;
        
-       // this.obtenerVentasCliente();  
+        this.obtenerVentasCliente();  
+        this.totalCancelar=null;
        
         this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se cancelo el producto con éxito', life: 3000});
          })
-
-     
 
     }
     else{
 
       this.messageService.add({severity: 'error', summary: 'Error', detail: 'Debe registrar un númeor de productos a cancelar', life: 3000});
     }
-
-/*
-  this.ventasService.cancelarVentaProducto(ventaProductoDto).subscribe(data => {
- this.mostrarProductos=false;
-
- this.obtenerVentasCliente();  
-
- this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se cancelo la partida con éxito', life: 3000});
-  })*/
-
-
-
 
   }
 
