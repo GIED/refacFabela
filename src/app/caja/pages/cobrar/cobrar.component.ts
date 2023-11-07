@@ -367,7 +367,11 @@ export class CobrarComponent implements OnInit {
       this.consultaVentas();
 
       this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Se guardo el cobro de la venta', life: 3000 });
-
+      if(this.saldoTotalFavor!=null || this.saldoTotalFavor!=undefined){
+     this.generarsSaldoFacorPdf(this.saldoTotalFavor.nIdVenta);
+     this.saldoTotalFavor=null;
+     this.saldoFavor=null;
+      }
 
     });
 
@@ -430,6 +434,35 @@ export class CobrarComponent implements OnInit {
   hideDialogAlter() {
     this.mostrarProductos = false;
   }
+
+
+  generarsSaldoFacorPdf(nId:number){
+
+    this.ventasService.generarSaldoFavorPdf(nId).subscribe(resp => {
+  
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      //console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'saldo_favor_' + nId + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Comprobante de saldo a favor generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de saldo a favor', life: 3000});
+      }
+  
+  });
+  
+  }
+  
+  
+  
+  
 
 
 }
