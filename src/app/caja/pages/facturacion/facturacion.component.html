@@ -39,6 +39,7 @@
                         <th>Vendedor</th>
                         <th>Estatus</th>
                         <th>Total</th>
+                        <th>Tipo Venta</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-venta>
@@ -55,6 +56,9 @@
                         </td>
                         <td><span class="p-column-title"></span> {{venta.nTotalVenta | currency:'USD'}}
                         </td>
+                        <td *ngIf="venta.nTipoPago==1"><span class="p-column-title"></span>CRÉDICTO  </td>
+                        
+                            <td *ngIf="venta.nTipoPago==0"><span class="p-column-title"></span>CONTADO  </td>
                         <td>
                             <tr>
                                 <td *ngIf="venta.idFactura == 0 && venta.tcCliente.nCp!=null && venta.tcCliente.tcRegimenFiscal!=null">

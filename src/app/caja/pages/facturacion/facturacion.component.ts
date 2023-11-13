@@ -9,6 +9,7 @@ import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TipoDoc } from 'src/app/shared/utils/TipoDoc.enum';
 import { SpinnerComponent } from '../../../shared/spinner/spinner.component';
 import { TcCliente } from '../../../administracion/model/TcCliente';
+import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
 
 @Component({
   selector: 'app-facturacion',
@@ -85,11 +86,28 @@ export class FacturacionComponent implements OnInit {
 
 
   openDialog(tvVentasFactura:TvVentasFactura){
-   // console.log('tvVentasFactura',tvVentasFactura);
+    if(tvVentasFactura.tcFormapago==null){
+      tvVentasFactura.tcFormapago=new TcFormaPago();
+
+    }
+   
+    console.log('tvVentasFactura',tvVentasFactura);
     this.tvVentasFactura=tvVentasFactura;
     this.formFactura=true;
     this.idVenta=tvVentasFactura.nId;
     this.totalVenta=tvVentasFactura.nTotalVenta;
+    if( this.tvVentasFactura.nTipoPago==1 ){
+    
+
+      this.tvVentasFactura.formaPago=22;
+      this.tvVentasFactura.tcFormapago.nId=22;
+      this.tvVentasFactura.tcFormapago.sClave='99';
+      this.tvVentasFactura.tcFormapago.sDescripcion='Por definir';
+      this.tvVentasFactura.tcFormapago.nEstatus=1;
+
+    }
+
+
   }
 
   openNew() { 

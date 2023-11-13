@@ -120,16 +120,26 @@ lineChartOptions:any;
 
   }
 
-//se obtine la hsitoria de ingreso del producto  
-informacionProducto(nId:number) {
+  limpiar(){
     this.labelsHistoriaIngresoProducto=[];
     this.dataHistoriaIngresoProducto=[];
-       this.nIdProductoConsulta=nId;
- 
+    this.laberProductoBodega=[];
+    this.dataProductoBodega=[];  
+    this.laberProductoVentaMes=[];      
+    this.dataProductoVentaMes=[];
+    this.productoDetalle=null;
+    this.listaProductoBodega=[];
+    this.listaProductosVentaMes=[];
+    this.listaIngresoProducto=[];
 
+  }
 
+//se obtine la hsitoria de ingreso del producto  
+informacionProducto(nId:number) {
+    
+    this.limpiar();
 
-
+    this.nIdProductoConsulta=nId;
   
     //Consulta de historia de precios del producto
     let historia= this.productosService.historiaPrecioProducto(nId);
@@ -152,6 +162,17 @@ informacionProducto(nId:number) {
       ]).subscribe(resultado => {
         this.listaHistoriaPrecioProducto=resultado[0]       
         this.productoDetalle=resultado[1];
+
+        for(const key2 in  this.listaHistoriaPrecioProducto){
+         
+            let fecha = new Date(this.listaHistoriaPrecioProducto[key2].dFecha);
+
+            fecha.setDate(fecha.getDate() + 1);
+      
+            this.listaHistoriaPrecioProducto[key2].dFecha=fecha;
+        }
+
+
         this.listaProductoBodega =resultado[2];
         for (const key in resultado[2]) {
             this.stockTotal += this.listaProductoBodega[key].nCantidad;
