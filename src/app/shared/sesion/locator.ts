@@ -107,6 +107,7 @@ static guardaVentaProductoEntrega= '/guardaVentasProducto';
 static guardaAbono= '/guardarAbono';
 static guardarMaquina= '/guardarMaquina';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
+static consultaProductoVenta='/ventasProductoHistoria?';
 static consultarVentaId='/obtenerVentaId?';
 static consultarMaquinaCliente='/obtenerMaquinasCliente?';
 static generarVentaPdf='/getVenta?';

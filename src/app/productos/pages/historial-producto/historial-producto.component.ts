@@ -12,6 +12,8 @@ import { TwProductoBodega } from '../../model/TwProductoBodega';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TvVentaProductoMes } from '../../model/TvVentaProductoMes';
 import { TwHistoriaIngresoProducto } from '../../model/TwHistoriaIngresoProducto';
+import { TwVentasProducto } from '../../model/TwVentasProducto';
+import { TvStockProducto } from '../../model/TvStockProducto';
 
 @Component({
   selector: 'app-historial-producto',
@@ -54,6 +56,10 @@ lineChartOptions:any;
 
   listaIngresoProducto: TwHistoriaIngresoProducto[];
 
+  //lista de ventas del producto
+
+  listaVentasProducto:TwVentasProducto[];
+
 
 
   constructor(private productService: ProductService, private messageService: MessageService,
@@ -66,6 +72,8 @@ lineChartOptions:any;
         this.laberProductoVentaMes=[];
         this.dataProductoVentaMes=[];
         this.dataHistoriaIngresoProducto=[];
+        this.listaVentasProducto=[];
+        this.productoDetalle=new TvProductoDetalle();   
       
      }
 
@@ -131,6 +139,8 @@ lineChartOptions:any;
     this.listaProductoBodega=[];
     this.listaProductosVentaMes=[];
     this.listaIngresoProducto=[];
+    this.listaVentasProducto=[];
+  
 
   }
 
@@ -138,19 +148,24 @@ lineChartOptions:any;
 informacionProducto(nId:number) {
     
     this.limpiar();
+    
+  
 
     this.nIdProductoConsulta=nId;
   
     //Consulta de historia de precios del producto
     let historia= this.productosService.historiaPrecioProducto(nId);
     //Consulta de datos generales del producto
-    let detalleProducto=this.productosService.obtenerTotalBodegasIdProducto(nId)
+    let detalleProductos=this.productosService.obtenerTotalBodegasIdProducto(nId)
     //Consulta de producto por bodegas
     let productoBodegas=  this.bodegasService.obtenerProductoBodegas(nId);
   // consulat de historia de ingreso del producto
     let historiaIngreso=this.productosService.historiaIngresoProducto(nId)
   //Consulta de ventas del producto por mes
     let ventaMesProducto= this.ventasService.obtenerProductoVentaMesId(nId);
+   // consulta de ventas del producto     
+   let ventasProducto=this.ventasService.obtenerProductoVenta(nId);
+   
 
 
 
@@ -158,9 +173,10 @@ informacionProducto(nId:number) {
     
     //hace la consulta en orden y espera a realizar la recarga hasta que llegen todas las peticiones
     forkJoin([
-        historia,detalleProducto,productoBodegas, ventaMesProducto, historiaIngreso
+        historia,detalleProductos,productoBodegas, ventaMesProducto, historiaIngreso, ventasProducto 
       ]).subscribe(resultado => {
-        this.listaHistoriaPrecioProducto=resultado[0]       
+        this.listaHistoriaPrecioProducto=resultado[0]    
+        this.productoDetalle=new TvProductoDetalle(); 
         this.productoDetalle=resultado[1];
 
         for(const key2 in  this.listaHistoriaPrecioProducto){
@@ -183,10 +199,8 @@ informacionProducto(nId:number) {
 
         this.listaIngresoProducto=resultado[4];
        // console.log(resultado[4]);
+        this.listaVentasProducto=resultado[5];
 
-     
-
-       
         this.graficaHistoriaPrecioProducto(this.listaHistoriaPrecioProducto);
         this.graficaproductoBodegas(this.listaProductoBodega);
         this.graficaVentasMes(this.listaProductosVentaMes);

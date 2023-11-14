@@ -69,6 +69,8 @@
                     </th>
                     <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
                         field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+                     <th pSortableColumn="nTipoPago">Tipo Venta<p-sortIcon
+                            field="nTipoPago"></p-sortIcon>
                 </th>
                     <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor<p-sortIcon field="tcUsuario.sNombreusuario"></p-sortIcon>
                     </th>
@@ -98,7 +100,10 @@
                        
                         <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red"> {{venta.tcEstatusVenta.sDescripcion}}</strong>
                         <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'" > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
-                         
+                      
+                        <td *ngIf="venta.nTipoPago==1"><span class="p-column-title"></span>CRÉDITO  </td>
+                        
+                        <td *ngIf="venta.nTipoPago==0"><span class="p-column-title"></span>CONTADO  </td>     
                        
                     <td class="p-text-center"><span class="p-column-title">Status</span>
                        

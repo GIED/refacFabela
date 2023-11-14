@@ -16,6 +16,7 @@ import { TwMaquinaCliente } from '../../productos/model/TwMaquinaCliente';
 import { TwVentasProductosTraer } from '../../productos/model/TwVentasProductosTraer';
 import { VwSaldoVentaFavorDisponible } from 'src/app/productos/model/VwSaldoVentaFavorDisponible';
 import { VentaProductoCancelaDto } from 'src/app/ventasycotizaciones/model/dto/VentaProductoCancelaDto';
+import { TwVentasProducto } from 'src/app/productos/model/TwVentasProducto';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +85,10 @@ export class VentasService {
   obtenerProductoVentaMesId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaProductoVentaMesId+'id='+id;
     return this.http.get<TvVentaProductoMes[]>(url);
+  }
+  obtenerProductoVenta(id:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaProductoVenta+'id='+id;
+    return this.http.get<TwVentasProducto[]>(url);
   }
 
   guardaVenta(datosVenta:DatosVenta){    
