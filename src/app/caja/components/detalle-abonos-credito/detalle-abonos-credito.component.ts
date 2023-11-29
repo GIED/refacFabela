@@ -99,7 +99,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
       let res1, res2, res3, res4;
 
-      if(this.formulario.get('abono').value < this.tvVentasDetalle.nSaldoTotal){
+      if(this.formulario.get('abono').value <= this.tvVentasDetalle.nSaldoTotal){
              res1 = this.ventasService.obtnerVentaId(this.tvVentasDetalle.nId)
 
      
@@ -142,9 +142,10 @@ export class DetalleAbonosCreditoComponent implements OnInit {
             this.twAbono.nAbono=this.tvVentasDetalle.nSaldoTotal;
 
           }
+          this.abrirformulario=false;
          this.ventasService.guardaAbono(this.twAbono).subscribe(data =>{
          this.listaAbonosVenta.push(data);
-           this.abrirformulario=false;
+          
            this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El Abono se guardo', life: 3000 });
            this.listaAbonosVenta = [...this.listaAbonosVenta];
  
