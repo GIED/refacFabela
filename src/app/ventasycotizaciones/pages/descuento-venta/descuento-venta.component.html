@@ -91,12 +91,72 @@
         </p-table>
 
         <p-dialog [(visible)]="mostrarProductos" header="Productos de la Venta" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <app-venta-productos-detalle [listaProductosVenta]="listaProductosVenta"></app-venta-productos-detalle>
-            </ng-template>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
-            </ng-template>
+                                
+                        <p-table #dt [value]="listaProductosVenta" responsiveLayout="scroll" [rows]="10"
+                                [paginator]="true"
+                                [globalFilterFields]="['sNoParte','sProducto','sDescripcion','sMarca','nCantidad','nTotalUnitario','nTotalPartida']"
+                                [(selection)]="selectedProducts2" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros"
+                                [showCurrentPageReport]="true">
+                                <ng-template pTemplate="caption">
+                                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                                        <span class="p-input-icon-left">
+                                            <i class="pi pi-search"></i>
+                                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                                placeholder="Buscar producto vendido" />
+                                        </span>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th pSortableColumn="sNoParte">No. Parte<p-sortIcon field="sNoParte"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="sProducto">Producto<p-sortIcon field="sProducto"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="sDescripcion">Descripción<p-sortIcon field="sDescripcion"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="sMarca">Marca<p-sortIcon field="sMarca"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="sUnitario">Precio Unitario<p-sortIcon field="nUnitario"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="nTotalUnitario">Precio Unitario con iva<p-sortIcon field="nTotalUnitario"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="nCantidad">Cantidad<p-sortIcon field="nCantidad"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="nTotalPartida">Total Partida<p-sortIcon field="nTotalPartida"></p-sortIcon>
+                                        </th>   
+                                        <th>Ajusta precio
+                                        </th>                                                                           
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-venta let-expanded="expanded">
+                                    <tr>                                    
+                                        <td><span class="p-column-title"></span> {{venta.sNoParte}}
+                                        </td>
+                                        <td><span class="p-column-title"></span> {{venta.sProducto}}
+                                        </td>
+                                        <td><span class="p-column-title"></span> {{venta.sDescripcion}}
+                                        </td>
+                                        <td><span class="p-column-title"></span>{{venta.sMarca}}
+                                        </td>
+                                        <td><span class="p-column-title"></span>{{venta.nUnitario}}
+                                        </td>
+                                        <td><span class="p-column-title"></span> {{venta.nTotalUnitario | number}}
+                                        </td>                                    
+                                        <td><span class="p-column-title"></span> {{venta.nCantidad | number}}
+                                        </td>
+                                        <td><span class="p-column-title"></span> {{venta.nTotalPartida | number}}
+                                        </td>  
+                                        <td><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger p-mr-2"
+                                            (click)="abrirAjustePrecio(venta)"></button>   </td>
+                                                                       
+                                                                            
+                                    </tr>
+                                </ng-template>
+                             </p-table>
+                            <ng-template pTemplate="footer">
+                                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
+                            </ng-template>
         </p-dialog>
         <p-toolbar styleClass="p-mb-4">
             <ng-template pTemplate="right">
@@ -139,6 +199,37 @@
         
                     
         </p-dialog>
+
+        <p-dialog [(visible)]="mostrarSimulador" header="Modificación de precios de los productos" [style]="{width: '600px', height:'400px'}" [closable]="true" styleClass="p-fluid red "  >
+              
+            
+            <div class="p-col-12">Nuevo Precio Unitario:<p-inputNumber [(ngModel)]="nuevoPrecioUnitario" mode="currency" currency="USD" locale="en-US"  [min]="1" (onBlur)="calcularNuevoPrecio()" > </p-inputNumber></div>
+        
+        <div role="group" class="p-selectbutton p-buttonset p-component">        
+            <div role="button" pripple="" class="p-ripple p-element p-button p-component ng-star-inserted" aria-pressed="false" tabindex="0" aria-labelledby="Option 1" style="background: green;"><!----><span class="p-button-label ng-star-inserted">Precio Unitario: {{twVentasProducto.nPrecioUnitario}}</span><!----><!----><!----><span class="p-ink " style="height: 178px; width: 178px; top: -75.8px; left: 61.6px; "></span></div>
+            <div role="button" pripple="" class="p-ripple p-element p-button p-component ng-star-inserted" aria-pressed="false" tabindex="0" aria-labelledby="Option 2" style="background: green;"><!----><span class="p-button-label ng-star-inserted">Iva Unitario: {{twVentasProducto.nIvaUnitario}}</span><!----><!----><!----><span class="p-ink" style="height: 219px; width: 219px; top: -100.75px; left: 2.89999px;"></span></div>
+            <div role="button" pripple="" class="p-ripple p-element p-button p-component ng-star-inserted" aria-pressed="false" tabindex="0" aria-labelledby="Option 3" style="background: green;"><!----><span class="p-button-label ng-star-inserted">Total Unitario: {{twVentasProducto.nTotalUnitario}}</span><!----><!----><!----><span class="p-ink"></span></div><!---->
+        </div>
+        <div role="group" class="p-selectbutton p-buttonset p-component">
+            <div role="button" pripple="" class="p-ripple p-element p-button p-component ng-star-inserted" aria-pressed="false" tabindex="0" aria-labelledby="Option 1" style="background: purple;"><!----><span class="p-button-label ng-star-inserted">Cantidad: {{twVentasProducto.nCantidad}}</span><!----><!----><!----><span class="p-ink " style="height: 178px; width: 178px; top: -75.8px; left: 61.6px; "></span></div>
+        </div>                 
+     
+        <div role="group" class="p-selectbutton p-buttonset p-component">        
+            <div role="button" pripple="" class="p-ripple p-element p-button p-component ng-star-inserted" aria-pressed="false" tabindex="0" aria-labelledby="Option 1" style="background: green;"><!----><span class="p-button-label ng-star-inserted">Precio Partida: {{twVentasProducto.nPrecioPartida}}</span><!----><!----><!----><span class="p-ink " style="height: 178px; width: 178px; top: -75.8px; left: 61.6px; "></span></div>
+            <div role="button" pripple="" class="p-ripple p-element p-button p-component ng-star-inserted" aria-pressed="false" tabindex="0" aria-labelledby="Option 2" style="background: green;"><!----><span class="p-button-label ng-star-inserted">Iva Partida: {{twVentasProducto.nIvaPartida}}</span><!----><!----><!----><span class="p-ink" style="height: 219px; width: 219px; top: -100.75px; left: 2.89999px;"></span></div>
+            <div role="button" pripple="" class="p-ripple p-element p-button p-component ng-star-inserted" aria-pressed="false" tabindex="0" aria-labelledby="Option 3" style="background: red;"><!----><span class="p-button-label ng-star-inserted">Total Partida: {{twVentasProducto.nTotalPartida}}</span><!----><!----><!----><span class="p-ink"></span></div><!---->
+        </div>   
+
+             <ng-template pTemplate="footer">
+                <button  pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="cerrarDialogCancela()"></button>
+                <button *ngIf="banGuardar" pButton pRipple label="Guardar" icon="pi pi-save" class=" p-button-success" (click)="guardarNuevoPrecio()"></button>
+            </ng-template>
+
+        </p-dialog>
+
+
+
+
     </div>
 </div>
 </div>

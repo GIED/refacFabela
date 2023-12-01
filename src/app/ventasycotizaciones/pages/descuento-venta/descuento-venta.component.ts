@@ -6,6 +6,8 @@ import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { VentasService } from 'src/app/shared/service/ventas.service';
 import { validators } from 'src/app/shared/validators/validators';
 import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
+import { TwVentasProducto } from '../../../productos/model/TwVentasProducto';
+import { CalculaPrecioDto } from 'src/app/productos/model/CalculaPrecioDto';
 
 @Component({
   selector: 'app-descuento-venta',
@@ -30,6 +32,11 @@ export class DescuentoVentaComponent implements OnInit {
   abrirformulario: boolean;
   formulario: FormGroup;
   VentaDescuentoDto:TvVentasDetalle;
+  twVentasProducto: TwVentasProducto;
+  mostrarSimulador:boolean;
+  nuevoPrecioUnitario:number;
+  calculaPrecio:CalculaPrecioDto;
+  banGuardar:boolean;
 
 constructor(  private ventasService:VentasService,  private messageService: MessageService, private fb: FormBuilder ) {
 
@@ -42,6 +49,11 @@ constructor(  private ventasService:VentasService,  private messageService: Mess
     { field: 'tcUsuario.sNombreUsuario', header: 'Vendedor' }
  
 ]
+  this.twVentasProducto=new TwVentasProducto();
+  this.calculaPrecio= new CalculaPrecioDto();
+  this.banGuardar=false;
+
+
  }
 
 ngOnInit(){
@@ -70,6 +82,74 @@ crearFormulario() {
   });
 
 }
+
+abrirAjustePrecio( ventaProductoDto:VentaProductoDto){
+
+  console.log(ventaProductoDto);
+
+  this.ventasService.obtenerVentaProductoId(ventaProductoDto.nIdVenta,ventaProductoDto.nIdProducto).subscribe(data=>{
+    this.twVentasProducto=data;
+    console.log(this.twVentasProducto);
+    this.mostrarSimulador=true;
+    this.nuevoPrecioUnitario=this.twVentasProducto.nPrecioUnitario;
+
+  })
+
+
+  
+}
+
+cerrarDialogCancela(){
+  this.mostrarSimulador=false;
+  this.twVentasProducto=null;
+  
+
+
+}
+
+guardarNuevoPrecio(){
+
+  this.ventasService.actualizaVentaProducto(this.twVentasProducto).subscribe(data=>{
+
+    console.log('Se guardo esta información',data);
+    this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se guardo el descuento', life: 3000});
+    this.mostrarProductos=false;
+    this.mostrarSimulador=false;
+    this.consultaVentas();
+   
+    this.banGuardar=false;
+
+  })
+
+}
+
+calcularNuevoPrecio(){
+  console.log('Estó es lo que se tiene que consultar',this.twVentasProducto);
+  this.calculaPrecio.cantidad=this.twVentasProducto.nCantidad;
+  this.calculaPrecio.precioUnitario=this.nuevoPrecioUnitario;
+
+this.ventasService.calcularNuevoPrecioAjustado( this.calculaPrecio).subscribe(data=>{
+
+  this.calculaPrecio=data;
+
+
+  this.twVentasProducto.nPrecioUnitario=this.calculaPrecio.precioUnitario;
+  this.twVentasProducto.nIvaUnitario=this.calculaPrecio.ivaUnitario;
+  this.twVentasProducto.nTotalUnitario=this.calculaPrecio.totalUnitario;
+  this.twVentasProducto.nPrecioPartida=this.calculaPrecio.precioPartida;
+  this.twVentasProducto.nIvaPartida=this.calculaPrecio.ivaPartida;
+  this.twVentasProducto.nTotalPartida=this.calculaPrecio.totalPartida;
+
+  this.banGuardar=true;
+
+
+})
+
+}
+
+
+
+
 cerrarModal() {
   this.abrirformulario = false;
 
@@ -110,6 +190,7 @@ this.mostrarProductos=true;
 
 this.ventasService.obtenerProductoVentaId(tvVentasDetalle.nId).subscribe(data => {
     this.listaProductosVenta=data;
+   
 })
 
 }

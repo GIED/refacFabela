@@ -17,6 +17,7 @@ import { TwVentasProductosTraer } from '../../productos/model/TwVentasProductosT
 import { VwSaldoVentaFavorDisponible } from 'src/app/productos/model/VwSaldoVentaFavorDisponible';
 import { VentaProductoCancelaDto } from 'src/app/ventasycotizaciones/model/dto/VentaProductoCancelaDto';
 import { TwVentasProducto } from 'src/app/productos/model/TwVentasProducto';
+import { CalculaPrecioDto } from 'src/app/productos/model/CalculaPrecioDto';
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +90,21 @@ export class VentasService {
   obtenerProductoVenta(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaProductoVenta+'id='+id;
     return this.http.get<TwVentasProducto[]>(url);
+  }
+
+  obtenerVentaProductoId(idVenta:number, idProducto:number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerVentaProductoId+'nIdVenta='+idVenta+'&nIdProducto='+idProducto;
+    return this.http.get<TwVentasProducto>(url);
+  }
+
+  calcularNuevoPrecioAjustado(calculaPrecioDto:CalculaPrecioDto){    
+    let url = environment.servicios.apiRefacFabela + locator.calcularNuevoPrecioAjustado;
+    return this.http.post<CalculaPrecioDto>(url,calculaPrecioDto);
+  }
+
+  actualizaVentaProducto(twVentasProducto:TwVentasProducto){    
+    let url = environment.servicios.apiRefacFabela + locator.actualizaVentaProducto;
+    return this.http.post<TwVentasProducto>(url,twVentasProducto);
   }
 
   guardaVenta(datosVenta:DatosVenta){    

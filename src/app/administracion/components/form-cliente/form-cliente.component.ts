@@ -168,6 +168,7 @@ export class FormClienteComponent implements OnInit {
       if (this.cliente.nId) {
         this.cliente.nEstatus = 1;
         this.cliente.nDescuento=this.objCliente.nDescuento;
+        this.cliente.n_limiteCredito=this.objCliente.n_limiteCredito
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
@@ -179,6 +180,7 @@ export class FormClienteComponent implements OnInit {
         this.cliente.sClave = this.crearId();
         this.cliente.nEstatus = 1;
         this.cliente.nDescuento=0;
+        this.cliente.n_limiteCredito=this.objCliente.n_limiteCredito
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes.push(respuesta);
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente guardado', life: 10000 });
