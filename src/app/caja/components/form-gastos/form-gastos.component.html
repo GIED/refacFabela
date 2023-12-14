@@ -1,0 +1,40 @@
+  
+                <form [formGroup]="formulario">
+                   
+                    <div class="p-field">
+                        <label for="name">Monto</label>
+                        <p-inputNumber  mode="currency" currency="USD" locale="en-US" formControlName="nMonto" [class.is-invalid]="validaMonto"   ></p-inputNumber>
+                        <small *ngIf="validaMonto" class="p-error">Monto no valido.</small>
+                    </div>
+                    <div class="p-field">
+                        <label for="marca">Categoria del Gasto</label>
+                        <p-dropdown [options]="listaCategoriaGasto" formControlName="nCategoriaGasto" optionLabel="sGasto" optionValue="nId"  [class.is-invalid]="validaCategoriaGasto" placeholder="Seleccione una categoria general"
+                            [showClear]="true"></p-dropdown>
+                        <small class="p-error" *ngIf="validaCategoriaGasto">*Categoria de gasto no valida.</small>
+                    </div>
+
+                    <div class="p-field">
+                        <label for="name">Descripcion</label>
+                        <textarea type="text" pInputText formControlName="sDescripcion" [class.is-invalid]="validaDescripcion" oninput="this.value = this.value.toUpperCase()" ></textarea>
+                        <small *ngIf="validaDescripcion" class="p-error">Descripcion del gasto no valida.</small>
+
+                    </div>                
+                                      
+                </form>
+                <div class="p-grid p-jc-end">
+                    <div class="p-col-8">
+                        <div class="box"></div>
+                    </div>
+                    <div class="p-col-2">
+                        <div class="box">
+                            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                        </div>
+                    </div>
+                    <div class="p-col-2">
+                        <div class="box">
+                            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardar()"></button>
+                        </div>
+                    </div>
+                </div>
+              
+                <hr>  
