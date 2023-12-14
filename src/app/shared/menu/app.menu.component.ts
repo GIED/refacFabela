@@ -145,9 +145,9 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Facturación', icon: 'pi pi-fw pi-ticket', routerLink: ['../caja/facturacion']
                     },
-                 /*   {
-                        label: 'Cierre de caja', icon: 'pi pi-fw pi-users', routerLink: ['../caja/cierre-de-caja']
-                    },*/
+                    {
+                        label: 'Gastos', icon: 'pi pi-fw pi-users', routerLink: ['../caja/gastos-caja']
+                    },
                     
                     {
                         label: 'Abonos', icon: 'pi pi-fw pi-sort-numeric-down', routerLink: ['../administracion/creditos']

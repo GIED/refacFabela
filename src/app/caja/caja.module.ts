@@ -12,6 +12,8 @@ import {  ReactiveFormsModule } from '@angular/forms';
 import { FormAbonosComponent } from './components/form-abonos/form-abonos.component';
 import { BalanceCajaComponent } from './components/balance-caja/balance-caja.component';
 import { VentasycotizacionesRoutingModule } from '../ventasycotizaciones/ventasycotizaciones-routing.module';
+import { GastosCajaComponent } from './pages/gastos-caja/gastos-caja.component';
+import { FormGastosComponent } from './components/form-gastos/form-gastos.component';
 
 
 
@@ -23,7 +25,9 @@ import { VentasycotizacionesRoutingModule } from '../ventasycotizaciones/ventasy
     AbonosComponent,
     DetalleAbonosCreditoComponent,
     FormAbonosComponent,
-    BalanceCajaComponent
+    BalanceCajaComponent,
+    GastosCajaComponent,
+    FormGastosComponent
    
   ],
   imports: [

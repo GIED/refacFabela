@@ -32,6 +32,8 @@ static consultaGanancia= '/catalogoGanancia';
 static consultaGananciaId= '/catalogoGananciaId?';
 static consultaFormaPago='/catalogoFormaPago';
 static consultaFormaPagoId='/catalogoFormaPagoId?';
+static consultaGastosCaja='/gastosCaja?';
+static obtenerCatalogoGastos='/catalogoGasto';
 static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';
 static consultarCajas='/consultaCajas';
@@ -44,6 +46,8 @@ static obtenerProductoId= '/obtenerProductoId?';
 static obtenerProductosLike= '/obtenerProductosLike?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static guardarProducto= '/guardarProducto';
+static guardarGasto= '/guardarGasto';
+static borrarGasto= '/borrarGasto';
 static guardarProductoGeneral= '/guardarProductoGeneral';
 
 static calcularPrecioProducto= '/calcularNuevoPrecio';

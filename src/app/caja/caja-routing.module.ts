@@ -4,6 +4,7 @@ import { CobrarComponent } from './pages/cobrar/cobrar.component';
 import { FacturacionComponent } from './pages/facturacion/facturacion.component';
 import { CierreDeCajaComponent } from './pages/cierre-de-caja/cierre-de-caja.component';
 import { AbonosComponent } from './pages/abonos/abonos.component';
+import { GastosCajaComponent } from './pages/gastos-caja/gastos-caja.component';
 
 const routes: Routes = [
 
@@ -23,6 +24,9 @@ const routes: Routes = [
         {
           path:'abonos',   component:AbonosComponent,
           },
+          {
+            path:'gastos-caja',   component:GastosCajaComponent,
+            },
         
        
     ]

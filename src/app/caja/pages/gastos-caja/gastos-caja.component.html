@@ -1,0 +1,109 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Registrar gasto" icon="pi pi-plus"
+                        class="p-button-success p-mr-2 p-mb-2" (click)="abrirFormulularioGasto()"></button>
+
+                </ng-template>
+                <ng-template pTemplate="right">
+                    Total de gastos del día: {{nGastosDia | number:'1.1-3'}}                  
+
+                </ng-template>
+
+
+            </p-toolbar>
+
+           
+            <p-table #dt [value]="listaGastosCaja" [rows]="10" [paginator]="true"
+                [globalFilterFields]="['nId','','tcGasto.sGasto','sDescripcion','dFecha', 'tcUsuario.sNombreUsuario', 'nMonto']" 
+                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <h5 class="p-m-0">Gastos del día</h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar Gasto" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                        </th>
+                        <th pSortableColumn="nId">Id 
+                              <p-sortIcon field="nId"></p-sortIcon>
+                        </th>                                         
+                        <th pSortableColumn="tcGasto.sGasto">Categoría
+                            <p-sortIcon field="tcGasto.sGasto"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="sDescripcion">Descripción                           
+                        </th>
+                        <th pSortableColumn="dFecha">Fecha                           
+                        </th>
+                        <th pSortableColumn="tcUsuario.sNombreUsuario">Usuario                 
+                        </th>
+                        <th pSortableColumn="nMonto">Monto
+                            <p-sortIcon field="nMonto"></p-sortIcon>                          
+                        </th>   
+                        <th></th>                     
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-gasto>
+                    <tr>
+                        <td>
+                        </td>
+                        <td><span class="p-column-title">Id</span> {{gasto.nId}}
+                        </td>
+                        <td><span class="p-column-title">Gasto</span> {{gasto.tcGasto.sGasto}}
+                        </td>
+                        <td><span class="p-column-title">Descripcion</span> {{gasto.sDescripcion}}
+                        </td>
+                        <td><span class="p-column-title">Fecha</span> {{gasto.dFecha | date}}
+                        </td>
+                        <td><span class="p-column-title">Usuario</span> {{gasto.tcUsuario.sNombreUsuario}}
+                        </td>
+                        <td><span class="p-column-title">Monto</span> {{gasto.nMonto | number:'1.1-3' }}
+                        </td>
+                        <td>                            
+                            <button  pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="borrarGasto(gasto)"></button>                          
+                        </td>    
+              
+                       <!-- <td>
+                            <p-checkbox [(ngModel)]="cliente.nDescuento" [binary]="true" inputId="cliente.nDescuento" (onChange)=guardarDescuento(cliente)></p-checkbox>
+                        </td>
+                       
+                        <td>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="editar(cliente)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                (click)="eliminar(cliente)"></button>
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
+                                (click)="lineaCredito(cliente)"></button>
+                        </td>-->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{listaGastosCaja ? listaGastosCaja.length : 0 }} registros.
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="mostrarFormGasto" [style]="{width: '600px'}" header="Gastos del día " [modal]="true" styleClass="p-fluid">
+            
+                <app-form-gastos (cerrar)="hideDialog($event)"   >   </app-form-gastos>
+           
+           
+        </p-dialog>
+
+       
+
+        <p-confirmDialog [style]="{width: '600px'}"></p-confirmDialog>
+    </div>
+</div>

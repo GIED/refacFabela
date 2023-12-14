@@ -13,6 +13,8 @@ import { TwCaja } from '../../productos/model/TwCaja';
 import { TcEstatusVenta } from '../../productos/model/TcEstatusVenta';
 import { TcUsoCfdi } from '../../productos/model/TcUsoCfdi';
 import { TcMarca } from 'src/app/productos/model/TcMarca';
+import { TwGasto } from 'src/app/productos/model/TwGasto';
+import { TcGasto } from 'src/app/productos/model/TcGasto';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +81,25 @@ export class CatalogoService {
   obtenerMarcas(){
     let url= environment.servicios.apiRefacFabela + locator.consultarMarcas;
     return this.http.get<TcMarca[]>(url);
+  }
+
+  obtenerGastosCaja(nId:number){
+    let url= environment.servicios.apiRefacFabela + locator.consultaGastosCaja+'nIdCaja='+nId;
+    return this.http.get<TwGasto[]>(url);
+  }
+
+  obtenerCatalogoGastos(){
+    let url= environment.servicios.apiRefacFabela + locator.obtenerCatalogoGastos;
+    return this.http.get<TcGasto[]>(url);
+  }
+
+  guardarGasto(twGasto: TwGasto){
+    let url = environment.servicios.apiRefacFabela + locator.guardarGasto;
+    return this.http.post<TwGasto>(url,twGasto);
+  }
+  borrarGasto(twGasto: TwGasto){
+    let url = environment.servicios.apiRefacFabela + locator.borrarGasto;
+    return this.http.post<TwGasto>(url,twGasto);
   }
 
 
