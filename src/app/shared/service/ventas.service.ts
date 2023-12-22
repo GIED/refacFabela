@@ -18,6 +18,7 @@ import { VwSaldoVentaFavorDisponible } from 'src/app/productos/model/VwSaldoVent
 import { VentaProductoCancelaDto } from 'src/app/ventasycotizaciones/model/dto/VentaProductoCancelaDto';
 import { TwVentasProducto } from 'src/app/productos/model/TwVentasProducto';
 import { CalculaPrecioDto } from 'src/app/productos/model/CalculaPrecioDto';
+import { TvReporteDetalleVenta } from 'src/app/productos/model/TvReporteDetalleVenta';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,11 @@ export class VentasService {
   obtenerAbonosVentaId(id:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaAbonoId+'nId='+id;
     return this.http.get<TwAbono[]>(url);
+  }
+
+  obtenerVentaCaja(id:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaVentasCaja+'nId='+id;
+    return this.http.get<TvReporteDetalleVenta[]>(url);
   }
   obtenerCobroParcial(id:number){
     let url = environment.servicios.apiRefacFabela + locator.obtenerVentaCobroParcial+'nIdVenta='+id;

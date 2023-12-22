@@ -98,6 +98,7 @@ static consultaVentasTop='/obtenerVentasTop';
 static consultaVentaDetalleCajaVigente='/obtenerVentasCajaVigente';
 static consultaVentaDetalleEntrega='/obtenerVentasDetalleEntrega'
 static consultaVentaAbonoId='/obtenerAbonosVentaId?';
+static consultaVentasCaja='/obtenerVentasDetalleCaja?';
 static obtenerVentaCobroParcial='/obtenerPagosParciales?';
 static consultaProductoVentaId='/consultaProductoVentaId?';
 static consultaProductoVentasTraer='/obtenerProductosTraer?';

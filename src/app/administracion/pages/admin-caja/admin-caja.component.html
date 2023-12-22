@@ -17,11 +17,11 @@
                 [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
                     <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                        <h5 class="p-m-0">Administración de clientes</h5>
+                        <h5 class="p-m-0">Administración de cajas</h5>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
                             <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                                placeholder="Buscar Cliente" />
+                                placeholder="Buscar Cajas" />
                         </span>
                     </div>
                 </ng-template>
@@ -77,7 +77,12 @@
                         <td>
                             <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                                 (click)="generarBalance(caja)"></button>
+                                <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info"
+                                (click)="consultarDetalleVentas(caja.nId)"></button>
                         </td>
+
+
+
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
@@ -110,6 +115,124 @@
                     (click)="nuevaCaja()"></button>
             </ng-template>
         </p-dialog>
+
+
+        <p-dialog [(visible)]="mostrarCaja" header="Ventas de la caja" [style]="{width: '1100px'}" [closable]="false" styleClass="p-fluid">
+                                
+            <p-table #dt2 [value]="listaVentasReporte" responsiveLayout="scroll" [rows]="10" [columns]="cols"
+                    [paginator]="true"
+                    [globalFilterFields]="['nIdVenta','sRfc','sRazonSocial','sEstatusVenta','sTipoVenta','sTipoPago','dInicioCredito','dTerminoCredito', 'sNombreUsuario','sFormaPago','nDescuento','nTotalVenta','nTotalPagoCajaNota','nSaldoFinalVenta','sEstatusEntrega']"
+                     [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                    currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros"
+                    [showCurrentPageReport]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Buscar ventas de la caja" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="nIdVenta">No. Venta<p-sortIcon field="nIdVenta"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="sRfc">RFC<p-sortIcon field="sRfc"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="sRazonSocial">Razón social<p-sortIcon field="sRazonSocial"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="sEstatusVenta">Estatus venta<p-sortIcon field="sEstatusVenta"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="sTipoVenta">Tipo Venta<p-sortIcon field="sTipoVenta"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="sTipoPago">Tipo Pago<p-sortIcon field="sTipoPago"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="dInicioCredito">Inicio Crédito<p-sortIcon field="dInicioCredito"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="dTerminoCredito">Termino Crédito<p-sortIcon field="dTerminoCredito"></p-sortIcon>
+                            </th>   
+                            <th pSortableColumn="sNombreUsuario">Nombre Usuario<p-sortIcon field="sNombreUsuario"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="sFormaPago">Forma de Pago<p-sortIcon field="sFormaPago"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nDescuento">Descuento<p-sortIcon field="nDescuento"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nTotalVenta">Total Venta<p-sortIcon field="nTotalVenta"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nTotalPagoCajaNota">Total pago Caja<p-sortIcon field="nTotalPagoCajaNota"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nSaldoFinalVenta">Saldo Final<p-sortIcon field="nSaldoFinalVenta"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="sEstatusEntrega">Estatus de entrega<p-sortIcon field="sEstatusEntrega"></p-sortIcon>
+                            </th>
+                           
+                                                                                                    
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-venta let-expanded="expanded">
+                        <tr>                                    
+                            <td><span class="p-column-title"></span> {{venta.nIdVenta}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.sRfc}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.sRazonSocial}}
+                            </td>
+                            <td><span class="p-column-title"></span>{{venta.sEstatusVenta}}
+                            </td>
+                            <td><span class="p-column-title"></span>{{venta.sTipoVenta}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.sTipoPago }}
+                            </td>                                    
+                            <td><span class="p-column-title"></span> {{venta.dInicioCredito | date}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.dTerminoCredito | date}}
+                            </td>  
+                            <td><span class="p-column-title"></span> {{venta.sNombreUsuario}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.sFormaPago}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.nDescuento}}
+                            </td>
+                            <td><span class="p-column-title"></span>{{venta.nTotalVenta}}
+                            </td>
+                            <td><span class="p-column-title"></span>{{venta.nTotalPagoCajaNota}}
+                            </td>
+                            <td><span class="p-column-title"></span> {{venta.nSaldoFinalVenta }}
+                            </td>
+                            <td><span class="p-column-title"></span>{{venta.sEstatusEntrega}}
+                            </td>
+                    
+                           
+                                                           
+                                                                
+                        </tr>
+                    </ng-template>
+                 </p-table>
+                 <ng-template pTemplate="right">
+                    <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                        class="p-button-help p-mb-2" (click)="dt2.exportCSV()"></button>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
+                </ng-template>
+</p-dialog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <p-confirmDialog [style]="{width: '600px'}"></p-confirmDialog>
     </div>
 </div>

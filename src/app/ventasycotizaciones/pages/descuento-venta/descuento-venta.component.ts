@@ -66,7 +66,7 @@ ngOnInit(){
 
 consultaVentas(){
 
-  this.ventasService.obtenerVentaDetalleEstatusVenta(1).subscribe(data=>{
+  this.ventasService.obtenerVentaDetalleEstatusVenta(8).subscribe(data=>{
     this.listaVentasDetalleCliente=data; 
     //console.log(this.listaVentasDetalleCliente);      
    

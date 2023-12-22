@@ -7,6 +7,7 @@ import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TwCaja } from '../../../productos/model/TwCaja';
 import { VentasService } from 'src/app/shared/service/ventas.service';
 import { UsuarioService } from '../../service/usuario.service';
+import { TvReporteDetalleVenta } from 'src/app/productos/model/TvReporteDetalleVenta';
 
 @Component({
   selector: 'app-admin-caja',
@@ -19,12 +20,39 @@ export class AdminCajaComponent implements OnInit {
   mostrarRegistroCaja: boolean=false;
   formulario: FormGroup;
   cajaNueva:TwCaja;
+  mostrarCaja:boolean;
+  listaVentasReporte:TvReporteDetalleVenta[];
+  cols:any;
+
 
   constructor(private messageService: MessageService,
     private confirmationService: ConfirmationService, private clienteService: ClienteService, private fb: FormBuilder,
     private tokenService: TokenService, private catalogoService: CatalogoService, private ventasService: VentasService) { 
 
       this.listaCajas= [];
+      this.listaVentasReporte=[];
+
+
+     
+      this.cols = [
+        { field: 'nIdVenta', header: 'nIdVenta' },
+        { field: 'sRfc', header: 'sRfc' },
+        { field: 'sRazonSocial', header: 'sRazonSocial' },
+        { field: 'sEstatusVenta', header: 'sEstatusVenta' },
+        { field: 'sTipoVenta', header: 'sTipoVenta' },
+        { field: 'sTipoPago', header: 'sTipoPago' },
+        { field: 'dInicioCredito', header: 'dInicioCredito' },   
+        { field: 'dTerminoCredito', header: 'dTerminoCredito' },
+        { field: 'sNombreUsuario', header: 'sNombreUsuario' },
+        { field: 'sFormaPago', header: 'sFormaPago' },
+        { field: 'nDescuento', header: 'nDescuento' },
+        { field: 'nTotalVenta', header: 'nTotalVenta' },   
+        { field: 'nTotalPagoCajaNota', header: 'nTotalPagoCajaNota' },
+        { field: 'nSaldoFinalVenta', header: 'nSaldoFinalVenta' },
+        { field: 'sEstatusEntrega', header: 'sEstatusEntrega' }    ]
+
+
+    
 
     }
 
@@ -46,11 +74,31 @@ export class AdminCajaComponent implements OnInit {
 
       this.listaCajas=data;
 
-
-     
-
     })
     
+
+  }
+
+
+  consultarDetalleVentas(nId:number){
+
+    this.mostrarCaja=true;
+
+    this.ventasService.obtenerVentaCaja(nId).subscribe(data=>{
+
+      this.listaVentasReporte=data;
+
+    })
+
+   
+
+
+
+
+  }
+
+  hideDialogAlter(){
+    this.mostrarCaja=false;
 
   }
 
