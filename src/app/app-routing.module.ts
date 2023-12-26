@@ -10,22 +10,22 @@ import { ProdGuardService } from './shared/guards/prod-guard.service';
 
 const routes: Routes = [
     {
-     path:'administracion', component: AppMainComponent,  canActivate:[ProdGuardService], data: {expectedRol: ['admin']},
+     path:'administracion', component: AppMainComponent,  canActivate:[ProdGuardService], data: {expectedRol:['admin','caja','almacen']},
      loadChildren:() => import('./administracion/administracion.module').then(m => m.AdministracionModule),
      
    },
    {
-    path:'ventasycotizaciones', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','distribuidor']},
+    path:'ventasycotizaciones', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','caja']},
     loadChildren:() => import('./ventasycotizaciones/ventasycotizaciones.module').then(m => m.VentasycotizacionesModule),
    
   },
   {
-    path:'almacen', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin', 'almacen']},
+    path:'almacen', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','almacen',]},
     loadChildren:() => import('./almacen/almacen.module').then(m => m.AlmacenModule),
    
   },
   {
-    path:'productos', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin']},
+    path:'productos', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','almacen']},
     loadChildren:() => import('./productos/productos.module').then(m => m.ProductosModule),
      
   },
@@ -35,7 +35,7 @@ const routes: Routes = [
     
   },
   {
-    path:'reportes', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin']},
+    path:'reportes', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol:['admin','ventas','distribuidor','almacen','caja']},
     loadChildren:() => import('./reportes/reportes.module').then(m => m.ReportesModule),
     
   },

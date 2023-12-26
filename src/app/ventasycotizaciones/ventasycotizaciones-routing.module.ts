@@ -25,7 +25,7 @@ const routes: Routes = [
         component: VentasPorPedidoComponent,
       },
       {
-        path: "consulta-venta",canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas']},
+        path: "consulta-venta",canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','caja']},
         component: ConsultaVentaComponent,
       },
       {
@@ -33,7 +33,7 @@ const routes: Routes = [
         component: ConsultaCotizacionComponent,
       },
       {
-        path: "cancela-venta",canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas']},
+        path: "cancela-venta",canActivate:[ProdGuardService], data: {expectedRol: ['admin']},
         component: CancelaVentaComponent,
       },
       {

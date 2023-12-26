@@ -29,45 +29,45 @@ export class AppMenuComponent implements OnInit {
             }
           });
         this.model = [
-            {label: 'Inicio', icon: 'pi pi-fw pi-home',  visible:this.realRol==='admin',  routerLink: ['/inicio/inicio-general']},
+            {label: 'Inicio', icon: 'pi pi-fw pi-home',  visible:this.realRol==='admin' || this.realRol==='ventas' || this.realRol==='almacen' || this.realRol==='caja',  routerLink: ['/inicio/inicio-general']},
             {
-                label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.realRol==='admin',
+                label: 'Administración', icon: 'pi pi-fw pi-cog', visible:this.realRol==='admin'  || this.realRol==='almacen' || this.realRol==='caja',
                 items: [
                     {
-                        label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['../administracion/usuario']
+                        label: 'Usuarios', icon: 'pi pi-fw pi-users', routerLink: ['../administracion/usuario'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'Clientes', icon: 'pi pi-fw pi-user', routerLink: ['../administracion/cliente']
+                        label: 'Clientes', icon: 'pi pi-fw pi-user', routerLink: ['../administracion/cliente'], visible:this.realRol==='admin' || this.realRol==='caja'
                     },
                     {
-                        label: 'Proveedores', icon: 'pi pi-fw pi-user-minus', routerLink: ['../administracion/proveedor']
+                        label: 'Proveedores', icon: 'pi pi-fw pi-user-minus', routerLink: ['../administracion/proveedor'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'Tipo de Cambio', icon: 'pi pi-fw pi-dollar', routerLink: ['../administracion/tipo-cambio']
+                        label: 'Tipo de Cambio', icon: 'pi pi-fw pi-dollar', routerLink: ['../administracion/tipo-cambio'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'Créditos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/creditos']
+                        label: 'Créditos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/creditos'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'Descuentos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../ventasycotizaciones/descuento-venta']
+                        label: 'Descuentos', icon: 'pi pi-fw pi-credit-card', routerLink: ['../ventasycotizaciones/descuento-venta'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'valida comprobantes', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/validaComprobante']
+                        label: 'Valida comprobantes', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/validaComprobante'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'Administración Caja', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/admin-caja']
+                        label: 'Administración Caja', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/admin-caja'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'venta a credito', icon: 'pi pi-sliders-h', routerLink: ['../administracion/traspaso-venta-credito']
+                        label: 'Venta a crédito', icon: 'pi pi-sliders-h', routerLink: ['../administracion/traspaso-venta-credito'], visible:this.realRol==='admin' || this.realRol==='caja'
                     },
                     {
-                        label: 'Tablero de Control', icon: 'pi pi-fw pi-credit-card', routerLink: ['../inicio/tablero']
+                        label: 'Tablero de Control', icon: 'pi pi-fw pi-credit-card', routerLink: ['../inicio/tablero'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'Productos Cancelados', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/productos-cancelados']
+                        label: 'Productos Cancelados', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/productos-cancelados'], visible:this.realRol==='admin'
                     },
                     {
-                        label: 'Ajuste Inventario', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/consulta-ajuste-inventario']
+                        label: 'Ajuste Inventario', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/consulta-ajuste-inventario'], visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
 
                     
@@ -76,41 +76,41 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-dollar', visible:this.realRol==='admin' || this.realRol==='ventas',
+                label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-dollar', visible:this.realRol==='admin' || this.realRol==='ventas'  || this.realRol==='caja',
                 items: [
                     {
-                        label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['../ventasycotizaciones/ventas']
+                        label: 'Ventas y Cotizaciones', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['../ventasycotizaciones/ventas'], visible:this.realRol==='admin' || this.realRol==='ventas'
                     },
                     {
-                        label: 'Ventas por Pedido', icon: 'pi pi-fw pi-wallet', routerLink: ['../ventasycotizaciones/ventas-por-pedido']
+                        label: 'Ventas por Pedido', icon: 'pi pi-fw pi-wallet', routerLink: ['../ventasycotizaciones/ventas-por-pedido'], visible:this.realRol==='admin' || this.realRol==='ventas'
                     },
                    
                     {
-                        label: 'Consulta Venta', icon: 'pi pi-fw pi-search', routerLink: ['../ventasycotizaciones/consulta-venta']
+                        label: 'Consulta Venta', icon: 'pi pi-fw pi-search', routerLink: ['../ventasycotizaciones/consulta-venta'], visible:this.realRol==='admin' || this.realRol==='ventas' || this.realRol==='caja'
                     },
                     {
-                        label: 'Consulta Cotización', icon: 'pi pi-fw pi-search-plus', routerLink: ['../ventasycotizaciones/consulta-cotizacion']
+                        label: 'Consulta Cotización', icon: 'pi pi-fw pi-search-plus', routerLink: ['../ventasycotizaciones/consulta-cotizacion'],visible:this.realRol==='admin' || this.realRol==='ventas'
                     },
                     {
-                        label: 'Cancela Venta', icon: 'pi pi-fw pi-search-minus', routerLink: ['../ventasycotizaciones/cancela-venta']
+                        label: 'Cancela Venta', icon: 'pi pi-fw pi-search-minus', routerLink: ['../ventasycotizaciones/cancela-venta'],visible:this.realRol==='admin' 
                     },
 
                 ]
             },
             {
-                label: 'Almacen', icon: 'pi pi-fw pi-slack',visible:this.realRol==='admin' || this.realRol==='almacen',
+                label: 'Almacen', icon: 'pi pi-fw pi-slack', visible:this.realRol==='admin' || this.realRol==='almacen' ,
                 items: [
                     {
-                        label: 'Ingreso mercancia', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/ingreso-mercancia']
+                        label: 'Ingreso mercancia', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/ingreso-mercancia'], visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
                     {
-                        label: 'Traspasos', icon: 'pi pi-fw pi-sort-alt', routerLink: ['../almacen/traspasos']
+                        label: 'Traspasos', icon: 'pi pi-fw pi-sort-alt', routerLink: ['../almacen/traspasos'], visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
                     {
-                        label: 'Inventario', icon: 'pi pi-fw pi-book', routerLink: ['../almacen/inventario']
+                        label: 'Inventario', icon: 'pi pi-fw pi-book', routerLink: ['../almacen/inventario'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
                     {
-                        label: 'Enterega de mercancia', icon: 'pi pi-fwpi-amazon', routerLink: ['../almacen/entrega-de-mercancia']
+                        label: 'Enterega de mercancia', icon: 'pi pi-fwpi-amazon', routerLink: ['../almacen/entrega-de-mercancia'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
                   /*  {
                         label: 'Stock mínimo', icon: 'pi pi-fw pi-spinner', routerLink: ['../almacen/stock-minimo']
@@ -119,38 +119,38 @@ export class AppMenuComponent implements OnInit {
                 ]
             },
             {
-                label: 'Productos', icon: 'pi pi-fw pi-briefcase', visible:this.realRol==='admin' ,
+                label: 'Productos', icon: 'pi pi-fw pi-briefcase', visible:this.realRol==='admin' || this.realRol==='ventas' || this.realRol==='almacen'  ,
                 items: [
                     {
-                        label: 'Registro', icon: 'pi pi-fw pi-external-link', routerLink: ['../productos/registro-producto']
+                        label: 'Registro', icon: 'pi pi-fw pi-external-link', routerLink: ['../productos/registro-producto'], visible:this.realRol==='admin' || this.realRol==='almacen' 
                     },
                     {
-                        label: 'Historial', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/historial-producto']
+                        label: 'Historial', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/historial-producto'], visible:this.realRol==='admin' || this.realRol==='almacen' || this.realRol==='ventas'
                     },
                     {
-                        label: 'Registro de pedidos', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/registro-pedidos']
+                        label: 'Registro de pedidos', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/registro-pedidos'],visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
                     {
-                        label: 'Venta Stock', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/venta-stock-cero']
+                        label: 'Venta Stock', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/venta-stock-cero'], visible:this.realRol==='admin'
                     },
                    
                 ]
             },
             {
-                label: 'Caja', icon: 'pi pi-fw pi-id-card', visible:this.realRol==='admin' || this.realRol==='caja',
+                label: 'Caja', icon: 'pi pi-fw pi-id-card', visible:this.realRol==='admin'   || this.realRol==='caja',
                 items: [
                     {
-                        label: 'Cobrar', icon: 'pi pi-fw pi-dollar', routerLink: ['../caja/cobrar']
+                        label: 'Cobrar', icon: 'pi pi-fw pi-dollar', routerLink: ['../caja/cobrar'], visible:this.realRol==='admin' || this.realRol==='caja'
                     },
                     {
-                        label: 'Facturación', icon: 'pi pi-fw pi-ticket', routerLink: ['../caja/facturacion']
+                        label: 'Facturación', icon: 'pi pi-fw pi-ticket', routerLink: ['../caja/facturacion'], visible:this.realRol==='admin' || this.realRol==='caja'
                     },
                     {
-                        label: 'Gastos', icon: 'pi pi-fw pi-users', routerLink: ['../caja/gastos-caja']
+                        label: 'Gastos', icon: 'pi pi-fw pi-users', routerLink: ['../caja/gastos-caja'], visible:this.realRol==='admin' || this.realRol==='caja'
                     },
                     
                     {
-                        label: 'Abonos', icon: 'pi pi-fw pi-sort-numeric-down', routerLink: ['../administracion/creditos']
+                        label: 'Abonos', icon: 'pi pi-fw pi-sort-numeric-down', routerLink: ['../administracion/creditos'], visible:this.realRol==='admin' || this.realRol==='caja'
                     },
                     
                 ]
