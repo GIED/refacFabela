@@ -63,6 +63,7 @@ export class AjusteInventarioComponent implements OnInit {
     //console.log(this.productoBodega);
     this.formGrp = new FormGroup({
       cantidadCtrl: new FormControl('', [Validators.required]),
+      motivoCtrl: new FormControl('', [Validators.required,  Validators.maxLength(200)]),
       
     });
   }
@@ -95,6 +96,7 @@ export class AjusteInventarioComponent implements OnInit {
     this.twAjusteInventario.nCantidadActual=this.cantidadCtrl.value;
     this.twAjusteInventario.nTotalAjustado=this.cantidadCtrl.value-this.productoBodega.nCantidad;
     this.twAjusteInventario.nIdUsuario=this.tokenService.getIdUser();
+    this.twAjusteInventario.sMotivo=this.motivoCtrl.value;
 
     //console.log("Este el objeto que mandare a registrase",this.twAjusteInventario);
     this.traspasoService.guardarAjusteInventario(this.twAjusteInventario).subscribe(data=>{
@@ -118,7 +120,9 @@ export class AjusteInventarioComponent implements OnInit {
   get cantidadCtrl() {
     return this.formGrp.get('cantidadCtrl') as FormControl;
   }
-
+  get motivoCtrl() {
+    return this.formGrp.get('motivoCtrl') as FormControl;
+  }
 
 
 }

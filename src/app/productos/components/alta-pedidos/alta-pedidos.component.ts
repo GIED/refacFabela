@@ -11,6 +11,7 @@ import { TwPedidoProducto } from '../../model/TwPedidoProducto';
 import { PedidosService } from '../../../shared/service/pedidos.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TvPedidoDetalle } from '../../model/TvPedidoDetalle';
+import { TvStockProducto } from '../../model/TvStockProducto';
 
 @Component({
   selector: 'app-alta-pedidos',
@@ -36,6 +37,7 @@ pedidoDto: PedidoDto;
 productDialog:boolean;
 titulo:string;
 producto:TcProducto;
+tvStockProducto:TvStockProducto;
 
 
   constructor(private productosService: ProductoService,
@@ -66,9 +68,14 @@ producto:TcProducto;
   }
 
   informacionProducto(producto:TcProducto){    
+  
+    this.muestraDetalleProducto=true;
 
     if(producto!=null){
-      this.muestraDetalleProducto=true;
+     this.productosService.obtenerTotalBodegasIdProducto(producto.nId).subscribe(data=>{
+      this.tvStockProducto=data;
+     })
+     
         this.listaProducto.push(producto);
     // console.log(this.listaProducto);
      this.obtenerProveedores();

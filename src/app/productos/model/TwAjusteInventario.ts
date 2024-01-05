@@ -19,6 +19,7 @@ export class TwAjusteInventario{
     tcAnaquel:TcAnaquel;	
 	tcNivel:TcNivel;
 	nIdAnaquel:number;
+	sMotivo:string;
 
     
 

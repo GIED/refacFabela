@@ -11,6 +11,9 @@ import { TrVentaCobro } from '../../../productos/model/TrVentaCobro';
 import { TwVenta } from '../../../productos/model/TwVenta';
 import { TwCaja } from '../../../productos/model/TwCaja';
 import { VwSaldoVentaFavorDisponible } from 'src/app/productos/model/VwSaldoVentaFavorDisponible';
+import { TwSaldoUtilizado } from 'src/app/productos/model/TwSaldoUtilizado';
+import { UsuarioService } from '../../../administracion/service/usuario.service';
+import { TokenService } from 'src/app/shared/service/token.service';
 
 @Component({
   selector: 'app-cobrar',
@@ -47,81 +50,57 @@ export class CobrarComponent implements OnInit {
   saldoDisponible:number;
   ventaSaldoFavor:TvVentasDetalle;
   state:boolean;
+  error:boolean;
+  descuento:boolean;
+  totalDescuento:number;
+  saldoUtilizado:TwSaldoUtilizado;
+  ventaCobro:TrVentaCobro;
+  twVenta:TwVenta;
+  banGuardar:boolean;
 
   constructor(private messageService: MessageService, private ventasService: VentasService,
-    private confirmationService: ConfirmationService, private fb: FormBuilder, private catalogo: CatalogoService) {
+    private confirmationService: ConfirmationService, private fb: FormBuilder, private catalogo: CatalogoService,   private tokenService: TokenService,) {
 
     this.listaCobrosParciales = [];
     this.displayListaVentas=false;
     this.displayListaAbonoVenta=false;
-
+    this.error=false;
+    this.saldoUtilizado=new TwSaldoUtilizado();
+    this.ventaCobro=new TrVentaCobro();
+    this.totalVenta=0;
+    this.aCuenta=0;
+    this.restan=0;
+    this.banGuardar=true;
   }
 
   ngOnInit() {
 
-
-
     this.crearFormulario();
     this.consultaVentas();
-    this.cajaActual();
-
+    this.cajaActual();  
+    this.obtenerCatalogoFormPago();
 
   }
+
 
   consultarVentaSaldo(){
     this.saldoTotalFavor=null;
    //console.log('voy a consultar si hay un saldo a favor:', this.saldoFavor);
 
-   if(this.saldoFavor!=null || this.saldoFavor!=undefined){
-   this.ventasService.obtenerSaldoVentaFavor(this.saldoFavor).subscribe(data=>{
-      this.saldoTotalFavor=data;
-
-      if(this.saldoTotalFavor!=null || this.saldoTotalFavor!=undefined){
-        this.saldoDisponible=this.saldoTotalFavor.nSaldoDisponible;
-
-        if(this.ventaSaldoFavor.nSaldoTotal<=this.formulario.controls.monto.value){
-                if(this.saldoDisponible<=this.ventaSaldoFavor.nSaldoTotal){
-                this.fProducto.monto.setValue((this.ventaSaldoFavor.nSaldoTotal-this.saldoDisponible).toFixed(3));
-                this.restan= this.fProducto.monto.value;
-                this.VentaDescuentoDto.nSaldoFavor=this.saldoDisponible;
-                this.VentaDescuentoDto.nIdVentaUtilizado=this.saldoFavor;          
-                this.formulario.controls.monto.disable();
-              }
-              else{
-                this.fProducto.monto.setValue((0).toFixed(3));
-                this.restan=0;
-                this.VentaDescuentoDto.nSaldoFavor=this.ventaSaldoFavor.nSaldoTotal;
-                this.VentaDescuentoDto.nIdVentaUtilizado=this.saldoFavor; 
-                this.formulario.controls.monto.disable();  
-
-              }
+    if (this.saldoFavor != null || this.saldoFavor != undefined) {
+      this.ventasService.obtenerSaldoVentaFavor(this.saldoFavor).subscribe(data => {
+        this.saldoTotalFavor = data;
+        
+        if(this.saldoTotalFavor==null){
+          this.error = true;
         }
         else{
-
-          this.fProducto.monto.setValue((0).toFixed(3));
-          this.formulario.controls.monto.disable();
-          this.VentaDescuentoDto.nSaldoFavor=0;
-          this.VentaDescuentoDto.nIdVentaUtilizado=0;
-
-
+          this.error = false;
         }
+       
 
-      }
-      else{
-        this.saldoDisponible=0;
-        this.restan=this.ventaSaldoFavor.nSaldoTotal;
-        this.fProducto.monto.setValue((this.ventaSaldoFavor.nSaldoTotal).toFixed(3));
-          this.formulario.controls.monto.disable();
-          this.VentaDescuentoDto.nSaldoFavor=0;
-          this.VentaDescuentoDto.nIdVentaUtilizado=0;
-        
-        
-
-
-      }  
-
-   })
-  }
+      })
+    }
 
   }
 
@@ -184,78 +163,229 @@ export class CobrarComponent implements OnInit {
     });
   }
 
+  guardaSaldoUtilizado(twSaldoUtilizado:TwSaldoUtilizado){
 
-  abrir(tvVentasDetalle: TvVentasDetalle) {
-    this.abrirformulario = true;
-   // console.log('Este es el objeto de información', tvVentasDetalle);
-    // console.log('Este es el objeto de información', tvVentasDetalle.nSaldoFavor);
+    console.log('Voy a guargar el saldo utilizado',twSaldoUtilizado );
+
+  this.ventasService.guardaSaldoUtilizado(twSaldoUtilizado).subscribe(data=>{
+
+    this.consultarVentaSaldo();
+    this.generarsSaldoFacorPdf(twSaldoUtilizado.nIdVenta);
+
+  })
 
 
-    this.ventaSaldoFavor=tvVentasDetalle;
+  }
 
-    if(tvVentasDetalle.nIdTipoVenta===3){
-      this.state=true;
+  guardaVentaCobro(trVentaCobro:TrVentaCobro){
 
-    }
-    else{
-      this.state=false;
+  
+    console.log('Voy a guargar el cobro',trVentaCobro );
+    this.ventasService.guardaVentaCobro(trVentaCobro).subscribe(data=>{
+     
+      this.consultaPagosParciales(data.nId);
 
-    }
+      this.banGuardar=true;
+
+      
+
+    })
+
+
+  }
+
+  aplicarSaldoFavor(){
+    
+    // Se mapea el objeto de saldo utilizado para guardar el registro
+    if(this.saldoTotalFavor.nSaldoDisponible>=this.ventaSaldoFavor.nSaldoTotal){
+       this.saldoUtilizado.nSaldoUtilizado=this.ventaSaldoFavor.nSaldoTotal;
+       this.saldoUtilizado.nSaldoTotal=this.ventaSaldoFavor.nSaldoTotal;
+       this.ventaCobro.nMonto=this.ventaSaldoFavor.nSaldoTotal;
+       this.saldoUtilizado.nSaldoUtilizado.toFixed(2);
+       this.saldoUtilizado.nSaldoTotal.toFixed(2);
+       this.ventaCobro.nMonto.toFixed(2);
+        
+
+         }
+   else{
+       this.saldoUtilizado.nSaldoUtilizado=this.saldoTotalFavor.nSaldoDisponible;
+       this.saldoUtilizado.nSaldoTotal=this.saldoTotalFavor.nSaldoDisponible;
+       this.ventaCobro.nMonto=this.saldoTotalFavor.nSaldoDisponible;
+       this.saldoUtilizado.nSaldoUtilizado.toFixed(2);
+       this.saldoUtilizado.nSaldoTotal.toFixed(2);
+       this.ventaCobro.nMonto.toFixed(2);
+     
+
+      }        
+        this.saldoUtilizado.nIdVenta=this.saldoFavor;
+        this.saldoUtilizado.nIdUsuario=this.tokenService.getIdUser();
+        this.saldoUtilizado.nEstatus=true;
+        this.saldoUtilizado.dFecha=new Date();
+        this.saldoUtilizado.nIdCaja=this.cajaActiva.nId;
+        this.saldoUtilizado.nIdVentaUtilizado=this.ventaSaldoFavor.nId;
+
+       // Se guarda    
+       console.log('Esto es el saldo utilizado que se guardará',this.saldoUtilizado);
+       this.guardaSaldoUtilizado( this.saldoUtilizado);
+       
+       this.ventaCobro.nIdVenta=this.ventaSaldoFavor.nId;
+       this.ventaCobro.nIdCaja=this.cajaActiva.nId;
+       this.ventaCobro.dFecha=new Date();
+       this.ventaCobro.nEstatus=1;
+       this.ventaCobro.nIdFormaPago=11;
+       console.log('Esto es lo que se cobrara en venta cobro',this.ventaCobro);
+     
+       
+       this.guardaVentaCobro(this.ventaCobro);
+
+      
+     
+
+
+
+
+
+  }
+
+  limpiar(){
+    this.noVenta = 0
+    this.totalVenta = 0;     
+    this.restan = 0;
+    this.VentaDescuentoDto = new TvVentasDetalle();
+    this.totalDescuento=0;
+    this.fProducto.monto.setValue(0);
+    this.aCuenta=0;
    
 
-  this.ventasService.obtenerCobroParcial(tvVentasDetalle.nId).subscribe(resp => {
 
-    this.listaCobrosParciales = resp;
-    //console.log('listaCobroParcial',this.listaCobrosParciales);
+  }
 
-    if (this.listaCobrosParciales.length >0) {
-      this.displayListaAbonoVenta=false;
-    } else {
-      this.displayListaAbonoVenta=true;
-    }
+  consultaPagosParciales(nIdVenta:number){
 
-    /* Se bloquea el campo de monto con el total de la venta sin opción a modificar el monto  */
-    if (tvVentasDetalle.tcTipoVenta.nId !== 3) {
+    this.limpiar();
+    this.banGuardar=false;
+
+
+
+    this.ventasService.obtenerCobroParcial(this.ventaSaldoFavor.nId).subscribe(resp => {
+      this.listaCobrosParciales = resp;
+      let formapago:number;
+
+      if (this.listaCobrosParciales.length > 0) {
+        this.displayListaAbonoVenta = false;
+      } else {
+        this.displayListaAbonoVenta = true;
+      }
+
+
+      for(let i in this.listaCobrosParciales ){
+        this.aCuenta+=this.listaCobrosParciales[i].nMonto;
+        
+     }
   
-      this.fProducto.monto.setValue(tvVentasDetalle.nSaldoTotal.toFixed(3));
-      this.formulario.controls.monto.disable();
+     this.noVenta = this.ventaSaldoFavor.nId;
+     this.totalVenta = this.ventaSaldoFavor.nTotalVenta;     
+     this.restan = this.ventaSaldoFavor.nTotalVenta-this.aCuenta-this.ventaSaldoFavor.descuento;
+     this.VentaDescuentoDto = this.ventaSaldoFavor;
+     this.totalDescuento=this.ventaSaldoFavor.descuento;
+     this.fProducto.monto.setValue(this.restan.toFixed(2));
+
+    if(this.ventaSaldoFavor.nIdTipoVenta === 3){      
+
+      if(this.restan==this.ventaSaldoFavor.nTotalVenta){
+
+        this.fProducto.monto.setValue(this.restan/2);
+      }        
+     
+    }
+   /* if(this.ventaSaldoFavor.nIdTipoVenta !== 3){   
+
+    this.formulario.controls.monto.disable();
+    } */
+
+
+
+
+
+     this.consultaVentas();
+
+      if(this.restan<=0.01){
+        this.ventasService.obtnerVentaId(this.ventaSaldoFavor.nId).subscribe(data=>{        
+          this.twVenta=data;
+          this.twVenta.nIdEstatusVenta=2; 
+          this.abrirformulario = false;
+         
+          if (this.listaCobrosParciales.length==1) {       
+          this.twVenta.nIdFormaPago=this.listaCobrosParciales[0].nIdFormaPago;
+          } 
+          if (this.listaCobrosParciales.length==2) {       
+            this.twVenta.nIdFormaPago=20;
+          } 
+
+          this.ventasService.guardarVentaCompleta(this.twVenta).subscribe(data=>{
+
+            console.log('Se guardo el cobro')
+
+            this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Se guardo el cobro', life: 3000 });
+
+            this.limpiaFormulario();         
+            this.consultaVentas();
+            this.saldoTotalFavor=null;
+            this.saldoFavor=null;
+           
+
+          })
+
+
+        })
+      }
+
+      this.banGuardar=true;
+
+  
+    })
+
+    
+
+
+
+
+
+  }
+
+
+  abrir(nId: number) {
+
+    this.abrirformulario = true;
+    this.ventasService.consultaVentaDetalleId(nId).subscribe(data => {
+      this.ventaSaldoFavor = data;
+
+      console.log( this.ventaSaldoFavor);
+
+      if (this.ventaSaldoFavor.nIdTipoVenta === 3) {
+        this.state = true;
+
+      }
+      else {
+        this.state = false;
+
+      }
+      if(this.ventaSaldoFavor.descuento>0){
+        this.descuento=true;
+
+      }
+      else{
+        this.descuento=false;
+      }
+
+     
       
-    }   
-  
-  
-    /*Se valida que no hay registro de pago de apartado y se habilita el campo de comto para escribir el monto a pagar considerando que sea mayor al 50% */
-    if (tvVentasDetalle.tcTipoVenta.nId === 3 && this.listaCobrosParciales.length == 0) {
-  
-      //console.log("Entre a asignar el valor de anticipo");
-      this.fProducto.monto.setValue(tvVentasDetalle.nAnticipo.toFixed(3));
-      this.VentaDescuentoDto.nSaldoFavor=0;
-      this.VentaDescuentoDto.nIdVentaUtilizado=0;
-      this.formulario.controls.monto.enable();
-    }
-  
-    /*Con este modulo se valida si ya hay un registro de anticipo en la caja y se asigna ñla diferecia para su cobro */
-    if (tvVentasDetalle.tcTipoVenta.nId === 3 && this.listaCobrosParciales.length > 0) {
-  
-      this.VentaDescuentoDto.nSaldoFavor=0;
-      this.VentaDescuentoDto.nIdVentaUtilizado=0;
-      this.fProducto.monto.setValue((tvVentasDetalle.nSaldoTotal).toFixed(3));
-      this.formulario.controls.monto.enable();
-  
-    }
-  });
+     this.consultaPagosParciales(this.ventaSaldoFavor.nId);
+
+     
 
 
-
-   /*Se obtiene  el catalogo de formas de pago */
-    this.obtenerCatalogoFormPago();
-
-    this.noVenta = tvVentasDetalle.nId;
-    this.totalVenta = tvVentasDetalle.nTotalVenta;
-    this.aCuenta=tvVentasDetalle.nAvancePago;
-    this.restan=tvVentasDetalle.nSaldoTotal;
-    this.VentaDescuentoDto = tvVentasDetalle; 
-  
-
+    })
 
   }
 
@@ -272,7 +402,6 @@ export class CobrarComponent implements OnInit {
   }
   cerrarModal() {
     this.abrirformulario = false;
-
     this.limpiaFormulario();
     this.saldoFavor=null;
     this.saldoTotalFavor=null;
@@ -320,21 +449,11 @@ export class CobrarComponent implements OnInit {
      // console.log(this.VentaDescuentoDto);
 
 
-      let con1 = this.catalogo.obtenerFormaPagoId(this.formulario.get('idFormaPago').value);
-      let con2 = this.catalogo.obtenerEstatusVentaId(2);
-
-
-      forkJoin([con1, con2]).subscribe(data => {
-
-        this.VentaDescuentoDto.tcFormapago = data[0];
-        this.VentaDescuentoDto.tcEstatusVenta = data[1];
-
-        this.guardarCobro();
+    
         this.limpiaFormulario();
         this.abrirformulario = false;
 
 
-      });
 
 
 
@@ -349,32 +468,51 @@ export class CobrarComponent implements OnInit {
 
   guardarCobro() {
 
-    //console.log("Esto es el objeto que se estará insertando");
-    
-    
-    this.VentaDescuentoDto.nAnticipo= this.fProducto.monto.value;
-   // console.log(this.VentaDescuentoDto);
+    if (this.formulario.invalid) {
+      return Object.values(this.formulario.controls).forEach(control => {
 
-    if(this.VentaDescuentoDto.nSaldoFavor===null || this.VentaDescuentoDto.nSaldoFavor===undefined ){
+        if (control instanceof FormGroup) {
+          // tslint:disable-next-line: no-shadowed-variable
 
-      this.VentaDescuentoDto.nSaldoFavor=0;
+          Object.values(control.controls).forEach(control => control.markAsTouched());
+        } else {
+          control.markAsTouched();
+        }
 
-    }
+      });
 
-    
-    this.ventasService.guardaVentaDetalle(this.VentaDescuentoDto).subscribe(data => {
+    } 
+    else {
+      console.log(this.fProducto.monto.value - this.restan);
 
-      this.consultaVentas();
+      if ((this.fProducto.monto.value - this.restan)>=0.01) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El total a pagar no puede ser mayor al adeudo', life: 3000 });
+      }
+      else {
 
-      this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Se guardo el cobro de la venta', life: 3000 });
-      if(this.saldoTotalFavor!=null || this.saldoTotalFavor!=undefined){
-     this.generarsSaldoFacorPdf(this.saldoTotalFavor.nIdVenta);
-     this.saldoTotalFavor=null;
-     this.saldoFavor=null;
+        console.log('Entre a guardar el cobro');
+
+
+        this.ventaCobro.nIdVenta = this.ventaSaldoFavor.nId;
+        this.ventaCobro.nIdCaja = this.cajaActiva.nId;
+        this.ventaCobro.dFecha = new Date();
+        this.ventaCobro.nEstatus = 1;
+        this.ventaCobro.nIdFormaPago = this.fProducto.idFormaPago.value;
+        this.ventaCobro.nMonto = this.fProducto.monto.value;
+        // this.ventaCobro.nMonto.toFixed(2);
+
+        console.log(this.fProducto.idFormaPago.value);
+        console.log(this.fProducto.monto.value);  
+        
+        this. banGuardar=false;
+
+        this.guardaVentaCobro(this.ventaCobro);
+
       }
 
-    });
 
+
+    }
 
 
 
@@ -457,6 +595,30 @@ export class CobrarComponent implements OnInit {
       }
   
   });
+  
+  }
+
+  generarVentaPedidoPdf(tvVentasDetalle:TvVentasDetalle){
+
+    this.ventasService.generarVentaPedidoPdf(tvVentasDetalle.nId).subscribe(resp => {
+  
+      
+        const file = new Blob([resp], { type: 'application/pdf' });
+        //console.log('file: ' + file.size);
+        if (file != null && file.size > 0) {
+          const fileURL = window.URL.createObjectURL(file);
+          const anchor = document.createElement('a');
+          anchor.download = 'venta_' + tvVentasDetalle.nId + '.pdf';
+          anchor.href = fileURL;
+          anchor.click();
+          this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'comprobante de venta Generado', life: 3000});
+          //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+         
+        } else {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+        }
+  
+    });
   
   }
   

@@ -108,10 +108,16 @@ static actualizaVentaProducto= '/actualizaVentaProducto';
 static cancelaProductoVenta= '/cancelaVentaProducto';
 static guardaVentaDetalle= '/guardarVentaDetalle';
 static guardarVentaDescuento= '/guardarVentaDescuento';
+static consultaVentaDetalleId= '/obtenerVentaDetalleId?';
 
 static guardaVentaProductoId= '/guardaVentaProductoId';
+static guardaSaldoUtilizado= '/guardarSaldoUtilizado';
+static guardaVentaCobro= '/guardarVentaCobro';
 static guardaVentaProductoEntrega= '/guardaVentasProducto';
 static guardaAbono= '/guardarAbono';
+static guardarVentaCompleta= '/guardarVentaCompleta';
+
+
 static guardarMaquina= '/guardarMaquina';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultaProductoVenta='/ventasProductoHistoria?';

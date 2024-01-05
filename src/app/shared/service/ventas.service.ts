@@ -19,6 +19,7 @@ import { VentaProductoCancelaDto } from 'src/app/ventasycotizaciones/model/dto/V
 import { TwVentasProducto } from 'src/app/productos/model/TwVentasProducto';
 import { CalculaPrecioDto } from 'src/app/productos/model/CalculaPrecioDto';
 import { TvReporteDetalleVenta } from 'src/app/productos/model/TvReporteDetalleVenta';
+import { TwSaldoUtilizado } from '../../productos/model/TwSaldoUtilizado';
 
 @Injectable({
   providedIn: 'root'
@@ -124,6 +125,19 @@ export class VentasService {
   guardarVentaDescuento(tvVentasDetalle:TvVentasDetalle){    
     let url = environment.servicios.apiRefacFabela + locator.guardarVentaDescuento;
     return this.http.post<TvVentasDetalle>(url,tvVentasDetalle);
+  }
+  consultaVentaDetalleId(nIdVenta:number){    
+    let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleId+'nIdVenta='+nIdVenta;
+    return this.http.get<TvVentasDetalle>(url);
+  }
+  guardaSaldoUtilizado(twSaldoUtilizado:TwSaldoUtilizado){
+    let url = environment.servicios.apiRefacFabela + locator.guardaSaldoUtilizado;
+    return this.http.post<TwSaldoUtilizado>(url,twSaldoUtilizado);
+  }
+
+  guardaVentaCobro(trVentaCobro:TrVentaCobro){
+    let url = environment.servicios.apiRefacFabela + locator.guardaVentaCobro;
+    return this.http.post<TrVentaCobro>(url,trVentaCobro);
   }
 
   guardaVentaProductoId(ventaProductoDto:VentaProductoDto){
@@ -254,6 +268,11 @@ export class VentasService {
   guardaAbono(twAbono:TwAbono){
     let url = environment.servicios.apiRefacFabela + locator.guardaAbono;
     return this.http.post<any>(url,twAbono);
+  }
+
+  guardarVentaCompleta(twVenta:TwVenta){
+    let url = environment.servicios.apiRefacFabela + locator.guardarVentaCompleta;
+    return this.http.post<TwVenta>(url,twVenta);
   }
   guardarMaquina(twMaquinaCliente:TwMaquinaCliente){
     let url = environment.servicios.apiRefacFabela + locator.guardarMaquina;

@@ -111,8 +111,10 @@
                       <td>
                         <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA'" pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
                             (click)="detalleVentaProductos(venta)"></button>
-                        <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA'" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                        <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                             (click)="generarVentaPdf(venta)"></button>
+                            <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                            (click)="generarVentaPedidoPdf(venta)"></button>
                             <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green"
                             (click)="generarsSaldoFacorPdf(venta)"></button>
                     </td>

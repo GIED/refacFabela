@@ -41,7 +41,8 @@ export class FormMaquinaClienteComponent implements OnInit {
     this.formMaquinas=this.fb.group({
       serieCtrl: new FormControl("",[Validators.required]),
       marcaCtrl: new FormControl("",[Validators.required]),
-      observacionesCtrl: new FormControl("",[Validators.required])
+      observacionesCtrl: new FormControl("",[Validators.required]),
+      modeloCtrl: new FormControl("",[Validators.required])
 
     });   
   }
@@ -65,6 +66,7 @@ export class FormMaquinaClienteComponent implements OnInit {
       this.maquinaCliente.nIdCliente=this.twMaquinaCliente.nIdCliente;
       this.maquinaCliente.sMarca=this.fMaquina.marcaCtrl.value;
       this.maquinaCliente.sSerie=this.fMaquina.serieCtrl.value;
+      this.maquinaCliente.sModelo=this.fMaquina.modeloCtrl.value;
       this.maquinaCliente.sObservaciones=this.fMaquina.observacionesCtrl.value;
 
       // console.log(this.maquinaCliente);
@@ -88,6 +90,7 @@ export class FormMaquinaClienteComponent implements OnInit {
     this.fMaquina.marcaCtrl.setValue("");
     this.fMaquina.serieCtrl.setValue("");
     this.fMaquina.observacionesCtrl.setValue("");
+    this.fMaquina.modeloCtrl.setValue("");
 
   }
 
@@ -102,6 +105,10 @@ export class FormMaquinaClienteComponent implements OnInit {
   }
   get validaObservacionesCtrl(){
     return this.formMaquinas.get('observacionesCtrl').invalid && this.formMaquinas.get('observacionesCtrl').touched;
+
+  }
+  get modeloCtrl(){
+    return this.formMaquinas.get('modeloCtrl').invalid && this.formMaquinas.get('modeloCtrl').touched;
 
   }
 

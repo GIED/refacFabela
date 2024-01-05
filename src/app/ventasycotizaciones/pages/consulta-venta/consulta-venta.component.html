@@ -113,7 +113,9 @@
                       <td>
                         <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
                             (click)="detalleVentaProductos(venta)"></button>
-                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                        <button *ngIf="venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                            (click)="generarVentaPedidoPdf(venta)"></button>
+                            <button *ngIf="venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                             (click)="generarVentaPdf(venta)"></button>
                     </td>
                 </tr>

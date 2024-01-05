@@ -109,8 +109,11 @@
                         <td>
                             <!--<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
                                 (click)="detalleVentaProductos(venta)"></button>-->
-                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="generarVentaPdf(venta)"></button>
-                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help" (click)="abrir(venta)"></button>
+                                <button *ngIf="venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                                (click)="generarVentaPedidoPdf(venta)"></button>
+                                <button *ngIf="venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                                (click)="generarVentaPdf(venta)"></button>
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help" (click)="abrir(venta.nId)"></button>
                         </td>
                     </tr>
                 </ng-template>
@@ -148,24 +151,65 @@
             <!--formulario de cobro de caja-->
             <p-dialog [(visible)]="abrirformulario" [style]="{width: '900px'}" header="Cobro de Ventas" [modal]="true" styleClass="p-fluid">
                 <div class="p-grid p-col-12">
-                    <div class="p-col-6">
-                        <p-panel header="Datos de la Venta">
-                            <div>La venta a cobrar es la No. <strong>{{noVenta}}</strong> </div>
+                    <div class="p-col-4" >
+                        <p-panel header="Datos de la Venta"  >
+                            <div>La venta a cobrar es: <strong>{{noVenta}}</strong> </div>
 
-                            <div>Monto total de venta <strong>$ {{totalVenta | number}}</strong> </div>
+                            <div>Monto total de venta: <strong>$ {{totalVenta | number}}</strong> </div>
 
-                            <div>A cuenta <strong>$ {{aCuenta | number}}</strong> </div>
+                            <div>A cuenta: <strong>$ {{aCuenta | number}}</strong> </div>
+
+                            <div *ngIf="descuento">Descuento:<strong>$ {{totalDescuento | number}}</strong></div>
                           
                             <div *ngIf="this.saldoDisponible>0">Saldo a favor <strong>$ {{this.saldoDisponible | number}}</strong> </div>
 
-                            <div>Restan <strong>$ {{restan | number}}</strong> </div>
-                            <p-inputNumber name="saldoFavor" id="saldoFavor" [(ngModel)]="saldoFavor"  mode="decimal" inputId="withoutgrouping" [useGrouping]="false"  placeholder="Ingresa venta con saldo a favor" (focusout)=consultarVentaSaldo() [disabled]="state"></p-inputNumber>
+                            <div >Restan <strong>$ {{restan | number}}</strong> </div>
 
+                        </p-panel> 
+                        <div style="margin-top: 20px;">Nota con saldo a Favor</div>                
+                        <div > <p-inputNumber name="saldoFavor" id="saldoFavor" [(ngModel)]="saldoFavor"  mode="decimal" inputId="withoutgrouping" [useGrouping]="false"  placeholder="Ingresa venta con saldo a favor" (focusout)=consultarVentaSaldo() [disabled]="state"></p-inputNumber></div>
+                        <div *ngIf="error" style="color: red;">La nota consultada no cuenta con saldo a favor </div>
+
+                        <p-panel *ngIf="saldoTotalFavor" header="Datos del saldo a favor" >
+                            <div>Venta saldo Favor <strong>{{saldoTotalFavor.nIdVenta}}</strong> </div>
+
+                            <div>Saldo Total <strong>$ {{saldoTotalFavor.nTotalCancelado | number}}</strong> </div>
+
+                            <div>Saldo Utilizado <strong>$ {{saldoTotalFavor.nTotalUsado | number}}</strong> </div>
+
+                            <div>Saldo Disponible <strong>$ {{saldoTotalFavor.nSaldoDisponible | number}}</strong> </div>
+
+                            <button *ngIf="saldoTotalFavor.nSaldoDisponible>0" type="button" pButton pRipple icon="pi pi-file-excel" label="Aplicar Saldo a favor" class="p-button-help p-mb-2" (click)="aplicarSaldoFavor()"></button>
+                                                      
                         </p-panel>
+
+                       
                     </div>
 
-                    <div class="p-col-6">
-                        <p-panel header="Abonos Realizados">
+                    <div class="p-col-8">
+                        <form [formGroup]="formulario" autocomplete="off">
+
+                            <div class="p-grid">
+        
+                                <div class="p-field p-col-6">
+                                    <label for="marca">Forma de pago</label>
+                                    <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago" [showClear]="true"></p-dropdown>
+                                    <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>
+                                </div>
+        
+                                <div class="p-field p-col-6">
+                                    <label for="name">Total a pagar</label>
+                                    <input type="text" pInputText name="monto" formControlName="monto" [class.is-invalid]="validaMonto" [max]='restan' />
+                                    <small class="p-error" *ngIf="validaMonto">Monto requerido</small>
+                                </div>
+        
+                            </div>
+        
+        
+        
+                        </form>
+        
+                        <p-panel header="Pagos Realizados">
                             <p-table [value]="listaCobrosParciales" [scrollable]="true" scrollHeight="150px">
                                 <ng-template pTemplate="header">
                                     <tr>
@@ -193,28 +237,7 @@
                     </div>
                 </div>
 
-                <form [formGroup]="formulario" autocomplete="off">
-
-                    <div class="p-grid">
-
-                        <div class="p-field p-col-6">
-                            <label for="marca">Forma de pago</label>
-                            <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago" [showClear]="true"></p-dropdown>
-                            <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>
-                        </div>
-
-                        <div class="p-field p-col-6">
-                            <label for="name">Total a pagar</label>
-                            <input type="text" pInputText name="monto" formControlName="monto" [class.is-invalid]="validaMonto" />
-                            <small class="p-error" *ngIf="validaMonto">Monto requerido</small>
-                        </div>
-
-                    </div>
-
-
-
-                </form>
-
+                
                 <div class="p-grid p-jc-end">
                     <div class="p-col-8">
                         <div class="box"></div>
@@ -226,7 +249,7 @@
                     </div>
                     <div class="p-col-2">
                         <div class="box">
-                            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="cobrarVenta()"></button>
+                            <button *ngIf="banGuardar" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarCobro()"></button>
                         </div>
                     </div>
                 </div>

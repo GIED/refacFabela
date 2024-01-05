@@ -32,5 +32,6 @@ tcTipoVenta?: TcTipoVenta;
 nSaldoFavor?:number;
 nIdVentaUtilizado?:number;
 nSaldo?:boolean;
+nVencido?:boolean;
     
 }

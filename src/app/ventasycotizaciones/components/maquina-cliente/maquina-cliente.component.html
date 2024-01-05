@@ -24,6 +24,8 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Maquinas"
         </th>
         <th pSortableColumn="sMarca">Marca<p-sortIcon field="sMarca"></p-sortIcon>
         </th>
+        <th pSortableColumn="sModelo">Modelo<p-sortIcon field="sModelo"></p-sortIcon>
+        </th>
         <th pSortableColumn="sObservaciones">Observaciones<p-sortIcon field="sObservaciones"></p-sortIcon>
         </th>
        <th></th>
@@ -35,6 +37,8 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Maquinas"
         <td><span class="p-column-title"></span> {{maquina.sSerie}}
         </td>
         <td><span class="p-column-title"></span> {{maquina.sMarca}}
+        </td>
+        <td><span class="p-column-title"></span> {{maquina.sModelo}}
         </td>
         <td><span class="p-column-title"></span> {{maquina.sObservaciones}}
         </td>

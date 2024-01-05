@@ -5,5 +5,6 @@ export class TwMaquinaCliente{
     sSerie?:string;
     sMarca?:string;
     sObservaciones?:string;
+    sModelo?:string;
 
 }

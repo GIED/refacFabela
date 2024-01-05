@@ -19,10 +19,17 @@
                 <small class="p-error" *ngIf="cantidadCtrl.errors?.required">Campo obligatorio</small>
             </div>
         </div>
-
-      
+        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
+            <label>Motivo del ajuste</label>
+            <textarea  formControlName="motivoCtrl" rows="5" cols="30"  pInputTextarea  required></textarea>
+            <div *ngIf="motivoCtrl.invalid || (motivoCtrl.dirty || motivoCtrl.touched)">
+                <small class="p-error" *ngIf="motivoCtrl.errors?.required">Campo obligatorio</small>
+            </div>
+        </div>
 
     </div>
+
+    
     <div class="p-grid p-jc-end p-mt-2">
         <div class="p-col-3">
             <button pButton pRipple type="button" class="p-button-outlined p-button-danger p-button-sm" (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times" required></button>

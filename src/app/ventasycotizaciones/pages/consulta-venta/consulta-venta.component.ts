@@ -155,6 +155,30 @@ generarVentaPdf(tvVentasDetalle:TvVentasDetalle){
 
 }
 
+generarVentaPedidoPdf(tvVentasDetalle:TvVentasDetalle){
+
+  this.ventasService.generarVentaPedidoPdf(tvVentasDetalle.nId).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      //console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'venta_' + tvVentasDetalle.nId + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'comprobante de venta Generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+      }
+
+  });
+
+}
+
 
 
 }

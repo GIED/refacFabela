@@ -74,9 +74,11 @@
                     </th>
                     <th pSortableColumn="nTotalAjustado">Total ajustado<p-sortIcon field="nTotalAjustado"></p-sortIcon>
                     </th>
+                    <th pSortableColumn="sMotivo">Motivo<p-sortIcon field="sMotivo"></p-sortIcon>
+                    </th>
                     <th pSortableColumn="nTotalAjustado">Fecha<p-sortIcon field="sFecha"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="tcUsuario.sNombreUsuario">Fecha<p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon>
+                    <th pSortableColumn="tcUsuario.sNombreUsuario">Usuario<p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon>
                     </th>
                     
                     
@@ -97,6 +99,8 @@
                     <td><span class="p-column-title"></span> {{producto.nCantidadActual}}
                     </td>
                     <td><span class="p-column-title"></span> {{producto.nTotalAjustado}}
+                    </td>
+                    <td><span class="p-column-title"></span> {{producto.sMotivo}}
                     </td>
                     <td><span class="p-column-title"></span> {{producto.sFecha | date}}
                     </td>

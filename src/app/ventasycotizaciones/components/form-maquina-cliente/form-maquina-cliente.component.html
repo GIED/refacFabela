@@ -14,7 +14,12 @@
                 <small class="p-error" *ngIf="validaMarcaCtrl">*Campo requerido.</small>
             </div>
             <div class="p-field p-col-12">
-                <label for="description">observacionesCtrl</label>
+                <label for="description">Modelo</label>
+                <input id="description" pInputText name="modeloCtrl" formControlName="modeloCtrl" rows="2" cols="20"  [class.is-invalid]="modeloCtrl">
+                <small class="p-error" *ngIf="modeloCtrl">*Campo requerido.</small>
+            </div>
+            <div class="p-field p-col-12">
+                <label for="description">Observaciones</label>
                 <textarea id="description" pInputTextarea name="observacionesCtrl" formControlName="observacionesCtrl" rows="2" cols="20" maxlength="1999"  [class.is-invalid]="validaObservacionesCtrl"></textarea>
                 <small class="p-error" *ngIf="validaObservacionesCtrl">*Campo requerido.</small>
             </div>

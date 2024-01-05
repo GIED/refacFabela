@@ -25,6 +25,8 @@ export class TwVenta{
     twCaja?:TwCaja
     tcFormapago?: TcFormaPago;
     nSaldo?:boolean;
+    nIdFormaPago?:number;
+    nAnticipo?:number;
 
 
 
