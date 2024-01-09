@@ -74,36 +74,36 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-venta let-expanded="expanded">
                     <tr>
-                        <td><span class="p-column-title"></span> {{venta.nId}}
+                        <td><span class="p-column-title">No. Venta</span> {{venta.nId}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc}}
+                        <td><span class="p-column-title">Rfc</span> {{venta.tcCliente.sRfc}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRazonSocial}}
+                        <td><span class="p-column-title">Razón Social</span> {{venta.tcCliente.sRazonSocial}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.nTotalVenta | number}}
+                        <td><span class="p-column-title">Total Venta</span>{{venta.nTotalVenta | number}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.nTotalAbono | number}}
+                        <td><span class="p-column-title">Total Abonos</span>{{venta.nTotalAbono | number}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.descuento | number}}
+                        <td><span class="p-column-title">Descuento</span>{{venta.descuento | number}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.nAnticipo | number}}
+                        <td><span class="p-column-title">Anticipo Inicial</span>{{venta.nAnticipo | number}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.nAvancePago | number}}
+                        <td><span class="p-column-title">Avance Pagos</span>{{venta.nAvancePago | number}}
                         </td>
-                        <td><span class="p-column-title"></span>
+                        <td><span class="p-column-title">Saldo Final</span>
                             <p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
                         </td>
 
-                        <td><span class="p-column-title"></span> {{venta.dFechaVenta | date}}
+                        <td><span class="p-column-title">Fecha Venta</span> {{venta.dFechaVenta | date}}
                         </td>
-                        <td class="p-text-center"><span class="p-column-title">Status</span> {{venta.tcEstatusVenta.sDescripcion}}
-                        </td>
-
-                        <td class="p-text-center"><span class="p-column-title">Status</span> {{venta.tcTipoVenta.sDescripcion}}
+                        <td class="p-text-center"><span class="p-column-title">Estatus Venta</span> {{venta.tcEstatusVenta.sDescripcion}}
                         </td>
 
+                        <td class="p-text-center"><span class="p-column-title">Origen Venta</span> {{venta.tcTipoVenta.sDescripcion}}
+                        </td>
 
-                        <td class="p-text-center"><span class="p-column-title">Status</span> {{venta.tcUsuario.sNombreUsuario}}
+
+                        <td class="p-text-center"><span class="p-column-title">Vendedor</span> {{venta.tcUsuario.sNombreUsuario}}
                         </td>
 
                         <td>

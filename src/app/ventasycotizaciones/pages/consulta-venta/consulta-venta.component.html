@@ -79,24 +79,24 @@
             </ng-template>
             <ng-template pTemplate="body" let-venta let-expanded="expanded">
                 <tr>
-                    <td><span class="p-column-title"></span> {{venta.nId}}
+                    <td><span class="p-column-title">No. Venta</span> {{venta.nId}}
                     </td>
-                    <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc   }}
+                    <td><span class="p-column-title">Rfc</span> {{venta.tcCliente.sRfc   }}
                     </td>
-                    <td><span class="p-column-title"></span> {{venta.tcCliente.sRazonSocial}}
+                    <td><span class="p-column-title">Razón Social</span> {{venta.tcCliente.sRazonSocial}}
                     </td>
-                    <td><span class="p-column-title"></span>{{venta.nTotalVenta | number}}
+                    <td><span class="p-column-title">Total Venta</span>{{venta.nTotalVenta | number}}
                     </td>
-                    <td><span class="p-column-title"></span>{{venta.nTotalAbono | number}}
+                    <td><span class="p-column-title">Total Abonos</span>{{venta.nTotalAbono | number}}
                     </td>
-                    <td><span class="p-column-title"></span>{{venta.descuento | number}}
+                    <td><span class="p-column-title">Descuento</span>{{venta.descuento | number}}
                     </td>
-                    <td><span class="p-column-title"></span><p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
+                    <td><span class="p-column-title">Saldo Final</span><p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
                     </td>
                    
-                    <td><span class="p-column-title"></span> {{venta.dFechaVenta | date  }}
+                    <td><span class="p-column-title">Fecha Venta</span> {{venta.dFechaVenta | date  }}
                     </td>
-                    <td class="p-text-center"><span class="p-column-title">Status</span>
+                    <td class="p-text-center"><span class="p-column-title">Estatus Venta</span>
                        
                         <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red"> {{venta.tcEstatusVenta.sDescripcion}}</strong>
                         <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'" > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
@@ -105,7 +105,7 @@
                         
                         <td *ngIf="venta.nTipoPago==0"><span class="p-column-title"></span>CONTADO  </td>     
                        
-                    <td class="p-text-center"><span class="p-column-title">Status</span>
+                    <td class="p-text-center"><span class="p-column-title">Vendedor</span>
                        
                             {{venta.tcUsuario.sNombreUsuario}}
                     </td>

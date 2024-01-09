@@ -34,13 +34,13 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Maquinas"
 </ng-template>
 <ng-template pTemplate="body" let-maquina let-expanded="expanded">
     <tr>
-        <td><span class="p-column-title"></span> {{maquina.sSerie}}
+        <td><span class="p-column-title">Serie</span> {{maquina.sSerie}}
         </td>
-        <td><span class="p-column-title"></span> {{maquina.sMarca}}
+        <td><span class="p-column-title">Marca</span> {{maquina.sMarca}}
         </td>
-        <td><span class="p-column-title"></span> {{maquina.sModelo}}
+        <td><span class="p-column-title">Modelo</span> {{maquina.sModelo}}
         </td>
-        <td><span class="p-column-title"></span> {{maquina.sObservaciones}}
+        <td><span class="p-column-title">Observaciones</span> {{maquina.sObservaciones}}
         </td>
 
         <td><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"

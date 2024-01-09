@@ -84,32 +84,32 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-venta let-expanded="expanded">
                     <tr>
-                        <td><span class="p-column-title"></span> {{venta.nId}}
+                        <td><span class="p-column-title">No. Venta</span> {{venta.nId}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc}}
+                        <td><span class="p-column-title">Rfc</span> {{venta.tcCliente.sRfc}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRazonSocial}}
+                        <td><span class="p-column-title">Razón Social</span> {{venta.tcCliente.sRazonSocial}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.nTotalVenta | number}}
+                        <td><span class="p-column-title">Total Venta</span>{{venta.nTotalVenta | number}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.nTotalAbono | number}}
+                        <td><span class="p-column-title">Total Abonos</span>{{venta.nTotalAbono | number}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.descuento | number}}
+                        <td><span class="p-column-title">Descuento</span>{{venta.descuento | number}}
                         </td>
-                        <td><span class="p-column-title"></span>
+                        <td><span class="p-column-title">Saldo Final</span>
                             <p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
                         </td>
 
-                        <td><span class="p-column-title"></span> {{venta.dFechaVenta |  date  }}
+                        <td><span class="p-column-title">Fecha Venta</span> {{venta.dFechaVenta |  date  }}
                         </td>
-                        <td class="p-text-center"><span class="p-column-title">Status</span>
+                        <td class="p-text-center"><span class="p-column-title">Estatus Venta</span>
 
                             {{venta.tcEstatusVenta.sDescripcion}}</td>
                             <td class="p-text-center"><span class="p-column-title">Tipo Venta</span>
 
                                 {{venta.tcTipoVenta.sDescripcion}}</td>
 
-                        <td class="p-text-center"><span class="p-column-title">Status</span>
+                        <td class="p-text-center"><span class="p-column-title">Vendedor</span>
 
                             {{venta.tcUsuario.sNombreUsuario}}
                         </td>
@@ -186,22 +186,22 @@
                         <tr>
                     
                            
-                            <td><span class="p-column-title"></span> {{venta.sNoParte}}
+                            <td><span class="p-column-title">No. Parte</span> {{venta.sNoParte}}
                             </td>
-                           <td><span class="p-column-title"></span> {{venta.sProducto}}
+                           <td><span class="p-column-title">Producto</span> {{venta.sProducto}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.sDescripcion}}
+                            <td><span class="p-column-title">Descripción</span> {{venta.sDescripcion}}
                             </td>
-                            <td><span class="p-column-title"></span>{{venta.sMarca}}
+                            <td><span class="p-column-title">Marca</span>{{venta.sMarca}}
                             </td>
-                             <td><span class="p-column-title"></span> {{venta.nTotalUnitario | number}}
+                             <td><span class="p-column-title">Precio Unitario</span> {{venta.nTotalUnitario | number}}
                             </td>
                            
-                            <td><span class="p-column-title"></span> {{venta.nCantidad | number}}
+                            <td><span class="p-column-title">Cantidad</span> {{venta.nCantidad | number}}
                             </td>
-                             <td><span class="p-column-title"></span> {{venta.nTotalPartida | number}}
+                             <td><span class="p-column-title">Total Partida</span> {{venta.nTotalPartida | number}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.sBodega}}-{{venta.sAnaquel}}-{{venta.sNivel}}
+                            <td><span class="p-column-title">Ubicación</span> {{venta.sBodega}}-{{venta.sAnaquel}}-{{venta.sNivel}}
                             </td>
                             <td> 
                                 <div *ngIf="venta.nEstatusEntregaAlmacen==false"><p-checkbox [(ngModel)]="venta.nEstatusEntregaAlmacen" [binary]="true"
@@ -277,13 +277,13 @@
                         <tr>
                     
                            
-                            <td><span class="p-column-title"></span> {{venta.nCantidad}}
+                            <td><span class="p-column-title">No. Parte</span> {{venta.nCantidad}}
                             </td>
-                           <td><span class="p-column-title"></span> {{venta.tcProducto.sProducto}}
+                           <td><span class="p-column-title">Producto</span> {{venta.tcProducto.sProducto}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.tcProducto.sDescripcion}}
+                            <td><span class="p-column-title">Descripción</span> {{venta.tcProducto.sDescripcion}}
                             </td>
-                            <td><span class="p-column-title"></span>{{venta.sUbicacion}}
+                            <td><span class="p-column-title">Marca</span>{{venta.sUbicacion}}
                             </td>
                             
                             

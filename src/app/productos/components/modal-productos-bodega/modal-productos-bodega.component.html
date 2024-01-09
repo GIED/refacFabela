@@ -14,10 +14,10 @@
     </ng-template>
     <ng-template pTemplate="body" let-bodega>
         <tr>
-            <td>{{bodega.tcBodega.sBodega}}</td>
-            <td class="p-text-center">{{bodega.tcAnaquel.sAnaquel}}</td>
-            <td  class="p-text-center">{{bodega.tcNivel.sNivel}}</td>
-            <td  class="p-text-center"> <div *ngIf="bodega.nCantidad==0" style="background: red; border-radius: 30px; color:white;">{{bodega.nCantidad}}</div> <div *ngIf="bodega.nCantidad>0" style="background: green; border-radius: 30px; color:white;">{{bodega.nCantidad}}</div> </td>
+            <td><span class="p-column-title">Bodega</span>{{bodega.tcBodega.sBodega}}</td>
+            <td class="p-text-center"><span class="p-column-title">Anaquel</span>{{bodega.tcAnaquel.sAnaquel}}</td>
+            <td  class="p-text-center"><span class="p-column-title">Nivel</span>{{bodega.tcNivel.sNivel}}</td>
+            <td  class="p-text-center"> <span class="p-column-title">Stock</span><div *ngIf="bodega.nCantidad==0" style="background: red; border-radius: 30px; color:white;">{{bodega.nCantidad}}</div> <div *ngIf="bodega.nCantidad>0" style="background: green; border-radius: 30px; color:white;">{{bodega.nCantidad}}</div> </td>
             <td *ngIf="traspaso"><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editarProducto(bodega)"></button></td>
 
         </tr>

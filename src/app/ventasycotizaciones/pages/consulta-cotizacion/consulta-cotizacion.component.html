@@ -82,24 +82,24 @@
                 <ng-template pTemplate="body" let-cotizacion>
                     <tr>
                         <td>
-                            <span class="p-column-title">Name</span> <strong (click)="cotizacionProducto(cotizacion.nId)">{{ cotizacion.nId }}</strong>
+                            <span class="p-column-title">Folio Cotización</span> <strong (click)="cotizacionProducto(cotizacion.nId)">{{ cotizacion.nId }}</strong>
                         </td>
                         <td>
-                            <span class="p-column-title">Name</span> {{ cotizacion.tcCliente.sRfc }}
+                            <span class="p-column-title">RFC</span> {{ cotizacion.tcCliente.sRfc }}
                         </td>
                         <td>
-                            <span class="p-column-title">Name</span> {{ cotizacion.tcCliente.sRazonSocial }}
-                        </td>
-
-                        <td>
-                            <span class="p-column-title">Name</span> {{ cotizacion.tcCliente.sTelefono }}
-                        </td>
-                        <td>
-                            <span class="p-column-title">Name</span> {{ cotizacion.dFecha | date }}
+                            <span class="p-column-title">Razón Social</span> {{ cotizacion.tcCliente.sRazonSocial }}
                         </td>
 
                         <td>
-                            <span class="p-column-title">Name</span> {{ cotizacion.nTotalCotizacion | number }}
+                            <span class="p-column-title">Teléfono</span> {{ cotizacion.tcCliente.sTelefono }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Fecha</span> {{ cotizacion.dFecha | date }}
+                        </td>
+
+                        <td>
+                            <span class="p-column-title">Total Cotización</span> {{ cotizacion.nTotalCotizacion | number }}
                         </td>
                         <td class="p-text-center" *ngIf="cotizacion.nEstatus == 1">
                             <i *ngIf="cotizacion.nVigencia == 0" class="pi pi-check" style="color: green;"></i>

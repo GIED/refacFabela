@@ -92,21 +92,21 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros
     <tr>
         <td>
         </td>
-        <td><span class="p-column-title">Name</span> {{venta.tcProducto.sNoParte}}
+        <td><span class="p-column-title">No parte</span> {{venta.tcProducto.sNoParte}}
         </td>
-        <td><span class="p-column-title">Price</span> {{venta.tcProducto.sProducto}}
+        <td><span class="p-column-title">Producto</span> {{venta.tcProducto.sProducto}}
         </td>
-        <td><span class="p-column-title">Price</span> {{venta.tcProducto.sDescripcion}}
+        <td><span class="p-column-title">Descripcion</span> {{venta.tcProducto.sDescripcion}}
         </td>
-        <td><span class="p-column-title">Price</span> {{venta.twVenta.tcCliente.sRazonSocial}}
+        <td><span class="p-column-title">Cliente</span> {{venta.twVenta.tcCliente.sRazonSocial}}
         </td>
-        <td><span class="p-column-title">Price</span> {{venta.twVenta.tcUsuario.sNombreUsuario}}
+        <td><span class="p-column-title">Usuario</span> {{venta.twVenta.tcUsuario.sNombreUsuario}}
         </td>
-        <td><span class="p-column-title">Price</span> {{venta.twVenta.dFechaVenta | date}}
+        <td><span class="p-column-title">Fecha Venta</span> {{venta.twVenta.dFechaVenta | date}}
         </td>
-        <td class="p-text-center"><span class="p-column-title p-text-center">Price</span> {{venta.nCantidad}}
+        <td class="p-text-center"><span class="p-column-title p-text-center">Vendidos</span> {{venta.nCantidad}}
         </td>
-        <td><span class="p-column-title">Price</span> 
+        <td><span class="p-column-title">Stock Actual</span> 
             <div *ngIf="venta.nCantidadTotal==0" style="background: red; border-radius: 30px; color:white; text-align: center;">{{venta.nCantidadTotal}}</div><div *ngIf="venta.nCantidadTotal>0" style="background: green; border-radius: 30px; color:white; text-align: center;">{{venta.nCantidadTotal}}</div>
         </td>
         <td class="p-text-center">

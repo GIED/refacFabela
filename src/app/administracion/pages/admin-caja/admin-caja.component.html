@@ -58,17 +58,17 @@
                     <tr>
                         <td>
                         </td>
-                        <td><span class="p-column-title">Name</span> {{caja.nId}}
+                        <td><span class="p-column-title">Id Caja</span> {{caja.nId}}
                         </td>
-                        <td><span class="p-column-title">Price</span> {{caja.dFechaApertura | date}}
+                        <td><span class="p-column-title">Fecha Apertura</span> {{caja.dFechaApertura | date}}
                         </td>
-                        <td><span class="p-column-title">Category</span> {{caja.dFechaCierre | date}}
+                        <td><span class="p-column-title">Fecha Cierre</span> {{caja.dFechaCierre | date}}
                         </td>
-                        <td><span class="p-column-title">Reviews</span> {{caja.nSaldoInicial | number }}
+                        <td><span class="p-column-title">Saldo Inicial</span> {{caja.nSaldoInicial | number }}
                         </td>
-                        <td><span class="p-column-title">Status</span> {{caja.nSaldoCierre | number}}
+                        <td><span class="p-column-title">Saldo Cierre</span> {{caja.nSaldoCierre | number}}
                         </td>
-                        <td><span class="p-column-title">Status</span> {{caja.nSaldoFinal | number}}
+                        <td><span class="p-column-title">Estatus</span> {{caja.nSaldoFinal | number}}
                         </td>
                         <td *ngIf="caja.nEstatus==1"><span class="p-column-title">Status</span> ABIERTA
                         </td>
@@ -172,35 +172,35 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-venta let-expanded="expanded">
                         <tr>                                    
-                            <td><span class="p-column-title"></span> {{venta.nIdVenta}}
+                            <td><span class="p-column-title">No. Venta</span> {{venta.nIdVenta}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.sRfc}}
+                            <td><span class="p-column-title">RFC</span> {{venta.sRfc}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.sRazonSocial}}
+                            <td><span class="p-column-title">Razón social</span> {{venta.sRazonSocial}}
                             </td>
-                            <td><span class="p-column-title"></span>{{venta.sEstatusVenta}}
+                            <td><span class="p-column-title">Estatus venta</span>{{venta.sEstatusVenta}}
                             </td>
-                            <td><span class="p-column-title"></span>{{venta.sTipoVenta}}
+                            <td><span class="p-column-title">Tipo Venta</span>{{venta.sTipoVenta}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.sTipoPago }}
+                            <td><span class="p-column-title">Tipo Pago</span> {{venta.sTipoPago }}
                             </td>                                    
-                            <td><span class="p-column-title"></span> {{venta.dInicioCredito | date}}
+                            <td><span class="p-column-title">Inicio Crédito</span> {{venta.dInicioCredito | date}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.dTerminoCredito | date}}
+                            <td><span class="p-column-title">Termino Crédito</span> {{venta.dTerminoCredito | date}}
                             </td>  
-                            <td><span class="p-column-title"></span> {{venta.sNombreUsuario}}
+                            <td><span class="p-column-title">Nombre Usuario</span> {{venta.sNombreUsuario}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.sFormaPago}}
+                            <td><span class="p-column-title">Forma de Pago</span> {{venta.sFormaPago}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.nDescuento}}
+                            <td><span class="p-column-title">Descuento</span> {{venta.nDescuento}}
                             </td>
-                            <td><span class="p-column-title"></span>{{venta.nTotalVenta}}
+                            <td><span class="p-column-title">Total Venta</span>{{venta.nTotalVenta}}
                             </td>
-                            <td><span class="p-column-title"></span>{{venta.nTotalPagoCajaNota}}
+                            <td><span class="p-column-title">Total pago Caja</span>{{venta.nTotalPagoCajaNota}}
                             </td>
-                            <td><span class="p-column-title"></span> {{venta.nSaldoFinalVenta }}
+                            <td><span class="p-column-title">Saldo Final</span> {{venta.nSaldoFinalVenta }}
                             </td>
-                            <td><span class="p-column-title"></span>{{venta.sEstatusEntrega}}
+                            <td><span class="p-column-title">Estatus de entrega</span>{{venta.sEstatusEntrega}}
                             </td>
                     
                            

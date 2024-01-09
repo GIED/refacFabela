@@ -36,17 +36,17 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros
     <tr>
 
        
-        <td><span class="p-column-title"></span> {{venta.sNoParte}}
+        <td><span class="p-column-title">No. Parte</span> {{venta.sNoParte}}
         </td>
-       <td><span class="p-column-title"></span> {{venta.sProducto}}
+       <td><span class="p-column-title">Producto</span> {{venta.sProducto}}
         </td>
-        <td><span class="p-column-title"></span> {{venta.sDescripcion}}
+        <td><span class="p-column-title">Descripción</span> {{venta.sDescripcion}}
         </td>
-        <td><span class="p-column-title"></span>{{venta.sMarca}}
+        <td><span class="p-column-title">Marca</span>{{venta.sMarca}}
         </td>
         
        
-        <td><span class="p-column-title"></span> {{venta.nCantidad | number}}
+        <td><span class="p-column-title">Cantidad</span> {{venta.nCantidad | number}}
         </td>
         <td><span class="p-column-title"></span>   <p-checkbox [(ngModel)]="venta.nEstatusEntregaAlmacen" [binary]="true" (onChange)=onSaveClicked(venta)></p-checkbox>
 

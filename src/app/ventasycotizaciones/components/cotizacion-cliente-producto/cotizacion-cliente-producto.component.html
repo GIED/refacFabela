@@ -29,11 +29,11 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros
 </ng-template>
 <ng-template pTemplate="body" let-cotizacion let-expanded="expanded">
     <tr>
-        <td><span class="p-column-title"></span> {{cotizacion.twCotizaciones.nId}}
+        <td><span class="p-column-title">No. Cotizacion</span> {{cotizacion.twCotizaciones.nId}}
         </td>
-        <td><span class="p-column-title"></span> {{cotizacion.twCotizaciones.dFecha || date }}
+        <td><span class="p-column-title">Fecha</span> {{cotizacion.twCotizaciones.dFecha || date }}
         </td>
-        <td><span class="p-column-title"></span> {{cotizacion.nTotalUnitario}}
+        <td><span class="p-column-title">Precio Unitario</span> {{cotizacion.nTotalUnitario}}
         </td>
 
       

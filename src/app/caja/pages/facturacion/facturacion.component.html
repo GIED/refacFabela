@@ -44,21 +44,21 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-venta>
                     <tr>
-                        <td><span class="p-column-title"></span> {{venta.nId}}
+                        <td><span class="p-column-title">No. Venta</span> {{venta.nId}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRfc}}
+                        <td><span class="p-column-title">RFC</span> {{venta.tcCliente.sRfc}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.tcCliente.sRazonSocial}}
+                        <td><span class="p-column-title">Razón Social</span> {{venta.tcCliente.sRazonSocial}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.tcUsuario.sNombreUsuario}}
+                        <td><span class="p-column-title">Vendedor</span> {{venta.tcUsuario.sNombreUsuario}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.tcEstatusVenta.sDescripcion}}
+                        <td><span class="p-column-title">Estatus</span> {{venta.tcEstatusVenta.sDescripcion}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.nTotalVenta | currency:'USD'}}
+                        <td><span class="p-column-title">Total</span> {{venta.nTotalVenta | currency:'USD'}}
                         </td>
-                        <td *ngIf="venta.nTipoPago==1"><span class="p-column-title"></span>CRÉDITO  </td>
+                        <td *ngIf="venta.nTipoPago==1"><span class="p-column-title">Tipo Venta</span>CRÉDITO  </td>
                         
-                            <td *ngIf="venta.nTipoPago==0"><span class="p-column-title"></span>CONTADO  </td>
+                            <td *ngIf="venta.nTipoPago==0"><span class="p-column-title">Tipo Venta</span>CONTADO  </td>
                         <td>
                             <tr>
                                 <td *ngIf="venta.idFactura == 0 && venta.tcCliente.nCp!=null && venta.tcCliente.tcRegimenFiscal!=null">

@@ -34,11 +34,11 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-producto>
                     <tr>
-                        <td (click)="muestraAlternativo(producto)">{{producto.nId}}</td>
-                        <td>{{producto.sNoParte}}</td>
-                        <td>{{producto.sProducto }}</td>
-                        <td>{{producto.sDescripcion}}</td>
-                        <td>{{producto.nPrecioPeso | number}}</td>
+                        <td (click)="muestraAlternativo(producto)"><span class="p-column-title">Id</span>{{producto.nId}}</td>
+                        <td><span class="p-column-title">No.Parte</span>{{producto.sNoParte}}</td>
+                        <td><span class="p-column-title">Producto</span>{{producto.sProducto }}</td>
+                        <td><span class="p-column-title">Descripción</span>{{producto.sDescripcion}}</td>
+                        <td><span class="p-column-title">Precio Compra</span>{{producto.nPrecioPeso | number}}</td>
                         <td>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
                                 (click)="editarProducto(producto)"></button>
@@ -94,12 +94,12 @@
             <ng-template pTemplate="body" let-producto>
                 <tr>
 
-                    <td>{{producto.tcProducto.sNoParte}}</td>
-                    <td>{{producto.tcProducto.sProducto }}</td>
-                    <td>{{producto.tcProducto.sDescripcion}}</td>
-                    <td>{{producto.tcProducto.nPrecioPeso | number}}</td>
-                    <td>{{producto.nCantidadPedida}}</td>
-                    <td>{{producto.tcProveedore.sRazonSocial}}</td>
+                    <td><span class="p-column-title">No.Parte</span>{{producto.tcProducto.sNoParte}}</td>
+                    <td><span class="p-column-title">Producto</span>{{producto.tcProducto.sProducto }}</td>
+                    <td><span class="p-column-title">Descripción</span>{{producto.tcProducto.sDescripcion}}</td>
+                    <td><span class="p-column-title">Precio Compra</span>{{producto.tcProducto.nPrecioPeso | number}}</td>
+                    <td><span class="p-column-title">Cantidad</span>{{producto.nCantidadPedida}}</td>
+                    <td><span class="p-column-title">Proveedor</span>{{producto.tcProveedore.sRazonSocial}}</td>
                     <td>
                         <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(producto)"
                             class="p-button-rounded p-button-danger p-mr-2"></button>

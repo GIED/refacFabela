@@ -120,28 +120,28 @@
 						<td><span class="p-column-title">Razón Social</span>
 							{{cliente.tcCliente.sRazonSocial}}
 						</td>
-						<td class="p-test-center">
+						<td class="p-test-center"> <span class="p-column-title">Limite Crédito</span>
 							{{cliente.nLimiteCredito | number}}
 						</td>
-						<td class="p-test-center">
+						<td class="p-test-center"> <span class="p-column-title">Disponible</span>
 							{{cliente.nCreditoDisponible | number}}
 						</td>
-						<td><span class="p-column-title">Reviews</span>
+						<td><span class="p-column-title">Saldo</span>
 							{{cliente.nSaldoTotal | number}}
 						</td>
-						<td><span class="p-column-title">Status</span>
+						<td><span class="p-column-title">Inicial</span>
 							{{cliente.nTotalVenta | number}}
 						</td>
-						<td><span class="p-column-title">Status</span>
+						<td><span class="p-column-title">Abonos</span>
 							{{cliente.nAbonos | number}}
 						</td>
 						
-						<td> <span class="p-colum-title"></span>
+						<td> <span class="p-colum-title">Avance crédito</span>
 							<div class="p-col">
                                 <p-progressBar [value]="cliente.nAvanceCredito" [showValue]="true" ></p-progressBar>
                             </div></td>
 					
-						<td class="p-text-center"><span class="p-column-title">Status</span>
+						<td class="p-text-center"><span class="p-column-title">Estatus General</span>
 							<div *ngIf="cliente.sEstatus==='VENCIDO'">
 							<p-tag styleClass="p-mr-2" severity="danger">{{cliente.sEstatus}}</p-tag>
 						  </div>
@@ -183,7 +183,7 @@
                        
 						<th pSortableColumn="nId">No. Venta<p-sortIcon field="nId"></p-sortIcon> </th>
 						<th pSortableColumn="nTotalVenta">Saldo Inicial<p-sortIcon field="nTotalVenta"></p-sortIcon> </th>
-						<th pSortableColumn="nTotalAbono">TotalAbono<p-sortIcon field="nTotalAbono"></p-sortIcon> </th>
+						<th pSortableColumn="nTotalAbono">Total Abono<p-sortIcon field="nTotalAbono"></p-sortIcon> </th>
 						<th pSortableColumn="descuento">Descuento<p-sortIcon field="descuento"></p-sortIcon> </th>
 						<th pSortableColumn="nSaldoTotal">Saldo Final<p-sortIcon field="nSaldoTotal"></p-sortIcon> </th>
 						<th pSortableColumn="nAvancePago">Avance<p-sortIcon field="nAvancePago"></p-sortIcon> </th>
@@ -197,27 +197,27 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-venta let-expanded="expanded">
                     <tr *ngIf="venta.nSaldoTotal>0">
-						<td><span class="p-column-title"></span> {{venta.nId}}
+						<td><span class="p-column-title">No. Venta</span> {{venta.nId}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.nTotalVenta | number}}
+                        <td><span class="p-column-title">Saldo Inicial</span> {{venta.nTotalVenta | number}}
                         </td>
-                        <td><span class="p-column-title"></span> {{venta.nTotalAbono| number}}
+                        <td><span class="p-column-title">Total Abono</span> {{venta.nTotalAbono| number}}
                         </td>
-						<td><span class="p-column-title"></span> {{venta.descuento| number}}
+						<td><span class="p-column-title">Descuento</span> {{venta.descuento| number}}
                         </td>
-                        <td><span class="p-column-title"></span>{{venta.nSaldoTotal | number}}
+                        <td><span class="p-column-title">Saldo Final</span>{{venta.nSaldoTotal | number}}
                         </td>
-						<td> <span class="p-colum-title"></span>
+						<td> <span class="p-colum-title">Avance</span>
 							<div class="p-col">
                                 <p-progressBar [value]="venta.nAvancePago" [showValue]="true" ></p-progressBar>
                             </div></td>
 						
-                        <td><span class="p-column-title"></span> {{venta.dFechaTerminoCredito | date}}
+                        <td><span class="p-column-title">Fecha Vencimiento</span> {{venta.dFechaTerminoCredito | date}}
                         </td>
 						
                     
                        
-							<td class="p-text-center"><span class="p-column-title">Status</span>
+							<td class="p-text-center"><span class="p-column-title">Estatus</span>
 								<div *ngIf="venta.sEstatus==='VENCIDO'">
 								<p-tag styleClass="p-mr-2" severity="danger">{{venta.sEstatus}}</p-tag>
 							  </div>

@@ -35,11 +35,11 @@
         <ng-template pTemplate="body" let-historia>
 
             <tr>
-                <td>{{historia.tcProducto.sNoParte}}</td>
-                <td>{{historia.tcProducto.sProducto}}</td>
-                <td>{{historia.sMoneda}}</td>
-                <td>{{historia.nPrecio | number}}</td>
-                <td>{{historia.dFecha | date }}</td>
+                <td><span class="p-column-title">No.Parte</span>{{historia.tcProducto.sNoParte}}</td>
+                <td><span class="p-column-title">Producto</span>{{historia.tcProducto.sProducto}}</td>
+                <td><span class="p-column-title">Moneda</span>{{historia.sMoneda}}</td>
+                <td><span class="p-column-title">Precio</span>{{historia.nPrecio | number}}</td>
+                <td><span class="p-column-title">Fecha Registro</span>{{historia.dFecha | date }}</td>
 
             </tr>
         </ng-template>

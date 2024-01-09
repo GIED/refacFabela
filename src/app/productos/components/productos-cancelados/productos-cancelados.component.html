@@ -23,10 +23,10 @@
         <ng-template pTemplate="body" let-producto>
 
             <tr>
-                <td>{{producto.nIdVenta}}</td>
-                <td>{{producto.tcUsuario.sNombreUsuario}}</td>
-                <td>{{producto.nCantidad}}</td>
-                <td>{{producto.dFecha | date }}</td>
+                <td><span class="p-column-title">Venta</span>{{producto.nIdVenta}}</td>
+                <td><span class="p-column-title">Usuario Cancela</span>{{producto.tcUsuario.sNombreUsuario}}</td>
+                <td><span class="p-column-title">Cancelados</span>{{producto.nCantidad}}</td>
+                <td><span class="p-column-title">Fecha Cancela</span>{{producto.dFecha | date }}</td>
             
 
             </tr>
