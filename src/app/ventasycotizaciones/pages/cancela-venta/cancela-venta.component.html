@@ -27,7 +27,7 @@
 
         <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
             [paginator]="true"
-            [globalFilterFields]="['nId','sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
+            [globalFilterFields]="['nId','sFolioVenta','tcCliente.sRfc','nTipoPago','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
             [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
             currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
             [showCurrentPageReport]="true">
@@ -66,10 +66,14 @@
                     <th pSortableColumn="dFechaVenta">Fecha Venta<p-sortIcon
                             field="dFechaVenta"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="tcEstatusVenta.sDescripcion">tipo venta<p-sortIcon
-                        field="tcEstatusVenta.sDescripcion"></p-sortIcon>
                     <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
                         field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+                        <th pSortableColumn="nTipoPago">Tipo Pago<p-sortIcon
+                            field="nTipoPago"></p-sortIcon>
+
+                    <th pSortableColumn="tcEstatusVenta.sDescripcion">Tipo venta<p-sortIcon
+                        field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+                    
                 </th>
                     <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor<p-sortIcon field="tcUsuario.sNombreusuario"></p-sortIcon>
                     </th>
@@ -95,13 +99,18 @@
                    
                     <td><span class="p-column-title"></span> {{venta.dFechaVenta | date}}
                     </td>
-                    <td><span class="p-column-title"></span> {{venta.tcTipoVenta.sDescripcion}}
-                    </td>
-                    <td  class="p-text-center"><span class="p-column-title">Status</span>
+                    <td class="p-text-center"><span class="p-column-title">Estatus Venta</span>
                        
-                         <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red"> {{venta.tcEstatusVenta.sDescripcion}}</strong>
-                         <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'" > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
-                          
+                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red"> {{venta.tcEstatusVenta.sDescripcion}}</strong>
+                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'" > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
+                    
+                        <td *ngIf="venta.nTipoPago==1"><span class="p-column-title"></span>CRÉDITO  </td>
+                        
+                        <td *ngIf="venta.nTipoPago==0"><span class="p-column-title"></span>CONTADO  </td>   
+                    
+                        <td><span class="p-column-title"></span> {{venta.tcTipoVenta.sDescripcion}}
+                    </td>
+                    
                        
                     <td class="p-text-center"><span class="p-column-title">Status</span>
                        

@@ -12,6 +12,8 @@ import { PedidosService } from '../../../shared/service/pedidos.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TvPedidoDetalle } from '../../model/TvPedidoDetalle';
 import { TvStockProducto } from '../../model/TvStockProducto';
+import { TwPedido } from '../../model/TwPedido';
+import { producto } from '../../interfaces/producto.interfaces';
 
 @Component({
   selector: 'app-alta-pedidos',
@@ -22,6 +24,8 @@ export class AltaPedidosComponent implements OnInit {
 
   
   @Output() listaPedidoDetalle: EventEmitter<TvPedidoDetalle[]> = new EventEmitter();
+  @Input() pedidoConsultado:TwPedido;
+
 
   formGrp: FormGroup;
 
@@ -38,6 +42,9 @@ productDialog:boolean;
 titulo:string;
 producto:TcProducto;
 tvStockProducto:TvStockProducto;
+twPedido:TwPedido;
+twPedidoProducto:TwPedidoProducto;
+listaPedidoProducto:TwPedidoProducto[];
 
 
   constructor(private productosService: ProductoService,
@@ -53,10 +60,24 @@ tvStockProducto:TvStockProducto;
     this.listaProductosCompra=[];
     this.tcPedidoProducto= new TwPedidoProducto() ;
    this.pedidoDto=new PedidoDto();
+   this.twPedido=new TwPedido();
+   this.twPedidoProducto=new TwPedidoProducto();
+   this.listaPedidoProducto=[];
+   this.tvStockProducto=new TvStockProducto();
   }
 
   ngOnInit() {
     this._initFormGroup();
+
+
+
+  if(this.pedidoConsultado===undefined){
+    
+    }
+    else{
+      this.twPedido=this.pedidoConsultado;
+      this.obtenerlistaPedidoProducto();
+    }
   }
 
   _initFormGroup(){ 
@@ -66,6 +87,82 @@ tvStockProducto:TvStockProducto;
     });
     
   }
+  //Este metodo guarda el pedido en la tabla de tw_pedido
+  guardarPedidoGeneral(twPedido:TwPedido){  
+    this.pedidosService.guardaPedidoGeneral(twPedido).subscribe(data=>{
+      this.twPedido=data;
+      
+    })
+  }
+   
+  // Este metodo guarda los productos del pedido
+  guardarPedidoProducto(twPedidoProducto:TwPedidoProducto){
+    this.pedidosService.guardaPedidoProducto(twPedidoProducto).subscribe(data=>{
+      this.twPedidoProducto=data;    
+      this.listaProducto=[];
+      this.muestraDetalleProducto=false;
+      this.limpiaFormulario();
+      this.twPedidoProducto=new TwPedidoProducto;
+      this.obtenerlistaPedidoProducto();
+      this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue guardado', life: 6000 });
+
+    })
+  }
+
+  obtenerlistaPedidoProducto(){
+
+    this.pedidosService.obtenerProductosPedido(this.twPedido.nId).subscribe(data=>{
+      this.listaPedidoProducto=data;
+      this.mostraarListaCompra=true;
+
+    })
+
+  }
+
+ 
+
+  
+ registrarProductoPedido(producto:TcProducto){
+    // se pre para el objeto de registro de producto
+    this.twPedidoProducto.dFechaPedido=new Date();
+    this.twPedidoProducto.nMotivoPedido=1;
+    this.twPedidoProducto.nIdProducto=producto.nId;
+    this.twPedidoProducto.nCantidadPedida= this.fProducto.nCantidadCtrl.value;  
+    this.twPedidoProducto.nIdProveedor=this.fProducto.nIdProveedorCtrl.value;
+    this.twPedidoProducto.nEstatus=false;
+    this.twPedidoProducto.nIdUsuario=this.tokenService.getIdUser();
+
+   // se valida si ya se guado el pedido general, si no se guarda
+    if(this.twPedido.nId!=null || this.twPedido!=undefined){
+
+      this.twPedido.nIdUsuario=this.tokenService.getIdUser();
+      this.twPedido.sCvePedido=this.crearId();
+      this.twPedido.dFechaPedido=new Date();
+      this.twPedido.nEstatus=0; 
+        
+      // se guarda pedido general
+      this.pedidosService.guardaPedidoGeneral(this.twPedido).subscribe(data=>{
+        this.twPedido=data;
+
+        this.twPedidoProducto.nIdPedido=this.twPedido.nId;
+        this.twPedidoProducto.sClavePedido=this.twPedido.sCvePedido;
+        // se guarda el pedido
+        this.guardarPedidoProducto(this.twPedidoProducto);
+
+
+      })
+
+    }
+    else{
+      this.twPedidoProducto.nIdPedido=this.twPedido.nId;
+      this.twPedidoProducto.sClavePedido=this.twPedido.sCvePedido;
+      // se guarda el pedido
+      this.guardarPedidoProducto(this.twPedidoProducto);
+    }
+ }
+
+
+
 
   informacionProducto(producto:TcProducto){    
   
@@ -95,72 +192,15 @@ tvStockProducto:TvStockProducto;
 
   limpiaFormulario(){   
     this.fProducto.nCantidadCtrl.setValue('');  
-    this.fProducto.nIdProveedorCtrl.setValue('');  
+   
   }
 
-  agregarProduct(producto:TcProducto){
-    if (this.formGrp.invalid) {
-  
-      return Object.values(this.formGrp.controls).forEach(control => {
-
-        if (control instanceof FormGroup) {
-          // tslint:disable-next-line: no-shadowed-variable
-          
-          Object.values(control.controls).forEach(control => control.markAsTouched());
-        } else {
-          control.markAsTouched();
-        }
-
-      });
-    }else{
-
-      for(let i in this.listaProveedores){
-        if(this.listaProveedores[i].nId==this.fProducto.nIdProveedorCtrl.value)
-          this.proveedor=this.listaProveedores[i];
-  
-        }    
-      this.tcPedidoProducto.nId=null;    
-      this.tcPedidoProducto.sClavePedido=this.crearId();
-      this.tcPedidoProducto.dFechaPedido=null; 
-      this.tcPedidoProducto.nMotivoPedido=1;
-      this.tcPedidoProducto.nIdProducto=producto.nId;
-      this.tcPedidoProducto.nCantidadPedida= this.fProducto.nCantidadCtrl.value;  
-      this.tcPedidoProducto.nIdProveedor=this.fProducto.nIdProveedorCtrl.value;
-      this.tcPedidoProducto.nCantidaRecibida=null;
-      this.tcPedidoProducto.dFechaRecibida=null;
-      this.tcPedidoProducto.nEstatus=false;
-      this.tcPedidoProducto.sObservaciones=null;   
-      this.tcPedidoProducto.nIdUsuario=this.tokenService.getIdUser(); 
-      this.tcPedidoProducto.tcProducto=producto;      
-      this.tcPedidoProducto.tcProveedore=this.proveedor;    
-      this.tcPedidoProducto.tcUsuario=null;  
-
-      this.listaProductosCompra.push(this.tcPedidoProducto);
-
-
-
-      //console.log(this.listaProductosCompra);
-
-      if(this.listaProductosCompra.length>0){
-      this.mostraarListaCompra=true;
-      }   
-      
-      this.listaProducto=[];
-      this.muestraDetalleProducto=false;
-      this.limpiaFormulario();
-      this.tcPedidoProducto=new TwPedidoProducto;
-
-      this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue agregado a la lista de compra', life: 6000 });
-      
-    }
-  }
-
+  // Se elimina el producto del pedido  
   quitarProducto(tcPedidoProducto: TwPedidoProducto){
-
-//console.log(tcPedidoProducto);
-    
-this.listaProductosCompra.splice(this.findIndexById(tcPedidoProducto.nIdProducto, this.listaProductosCompra),1);
-this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue eliminado a la lista de compra', life: 6000 });
+  this.pedidosService.borrarProductoPedido(tcPedidoProducto).subscribe(data=>{
+  this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue eliminado a la lista de compra', life: 6000 });
+  this.obtenerlistaPedidoProducto();
+})
 
 
   }
@@ -191,39 +231,12 @@ this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito'
     return id;
   }
 
-  guardarPedido(){
-    this.pedidoDto.nId=null;
-     this.pedidoDto.nIdUsuario=this.tokenService.getIdUser();
-     this.pedidoDto.sCvePedido=this.crearId();
-     this.pedidoDto.dFechaPedido=null;
-     this.pedidoDto.sObservaciones="";
-     this.pedidoDto.nEstatus=0; 
-     this.pedidoDto.dFechaPedidoCierre=null;      
-     this.pedidoDto.twPedidoProducto=this.listaProductosCompra;
+  
 
-
-    // console.log(this.pedidoDto);
-
-     this.pedidosService.guardaPedido(this.pedidoDto).subscribe(data=>{
-      this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El pedido fue registrado con éxito', life: 3000 });
-     this.pedidoDto=data;
-     
-      this.cerrarNuevoPedido();
-      this.generarPedidoPdf( this.pedidoDto.nId);
-     // console.log(data);
-     })
-
-
-
-
-  }
-
-  cerrarNuevoPedido(){
-    
+  cerrarNuevoPedido(){    
 
     this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
-      this.listaPedidoDetalle.emit(data);
-        
+      this.listaPedidoDetalle.emit(data);        
       })
   }
 

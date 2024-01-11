@@ -8,6 +8,7 @@ import { TvPedidoDetalle } from 'src/app/productos/model/TvPedidoDetalle';
 import { PedidoDto } from '../../productos/model/PedidoDto';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { TwPedido } from 'src/app/productos/model/TwPedido';
 
 
 @Injectable({
@@ -34,10 +35,22 @@ export class PedidosService {
         let url = environment.servicios.apiRefacFabela + locator.obtenerPedidos;
         return this.http.get<TvPedidoDetalle[]>(url);
       }
+      obtenerPedidosId(nIdPedido:number){
+        let url = environment.servicios.apiRefacFabela + locator.obtenerPedidosId+"nIdPedido="+nIdPedido;
+        return this.http.get<TwPedido>(url);
+      }
 
       guardaPedido(pedidoDto:PedidoDto){
         let url = environment.servicios.apiRefacFabela + locator.guardaPedido;
         return this.http.post<any>(url,pedidoDto);
+      }
+      guardaPedidoGeneral(twPedido:TwPedido){
+        let url = environment.servicios.apiRefacFabela + locator.guardaPedidoGeneral;
+        return this.http.post<TwPedido>(url,twPedido);
+      }
+      guardaPedidoProducto(twPedidoProducto:TwPedidoProducto){
+        let url = environment.servicios.apiRefacFabela + locator.guardaPedidoProducto;
+        return this.http.post<TwPedidoProducto>(url,twPedidoProducto);
       }
       guardaIngresoProductoPedido(twPedidoProducto:TwPedidoProducto){
         let url = environment.servicios.apiRefacFabela + locator.guardaIngresoProductoPedido;

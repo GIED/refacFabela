@@ -117,6 +117,8 @@
                             (click)="generarVentaPedidoPdf(venta)"></button>
                             <button *ngIf="venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
                             (click)="generarVentaPdf(venta)"></button>
+                            <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green"
+                            (click)="generarsSaldoFacorPdf(venta)"></button>
                     </td>
                 </tr>
             </ng-template>

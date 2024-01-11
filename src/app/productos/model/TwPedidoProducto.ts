@@ -17,6 +17,7 @@ export class TwPedidoProducto{
     nIdUsuario:number;
     tcProducto: TcProducto;
     tcProveedore:Proveedores;
-    tcUsuario: TcUsuario;  
+    tcUsuario: TcUsuario; 
+    nIdPedido:number; 
 
 }

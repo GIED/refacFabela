@@ -9,6 +9,9 @@ import { TwPedidoProducto } from '../../model/TwPedidoProducto';
 import { TcProducto } from '../../model/TcProducto';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
 import { TvPedidoDetalle } from '../../model/TvPedidoDetalle';
+import { ProveedorService } from 'src/app/administracion/service/proveedor.service';
+import { Proveedores } from 'src/app/administracion/interfaces/proveedores';
+import { TwPedido } from '../../model/TwPedido';
 
 @Component({
   selector: 'app-registro-pedidos',
@@ -38,16 +41,25 @@ export class RegistroPedidosComponent implements OnInit {
     traspaso:boolean=false;
     listaPedidoDetalle:TvPedidoDetalle[];
     registroPedido:boolean;
+    pedidoConsultado:TwPedido;
+   
    
 
   constructor(private pedidosService: PedidosService,  private productosService: ProductoService,
     private bodegasService: BodegasService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService, ) { }
+    private confirmationService: ConfirmationService,
+    private proveedorService:ProveedorService ) {
+
+      this.stockTotal=0;
+
+      
+     }
 
   ngOnInit(): void {
   
     this.obtenerPedidosEstatus();
+    
   }
 
   consultaProductosRegistrados(nId:number){
@@ -65,7 +77,20 @@ export class RegistroPedidosComponent implements OnInit {
   }
 
   cerrarNuevoPedido(){
+   
+    this.pedidoConsultado=undefined;
     this.registroPedido=false;
+    this.obtenerPedidosEstatus();
+  }
+
+  editarPedido(nIdPedido:number){
+
+    this.pedidoConsultado=new TwPedido();
+    this.pedidosService.obtenerPedidosId(nIdPedido).subscribe(data=>{
+      this.pedidoConsultado=data;   
+      this.registroPedido=true;
+    });
+
   }
 
  
@@ -90,13 +115,17 @@ this.registroPedido=false;
 
  }
 
+
+
  
 
 nuevoPedido(){
 
   //console.log("entre a ocultar el modal");
+  this.pedidoConsultado===null;
   this.registroPedido=true;
   this.obtenerPedidosEstatus();
+  
 }
  
 

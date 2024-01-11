@@ -1,71 +1,91 @@
-<div class="p-grid p-fluid">
-    <div class="p-col-12 p-xl-12 p-md-12">
-        <app-input-busqueda (productoSeleccionado)="informacionProducto($event)"></app-input-busqueda>
-    </div>
-</div>
+
 
 <!--Pedido a consultar-->
-<div class="p-grid" *ngIf="muestraDetalleProducto" class="p-col-12 p-lg-12 p-md-12 ">
-    <div class="p-text-center">
-        <h3>Datos del Producto</h3>
+
+
+<div class="p-grid p-col-12">
+    <div class="p-col-3" >
+        <p-panel header="Datos del Pedido"  >
+            <div>El Pedido Registrado es: <strong>{{twPedido.nId}}</strong> </div>
+            <div>Fecha del Pedido: <strong> {{twPedido.dFechaPedido| date}}</strong> </div>
+            <div>Fecha de cierre: <strong> {{twPedido.dFechaPedidoCierre| date}}</strong> </div>        
+        </p-panel>       
     </div>
-    <div class="p-text-center">
-        <h4>Stock del producto: {{tvStockProducto.nCantidadTotal}}</h4>
-    </div>
-    <form [formGroup]="formGrp" autocomplete="off">
-        <div class="p-col-12 p-lg-12 p-md-12 ">
 
-            <p-table [value]="listaProducto" [rows]="10" responsiveLayout="scroll"
-                currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos"
-                [showCurrentPageReport]="true">
-
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="nId">Id</th>
-                        <th pSortableColumn="noParte">No.Parte </th>
-                        <th pSortableColumn="descripcion">Producto</th>
-                        <th pSortableColumn="precio">Descripción</th>
-                        <th pSortableColumn="categoria">Precio Compra</th>
-                         <th pSortableColumn="editar">Editar</th>
-                        <th pSortableColumn="cantidad">Cantidad</th>                       
-                        <th pSortableColumn="cantidad"> Proveedor</th>                        
-                        <th pSortableColumn="agregar">Agregar</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-producto>
-                    <tr>
-                        <td (click)="muestraAlternativo(producto)"><span class="p-column-title">Id</span>{{producto.nId}}</td>
-                        <td><span class="p-column-title">No.Parte</span>{{producto.sNoParte}}</td>
-                        <td><span class="p-column-title">Producto</span>{{producto.sProducto }}</td>
-                        <td><span class="p-column-title">Descripción</span>{{producto.sDescripcion}}</td>
-                        <td><span class="p-column-title">Precio Compra</span>{{producto.nPrecioPeso | number}}</td>
-                        <td>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-                                (click)="editarProducto(producto)"></button>
-                        </td>
-                        <td>
-                            <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0"
-                                [max]="1000" [class.is-invalid]="validanCantidadCtrl"></p-inputNumber>
-                            <small class="p-error" *ngIf="validanCantidadCtrl">*Registrar Cantidad.</small>
-                        </td>
-                        <td>
-                            <p-dropdown [options]="listaProveedores" formControlName="nIdProveedorCtrl"
-                                optionLabel="sRazonSocial" optionValue="nId" [class.is-invalid]="validanIdProveedorCtrl"
-                                placeholder="Seleccine un Proveedor" [showClear]="true"></p-dropdown>
-                            <small class="p-error" *ngIf="validanIdProveedorCtrl">*Registrar Proveedor.</small>
-                        </td>
-                        <td>
-                            <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2"
-                                (click)="agregarProduct(producto)"></button>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-
-
+    <div class="p-col-9" >
+        <p-panel header="Busqueda del producto"  >
+        <div class="p-grid p-fluid">
+            <div class="p-col-12 p-xl-12 p-md-12">
+                <app-input-busqueda (productoSeleccionado)="informacionProducto($event)"></app-input-busqueda>
+            </div>
         </div>
-    </form>
+       </p-panel>       
+    </div>
+
+    <div class="p-col-12">       
+        <div class="p-grid" *ngIf="muestraDetalleProducto" class="p-col-12 p-lg-12 p-md-12 ">
+            <div class="p-text-center">
+                <h3>Datos del Producto</h3>
+            </div>
+            <div class="p-text-center">
+                <h4>Stock del producto: {{tvStockProducto.nCantidadTotal}}</h4>
+            </div>
+            <form [formGroup]="formGrp" autocomplete="off">
+                <div class="p-col-12 p-lg-12 p-md-12 ">
+        
+                    <p-table [value]="listaProducto" [rows]="10" responsiveLayout="scroll"
+                        currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos"
+                        [showCurrentPageReport]="true">
+        
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="nId">Id</th>
+                                <th pSortableColumn="noParte">No.Parte </th>
+                                <th pSortableColumn="descripcion">Producto</th>
+                                <th pSortableColumn="precio">Descripción</th>
+                                <th pSortableColumn="categoria">Precio Compra</th>
+                                 <th pSortableColumn="editar">Editar</th>
+                                <th pSortableColumn="cantidad">Cantidad</th>                       
+                                <th pSortableColumn="cantidad"> Proveedor</th>                        
+                                <th pSortableColumn="agregar">Agregar</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-producto>
+                            <tr>
+                                <td (click)="muestraAlternativo(producto)"><span class="p-column-title">Id</span>{{producto.nId}}</td>
+                                <td><span class="p-column-title">No.Parte</span>{{producto.sNoParte}}</td>
+                                <td><span class="p-column-title">Producto</span>{{producto.sProducto }}</td>
+                                <td><span class="p-column-title">Descripción</span>{{producto.sDescripcion}}</td>
+                                <td><span class="p-column-title">Precio Compra</span>{{producto.nPrecioPeso | number}}</td>
+                                <td>
+                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                                        (click)="editarProducto(producto)"></button>
+                                </td>
+                                <td>
+                                    <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0"
+                                        [max]="1000" [class.is-invalid]="validanCantidadCtrl"></p-inputNumber>
+                                    <small class="p-error" *ngIf="validanCantidadCtrl">*Registrar Cantidad.</small>
+                                </td>
+                                <td>
+                                    <p-dropdown [options]="listaProveedores" formControlName="nIdProveedorCtrl"
+                                        optionLabel="sRazonSocial" optionValue="nId" [class.is-invalid]="validanIdProveedorCtrl"
+                                        placeholder="Seleccine un Proveedor" [showClear]="true"></p-dropdown>
+                                    <small class="p-error" *ngIf="validanIdProveedorCtrl">*Registrar Proveedor.</small>
+                                </td>
+                                <td>
+                                    <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2"
+                                        (click)="registrarProductoPedido(producto)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>    
+                </div>
+            </form>
+        </div>
+       
+    </div>
 </div>
+
 
 <!--Lista de productos del pedido-->
 
@@ -73,27 +93,38 @@
     <div class="p-text-center">
         <h3>Lista de productos por pedir</h3>
     </div>
-
     <div class="p-col-12 p-lg-12 p-md-12 ">
-
-        <p-table [value]="listaProductosCompra" [rows]="10" responsiveLayout="scroll"
-            currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos"
-            [showCurrentPageReport]="true">
+        <p-table #dt2 [value]="listaPedidoProducto" [rows]="20" [paginator]="true"
+        [globalFilterFields]="['tcProducto.sNoParte','tcProveedore.sRazonSocial','nCantidadPedida','tcProducto.sProducto','tcProducto.sDescripcion']" 
+        [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+        currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+        [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                <h5 class="p-m-0">Administración de pedidos</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt2.filterGlobal($event.target.value, 'contains')"
+                        placeholder="Buscar Pedido" />
+                </span>
+            </div>
+        </ng-template>
 
             <ng-template pTemplate="header">
                 <tr>
-
-                    <th pSortableColumn="noParte">No.Parte </th>
-                    <th pSortableColumn="descripcion">Producto</th>
-                    <th pSortableColumn="precio">Descripción</th>
-                    <th pSortableColumn="categoria">Precio Compra</th>
-                    <th pSortableColumn="cantidad">Cantidad</th>
-                    <th pSortableColumn="cantidad"> Proveedor</th>
+                    <th pSortableColumn="id">NP <p-sortIcon field="nId"></p-sortIcon> </th>                                     
+                    <th pSortableColumn="tcProducto.sNoParte">No.Parte <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon> </th>
+                    <th pSortableColumn="tcProducto.sProducto">Producto <p-sortIcon field="tcProducto.sProducto"></p-sortIcon></th>
+                    <th pSortableColumn="tcProducto.sDescripcion">Descripción <p-sortIcon field="tcProducto.sDescripcion"></p-sortIcon></th>
+                    <th pSortableColumn="tcProducto.nPrecioPeso">Precio Compra <p-sortIcon field="tcProducto.nPrecioPeso"></p-sortIcon></th>
+                    <th pSortableColumn="nCantidadPedida">Cantidad <p-sortIcon field="nCantidadPedida"></p-sortIcon></th>
+                    <th pSortableColumn="tcProveedore.sRazonSocial"> Proveedor <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon></th>
+                    <th></th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-producto>
+            <ng-template pTemplate="body" let-producto let-rowIndex="rowIndex">
                 <tr>
-
+                    <td><span class="p-column-title">Np.</span> {{rowIndex + 1}}</td>
                     <td><span class="p-column-title">No.Parte</span>{{producto.tcProducto.sNoParte}}</td>
                     <td><span class="p-column-title">Producto</span>{{producto.tcProducto.sProducto }}</td>
                     <td><span class="p-column-title">Descripción</span>{{producto.tcProducto.sDescripcion}}</td>
@@ -106,27 +137,20 @@
                     </td>
                 </tr>
             </ng-template>
-
             <ng-template pTemplate="summary">
-                <div class="p-grid p-mt-2" *ngIf="listaProductosCompra.length>0">
-                    <button pButton class="p-button-primary" (click)="guardarPedido()"  label="Guardar Pedido"></button>
+                <div class="p-d-flex p-ai-center p-jc-between">
+                    Total de Productos: {{listaPedidoProducto ? listaPedidoProducto.length : 0 }}
                 </div>
-            </ng-template>
-    
-        </p-table>
-       
-
+            </ng-template>            
+        </p-table>      
     </div>
-
 </div>
 
 <!--registro de productos-->
 
-<p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
-styleClass="p-fluid">
+<p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"styleClass="p-fluid" >
 <ng-template pTemplate="content">
-    <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
-        (guardarProducto)="saveProduct($event)"></app-modal-producto>
+    <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"   (guardarProducto)="saveProduct($event)"></app-modal-producto>
 </ng-template>
 </p-dialog>
 
