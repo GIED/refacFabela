@@ -15,4 +15,5 @@ export interface Clientes {
     nCp?:number;
     tcRegimenFiscal?:TcRegimenFiscal;
     nDescuento?:number;
+    nIdDatoFactura?:number;
 }

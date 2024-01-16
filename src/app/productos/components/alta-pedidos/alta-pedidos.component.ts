@@ -22,48 +22,48 @@ import { producto } from '../../interfaces/producto.interfaces';
 })
 export class AltaPedidosComponent implements OnInit {
 
-  
+
   @Output() listaPedidoDetalle: EventEmitter<TvPedidoDetalle[]> = new EventEmitter();
-  @Input() pedidoConsultado:TwPedido;
+  @Input() pedidoConsultado: TwPedido;
 
 
   formGrp: FormGroup;
 
-listaDetalleProducto:TcProducto[];
-listaProducto:TcProducto[]; 
-muestraDetalleProducto:boolean=false;
-listaProveedores:Proveedores[];
-listaProductosCompra:TwPedidoProducto[]=[];
-tcPedidoProducto:TwPedidoProducto;
-proveedor:Proveedores;
-mostraarListaCompra:boolean=false;
-pedidoDto: PedidoDto;
-productDialog:boolean;
-titulo:string;
-producto:TcProducto;
-tvStockProducto:TvStockProducto;
-twPedido:TwPedido;
-twPedidoProducto:TwPedidoProducto;
-listaPedidoProducto:TwPedidoProducto[];
+  listaDetalleProducto: TcProducto[];
+  listaProducto: TcProducto[];
+  muestraDetalleProducto: boolean = false;
+  listaProveedores: Proveedores[];
+  listaProductosCompra: TwPedidoProducto[] = [];
+  tcPedidoProducto: TwPedidoProducto;
+  proveedor: Proveedores;
+  mostraarListaCompra: boolean = false;
+  pedidoDto: PedidoDto;
+  productDialog: boolean;
+  titulo: string;
+  producto: TcProducto;
+  tvStockProducto: TvStockProducto;
+  twPedido: TwPedido;
+  twPedidoProducto: TwPedidoProducto;
+  listaPedidoProducto: TwPedidoProducto[];
 
 
   constructor(private productosService: ProductoService,
-     private proveedorService: ProveedorService, 
-     private fb: FormBuilder,
-      private usuarioService: UsuarioService,
-       private tokenService: TokenService, 
-       private pedidosService: PedidosService,
-       private messageService: MessageService,  private confirmationService: ConfirmationService) { 
+    private proveedorService: ProveedorService,
+    private fb: FormBuilder,
+    private usuarioService: UsuarioService,
+    private tokenService: TokenService,
+    private pedidosService: PedidosService,
+    private messageService: MessageService, private confirmationService: ConfirmationService) {
 
-    this.listaProducto=[];
-    this.listaProveedores=[];
-    this.listaProductosCompra=[];
-    this.tcPedidoProducto= new TwPedidoProducto() ;
-   this.pedidoDto=new PedidoDto();
-   this.twPedido=new TwPedido();
-   this.twPedidoProducto=new TwPedidoProducto();
-   this.listaPedidoProducto=[];
-   this.tvStockProducto=new TvStockProducto();
+    this.listaProducto = [];
+    this.listaProveedores = [];
+    this.listaProductosCompra = [];
+    this.tcPedidoProducto = new TwPedidoProducto();
+    this.pedidoDto = new PedidoDto();
+    this.twPedido = new TwPedido();
+    this.twPedidoProducto = new TwPedidoProducto();
+    this.listaPedidoProducto = [];
+    this.tvStockProducto = new TvStockProducto();
   }
 
   ngOnInit() {
@@ -71,81 +71,78 @@ listaPedidoProducto:TwPedidoProducto[];
 
 
 
-  if(this.pedidoConsultado===undefined){
-    
+    if (this.pedidoConsultado === undefined) {
+
     }
-    else{
-      this.twPedido=this.pedidoConsultado;
+    else {
+      this.twPedido = this.pedidoConsultado;
       this.obtenerlistaPedidoProducto();
     }
   }
 
-  _initFormGroup(){ 
-    this.formGrp=this.fb.group({   
-      nCantidadCtrl: ['',[Validators.required]],
-      nIdProveedorCtrl: ['',[Validators.required]]
+  _initFormGroup() {
+    this.formGrp = this.fb.group({
+      nCantidadCtrl: ['', [Validators.required]],
+      nIdProveedorCtrl: ['', [Validators.required]]
     });
-    
+
   }
   //Este metodo guarda el pedido en la tabla de tw_pedido
-  guardarPedidoGeneral(twPedido:TwPedido){  
-    this.pedidosService.guardaPedidoGeneral(twPedido).subscribe(data=>{
-      this.twPedido=data;
-      
+  guardarPedidoGeneral(twPedido: TwPedido) {
+    this.pedidosService.guardaPedidoGeneral(twPedido).subscribe(data => {
+      this.twPedido = data;
+
     })
   }
-   
+
   // Este metodo guarda los productos del pedido
-  guardarPedidoProducto(twPedidoProducto:TwPedidoProducto){
-    this.pedidosService.guardaPedidoProducto(twPedidoProducto).subscribe(data=>{
-      this.twPedidoProducto=data;    
-      this.listaProducto=[];
-      this.muestraDetalleProducto=false;
+  guardarPedidoProducto(twPedidoProducto: TwPedidoProducto) {
+    this.pedidosService.guardaPedidoProducto(twPedidoProducto).subscribe(data => {
+      this.twPedidoProducto = data;
+      this.listaProducto = [];
+      this.muestraDetalleProducto = false;
       this.limpiaFormulario();
-      this.twPedidoProducto=new TwPedidoProducto;
+      this.twPedidoProducto = new TwPedidoProducto;
       this.obtenerlistaPedidoProducto();
       this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue guardado', life: 6000 });
 
     })
   }
 
-  obtenerlistaPedidoProducto(){
+  obtenerlistaPedidoProducto() {
 
-    this.pedidosService.obtenerProductosPedido(this.twPedido.nId).subscribe(data=>{
-      this.listaPedidoProducto=data;
-      this.mostraarListaCompra=true;
+    this.pedidosService.obtenerProductosPedido(this.twPedido.nId).subscribe(data => {
+      this.listaPedidoProducto = data;
+      this.mostraarListaCompra = true;
 
     })
 
   }
 
- 
-
-  
- registrarProductoPedido(producto:TcProducto){
+  registrarProductoPedido(producto: TcProducto) {
     // se pre para el objeto de registro de producto
-    this.twPedidoProducto.dFechaPedido=new Date();
-    this.twPedidoProducto.nMotivoPedido=1;
-    this.twPedidoProducto.nIdProducto=producto.nId;
-    this.twPedidoProducto.nCantidadPedida= this.fProducto.nCantidadCtrl.value;  
-    this.twPedidoProducto.nIdProveedor=this.fProducto.nIdProveedorCtrl.value;
-    this.twPedidoProducto.nEstatus=false;
-    this.twPedidoProducto.nIdUsuario=this.tokenService.getIdUser();
+    this.twPedidoProducto.dFechaPedido = new Date();
+    this.twPedidoProducto.nMotivoPedido = 1;
+    this.twPedidoProducto.nIdProducto = producto.nId;
+    this.twPedidoProducto.nCantidadPedida = this.fProducto.nCantidadCtrl.value;
+    this.twPedidoProducto.nIdProveedor = this.fProducto.nIdProveedorCtrl.value;
+    this.twPedidoProducto.nEstatus = false;
+    this.twPedidoProducto.nIdUsuario = this.tokenService.getIdUser();
 
-   // se valida si ya se guado el pedido general, si no se guarda
-    if(this.twPedido.nId!=null || this.twPedido!=undefined){
+    // se valida si ya se guado el pedido general, si no se guarda
+    if (this.twPedido.nId != null || this.twPedido != undefined) {
 
-      this.twPedido.nIdUsuario=this.tokenService.getIdUser();
-      this.twPedido.sCvePedido=this.crearId();
-      this.twPedido.dFechaPedido=new Date();
-      this.twPedido.nEstatus=0; 
-        
+      this.twPedido.nIdUsuario = this.tokenService.getIdUser();
+      this.twPedido.sCvePedido = this.crearId();
+      this.twPedido.dFechaPedido = new Date();
+      this.twPedido.nEstatus = 0;
+
       // se guarda pedido general
-      this.pedidosService.guardaPedidoGeneral(this.twPedido).subscribe(data=>{
-        this.twPedido=data;
+      this.pedidosService.guardaPedidoGeneral(this.twPedido).subscribe(data => {
+        this.twPedido = data;
 
-        this.twPedidoProducto.nIdPedido=this.twPedido.nId;
-        this.twPedidoProducto.sClavePedido=this.twPedido.sCvePedido;
+        this.twPedidoProducto.nIdPedido = this.twPedido.nId;
+        this.twPedidoProducto.sClavePedido = this.twPedido.sCvePedido;
         // se guarda el pedido
         this.guardarPedidoProducto(this.twPedidoProducto);
 
@@ -153,64 +150,64 @@ listaPedidoProducto:TwPedidoProducto[];
       })
 
     }
-    else{
-      this.twPedidoProducto.nIdPedido=this.twPedido.nId;
-      this.twPedidoProducto.sClavePedido=this.twPedido.sCvePedido;
+    else {
+      this.twPedidoProducto.nIdPedido = this.twPedido.nId;
+      this.twPedidoProducto.sClavePedido = this.twPedido.sCvePedido;
       // se guarda el pedido
       this.guardarPedidoProducto(this.twPedidoProducto);
     }
- }
+  }
 
 
 
 
-  informacionProducto(producto:TcProducto){    
-  
-    this.muestraDetalleProducto=true;
+  informacionProducto(producto: TcProducto) {
 
-    if(producto!=null){
-     this.productosService.obtenerTotalBodegasIdProducto(producto.nId).subscribe(data=>{
-      this.tvStockProducto=data;
-     })
-     
-        this.listaProducto.push(producto);
-    // console.log(this.listaProducto);
-     this.obtenerProveedores();
+    this.muestraDetalleProducto = true;
+
+    if (producto != null) {
+      this.productosService.obtenerTotalBodegasIdProducto(producto.nId).subscribe(data => {
+        this.tvStockProducto = data;
+      })
+
+      this.listaProducto.push(producto);
+      // console.log(this.listaProducto);
+      this.obtenerProveedores();
     }
-  
+
   }
-  get validanCantidadCtrl(){
-    return this.formGrp.get('nCantidadCtrl').invalid  ;
+  get validanCantidadCtrl() {
+    return this.formGrp.get('nCantidadCtrl').invalid;
   }
-  get validanIdProveedorCtrl(){
+  get validanIdProveedorCtrl() {
     return this.formGrp.get('nIdProveedorCtrl').invalid;
   }
 
-  get fProducto(){
+  get fProducto() {
     return this.formGrp.controls;
-}
+  }
 
-  limpiaFormulario(){   
-    this.fProducto.nCantidadCtrl.setValue('');  
-   
+  limpiaFormulario() {
+    this.fProducto.nCantidadCtrl.setValue('');
+
   }
 
   // Se elimina el producto del pedido  
-  quitarProducto(tcPedidoProducto: TwPedidoProducto){
-  this.pedidosService.borrarProductoPedido(tcPedidoProducto).subscribe(data=>{
-  this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue eliminado a la lista de compra', life: 6000 });
-  this.obtenerlistaPedidoProducto();
-})
+  quitarProducto(tcPedidoProducto: TwPedidoProducto) {
+    this.pedidosService.borrarProductoPedido(tcPedidoProducto).subscribe(data => {
+      this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El producto fue eliminado a la lista de compra', life: 6000 });
+      this.obtenerlistaPedidoProducto();
+    })
 
 
   }
-  findIndexById(id: number, arreglo:TwPedidoProducto[]): number {
+  findIndexById(id: number, arreglo: TwPedidoProducto[]): number {
     let index = -1;
     for (let i = 0; i < arreglo.length; i++) {
-        if (arreglo[i].nIdProducto === id) {
-            index = i;
-            break;
-        }
+      if (arreglo[i].nIdProducto === id) {
+        index = i;
+        break;
+      }
     }
     return index;
   }
@@ -218,7 +215,7 @@ listaPedidoProducto:TwPedidoProducto[];
   obtenerProveedores() {
     this.proveedorService.getProveedores().subscribe(provedores => {
       this.listaProveedores = provedores;
-     // console.log(this.listaProveedores);
+      // console.log(this.listaProveedores);
     })
   }
 
@@ -231,75 +228,75 @@ listaPedidoProducto:TwPedidoProducto[];
     return id;
   }
 
-  
 
-  cerrarNuevoPedido(){    
 
-    this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
-      this.listaPedidoDetalle.emit(data);        
-      })
+  cerrarNuevoPedido() {
+
+    this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data => {
+      this.listaPedidoDetalle.emit(data);
+    })
   }
 
-  generarPedidoPdf(nId:number){
+  generarPedidoPdf(nId: number) {
 
     //console.log("Se va a generar el comprobante");
 
     this.pedidosService.generarPedidoPdf(nId).subscribe(resp => {
-  
-      
-        const file = new Blob([resp], { type: 'application/pdf' });
-       // console.log('file: ' + file.size);
-        if (file != null && file.size > 0) {
-          const fileURL = window.URL.createObjectURL(file);
-          const anchor = document.createElement('a');
-          anchor.download = 'pedido_' +nId + '.pdf';
-          anchor.href = fileURL;
-          anchor.click();
-          this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Comprobante de Pedido Generado', life: 6000});
-          //una vez generado el reporte limproducto:TcProducto;pia el formulario para una nueva venta o cotización 
-         
-        } else {
-          this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se puedo generar el comprobante del pedido', life: 6000});
-        }
-  
+
+
+      const file = new Blob([resp], { type: 'application/pdf' });
+      // console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'pedido_' + nId + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Comprobante de Pedido Generado', life: 6000 });
+        //una vez generado el reporte limproducto:TcProducto;pia el formulario para una nueva venta o cotización 
+
+      } else {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se puedo generar el comprobante del pedido', life: 6000 });
+      }
+
     });
-  
-  }
-
-  editarProducto(producto:TcProducto){
-    this.producto=producto;
-    this.titulo="Registro de Productos"
-    this.productDialog=true;
 
   }
 
-  hideDialog(){
-    this.productDialog=false;
+  editarProducto(producto: TcProducto) {
+    this.producto = producto;
+    this.titulo = "Registro de Productos"
+    this.productDialog = true;
 
   }
 
-  saveProduct(producto:TcProducto){
+  hideDialog() {
+    this.productDialog = false;
+
+  }
+
+  saveProduct(producto: TcProducto) {
 
 
     if (producto.nId) {
       this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
-          this.listaProducto[0].nPrecioPeso = productoActualizado.nPrecioPeso;
-          this.messageService.add({ severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000 });
+        this.listaProducto[0].nPrecioPeso = productoActualizado.nPrecioPeso;
+        this.messageService.add({ severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000 });
       });
-  }
-  else {
+    }
+    else {
       this.productosService.guardaProducto(producto).subscribe(productoNuevo => {
-          this.listaProducto.push(productoNuevo);
-          this.messageService.add({ severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000 });
+        this.listaProducto.push(productoNuevo);
+        this.messageService.add({ severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000 });
       });
-  }
-  this.productDialog = false;
+    }
+    this.productDialog = false;
 
   }
 
- 
 
-  
-  
+
+
+
 
 }
