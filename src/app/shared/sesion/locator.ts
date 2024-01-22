@@ -169,7 +169,7 @@ static movimientoExterno='/movimientoExterno';
 
 //factura
 static consultaVentaFactura='/facturacion/ventasParaFactura';
-static consultaCreditos='/facturacion/consultaCreditos';
+static consultaCreditos='/facturacion/consultaCreditos?';
 static facturarVenta='/facturacion/venta?';
 static facturarComplemento='/facturacion/complemento?'
 static consultaFacturas='/facturacion/ventasFacturadas';

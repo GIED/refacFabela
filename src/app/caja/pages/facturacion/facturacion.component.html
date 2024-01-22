@@ -6,7 +6,10 @@
                 <h3>Módulo de Facturación</h3>
             </div>
             <div class="p-text-right">
-                <h5>Creditos disponibles: {{creditosRestantes}} </h5>
+                <h5>Créditos disponibles Fabela: {{creditosRestantesFabela}} </h5>
+            </div>
+            <div class="p-text-right">
+                <h5>Créditos disponibles Jemkal: {{creditosRestantesJemkal}} </h5>
             </div>
            
             <button pButton pRipple type="button" label="Para Facturar" class="p-button-danger" (click)="obtenerFacruras()"></button>
@@ -129,7 +132,17 @@
                             </div>
                             <div class="p-field p-col-12 p-md-12">
                                 <span class="p-float-label">
-                                    <label for="float-input"><strong> Forma de pago: </strong> {{tvVentasFactura.tcFormapago.sDescripcion}}</label>
+                                    <label for="float-input"><strong> Forma de pago: </strong> {{this.nuevaFormaPago}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong> Rfc emisor </strong> {{tvVentasFactura.sRfcEmisor}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong> Nombre emisor </strong> {{tvVentasFactura.sNombreEmisor}}</label>
                                 </span>
                             </div>
                         </div>

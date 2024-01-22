@@ -10,6 +10,8 @@ import { TipoDoc } from 'src/app/shared/utils/TipoDoc.enum';
 import { SpinnerComponent } from '../../../shared/spinner/spinner.component';
 import { TcCliente } from '../../../administracion/model/TcCliente';
 import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
+import { VentasService } from '../../../shared/service/ventas.service';
+import { TrVentaCobro } from '../../../productos/model/TrVentaCobro';
 
 @Component({
   selector: 'app-facturacion',
@@ -28,9 +30,14 @@ export class FacturacionComponent implements OnInit {
     clienteDialog:boolean;
     objCliente: TcCliente;
     creditosRestantes:number;
+    creditosRestantesFabela:number;
+    creditosRestantesJemkal:number;
+    ListaTrVentaCobro: TrVentaCobro[];
+    nuevaFormaPago:string;
+    efectivoValida:boolean;
     
 
-  constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService) {
+  constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService, private ventasService: VentasService) {
         this.listaVentas=[];
         this.listaUsoCfdi=[];
         this.formFactura=false;
@@ -38,6 +45,10 @@ export class FacturacionComponent implements OnInit {
         this.clienteDialog= false;
         this.objCliente= new TcCliente();
         this.creditosRestantes=0;
+        this.creditosRestantesFabela=0;
+        this.creditosRestantesJemkal=0;
+        this.nuevaFormaPago='';
+        this.efectivoValida=false;
      }
 
   ngOnInit(){
@@ -77,36 +88,66 @@ export class FacturacionComponent implements OnInit {
   }
   consultaCreditos(){
 
-    this.facturaService.consultaCreditos().subscribe(resp =>{
-      this.creditosRestantes=resp;
+    this.facturaService.consultaCreditos(1).subscribe(resp =>{
+      this.creditosRestantesFabela=resp;
   });
+  this.facturaService.consultaCreditos(2).subscribe(resp =>{
+    this.creditosRestantesJemkal=resp;
+});
 
   }
 
 
 
   openDialog(tvVentasFactura:TvVentasFactura){
-    if(tvVentasFactura.tcFormapago==null){
-      tvVentasFactura.tcFormapago=new TcFormaPago();
-
-    }
-   
-    console.log('tvVentasFactura',tvVentasFactura);
-    this.tvVentasFactura=tvVentasFactura;
-    this.formFactura=true;
-    this.idVenta=tvVentasFactura.nId;
-    this.totalVenta=tvVentasFactura.nTotalVenta;
-    if( this.tvVentasFactura.nTipoPago==1 ){
     
+    /*Consultamos el múmero de pagos registrados para la venta */
+    this.ventasService.obtenerCobroParcial(tvVentasFactura.nId).subscribe(data=>{
+      this.ListaTrVentaCobro=data;
+      /*Si hay más de un pago para la venta se concatena en el string de la forma de pago la cadena del detlla de pago */
+      if (this.ListaTrVentaCobro.length > 1) {
+        for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
+          this.nuevaFormaPago += this.ListaTrVentaCobro[index].tcFormapago.sDescripcion + '/'
+        }
+      }
+      else {
+        for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
+          this.nuevaFormaPago = this.ListaTrVentaCobro[index].tcFormapago.sDescripcion
 
-      this.tvVentasFactura.formaPago=22;
-      this.tvVentasFactura.tcFormapago.nId=22;
-      this.tvVentasFactura.tcFormapago.sClave='99';
-      this.tvVentasFactura.tcFormapago.sDescripcion='Por definir';
-      this.tvVentasFactura.tcFormapago.nEstatus=1;
+           /*Si el  monto de pago en efectivo es mayor o igual a dos mil la factura sale por definir para hacer el complemento de pago*/
+          if (this.ListaTrVentaCobro[index].nMonto >= 2000 && this.ListaTrVentaCobro[index].tcFormapago.nId == 1) {
+            this.efectivoValida = true;
+          }
+          else {
+            this.efectivoValida = false;
+          }
+        }
+      }
 
-    }
+       /*Si  tcForma de pago es nulo se inicializa */
+      if(tvVentasFactura.tcFormapago==null){
+        tvVentasFactura.tcFormapago=new TcFormaPago();
+  
+      }
+     
+       /*Se castean los datos */
+      this.tvVentasFactura=tvVentasFactura;
+      this.formFactura=true;
+      this.idVenta=tvVentasFactura.nId;
+      this.totalVenta=tvVentasFactura.nTotalVenta;
+      
+       /*Si el tipo de pago es a crédito o el numero de formas de pago es mayor a 1 se realiza la factura por cobrar*/
+      if( this.tvVentasFactura.nTipoPago==1 || this.ListaTrVentaCobro.length>1 || this.efectivoValida ){     
+        this.tvVentasFactura.formaPago=22;
+        this.tvVentasFactura.tcFormapago.nId=22;
+        this.tvVentasFactura.tcFormapago.sClave='99';
+        this.tvVentasFactura.tcFormapago.sDescripcion='Por definir';
+        this.tvVentasFactura.tcFormapago.nEstatus=1;
+  
+      }
 
+    })
+    
 
   }
 

@@ -24,5 +24,11 @@ tcEstatusVenta?:TcEstatusVenta;
 tcFormapago?:TcFormaPago;
 twCaja?:TwCaja;
 tcTipoVenta?: TcTipoVenta;
+nIdDatoFactura?:number;
+sNombreEmisor?:string;
+sRfcEmisor?:string;
+
+
+
     
 }
