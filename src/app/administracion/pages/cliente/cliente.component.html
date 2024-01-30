@@ -11,7 +11,7 @@
 
             </p-toolbar>
             <p-table #dt [value]="listaClientes" [rows]="10" [paginator]="true"
-                [globalFilterFields]="['sRfc','sRazonSocial','nCp','tcRegimenFiscal.sDescripcion','n_limiteCredito']" [(selection)]="selectedProducts"
+                [globalFilterFields]="['sRfc','sRazonSocial','tcCp.sCp','tcRegimenFiscal.sDescripcion','n_limiteCredito']" [(selection)]="selectedProducts"
                 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
                 [showCurrentPageReport]="true">
@@ -78,7 +78,7 @@
                         </td>
                         <td><span class="p-column-title">Télefono</span> {{cliente.sTelefono}}
                         </td>
-                        <td><span class="p-column-title">CP</span> {{cliente.nCp}}
+                        <td><span class="p-column-title">CP</span> {{cliente.tcCp.sCp}}
                         </td>
                         <td><span class="p-column-title">Regimen Fiscal</span>  {{cliente.tcRegimenFiscal!=null?cliente.tcRegimenFiscal.sDescripcion:''}}
                         </td>

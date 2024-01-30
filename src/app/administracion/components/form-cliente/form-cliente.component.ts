@@ -8,6 +8,9 @@ import { TokenService } from 'src/app/shared/service/token.service';
 import { ClienteService } from '../../service/cliente.service';
 import { TcRegimenFiscal } from 'src/app/productos/model/TcRegimenFiscal';
 import { Clientes } from '../../interfaces/clientes';
+import { TcCp } from 'src/app/productos/model/TcCp';
+import { validators } from 'src/app/shared/validators/validators';
+import { DatosFacturaDto } from '../../../productos/model/DatosFacturaDto';
 
 @Component({
   selector: 'app-form-cliente',
@@ -26,6 +29,10 @@ export class FormClienteComponent implements OnInit {
   submitted: boolean;
   credito: boolean;
   cliente: Clientes;
+  tcCp: TcCp;
+  cpExiste: boolean;
+  banGuardar : boolean;
+  listaDatosFactura: DatosFacturaDto[];
   constructor(
     private catalogoService: CatalogoService,
     private productosService: ProductoService,
@@ -39,22 +46,28 @@ export class FormClienteComponent implements OnInit {
     this.crearFormulario();
     this.listaRegimenFiscal = [];
     this.limpiarFormulario();
+    this.cpExiste = false;
+    this.banGuardar = false;   
   }
 
   ngOnInit(): void {
-    this.limpiarFormulario();
+    /*Se obtiene el catalogo de regimen fiscal para el formulario*/
     this.obtenerRegimenFiscal();
+    /*Se crea el formulario*/
     this.crearFormulario();
-
-
-    if (this.objCliente !== undefined && this.objCliente !== null) {
+    /*Se limpia el formulario*/
+    this.limpiarFormulario();
+    /*Se consulta el catalogo de Razon social */
+    this.obtenerCatalogoRazonSocial();
+    /*Se determina si en una actualización o un registro nuevo de cliente*/
+    
+    if (this.objCliente.nId == undefined) {
+      //console.log('Es un nuevo registro');
+    }
+    else {
+      //console.log('Voy a editar el archivo')
       this.editar();
     }
-
-
-
-
-
   }
   crearFormulario() {
     this.formulario = this.fb.group({
@@ -64,16 +77,17 @@ export class FormClienteComponent implements OnInit {
       sDireccion: ['', [Validators.required]],
       sTelefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       sCorreo: ['', [Validators.required, Validators.email]],
-      nCp: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(5), Validators.pattern('^[0-9]{5}')]],
+      nCp: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(5), Validators.pattern('^[0-9]{5}')]],
       sClave: ['', []],
       nIdRegimenFiscal: ['', [Validators.required]],
-
+      nDatosValidados: ['', []],
+      nIdDatoFactura: ['', [Validators.required]],
     })
 
   }
   // Validación de campos Guardar Cliente
   get validaRfc() {
-    return this.formulario.get('sRfc').invalid;
+    return this.formulario.get('sRfc').invalid && this.formulario.get('sRazonSocial').touched;
   }
   get validaRS() {
     return this.formulario.get('sRazonSocial').invalid && this.formulario.get('sRazonSocial').touched;
@@ -88,18 +102,19 @@ export class FormClienteComponent implements OnInit {
     return this.formulario.get('sCorreo').invalid && this.formulario.get('sCorreo').touched;
   }
   get validaCp() {
-    return this.formulario.get('nCp').invalid && this.formulario.get('nCp').touched;
+    return (this.formulario.get('nCp').invalid && this.formulario.get('nCp').touched) || this.cpExiste;
   }
   get validaRegimenfiscal() {
     return this.formulario.get('nIdRegimenFiscal').invalid && this.formulario.get('nIdRegimenFiscal').touched;
   }
-
-  openNew(productDialog: boolean) {
-    this.cliente = {};
-    this.submitted = false;
-    this.clienteDialog = true;
-    this.limpiarFormulario();
+  get validaValidados() {
+    return this.formulario.get('nDatosValidados').invalid && this.formulario.get('nDatosValidados').touched;
   }
+  get validaDatoFactura() {
+    return this.formulario.get('nIdDatoFactura').invalid && this.formulario.get('nIdDatoFactura').touched;
+  }
+
+
   limpiarFormulario() {
     this.fclientes.nId.setValue("");
     this.fclientes.sCorreo.setValue("");
@@ -110,11 +125,38 @@ export class FormClienteComponent implements OnInit {
     this.fclientes.sClave.setValue("");
     this.fclientes.nCp.setValue("");
     this.fclientes.nIdRegimenFiscal.setValue("");
+    this.fclientes.nDatosValidados.setValue(false);   
+    this.tcCp = null;
+  }
+
+  consultaCp() {
+    this.tcCp = new TcCp();
+    this.catalogoService.obtenerCpLike(this.fclientes.nCp.value).subscribe(data => {
+      this.tcCp = data;
+
+      if (this.tcCp != undefined || this.tcCp != null) {
+        console.log('encontre los datos del cogigo postal')
+        this.cpExiste = false;
+        this.banGuardar=true;
+      }
+      else {
+        console.log('No encontre los datos del codigo postal')
+        this.formulario.setErrors({ 'formularioInvalido': true });
+        this.cpExiste = true;
+        this.banGuardar=false;
+      }
+    })
   }
 
   obtenerRegimenFiscal() {
     this.clienteService.obtenerRegimenFiscal().subscribe(data => {
       this.listaRegimenFiscal = data;
+    })
+  }
+
+  obtenerCatalogoRazonSocial() {
+    this.clienteService.obtenerCatalogoRazonSocial().subscribe(data => {
+      this.listaDatosFactura = data;
     })
   }
 
@@ -127,11 +169,19 @@ export class FormClienteComponent implements OnInit {
     this.fclientes.sRazonSocial.setValue(this.objCliente.sRazonSocial);
     this.fclientes.sRfc.setValue(this.objCliente.sRfc);
     this.fclientes.sClave.setValue(this.objCliente.sClave);
-    this.fclientes.nCp.setValue(this.objCliente.nCp);
-    if (this.objCliente.tcRegimenFiscal !== null && this.objCliente.tcRegimenFiscal !== undefined ) {
-      //console.log('entre');
+    this.fclientes.nCp.setValue(this.objCliente.tcCp.sCp);
+    this.fclientes.nDatosValidados.setValue(this.objCliente.nDatosValidados);
+    console.log(this.objCliente.nDatosValidados);
+
+
+    if (this.objCliente.tcRegimenFiscal !== null && this.objCliente.tcRegimenFiscal !== undefined) {
+      this.consultaCp();
       this.fclientes.nIdRegimenFiscal.setValue(this.objCliente.tcRegimenFiscal.nId);
+      this.fclientes.nIdDatoFactura.setValue(this.objCliente.nIdDatoFactura);
+     
     }
+
+    
 
   }
 
@@ -149,7 +199,7 @@ export class FormClienteComponent implements OnInit {
 
   guardar() {
 
-    if (this.formulario.invalid) {
+    if (this.formulario.invalid || this.cpExiste) {
       return Object.values(this.formulario.controls).forEach(control => {
         if (control instanceof FormGroup) {
           // tslint:disable-next-line: no-shadowed-variable
@@ -165,9 +215,12 @@ export class FormClienteComponent implements OnInit {
 
       if (this.cliente.nId) {
         this.cliente.nEstatus = 1;
-        this.cliente.nDescuento=this.objCliente.nDescuento;
-        this.cliente.n_limiteCredito=this.objCliente.n_limiteCredito
-        this.cliente.nIdDatoFactura=this.objCliente.nIdDatoFactura
+        this.cliente.nDescuento = this.objCliente.nDescuento;
+        this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito        
+        this.cliente.nCp = this.tcCp.nId;
+        console.log('esto es lo que voy a actualizar', this.cliente);
+        console.log('esto es lo que voy a actualizar', this.fclientes);
+
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
@@ -178,9 +231,9 @@ export class FormClienteComponent implements OnInit {
       else {
         this.cliente.sClave = this.crearId();
         this.cliente.nEstatus = 1;
-        this.cliente.nDescuento=0;
-        this.cliente.n_limiteCredito=this.objCliente.n_limiteCredito
-        this.cliente.nIdDatoFactura=1;
+        this.cliente.nDescuento = 0;
+        this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito       
+        this.cliente.nCp = this.tcCp.nId;
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes.push(respuesta);
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente guardado', life: 10000 });

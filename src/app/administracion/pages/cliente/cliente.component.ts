@@ -65,9 +65,11 @@ export class ClienteComponent implements OnInit {
   obtenerClientes() {
     this.clienteService.getClientes().subscribe(clientes => {
       this.listaClientes = clientes;
+
+      console.log('sali de consultar todos los clientes')
     
     });
-    ;
+    
   }
 
   openNew() {
@@ -114,10 +116,13 @@ export class ClienteComponent implements OnInit {
 
   hideDialog(event: boolean) {
 
+    this.listaClientes=[];
+    this.obtenerClientes();
     this.clienteDialog = false;
     this.credito = false;
     this.submitted = false;
-    this.obtenerClientes();
+    
+    
   }
 
 
@@ -138,7 +143,9 @@ export class ClienteComponent implements OnInit {
             this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
             this.credito = false;
           })
-          this.listaClientes = [...this.listaClientes];
+
+          this.listaClientes=[];
+          this.obtenerClientes();
         }
         else{
           this.messageService.add({ severity: 'info', summary: 'El limite de crédito no puede ser menor al adeudo actual que es de:'+this.saldoGeneralCliente.nSaldoTotal, detail: 'Cliente no actualizado', life: 10000 });
@@ -157,7 +164,8 @@ export class ClienteComponent implements OnInit {
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
           this.credito = false;
         })
-        this.listaClientes = [...this.listaClientes];
+        this.listaClientes=[];
+        this.obtenerClientes();
 
 
 
@@ -204,6 +212,8 @@ export class ClienteComponent implements OnInit {
 
 this.clienteService.guardaCliente(cliente).subscribe(data=>{
   this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
+  this.listaClientes=[];
+  this.obtenerClientes();
 
 })
 

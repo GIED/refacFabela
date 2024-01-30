@@ -15,6 +15,7 @@ import { TcUsoCfdi } from '../../productos/model/TcUsoCfdi';
 import { TcMarca } from 'src/app/productos/model/TcMarca';
 import { TwGasto } from 'src/app/productos/model/TwGasto';
 import { TcGasto } from 'src/app/productos/model/TcGasto';
+import { TcCp } from 'src/app/productos/model/TcCp';
 
 @Injectable({
   providedIn: 'root'
@@ -100,6 +101,11 @@ export class CatalogoService {
   borrarGasto(twGasto: TwGasto){
     let url = environment.servicios.apiRefacFabela + locator.borrarGasto;
     return this.http.post<TwGasto>(url,twGasto);
+  }
+
+  obtenerCpLike(valor:string) {
+    let url = environment.servicios.apiRefacFabela + locator.obtenerCpLike+'cp='+valor;
+    return this.http.get<TcCp>(url);
   }
 
 

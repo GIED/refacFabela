@@ -1,3 +1,4 @@
+import { TcCp } from 'src/app/productos/model/TcCp';
 import { TcRegimenFiscal } from '../../productos/model/TcRegimenFiscal';
 export interface Clientes {
    
@@ -16,4 +17,6 @@ export interface Clientes {
     tcRegimenFiscal?:TcRegimenFiscal;
     nDescuento?:number;
     nIdDatoFactura?:number;
+    nDatosValidados?:boolean;
+    tcCp?:TcCp;
 }

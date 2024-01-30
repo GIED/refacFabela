@@ -6,6 +6,7 @@ import { Clientes } from '../interfaces/clientes';
 import { SaldoGeneralCliente } from '../../ventasycotizaciones/model/TvSaldoGeneralCliente';
 import { TcCliente } from '../model/TcCliente';
 import { TcRegimenFiscal } from 'src/app/productos/model/TcRegimenFiscal';
+import { DatosFacturaDto } from 'src/app/productos/model/DatosFacturaDto';
 
 @Injectable({
   providedIn: 'root'
@@ -51,5 +52,9 @@ export class ClienteService {
   obtenerRegimenFiscal(){
     let url = environment.servicios.apiRefacFabela + locator.consultaRegimenFiscal;
     return this.http.get<TcRegimenFiscal[]>(url);
+  }
+  obtenerCatalogoRazonSocial(){
+    let url = environment.servicios.apiRefacFabela + locator.consultaCatalogoRazonSocial;
+    return this.http.get<DatosFacturaDto[]>(url);
   }
 }
