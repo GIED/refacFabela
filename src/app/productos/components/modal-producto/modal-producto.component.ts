@@ -314,6 +314,7 @@ export class ModalProductoComponent implements OnInit {
     this.listaNoParte=[];
     this.fProducto.nIdDescuento.setValue(productoEditar.nIdDescuento);
     this.fProducto.nIdMarca.setValue(productoEditar.nIdMarca);
+    this.calculaPrecioFinal();
 
 }
 
@@ -423,6 +424,8 @@ calculaPrecioFinal():void{
     this.tcProductoCalculo=resp;
     this.precioFinal=this.tcProductoCalculo.nPrecioConIva;
     this.precioFinal.toFixed(2);
+
+    console.log(this.tcProductoCalculo);
 
    });
   

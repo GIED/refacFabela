@@ -60,6 +60,10 @@
                             <p-sortIcon field="nDescuento"></p-sortIcon>
                           
                         </th>
+                        <th pSortableColumn="nDatosValidados">Estatus Validación
+                            <p-sortIcon field="nDatosValidados"></p-sortIcon>
+                          
+                        </th>
                        
                         <th></th>
                     </tr>
@@ -87,6 +91,9 @@
                         <td>
                             <p-checkbox [(ngModel)]="cliente.nDescuento" [binary]="true" inputId="cliente.nDescuento" (onChange)=guardarDescuento(cliente)></p-checkbox>
                         </td>
+
+                        <td *ngIf="cliente.nDatosValidados==true" style="color: green;">Datos validados</td>
+                        <td *ngIf="cliente.nDatosValidados==false" style="color: red;">Datos no validados</td>
                        
                         <td>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
