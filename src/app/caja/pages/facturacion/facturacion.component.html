@@ -64,7 +64,7 @@
                             <td *ngIf="venta.nTipoPago==0"><span class="p-column-title">Tipo Venta</span>CONTADO  </td>
                         <td>
                             <tr>
-                                <td *ngIf="venta.tcCliente.nDatosValidados==true ">
+                                <td *ngIf="venta.tcCliente.nDatosValidados==true && venta.idFactura==0 ">
                                     <button pButton pRipple icon="pi pi-file-o" pTooltip="Generar Factura" class="p-button-rounded p-button-warning" (click)="openDialog(venta)"></button>
                                 </td>
                                 <td *ngIf="venta.tcCliente.nDatosValidados==false">
