@@ -147,6 +147,7 @@ static consultaCotizacionesBusqueda='/consultaCotizacionesLike?';
 static consultaCotizacionClienteProducto='/consultaCotizacionClienteProducto?';
 static consultaCotizacionId='/consultaCotizacionId?';
 static consultaCotizacionIdCotizacion='/consultaCotizacionIdCotizacion?';
+static consultaCotizacionesIdClienteVigente='/consultaCotizacionesClienteVigente?';
 
 static obtenerVentaIdcotizacon='/obtenerVentaIdCotizacion?';
 static generarCotizacionPdf='/getCotizacion?';

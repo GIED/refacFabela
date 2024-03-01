@@ -80,6 +80,8 @@ export class VentasComponent implements OnInit {
   nIdProductoConsulta:number;
   mostrarHistoriaStockProducto:boolean=false;
   productoDescuentoDto:ProductoDescuentoDto;
+  regreso:boolean;
+  mostrarCotizacionesVigentes:boolean;
 
   constructor(
     private clienteService:ClienteService,
@@ -99,6 +101,7 @@ export class VentasComponent implements OnInit {
       this.maquinaCliente=new TwMaquinaCliente;
       this.clienteDialog=false;
       this.objCliente=undefined;
+      this.regreso=false;
     }
 
   ngOnInit(): void {
@@ -147,6 +150,60 @@ export class VentasComponent implements OnInit {
     this.nIdProductoConsulta=nIdProducto;
 
 this.mostrarProductosCotizacionCliente=true;
+
+
+  }
+
+  abrirCotizaciones(){
+    if(this.clienteSeleccionado!=null){
+    this.mostrarCotizacionesVigentes=true;
+    }
+    else{
+
+      this.messageService.add({severity: 'warn', summary: 'Error', detail: 'Debe elegir un cliente', life: 3000});
+
+
+    }
+  }
+
+  cargarListaCompra(nIdCotizacion:number){
+
+    this.mostrarCotizacionesVigentes=false;
+
+    console.log('Esta es la cotización a modificar', nIdCotizacion );
+
+
+  this.ventasCotizacionService.obtenerCotizacionProducto(nIdCotizacion).subscribe(data=>{
+
+    console.log('Estos son los productos de la venta', data);
+
+   for (let index = 0; index < data.length; index++) {
+    let productoEnLista:TvStockProducto=new TvStockProducto();
+    productoEnLista.nIdProducto=data[index].nIdProducto;
+    productoEnLista.tcProducto=data[index].tcProducto;
+    productoEnLista.tcProducto.nPrecioConIva=data[index].nTotalUnitario;
+
+    productoEnLista.tcProducto.nPrecioSinIva=data[index].nPrecioUnitario;
+    console.log(productoEnLista.tcProducto.nPrecioConIva);
+    productoEnLista.tcProducto.nPrecio=data[index].nPrecioUnitario;
+    console.log(productoEnLista.tcProducto.nPrecio);
+    productoEnLista.tcProducto.nPrecioIva=data[index].nIvaPartida;
+    console.log(productoEnLista.tcProducto.nPrecioIva);
+    productoEnLista.tcProducto.nPrecioPeso=data[index].nPrecioUnitario;
+    console.log(productoEnLista.tcProducto.nPrecioPeso);
+    productoEnLista.nCantidad=data[index].nCantidad;    
+    this.listaProductos.push(productoEnLista);
+    this.total =+data[index].nTotalPartida;
+   }
+
+  
+
+    
+
+    
+
+
+  })
 
 
   }
@@ -307,6 +364,7 @@ valorSeleccionadoProducto(){
     this.productosFiltrados.push(productoStock); 
     this.mostrarSugerenciasProducto=false;
     this.productoCtrl.setValue('');
+    this.regreso=false;
   });
 }
 
@@ -364,6 +422,8 @@ this.productoDescuentoDto.tcCliente=this.clienteSeleccionado;
      this.productosFiltrados[index].tcProducto.sProducto=this.productoNuevoPrecio.sProducto;
     
   }
+
+  this.regreso=true;
 
   
  })

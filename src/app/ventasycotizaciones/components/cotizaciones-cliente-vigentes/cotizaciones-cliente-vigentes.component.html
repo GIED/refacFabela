@@ -1,0 +1,145 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            
+            <p-table #dt [value]="listaCotizacionesVigentes" [rows]="5" [paginator]="true" [globalFilterFields]="[
+          'nId',
+          'tcCliente.sRfc',
+          'tcCliente.sRazonSocial',
+          'nTotalCotizacion',
+          'dFecha'
+        ]" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="
+              p-d-flex p-flex-column p-flex-md-row p-jc-md-between
+              table-header
+            ">
+                        <h5 class="p-m-0">Cotizaciones</h5>
+                        <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar en toda la tabla"
+              />
+            </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="sFolioCotizacion">
+                            Folio Cotización
+                            <p-sortIcon field="sFolioCotizacion"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcCliente.sRfc">
+                            RFC
+                            <p-sortIcon field="tcCliente.sRfc"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcCliente.sRazonSocial">
+                            Razón Social
+                            <p-sortIcon field="tcCliente.sRazonSocial"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="name">Teléfono</th>
+                        <th pSortableColumn="dFecha">
+                            Fecha
+                            <p-sortIcon field="dFecha"></p-sortIcon>
+                        </th>
+
+                        <th pSortableColumn="nTotalCotizacion">
+                            TotalCotización
+                            <p-sortIcon field="nTotalCotizacion"></p-sortIcon>
+                        </th>
+                
+                        <th>Acción/Estatus</th>
+                        <th>Cotización</th>
+                     
+
+
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-cotizacion>
+                    <tr>
+                        <td>
+                            <span class="p-column-title">Folio Cotización</span> <strong (click)="cotizacionProducto(cotizacion.nId)">{{ cotizacion.nId }}</strong>
+                        </td>
+                        <td>
+                            <span class="p-column-title">RFC</span> {{ cotizacion.tcCliente.sRfc }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Razón Social</span> {{ cotizacion.tcCliente.sRazonSocial }}
+                        </td>
+
+                        <td>
+                            <span class="p-column-title">Teléfono</span> {{ cotizacion.tcCliente.sTelefono }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Fecha</span> {{ cotizacion.dFecha | date }}
+                        </td>
+
+                        <td>
+                            <span class="p-column-title">Total Cotización</span> {{ cotizacion.nTotalCotizacion | number }}
+                        </td>
+                       
+                      
+
+                        <td >
+
+                            <button  pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2" (click)="actualizaProducto(cotizacion.nId)"></button>
+                            
+
+                        </td>
+
+                     
+                        <td> <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                            (click)="generarCotizacionPdf(cotizacion)"></button></td>
+                       
+
+
+
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{ listaCotizacionesVigentes ? listaCotizacionesVigentes.length : 0 }} Registros.
+                    </div>
+                </ng-template>
+            </p-table>
+
+            <!--  <p-dialog [(visible)]="credito" [style]="{width: '600px'}" header="Línea de crédito " [modal]="true"
+            styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="p-field">
+                    <label for="name">Monto del crédito</label>
+                    <p-inputNumber type="number" pInputText id="name" name="n_limiteCredito"
+                        [(ngModel)]="cliente.n_limiteCredito"></p-inputNumber>
+                    <small class="p-invalid" *ngIf="submitted && !product.name">Monto requerido.</small>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                    (click)="hideDialog()"></button>
+                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+                    (click)="guardarLineaCredito()"></button>
+            </ng-template>
+        </p-dialog>-->
+
+            <p-confirmDialog [style]="{ width: '600px' }"></p-confirmDialog>
+
+
+
+        </div>
+
+        <p-dialog [(visible)]="mostrarCotizacionProducto" header="Lista Cotizacion Productos" [style]="{width: '700px'}" [closable]="true" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <div class="card widget-tasks">
+                    <app-cotizacion-producto [nIdCotizacion]="nIdCotizacion" >            </app-cotizacion-producto>
+                </div> 
+            </ng-template>
+            <ng-template pTemplate="footer">
+    
+            </ng-template>
+        </p-dialog>
+    </div>

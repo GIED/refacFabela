@@ -25,6 +25,7 @@ import { FormMaquinaClienteComponent } from './components/form-maquina-cliente/f
 import { AdministracionModule } from '../administracion/administracion.module';
 import { CotizacionClienteProductoComponent } from './components/cotizacion-cliente-producto/cotizacion-cliente-producto.component';
 import { CotizacionProductoComponent } from './components/cotizacion-producto/cotizacion-producto.component';
+import { CotizacionesClienteVigentesComponent } from './components/cotizaciones-cliente-vigentes/cotizaciones-cliente-vigentes.component';
 
 
 
@@ -32,7 +33,7 @@ import { CotizacionProductoComponent } from './components/cotizacion-producto/co
 @NgModule({
   declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,
 
-    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, FormCompraInternetComponent, PagoVentaInternetComponent, FormCargaComprobanteComponent, DescuentoVentaComponent, MaquinaClienteComponent, FormMaquinaClienteComponent, CotizacionClienteProductoComponent, CotizacionProductoComponent],
+    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, FormCompraInternetComponent, PagoVentaInternetComponent, FormCargaComprobanteComponent, DescuentoVentaComponent, MaquinaClienteComponent, FormMaquinaClienteComponent, CotizacionClienteProductoComponent, CotizacionProductoComponent, CotizacionesClienteVigentesComponent],
 
   imports: [
     VentasycotizacionesRoutingModule,

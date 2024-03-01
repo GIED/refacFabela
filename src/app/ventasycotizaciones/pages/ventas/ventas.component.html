@@ -22,6 +22,7 @@
                         
                         <br>                           
                                 <button pButton pRipple type="button" icon="pi pi-user" class="p-button-rounded p-button-info p-button-outlined" (click)="openNew()"></button>
+                                <button   pButton pRipple type="button" icon="pi pi-search" class="p-button-rounded p-button-info p-button-outlined" (click)="abrirCotizaciones()"></button>
                                      
                 </div>                              
                         <p-dialog [(visible)]="clienteDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true"  styleClass="p-fluid">             
@@ -130,7 +131,7 @@
                                                 </p-inputNumber>
                                             </td>
                                             <td>
-                                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
+                                                <button *ngIf="regreso" pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
                                             </td>
                                         </tr>
                                     </ng-template>
@@ -355,6 +356,17 @@
         <ng-template pTemplate="content">
             <div class="card widget-tasks">
                 <app-cotizacion-cliente-producto [nICliente]="clienteSeleccionado.nId"  [nIProducto]="nIdProductoConsulta" >            </app-cotizacion-cliente-producto>
+            </div> 
+        </ng-template>
+        <ng-template pTemplate="footer">
+
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog  [(visible)]="mostrarCotizacionesVigentes" header="Lista Cotizaciones Vigentes" [style]="{width: '90%'}" [closable]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="card widget-tasks" >
+                <app-cotizaciones-cliente-vigentes [nICliente]="clienteSeleccionado.nId" (cotizacionModifica)="cargarListaCompra($event)" >            </app-cotizaciones-cliente-vigentes>
             </div> 
         </ng-template>
         <ng-template pTemplate="footer">
