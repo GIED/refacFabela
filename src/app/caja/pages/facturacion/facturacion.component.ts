@@ -12,6 +12,7 @@ import { TcCliente } from '../../../administracion/model/TcCliente';
 import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TrVentaCobro } from '../../../productos/model/TrVentaCobro';
+import { SubirFacturaDto } from '../../../productos/model/SubirFacturaDto';
 
 @Component({
   selector: 'app-facturacion',
@@ -35,6 +36,11 @@ export class FacturacionComponent implements OnInit {
     ListaTrVentaCobro: TrVentaCobro[];
     nuevaFormaPago:string;
     efectivoValida:boolean;
+    subirFacturaDto:SubirFacturaDto;
+    mostrarFormularioFactura:boolean;
+    formData: FormData = new FormData();
+    venta:string;
+    uuid:string;
     
 
   constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService, private ventasService: VentasService) {
@@ -49,6 +55,7 @@ export class FacturacionComponent implements OnInit {
         this.creditosRestantesJemkal=0;
         this.nuevaFormaPago='';
         this.efectivoValida=false;
+        this.subirFacturaDto=new SubirFacturaDto();
      }
 
   ngOnInit(){
@@ -57,6 +64,53 @@ export class FacturacionComponent implements OnInit {
    this.consultaCreditos();
 
 
+    
+  }
+
+  onSubmit(){
+   this.formData.append('venta',this.venta);
+   this.formData.append('uuid',this.uuid);
+
+   console.log(this.venta);
+   
+   console.log(this.uuid);
+   
+  
+    this.facturaService.subirDocumento(this.formData).subscribe(data=>{
+      
+      this.formData= new FormData();
+      this.subirFacturaDto=data;
+      console.log(this.subirFacturaDto);
+
+    });
+   
+
+
+  }
+
+  mostrarformularioFactura(venta:number){
+    this.mostrarFormularioFactura=true;
+    this.venta=venta.toString();
+  }
+
+  onFileChange(event: any) {
+    const fileList: FileList = event.target.files;
+    if (fileList.length > 0) {
+      const file: File = fileList[0];
+      this.formData.append('file', file);
+    }
+  }
+
+  onFileChangeXml(event: any) {
+    const fileList: FileList = event.target.files;
+    if (fileList.length > 0) {
+      const fileXml: File = fileList[0];
+      this.formData.append('fileXml', fileXml);
+    }
+  }
+
+
+  onFileSelected(event: any ): void {
     
   }
 

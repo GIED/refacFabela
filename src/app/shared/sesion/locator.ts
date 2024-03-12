@@ -134,6 +134,7 @@ static generarSaldoFavorPdf='/getSaldoFavor?';
 static generarInventarioPdf='/getReporteInventario?';
 static generarVentaAlmacenPdf='/getVentaAlmacen?'
 static descargarDocuemento='/facturacion/getDocumento?';
+static uploadDocuemento='/facturacion/upload?';
 static generarReporteCajaPdf='/getReporteCaja?';
 static generarAbonoVentaPdf='/getAbonoVentaId?';
 static generarHistorialAbonoVentaPdf='/getAbonoVentaIdCliente?';

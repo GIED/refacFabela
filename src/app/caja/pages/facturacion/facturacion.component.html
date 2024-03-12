@@ -67,6 +67,13 @@
                                 <td *ngIf="venta.tcCliente.nDatosValidados==true && venta.idFactura==0 ">
                                     <button pButton pRipple icon="pi pi-file-o" pTooltip="Generar Factura" class="p-button-rounded p-button-warning" (click)="openDialog(venta)"></button>
                                 </td>
+
+                                <td *ngIf="venta.tcCliente.nDatosValidados==true && venta.idFactura==0 ">
+                                    <button pButton pRipple icon="pi pi-paperclip" pTooltip="Cargar Factura" class="p-button-rounded p-button-ssucces" (click)="mostrarformularioFactura(venta.nId)"></button>
+                                </td>
+
+
+                                
                                 <td *ngIf="venta.tcCliente.nDatosValidados==false">
                                    <p class="p-text-center" style="color: red;">Sin validar datos de facturación</p>
                                 </td>
@@ -80,6 +87,7 @@
                                 </td>
                             </tr>
                         </td>
+                       
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
@@ -149,6 +157,9 @@
                                     <label for="float-input"><strong> Nombre emisor </strong> {{tvVentasFactura.sNombreEmisor}}</label>
                                 </span>
                             </div>
+
+                            <input type="file" (change)="onFileSelected($event)">
+                           
                         </div>
                     </p-card>
                 </div>
@@ -172,5 +183,36 @@
         <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-text" (click)="generarFactura()"></button>
       <!--  <button pButton pRipple label="Complemento" icon="pi pi-check" class="p-button-text" (click)="generarComplemento()"></button>-->
     </ng-template>
+</p-dialog>
+
+
+<p-dialog  [(visible)]="mostrarFormularioFactura" header="Registro de factura" [style]="{width: '40%'}" [closable]="true" styleClass="p-fluid">
+    
+
+    <form (ngSubmit)="onSubmit()">
+
+       
+      <div>
+          <label for="nIdVenta">No. Venta:</label>
+          <input type="text" pInputText id="venta" name="venta" [(ngModel)]="venta" disabled="false">
+        </div>
+        <div>
+          <label for="tipoDoc">UUID factura</label>
+          <input type="text" pInputText id="uuid" name="uuid" [(ngModel)]="uuid">
+        </div>
+        <div>
+          <label for="file">Adjuntar pdf factura</label>
+          <input type="file" pInputText id="file" name="file" (change)="onFileChange($event)">
+        </div>
+
+        <div>
+            <label for="file">Adjuntar xml factura</label>
+            <input type="file" pInputText id="filexml" name="filexml" (change)="onFileChangeXml($event)">
+          </div>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" style="background: green; color:white; margin-top: 20px;"  type="submit"></button>
+    </form>
+
+
+
 </p-dialog>
 

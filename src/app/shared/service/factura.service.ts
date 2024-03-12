@@ -47,4 +47,16 @@ export class FacturaService {
     );
 
   }
+
+  subirDocumento(formData: FormData) {
+   // const formData = new FormData();
+   // formData.append('file', file),
+   // formData.append('venta', venta),
+   // formData.append('uuio', uuid);
+
+
+    return this.http.post<any>(environment.servicios.apiRefacFabela + locator.uploadDocuemento , formData) ;
+  }
+
+  
 }
