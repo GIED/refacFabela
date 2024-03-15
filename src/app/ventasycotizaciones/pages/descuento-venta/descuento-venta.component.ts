@@ -9,6 +9,7 @@ import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
 import { TwVentasProducto } from '../../../productos/model/TwVentasProducto';
 import { CalculaPrecioDto } from 'src/app/productos/model/CalculaPrecioDto';
 
+
 @Component({
   selector: 'app-descuento-venta',
   templateUrl: './descuento-venta.component.html',
@@ -221,7 +222,7 @@ guardarDescuento() {
 
     //console.log(this.VentaDescuentoDto.descuento);
 
-    if(this.VentaDescuentoDto.nSaldoTotal>this.VentaDescuentoDto.descuento){
+    if(this.VentaDescuentoDto.nSaldoTotal>=this.VentaDescuentoDto.descuento){
     
     this.ventasService.guardarVentaDescuento(this.VentaDescuentoDto).subscribe(data=>{
 

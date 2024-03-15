@@ -41,6 +41,11 @@ export class FacturacionComponent implements OnInit {
     formData: FormData = new FormData();
     venta:string;
     uuid:string;
+    file: File | null = null;
+    fileXml: File | null = null;
+    pdf:boolean;
+    xml:boolean;
+
     
 
   constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService, private ventasService: VentasService) {
@@ -68,21 +73,34 @@ export class FacturacionComponent implements OnInit {
   }
 
   onSubmit(){
-   this.formData.append('venta',this.venta);
-   this.formData.append('uuid',this.uuid);
+    console.log(this.venta);
+    console.log(this.uuid);
 
-   console.log(this.venta);
-   
-   console.log(this.uuid);
-   
+   if(this.venta!=null && this.uuid!=null && this.pdf && this.xml ){
+    
+
+    this.formData.append('venta',this.venta);
+   this.formData.append('uuid',this.uuid);   
   
     this.facturaService.subirDocumento(this.formData).subscribe(data=>{
       
       this.formData= new FormData();
       this.subirFacturaDto=data;
       console.log(this.subirFacturaDto);
+      this.obtenerFacruras();
+      this.mostrarFormularioFactura=false;
 
     });
+
+   }
+
+   else {
+
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Se requieren todos los datos', life: 3000 });
+
+   }
+
+   
    
 
 
@@ -98,14 +116,17 @@ export class FacturacionComponent implements OnInit {
     if (fileList.length > 0) {
       const file: File = fileList[0];
       this.formData.append('file', file);
+      this.pdf=true;
     }
   }
 
   onFileChangeXml(event: any) {
+    
     const fileList: FileList = event.target.files;
     if (fileList.length > 0) {
       const fileXml: File = fileList[0];
       this.formData.append('fileXml', fileXml);
+      this.xml=true;
     }
   }
 

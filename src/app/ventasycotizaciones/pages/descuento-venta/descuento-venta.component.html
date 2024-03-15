@@ -58,13 +58,13 @@
                     </td>
                     <td><span class="p-column-title">Razón Social</span> {{venta.tcCliente.sRazonSocial}}
                     </td>
-                    <td><span class="p-column-title">Total Venta</span>{{venta.nTotalVenta | number}}
+                    <td><span class="p-column-title">Total Venta</span>{{venta.nTotalVenta | truncateDecimals2 | number}}
                     </td>
-                    <td><span class="p-column-title">Total Abonos</span>{{venta.nTotalAbono | number}}
+                    <td><span class="p-column-title">Total Abonos</span>{{venta.nTotalAbono | truncateDecimals2 | number}}
                     </td>
-                    <td><span class="p-column-title">Descuento</span>{{venta.descuento | number}}
+                    <td><span class="p-column-title">Descuento</span>{{venta.descuento | truncateDecimals2 | number}}
                     </td>
-                    <td><span class="p-column-title">Saldo Final</span><p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
+                    <td><span class="p-column-title">Saldo Final</span><p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal  | truncateDecimals2 | number}}</p-tag>
                     </td>
                    
                     <td><span class="p-column-title">Fecha Venta</span> {{venta.dFechaVenta | date}}
@@ -139,14 +139,16 @@
                                         </td>
                                         <td><span class="p-column-title"></span>{{venta.sMarca}}
                                         </td>
-                                        <td><span class="p-column-title"></span>{{venta.nUnitario}}
+                                        <td><span class="p-column-title"></span>{{venta.nUnitario | truncateDecimals2 | number}}
                                         </td>
-                                        <td><span class="p-column-title"></span> {{venta.nTotalUnitario | number}}
+                                        <td><span class="p-column-title"></span> {{venta.nTotalUnitario | truncateDecimals2 | number}}
                                         </td>                                    
-                                        <td><span class="p-column-title"></span> {{venta.nCantidad | number}}
+                                        <td><span class="p-column-title"></span> {{venta.nCantidad }} 
                                         </td>
-                                        <td><span class="p-column-title"></span> {{venta.nTotalPartida | number}}
+                                        <td><span class="p-column-title"></span> {{venta.nTotalPartida | truncateDecimals2 | number }}
+                                         
                                         </td>  
+                                      
                                         <td><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger p-mr-2"
                                             (click)="abrirAjustePrecio(venta)"></button>   </td>
                                                                        

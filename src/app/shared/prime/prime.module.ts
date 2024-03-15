@@ -86,6 +86,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { FormsModule } from '@angular/forms';
+import { PipesModule } from 'src/app/pipes/pipes/pipes.module';
 
 
 
@@ -180,7 +181,9 @@ FullCalendarModule.registerPlugins([
         TreeModule,
         TreeTableModule,
         VirtualScrollerModule,
-        FormsModule
+        FormsModule,
+        PipesModule
+        
      
         
      

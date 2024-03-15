@@ -27,6 +27,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 
 
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -36,7 +37,7 @@ import { DialogService } from 'primeng/dynamicdialog';
         AppTopBarComponent,
         AppFooterComponent,
         AppRightPanelComponent,
-        SpinnerComponent,
+        SpinnerComponent,     
      
       
         

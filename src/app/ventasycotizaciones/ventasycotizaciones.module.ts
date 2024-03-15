@@ -30,10 +30,12 @@ import { CotizacionesClienteVigentesComponent } from './components/cotizaciones-
 
 
 
+
+
 @NgModule({
   declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,
 
-    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, FormCompraInternetComponent, PagoVentaInternetComponent, FormCargaComprobanteComponent, DescuentoVentaComponent, MaquinaClienteComponent, FormMaquinaClienteComponent, CotizacionClienteProductoComponent, CotizacionProductoComponent, CotizacionesClienteVigentesComponent],
+    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, FormCompraInternetComponent, PagoVentaInternetComponent, FormCargaComprobanteComponent, DescuentoVentaComponent, MaquinaClienteComponent, FormMaquinaClienteComponent, CotizacionClienteProductoComponent, CotizacionProductoComponent, CotizacionesClienteVigentesComponent ],
 
   imports: [
     VentasycotizacionesRoutingModule,
@@ -41,7 +43,10 @@ import { CotizacionesClienteVigentesComponent } from './components/cotizaciones-
     FormsModule, 
     ProductosModule,
     ReactiveFormsModule,
-    AdministracionModule
+    AdministracionModule,
+    
+
+    
     
   ],
   exports:[VentaProductosDetalleComponent, DescuentoVentaComponent, ProductosAlternativosVentaComponent]
