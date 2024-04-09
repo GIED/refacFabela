@@ -64,7 +64,8 @@
                     </td>
                     <td><span class="p-column-title">Descuento</span>{{venta.descuento | truncateDecimals2 | number}}
                     </td>
-                    <td><span class="p-column-title">Saldo Final</span><p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal  | truncateDecimals2 | number}}</p-tag>
+                    <td><span class="p-column-title">Saldo Final</span><p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal 
+                     | truncateDecimals2 | number}}</p-tag>
                     </td>
                    
                     <td><span class="p-column-title">Fecha Venta</span> {{venta.dFechaVenta | date}}

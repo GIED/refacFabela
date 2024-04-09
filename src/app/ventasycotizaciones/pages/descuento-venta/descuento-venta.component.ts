@@ -223,6 +223,12 @@ guardarDescuento() {
     //console.log(this.VentaDescuentoDto.descuento);
 
     if(this.VentaDescuentoDto.nSaldoTotal>=this.VentaDescuentoDto.descuento){
+
+      if((this.VentaDescuentoDto.nSaldoTotal-this.VentaDescuentoDto.descuento)<0.02){
+
+        this.VentaDescuentoDto.descuento=this.VentaDescuentoDto.nSaldoTotal;
+
+      }
     
     this.ventasService.guardarVentaDescuento(this.VentaDescuentoDto).subscribe(data=>{
 
