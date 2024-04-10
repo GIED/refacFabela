@@ -6,7 +6,7 @@
     <div class="p-grid">
         <div class="p-field p-col-6">
             <label for="name">No. de parte</label>
-            <input type="text" pInputText name="sNoParte" formControlName="sNoParte" (input)="teclaPresionada()" [class.is-invalid]="validaNoParte" />
+            <input type="text" pInputText name="sNoParte" formControlName="sNoParte" (input)="teclaPresionada()" [class.is-invalid]="validaNoParte" oninput="this.value = this.value.toUpperCase()"  />
             <p-listbox *ngIf="mostrarSugerencias" [options]="listaNoParte" formControlName="sNoParte" optionLabel="sNoParte" (onClick)="valorSeleccionado()" optionValue="sNoParte"></p-listbox>
             <small class="p-error" *ngIf="validaNoParte">*Número de Parte requerido.</small>
         </div>
@@ -73,7 +73,7 @@
 
         <div class="p-field p-col-6">
             <label for="ganancia">Descuento</label>
-            <p-dropdown [options]="listaGanancia" formControlName="nIdDescuento" optionLabel="nId"  optionValue="nId" [class.is-invalid]="validaDescuento" placeholder="Seleccine un Descuento" [showClear]="true">
+            <p-dropdown [options]="listaGanancia" formControlName="nIdDescuento" optionLabel="nId"  optionValue="nId" [class.is-invalid]="validaDescuento" placeholder="Seleccine un Descuento" >
                 <ng-template let-ganancia2 pTemplate="item">
                     {{ganancia2.nId}}%
                 </ng-template>

@@ -114,6 +114,7 @@ export class TraspasoVentaACreditoComponent implements OnInit {
                             fin.setDate(fin.getDate() + 30);
                         this.twVenta.dFechaTerminoCredito=fin;
                         this.twVenta.nIdEstatusVenta=2;
+                        this.twVenta.nIdFormaPago=22;
     
                         this.ventasService.cambiarVentaACredito(this.twVenta).subscribe(resp =>{
                          // console.log('venta actualizada: ',resp);

@@ -285,6 +285,7 @@ export class ModalProductoComponent implements OnInit {
       this.tcProducto = this.formulario.value;
       this.tcProducto.nEstatus=1;
       this.tcProducto.nIdusuario=this.tokenService.getIdUser(); 
+      console.log(this.tcProducto);
       this.guardarProducto.emit(this.tcProducto);
       this.cerrarModal();
     }
