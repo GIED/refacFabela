@@ -17,6 +17,11 @@ export class TraspasoService {
     return this.http.post<any>(url,twProductoBodega);
   }
 
+  guardarMovimientoInterno2(twProductoBodega:TwProductoBodega){
+    let url = environment.servicios.apiRefacFabela + locator.movimientoInterno2;
+    return this.http.post<any>(url,twProductoBodega);
+  }
+
   guardarAjusteInventario(twAjusteInventario:TwAjusteInventario){
     let url = environment.servicios.apiRefacFabela + locator.guardarAjusteInventario;
     return this.http.post<any>(url,twAjusteInventario);

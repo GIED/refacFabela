@@ -168,6 +168,7 @@ static obtenerVentasAnoVendedor='/total_venta_ano_vendedor?';
 static obtenerVentasAnoMesVendedor='/total_venta_ano_mes_vendedor?';
 //traspasos
 static movimientoInterno='/movimientoInterno';
+static movimientoInterno2='/movimientoInterno2';
 static guardarAjusteInventario='/guardarAjusteInventario';
 static movimientoExterno='/movimientoExterno';
 

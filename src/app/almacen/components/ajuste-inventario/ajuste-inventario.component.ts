@@ -101,7 +101,7 @@ export class AjusteInventarioComponent implements OnInit {
     //console.log("Este el objeto que mandare a registrase",this.twAjusteInventario);
     this.traspasoService.guardarAjusteInventario(this.twAjusteInventario).subscribe(data=>{
 
-      this.traspasoService.guardarMovimientoInterno(this.castFormGrup()).subscribe(resp => {
+      this.traspasoService.guardarMovimientoInterno2(this.castFormGrup()).subscribe(resp => {
         this.ref.close(resp.twProductobodega);
       });
     })
