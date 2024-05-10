@@ -1,8 +1,7 @@
 <div class="p-grid p-fluid">
     <!--Campos de filtro-->
     <div class="p-col-12 ">
-        <div class="card">
-         
+        <div class="card">       
                
             <br>
                 <div class="p-field p-col-12 p-md-12">
@@ -16,15 +15,10 @@
         </div>
     </div>
 </div>
-
-
-<div class="p-grid">
-    
+<div class="p-grid">    
     <div class="p-col-12">
-        <div class="card">	
-  
-        <p-toast></p-toast>
-      
+        <div class="card">	  
+        <p-toast></p-toast>    
 
         <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
             [paginator]="true"
@@ -119,6 +113,8 @@
                             (click)="generarVentaPdf(venta)"></button>
                             <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green"
                             (click)="generarsSaldoFacorPdf(venta)"></button>
+                            <button *ngIf="mostrarAjustes" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-purple" style="background: purple;"
+                            (click)="editar(venta)"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -132,6 +128,14 @@
                 <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
             </ng-template>
         </p-dialog>
+
+        <p-dialog [(visible)]="mostrarEdicion" header="Edición de Venta" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <app-form-actualiza-venta  [nIdVenta]="nIdVenta" (cerrar)="hideDialogAlter2($event)" ></app-form-actualiza-venta>
+            </ng-template>
+           
+        </p-dialog>
+
         <p-toolbar styleClass="p-mb-4">
             <ng-template pTemplate="right">
                 <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"

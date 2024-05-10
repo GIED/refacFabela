@@ -70,6 +70,10 @@ export class CatalogoService {
     let url= environment.servicios.apiRefacFabela + locator.consultarCajaActiva;
     return this.http.get<TwCaja>(url);
   }
+  consultaCajaId(nIdCaja:number){
+    let url= environment.servicios.apiRefacFabela + locator.consultarCajaId+'nIdCaja='+nIdCaja;
+    return this.http.get<TwCaja>(url);
+  }
   obtenerCajas(){
     let url= environment.servicios.apiRefacFabela + locator.consultarCajas;
     return this.http.get<TwCaja[]>(url);

@@ -1,0 +1,51 @@
+<form [formGroup]="formGrp" autocomplete="off">
+   
+    <div class="p-grid">       
+        <div class="p-field p-col-12">
+            <h6>No. venta </h6> 
+            <input type="text" pInputText name="nId" formControlName="nId" [class.is-invalid]="validanId" />
+            
+        </div>
+
+        <div class="p-col-12">
+            <h6>Cliente </h6> 
+            <input type="text" pInputText name="cliente" formControlName="clienteCtrl" (input)="inputCliente()" />
+            <p-listbox *ngIf="mostrarSugerenciasCliente" [options]="listaCliente" formControlName="clienteSeleccionadoCtrl" optionLabel="sRazonSocial" (onClick)="valorSeleccionadoCliente()">
+                <ng-template let-cliente pTemplate="item">
+                    <div>
+                        <div>{{cliente.sRfc}}-{{cliente.sRazonSocial}}</div>
+                    </div>
+                </ng-template>
+            </p-listbox>
+        </div>
+       
+        <div style="margin-top: 20px;">
+        <h6>Id caja</h6> 
+        <p-inputNumber  pInputText name="cajaCtrl" formControlName="cajaCtrl"  [useGrouping]="false" max="5000"  ></p-inputNumber>
+        </div>
+
+
+ <div class="p-field p-col-12" style="margin-top: 20px;">
+                               
+            <p-checkbox formControlName="saldoCtrl" label="Saldo a favor" [binary]="true" inputId="binary" ></p-checkbox>           
+       
+       </div>
+        
+        
+    </div>
+</form>
+<div class="p-grid p-jc-end">
+    <div class="p-col-8">
+        <div class="box"></div>
+    </div>
+    <div class="p-col-2">
+        <div class="box">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" severity="danger" (click)="cerrarModal()"></button>
+        </div>
+    </div>
+    <div class="p-col-2">
+        <div class="box">
+            <button *ngIf="btn" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" severity="success" (click)="saveProduct()"></button>
+        </div>
+    </div>
+</div>

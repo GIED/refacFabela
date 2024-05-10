@@ -5,6 +5,7 @@ import { ProductService } from 'src/app/demo/service/productservice';
 import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
+import { TokenService } from '../../../shared/service/token.service';
 
 
 
@@ -27,11 +28,14 @@ export class ConsultaVentaComponent implements OnInit {
     mostrarProductos:boolean;
     buscar:string;
     myDate:Date;
-
+    mostrarEdicion:boolean;
     listaVentasDetalleCliente: TvVentasDetalle[];
     listaProductosVenta:VentaProductoDto;
+    nIdVenta:number;
+    IdUsuario:number;
+  mostrarAjustes:boolean
 
-  constructor(  private ventasService:VentasService,  private messageService: MessageService,   ) {
+  constructor(  private ventasService:VentasService,  private messageService: MessageService, private tokenService: TokenService   ) {
 
     this.cols = [
       { field: 'sFolioVenta', header: 'Folio' },
@@ -39,9 +43,10 @@ export class ConsultaVentaComponent implements OnInit {
       { field: 'tcCliente.sRazonSocial', header: 'Razón Social' },
       { field: 'nTotalVenta', header: 'Total Venta' },
       { field: 'dFechaVenta', header: 'Fecha de Venta' },
-      { field: 'tcUsuario.sNombreUsuario', header: 'Vendedor' },
-     
-  ]
+      { field: 'tcUsuario.sNombreUsuario', header: 'Vendedor' },     
+  ];
+  this.mostrarEdicion=false;
+
    }
 
   ngOnInit(){
@@ -65,7 +70,25 @@ export class ConsultaVentaComponent implements OnInit {
      }     
     
     }); 
+
+    this.IdUsuario=this.tokenService.getIdUser();
+
+    if(this.IdUsuario==19 || this.IdUsuario==23 || this.IdUsuario==29 || this.IdUsuario==8 || this.IdUsuario==27 || this.IdUsuario==26 || this.IdUsuario==37 || this.IdUsuario==22){
+
+      this.mostrarAjustes=true;
+
+    }
+    else{
+      this.mostrarAjustes=false;
+    }
+   
+  
+
+
+
   }
+
+  
 
   generarsSaldoFacorPdf(tvVentasDetalle:TvVentasDetalle){
 
@@ -92,6 +115,13 @@ export class ConsultaVentaComponent implements OnInit {
   }
  
 
+  editar(venta: TvVentasDetalle){
+
+    this.mostrarEdicion=true;
+    this.nIdVenta=venta.nId;
+
+  }
+
 detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
 
   this.mostrarProductos=true;
@@ -104,6 +134,34 @@ detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
 
 hideDialogAlter(){
   this.mostrarProductos=false;
+ 
+  
+}
+
+hideDialogAlter2(){
+  this.mostrarEdicion=false;
+
+  this.ventasService.obtenerVentasTop().subscribe(data=>{
+    this.listaVentasDetalleCliente=data; 
+    //console.log( this.listaVentasDetalleCliente);
+
+   
+    for (let index = 0; index <  this.listaVentasDetalleCliente.length; index++) {
+
+     let fecha = new Date(this.listaVentasDetalleCliente[index].dFechaVenta);
+
+     fecha.setDate(fecha.getDate() + 1);
+
+     this.listaVentasDetalleCliente[index].dFechaVenta=fecha;
+
+    // console.log(fecha);
+     
+ 
+     
+    }     
+   
+   }); 
+
 }
 
 consultar(){

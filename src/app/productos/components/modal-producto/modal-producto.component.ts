@@ -7,7 +7,7 @@ import { TcCategoriaGeneral } from '../../model/TcCategoriaGeneral';
 import { MessageService } from 'primeng/api';
 import { TcCategoria } from '../../model/TcCategoria';
 import { TcClavesat } from '../../model/TcClavesat';
-import { Subject } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ProductoService } from '../../../shared/service/producto.service';
 import { UsuarioService } from '../../../administracion/service/usuario.service';
@@ -69,16 +69,41 @@ export class ModalProductoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //console.log(this.producto);
-    if (this.producto != null) {
-      this.editProducto(this.producto);
+   
+ this.buscaPorNoParte();
+    const  observable1 = this.catalogoService.obtenerCategoriaGeneral();
+    const  observable2 = this.catalogoService.obtenerClaveSat();
+    const  observable3 =this.catalogoService.obtenerGanancia();   
+    const  observable4 =  this.catalogoService.obtenerMarcas();
+   
 
-    }
-    this.obtenerCategoriaGeneral();
-    this.obtenerClaveSat();
-    this.obtenerGanancia();
-    this.buscaPorNoParte();
-    this.obtenerMarcas();
+    forkJoin([observable1, observable2, observable3, observable4 ]).subscribe({
+      next: ([resultado1, resultado2, resultado3, resultado4]) => {
+        
+        this.listaCategoriaGeneral = resultado1;
+        this.listaClaveSat = resultado2;
+        this.listaGanancia=resultado3;
+        this.listaMarca=resultado4;
+
+            //console.log(this.producto);
+        if (this.producto != null) {
+          this.editProducto(this.producto);
+
+        }
+
+
+
+      },
+      error: error => {
+        console.error('Error al ejecutar los observables', error);
+      }
+    });
+
+
+
+
+    
+  
   }
   obtenerMarcas(){
     this.catalogoService.obtenerMarcas().subscribe(data=> {
@@ -118,13 +143,9 @@ export class ModalProductoComponent implements OnInit {
         this.fProducto.sProducto.setValue(this.producto.sProducto);
         this.fProducto.sMarca.setValue(this.producto.sMarca);
         this.fProducto.sIdBar.setValue(this.producto.sIdBar);
-       this.fProducto.nIdMarca.setValue(this.producto.nIdMarca);
-           
-      
+       this.fProducto.nIdMarca.setValue(this.producto.nIdMarca);        
         this.fProducto.sNoParte.enabled
         this.fProducto.sMarca.enabled
-
-
 
        }
     })
@@ -146,10 +167,8 @@ export class ModalProductoComponent implements OnInit {
           this.fProducto.sMarca.setValue(this.listaMarca[index].sMarca);
         }
              
-      }
-      
-  
-  
+      }    
+    
      }
   
    // console.log("Este el valor seleccionado",this.fProducto.nIdMarca.value);
@@ -284,8 +303,8 @@ export class ModalProductoComponent implements OnInit {
     }else{
       this.tcProducto = this.formulario.value;
       this.tcProducto.nEstatus=1;
-      this.tcProducto.nIdusuario=this.tokenService.getIdUser(); 
-      console.log(this.tcProducto);
+      this.tcProducto.nIdusuario=this.tokenService.getIdUser();       
+      console.log('Este el producto que voy a guardar',this.tcProducto);
       this.guardarProducto.emit(this.tcProducto);
       this.cerrarModal();
     }
@@ -293,6 +312,9 @@ export class ModalProductoComponent implements OnInit {
   }
 
   editProducto(productoEditar: TcProducto) {
+
+
+    
     this.productDialog = true;
     this.fProducto.nId.setValue(productoEditar.nId);
     this.fProducto.sNoParte.setValue(productoEditar.sNoParte);
@@ -335,11 +357,7 @@ limpiaFormulario() {
   this.fProducto.nIdclavesat.setValue("");
   this.fProducto.sIdBar.setValue("");
   this.fProducto.nIdDescuento.setValue("");
-  
-
-
-
-  
+   
 }
 
 teclaPresionada(){
@@ -350,8 +368,7 @@ teclaPresionada(){
     this.limpiaFormulario();
     this.mostrarSugerencias=false;
   }
-
-  
+ 
 }
 
 buscaPorNoParte(){
@@ -401,18 +418,14 @@ valorSeleccionado(){
 for (let index = 0; index < this.listaNoParte.length; index++) {
   const producto = this.listaNoParte[index];   
   if(producto.sNoParte==noparte){
+    console.log(producto);
     this.editProducto(producto);
     this.mostrarSugerencias=false;
   } 
   
 }
-
- 
  
 }
-
-
-
 
 calculaPrecioFinal():void{
  if (this.fProducto.nPrecio.valid  && this.fProducto.sMoneda.valid &&this.fProducto.nIdGanancia.valid) {
@@ -429,20 +442,9 @@ calculaPrecioFinal():void{
     console.log(this.tcProductoCalculo);
 
    });
-  
-
      
-
-
-
-
-  
-   
  } 
 }
-
-
-
   get fProducto(){
     return this.formulario.controls;
 }

@@ -52,10 +52,22 @@ export class ModalProductosAlternativosComponent implements OnInit {
 
   let twProductoAlternativo = new TwProductoAlternativo(null,1,null,this.nIdProducto,producto);
   //console.log(twProductoAlternativo);
+if(this.sProducto!==producto.sProducto){
 
-  this.productosService.guardaProductoAlternativo(twProductoAlternativo).subscribe(newProdAlt =>{
+ this.productosService.guardaProductoAlternativo(twProductoAlternativo).subscribe(newProdAlt =>{
     this.obtenerProductosAlternativos();
+    this.messageService.add({severity: 'success', summary: 'Se guardo el alternativo', detail: 'Se guado el número alternativo', life: 3000});
   });
+
+}
+
+else{
+
+  this.messageService.add({severity: 'error', summary: 'Se guardo el alternativo', detail: 'El producto no puede ser alternativo de si mismo', life: 3000});
+
+}
+
+ 
     
   }
 

@@ -38,6 +38,7 @@ static consultaGastosCaja='/gastosCaja?';
 static obtenerCatalogoGastos='/catalogoGasto';
 static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';
+static consultarCajaId='/consultarCajaId?';
 static consultarCajas='/consultaCajas';
 static abrirCajaNueva= '/nuevaCaja?';
 static consultarMarcas= '/catalogoMarca';

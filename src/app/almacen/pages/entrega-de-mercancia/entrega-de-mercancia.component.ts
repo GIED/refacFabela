@@ -8,6 +8,7 @@ import { TvVentasDetalle } from "src/app/productos/model/TvVentasDetalle";
 import { VentasService } from "src/app/shared/service/ventas.service";
 import { VentaProductoDto } from "src/app/ventasycotizaciones/model/dto/VentaProductoDto";
 import { TwVentasProductosTraer } from '../../../productos/model/TwVentasProductosTraer';
+import { TokenService } from "src/app/shared/service/token.service";
 
 @Component({
   selector: "app-entrega-de-mercancia",
@@ -33,11 +34,14 @@ export class EntregaDeMercanciaComponent implements OnInit {
   botonProductosTraer:boolean=false;
   mostrarDialogTraer:boolean=false;
   buscar:string;
+  IdUsuario:number;
+  mostrarAjustes:boolean
 
   constructor(
     private messageService: MessageService,
     private ventasService: VentasService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private tokenService: TokenService
   ) {
   this.listaVentasProductosTraer=[];
   this.botonProductosTraer=false;
@@ -46,6 +50,17 @@ export class EntregaDeMercanciaComponent implements OnInit {
 
   ngOnInit() {
     this.consultaVentas();
+
+    this.IdUsuario=this.tokenService.getIdUser();
+
+    if(this.IdUsuario==19 || this.IdUsuario==23  || this.IdUsuario==8 || this.IdUsuario==27 || this.IdUsuario==26 ){
+
+      this.mostrarAjustes=true;
+
+    }
+    else{
+      this.mostrarAjustes=false;
+    }
   }
 
   consultaVentas() {
