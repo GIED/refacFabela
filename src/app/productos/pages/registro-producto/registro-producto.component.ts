@@ -34,6 +34,7 @@ export class RegistroProductoComponent implements OnInit {
     nIdProducto: number;
     sProducto: string;
     traspaso:boolean=false;
+    sNoParte:string;
 
     constructor(
         private productosService: ProductoService,
@@ -86,9 +87,11 @@ export class RegistroProductoComponent implements OnInit {
     }
 
 
-    alternativosProduct(nId: number, sProducto: string) {
+    alternativosProduct(nId: number, sProducto: string, sNoParte:string) {
         this.nIdProducto = nId;
         this.sProducto = sProducto;
+        this.sNoParte=sNoParte;
+
         this.alternativosDialog = true;
     }
 

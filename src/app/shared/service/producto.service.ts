@@ -70,6 +70,10 @@ export class ProductoService {
     let url = environment.servicios.apiRefacFabela + locator.consultaNoParte+'No_Parte='+noParte;
     return this.http.get<TcProducto[]>(url);
   }
+  obtenerProductoNoParte(noParte: string){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerProductosNoParte+'No_Parte='+noParte;
+    return this.http.get<TcProducto>(url);
+  }
 
   guardaProducto(producto: TcProducto){
     let url = environment.servicios.apiRefacFabela + locator.guardarProducto;

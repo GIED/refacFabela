@@ -12,12 +12,12 @@
         </div>
         <div class="p-field p-col-6">
             <label for="name">Nombre del producto</label>
-            <input type="text" pInputText name="sProducto" formControlName="sProducto" [class.is-invalid]="validaProducto" />
+            <input type="text" pInputText name="sProducto" formControlName="sProducto" [class.is-invalid]="validaProducto" oninput="this.value = this.value.toUpperCase()"  />
             <small class="p-error" *ngIf="validaProducto">*nombre del producto requerido.</small>
         </div>
         <div class="p-field p-col-12">
             <label for="description">Descripcion</label>
-            <textarea id="description" pInputTextarea name="sDescripcion" formControlName="sDescripcion" rows="2" cols="20"></textarea>
+            <textarea id="description" pInputTextarea name="sDescripcion" formControlName="sDescripcion" rows="2" cols="20" oninput="this.value = this.value.toUpperCase()" ></textarea>
         </div>
         <div class="p-field p-col-6">
             <label for="marca">Código</label>

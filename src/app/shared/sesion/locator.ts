@@ -48,6 +48,7 @@ static obtenerProductos= '/obtenerProductos';
 static obtenerProductoId= '/obtenerProductoId?';
 static obtenerProductosLike= '/obtenerProductosLike?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
+static obtenerProductosNoParte= '/obtenerProductosNoParte?';
 static guardarProducto= '/guardarProducto';
 static guardarGasto= '/guardarGasto';
 static borrarGasto= '/borrarGasto';

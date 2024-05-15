@@ -51,6 +51,9 @@ export class ModalProductoComponent implements OnInit {
   ganancia:number;
   precioFinal: number;
   listaMarca:TcMarca[];
+  noparte:string;
+  edithBand:boolean=false;
+  consultaProducto:TcProducto;
 
   constructor(private fb: FormBuilder, 
               private catalogoService: CatalogoService, 
@@ -88,8 +91,14 @@ export class ModalProductoComponent implements OnInit {
             //console.log(this.producto);
         if (this.producto != null) {
           this.editProducto(this.producto);
+          this.fProducto.sNoParte.disable();
+          this.edithBand=true;
+         
 
         }
+        else{
+        this.edithBand=false;
+          }
 
 
 
@@ -303,10 +312,49 @@ export class ModalProductoComponent implements OnInit {
     }else{
       this.tcProducto = this.formulario.value;
       this.tcProducto.nEstatus=1;
-      this.tcProducto.nIdusuario=this.tokenService.getIdUser();       
-      console.log('Este el producto que voy a guardar',this.tcProducto);
-      this.guardarProducto.emit(this.tcProducto);
-      this.cerrarModal();
+      this.tcProducto.nIdusuario=this.tokenService.getIdUser();    
+
+      //console.log('Este el producto que voy a guardar',this.tcProducto);
+      
+      /*Si es edición de producto solo se guarda la información */
+      if(this.edithBand){
+
+        this.tcProducto.sNoParte=this.formulario.get('sNoParte').value;
+        this.guardarProducto.emit(this.tcProducto);
+        this.cerrarModal();
+
+
+      }
+      /*Si no es actualización de valida la exixtencia del producto */
+      else
+
+      {
+
+       /* Se consulta  que el producto no exista en la base de datos */
+        this.productosService.obtenerProductoNoParte(this.formulario.get('sNoParte').value).subscribe(data=>{        
+
+          /* Si no exixte el producto guarda la información */
+          if(data==null || data == undefined){
+            //console.log(data);
+            this.guardarProducto.emit(this.tcProducto);
+            this.cerrarModal();         
+          }
+          /* Se manda mensaje de que no se puede guardar el producto */
+          else{
+            this.messageService.add({severity: 'error', summary: 'Error', detail: 'El número ya existe, favor de verificar', life: 3000});
+          }
+        })
+
+
+
+
+      }
+
+
+
+
+
+      
     }
   
   }
@@ -388,6 +436,7 @@ buscaPorNoParte(){
           }else{
             this.fProducto.sNoParte.setValue(valor);
             this.mostrarSugerencias=false;
+            this.edithBand=false;
             this.messageService.add({severity: 'warn', summary: 'No se encontraron coincidencias', detail: 'el número de parte no existe en la base de datos.', life: 3000});
           }
         })
@@ -412,13 +461,15 @@ valorSeleccionado(){
 
 valorSeleccionado(){
   //console.log(this.fProducto.sNoParte.value);
-  let noparte =this.fProducto.sNoParte.value;  
+  this.noparte =this.fProducto.sNoParte.value;  
   //console.log('antes',this.listaNoParte);
+   this.fProducto.sNoParte.disable();
+   this.edithBand=true;
 
 for (let index = 0; index < this.listaNoParte.length; index++) {
   const producto = this.listaNoParte[index];   
-  if(producto.sNoParte==noparte){
-    console.log(producto);
+  if(producto.sNoParte==this.noparte){
+    //console.log(producto);
     this.editProducto(producto);
     this.mostrarSugerencias=false;
   } 
@@ -439,7 +490,7 @@ calculaPrecioFinal():void{
     this.precioFinal=this.tcProductoCalculo.nPrecioConIva;
     this.precioFinal.toFixed(2);
 
-    console.log(this.tcProductoCalculo);
+   // console.log(this.tcProductoCalculo);
 
    });
      

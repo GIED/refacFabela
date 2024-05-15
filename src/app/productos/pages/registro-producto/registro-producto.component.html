@@ -62,7 +62,7 @@
                             <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
                                 (click)="detalleProduct(product.nId)"></button>
                             <button pButton pRipple icon="pi pi-sitemap" class="p-button-rounded p-button-warning"
-                                (click)="alternativosProduct(product.nId, product.sProducto)"></button>
+                                (click)="alternativosProduct(product.nId, product.sProducto, product.sNoParte)"></button>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
                                 (click)="editarProducto(product)"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
@@ -138,7 +138,7 @@
         <p-dialog [(visible)]="alternativosDialog" [style]="{width: '800px'}" header="Productos Alternativos"
             [modal]="true" styleClass="p-fluid" [closable]="false">
             <ng-template pTemplate="content">
-                <app-modal-productos-alternativos [nIdProducto]="nIdProducto" [sProducto]="sProducto">
+                <app-modal-productos-alternativos [nIdProducto]="nIdProducto" [sNoParte]="sNoParte" [sProducto]="sProducto">
                 </app-modal-productos-alternativos>
             </ng-template>
             <ng-template pTemplate="footer">

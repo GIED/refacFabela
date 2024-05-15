@@ -13,6 +13,8 @@ import { ConfirmationService, ConfirmEventType, MessageService } from "primeng/a
 export class ModalProductosAlternativosComponent implements OnInit {
   @Input() nIdProducto: number;
   @Input() sProducto: string;
+  @Input() sNoParte: string;
+
 
   
 
@@ -52,7 +54,8 @@ export class ModalProductosAlternativosComponent implements OnInit {
 
   let twProductoAlternativo = new TwProductoAlternativo(null,1,null,this.nIdProducto,producto);
   //console.log(twProductoAlternativo);
-if(this.sProducto!==producto.sProducto){
+
+if(this.sNoParte!=producto.sNoParte){
 
  this.productosService.guardaProductoAlternativo(twProductoAlternativo).subscribe(newProdAlt =>{
     this.obtenerProductosAlternativos();
