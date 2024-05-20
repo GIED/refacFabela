@@ -78,6 +78,7 @@ export class ModalProductoComponent implements OnInit {
     const  observable2 = this.catalogoService.obtenerClaveSat();
     const  observable3 =this.catalogoService.obtenerGanancia();   
     const  observable4 =  this.catalogoService.obtenerMarcas();
+    const  observable5 = this.tokenService.getIdUser();
    
 
     forkJoin([observable1, observable2, observable3, observable4 ]).subscribe({
@@ -93,6 +94,15 @@ export class ModalProductoComponent implements OnInit {
           this.editProducto(this.producto);
           this.fProducto.sNoParte.disable();
           this.edithBand=true;
+          
+          if(observable5==18 || observable5==8 ){
+          
+          }
+          else{
+
+            this.fProducto.sMarca.disable();
+          this.fProducto.nIdMarca.disable();
+          }
          
 
         }
@@ -320,6 +330,10 @@ export class ModalProductoComponent implements OnInit {
       if(this.edithBand){
 
         this.tcProducto.sNoParte=this.formulario.get('sNoParte').value;
+        this.tcProducto.sMarca=this.formulario.get('sMarca').value;
+        this.tcProducto.nIdMarca=this.formulario.get('nIdMarca').value;
+
+
         this.guardarProducto.emit(this.tcProducto);
         this.cerrarModal();
 
@@ -437,6 +451,7 @@ buscaPorNoParte(){
             this.fProducto.sNoParte.setValue(valor);
             this.mostrarSugerencias=false;
             this.edithBand=false;
+            
             this.messageService.add({severity: 'warn', summary: 'No se encontraron coincidencias', detail: 'el número de parte no existe en la base de datos.', life: 3000});
           }
         })
@@ -464,6 +479,15 @@ valorSeleccionado(){
   this.noparte =this.fProducto.sNoParte.value;  
   //console.log('antes',this.listaNoParte);
    this.fProducto.sNoParte.disable();
+ 
+    if(this.tokenService.getIdUser()==18 || this.tokenService.getIdUser()==8  ){
+          
+    }
+    else{
+
+      this.fProducto.sMarca.disable();
+    this.fProducto.nIdMarca.disable();
+    }
    this.edithBand=true;
 
 for (let index = 0; index < this.listaNoParte.length; index++) {
