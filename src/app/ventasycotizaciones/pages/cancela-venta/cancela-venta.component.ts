@@ -33,6 +33,8 @@ export class CancelaVentaComponent implements OnInit {
   producto:String;
   totalVendidos:number;
   totalCancelar:number;
+  sMotivo:string;
+  penaliza:boolean;  
   ventaProductoDto:VentaProductoDto;
   VentaProductoCancelaDto:VentaProductoCancelaDto;
 
@@ -49,6 +51,7 @@ constructor(  private ventasService:VentasService,  private messageService: Mess
    
 ]
 this.VentaProductoCancelaDto=new VentaProductoCancelaDto();
+this.penaliza=false;
  }
 
 ngOnInit(){
@@ -135,10 +138,15 @@ cancelaVenta(ventaProductoDto:VentaProductoDto){
 
   concelarVentaProducto(){
 
-    if(this.totalCancelar!=undefined && this.totalCancelar!=null){
+    if(this.totalCancelar!=undefined && this.totalCancelar!=null && this.sMotivo!=null && this.sMotivo!=undefined){
 
-      console.log('voy a cancelar:',this.totalCancelar,' productos de: ',this.totalVendidos,'vendidos');
+     
      this.VentaProductoCancelaDto.nCancela=this.totalCancelar;
+     this.VentaProductoCancelaDto.sMotivo=this.sMotivo;
+     this.VentaProductoCancelaDto.penaliza=this.penaliza;
+
+     console.log( this.VentaProductoCancelaDto.penaliza);
+
 
       this.ventasService.cancelarVentaProducto(this.VentaProductoCancelaDto).subscribe(data => {
         this.mostrarProductos=false;
@@ -146,6 +154,9 @@ cancelaVenta(ventaProductoDto:VentaProductoDto){
        
         this.obtenerVentasCliente();  
         this.totalCancelar=null;
+        this.VentaProductoCancelaDto.nCancela=null;
+        this.VentaProductoCancelaDto.sMotivo=null;
+        this.VentaProductoCancelaDto.penaliza=null;
        
         this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se cancelo el producto con éxito', life: 3000});
          })
@@ -153,7 +164,7 @@ cancelaVenta(ventaProductoDto:VentaProductoDto){
     }
     else{
 
-      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Debe registrar un númeor de productos a cancelar', life: 3000});
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Debe registrar todos los campos requeridos', life: 3000});
     }
 
   }

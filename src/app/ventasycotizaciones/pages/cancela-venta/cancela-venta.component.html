@@ -1,8 +1,7 @@
 <div class="p-grid p-fluid">
     <!--Campos de filtro-->
     <div class="p-col-12 ">
-        <div class="card">
-            
+        <div class="card">           
                
             <br>
                 <div class="p-field p-col-12 p-md-12">
@@ -204,14 +203,15 @@
             </ng-template>
         </p-toolbar>
 
-        <p-dialog [(visible)]="mostrarCancela" header="Cancelación de productos" [style]="{width: '700px', height:'300px'}" [closable]="true" styleClass="p-fluid red "  >
+        <p-dialog [(visible)]="mostrarCancela" header="Cancelación de productos" [style]="{width: '700px', height:'500px'}" [closable]="true" styleClass="p-fluid red "  >
                 
-            <div class="card" style="background-color:lightgrey">
+            <div class="card" >
                 <div class="flex flex-column card-container green-container">
                     <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">{{producto}}</div>
                     <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Total Vendidos:{{totalVendidos}}</div>
-                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Total Cancelar:<p-inputNumber [(ngModel)]="totalCancelar" inputId="minmax" mode="decimal" [min]="1" [max]='totalVendidos'> </p-inputNumber>
-                    </div>
+                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Total Cancelar:<p-inputNumber [(ngModel)]="totalCancelar" inputId="minmax" mode="decimal" [min]="1" [max]='totalVendidos'> </p-inputNumber> </div>
+                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Motivo:<textarea [(ngModel)]="sMotivo" rows="5" cols="30"  pInputTextarea  required > </textarea> </div>
+                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2"><p-checkbox [(ngModel)]="penaliza" label="Cargo del 20%" [binary]="true" inputId="binary" ></p-checkbox> </div>
                 </div>
             </div>
 

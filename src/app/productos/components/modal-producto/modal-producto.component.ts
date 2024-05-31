@@ -95,7 +95,7 @@ export class ModalProductoComponent implements OnInit {
           this.fProducto.sNoParte.disable();
           this.edithBand=true;
           
-          if(observable5==18 || observable5==8 ){
+          if(observable5==19 || observable5==8 ){
           
           }
           else{
@@ -480,7 +480,7 @@ valorSeleccionado(){
   //console.log('antes',this.listaNoParte);
    this.fProducto.sNoParte.disable();
  
-    if(this.tokenService.getIdUser()==18 || this.tokenService.getIdUser()==8  ){
+    if(this.tokenService.getIdUser()==19 || this.tokenService.getIdUser()==8  ){
           
     }
     else{
