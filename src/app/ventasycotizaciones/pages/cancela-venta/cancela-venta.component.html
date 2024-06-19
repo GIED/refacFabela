@@ -100,9 +100,9 @@
                     </td>
                     <td class="p-text-center"><span class="p-column-title">Estatus Venta</span>
                        
-                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red"> {{venta.tcEstatusVenta.sDescripcion}}</strong>
-                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'" > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
-                    
+                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red" (click)="cancelados(venta)"> {{venta.tcEstatusVenta.sDescripcion}} </strong>
+                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'"   > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
+                      
                         <td *ngIf="venta.nTipoPago==1"><span class="p-column-title"></span>CRÉDITO  </td>
                         
                         <td *ngIf="venta.nTipoPago==0"><span class="p-column-title"></span>CONTADO  </td>   
@@ -220,6 +220,15 @@
                 <button pButton pRipple label="Cancelar Producto" icon="pi pi-save" class=" p-button-success" (click)="concelarVentaProducto()"></button>
             </ng-template>
 
+        </p-dialog>
+
+        <p-dialog [(visible)]="mostrarCancelados" header="Productos Cancelados" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <app-venta-producto-cancela  [nIdVenta]="nIdVenta" (cerrar)="hideDialogAlter3($event)" ></app-venta-producto-cancela>
+            </ng-template>   
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter3()"></button>
+            </ng-template>        
         </p-dialog>
 
 

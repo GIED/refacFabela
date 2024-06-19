@@ -92,7 +92,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'Consulta Cotización', icon: 'pi pi-fw pi-search-plus', routerLink: ['../ventasycotizaciones/consulta-cotizacion'],visible:this.realRol==='admin' || this.realRol==='ventas'
                     },
                     {
-                        label: 'Cancela Venta', icon: 'pi pi-fw pi-search-minus', routerLink: ['../ventasycotizaciones/cancela-venta'],visible:this.realRol==='admin' 
+                        label: 'Cancela Venta', icon: 'pi pi-fw pi-search-minus', routerLink: ['../ventasycotizaciones/cancela-venta'],visible:this.realRol==='admin' || this.realRol==='caja'
                     },
 
                 ]

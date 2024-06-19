@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Product } from 'src/app/demo/domain/product';
 import { ProductService } from 'src/app/demo/service/productservice';
@@ -15,6 +15,8 @@ import { TokenService } from '../../../shared/service/token.service';
   styleUrls: ['./consulta-venta.component.scss']
 })
 export class ConsultaVentaComponent implements OnInit {
+
+
 
   productDialog: boolean;
     selectedProducts: Product[];
@@ -34,6 +36,7 @@ export class ConsultaVentaComponent implements OnInit {
     nIdVenta:number;
     IdUsuario:number;
   mostrarAjustes:boolean
+  mostrarCancelados:boolean;
 
   constructor(  private ventasService:VentasService,  private messageService: MessageService, private tokenService: TokenService   ) {
 
@@ -46,6 +49,7 @@ export class ConsultaVentaComponent implements OnInit {
       { field: 'tcUsuario.sNombreUsuario', header: 'Vendedor' },     
   ];
   this.mostrarEdicion=false;
+  this.mostrarCancelados=false;
 
    }
 
@@ -121,6 +125,12 @@ export class ConsultaVentaComponent implements OnInit {
     this.nIdVenta=venta.nId;
 
   }
+  cancelados(venta: TvVentasDetalle){
+
+    this.mostrarCancelados=true;
+    this.nIdVenta=venta.nId;
+
+  }
 
 detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
 
@@ -136,6 +146,11 @@ hideDialogAlter(){
   this.mostrarProductos=false;
  
   
+}
+
+hideDialogAlter3(){
+  this.mostrarCancelados=false;
+
 }
 
 hideDialogAlter2(){

@@ -123,7 +123,7 @@
             <div class="p-field">
                 <label for="name">Total Producto a ingresar</label>
                 <p-inputNumber type="number" pInputText id="nCantidaRecibida" name="nCantidaRecibida"
-                    [(ngModel)]="pedido.nCantidaRecibida"></p-inputNumber>
+                    [(ngModel)]="pedido.nCantidaRecibida"  [max]="pedido.nCantidadPedida"></p-inputNumber>
                 <small class="p-invalid" *ngIf="submitted">Monto requerido.</small>
             </div>
         </ng-template>

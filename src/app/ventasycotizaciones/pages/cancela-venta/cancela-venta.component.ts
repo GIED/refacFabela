@@ -37,6 +37,8 @@ export class CancelaVentaComponent implements OnInit {
   penaliza:boolean;  
   ventaProductoDto:VentaProductoDto;
   VentaProductoCancelaDto:VentaProductoCancelaDto;
+  mostrarCancelados:boolean;
+  nIdVenta:number;
 
 
 constructor(  private ventasService:VentasService,  private messageService: MessageService,  ) {
@@ -65,6 +67,17 @@ obtenerVentasCliente(){
     //console.log(this.listaVentasDetalleCliente);      
    
    }); 
+
+}
+hideDialogAlter3(){
+  this.mostrarCancelados=false;
+
+}
+
+cancelados(venta: TvVentasDetalle){
+
+  this.mostrarCancelados=true;
+  this.nIdVenta=venta.nId;
 
 }
 

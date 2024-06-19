@@ -1,0 +1,69 @@
+<p-table #dt [value]="listaProductosCancela" responsiveLayout="scroll" [rows]="10"
+[paginator]="true"
+[globalFilterFields]="['tcProducto.sNoParte','tcProducto.sProducto','tcProducto.sDescripcion','tcProducto.sMarca','nTotalUnitario','nPrecioPartida','nCantidad']"
+ [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} Registros"
+[showCurrentPageReport]="true">
+<ng-template pTemplate="caption">
+    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar producto" />
+        </span>
+    </div>
+</ng-template>
+<ng-template pTemplate="header">
+    <tr>
+        <th pSortableColumn="tcProducto.sNoParte">No. Parte<p-sortIcon field="tcProducto.sNoParte"></p-sortIcon>
+        </th>
+        <th pSortableColumn="tcProducto.sProducto">Producto<p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
+        </th>
+        <th pSortableColumn="tcProducto.sDescripcion">Descripción<p-sortIcon field="tcProducto.sDescripcion"></p-sortIcon>
+        </th>
+        <th pSortableColumn="tcProducto.sMarca">Marca<p-sortIcon field="tcProducto.sMarca"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nTotalUnitario">Precio Unitario<p-sortIcon field="nTotalUnitario"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nPrecioPartida">Precio Partida<p-sortIcon field="nPrecioPartida"></p-sortIcon>
+        </th>
+        <th pSortableColumn="nCantidad">Cantidad<p-sortIcon field="nCantidad"></p-sortIcon>
+        </th>
+        <th >Total Penaliza
+        </th>
+        <th >Motivo
+        </th>
+        
+       
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-venta let-expanded="expanded">
+    <tr>
+
+       
+        <td><span class="p-column-title">No. Parte</span> {{venta.tcProducto.sNoParte}}
+        </td>
+       <td><span class="p-column-title">Producto</span> {{venta.tcProducto.sProducto}}
+        </td>
+        <td><span class="p-column-title">Descripción</span> {{venta.tcProducto.sDescripcion}}
+        </td>
+        <td><span class="p-column-title">Marca</span>{{venta.tcProducto.sMarca}}
+        </td>
+        <td><span class="p-column-title">Precio Unitario</span>{{venta.nTotalUnitario}}
+        </td>
+         <td><span class="p-column-title">Precio Partida</span> {{venta.nPrecioPartida | number}}
+        </td>
+       
+        <td><span class="p-column-title">Cantidad</span> {{venta.nCantidad | number}}
+        </td>
+         <td><span class="p-column-title">Total Penaliza</span> {{venta.penaliza | number}}
+        </td>
+        <td><span class="p-column-title">Motivo</span> {{venta.sMotivo}}
+        </td>
+       
+           
+      
+    </tr>
+</ng-template>
+</p-table>

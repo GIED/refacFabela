@@ -24,11 +24,7 @@ export class PedidoProductosComponent implements OnInit {
   @Input() listaPedidos: TwPedidoProducto[];
   @Input() banIngreso: boolean;
   @Output() listaPedidoDetalle: EventEmitter<TvPedidoDetalle[]>=new EventEmitter();
-
-
-
-  
-  
+  @Output() cierraformulario: EventEmitter<boolean> = new EventEmitter();
 
  
   productDialog: boolean = false;
@@ -52,9 +48,11 @@ export class PedidoProductosComponent implements OnInit {
     mostrarEntrega:boolean=false;
     submitted:boolean=false;
     pedido:TwPedidoProducto;
+    pedidoOrg:TwPedidoProducto;
     mensaje:string;
     pedidoDto: TwPedidoProducto;
-    dataBodega:TwProductoBodega
+    dataBodega:TwProductoBodega;
+    contidadIngresada:number;
     
 
     constructor(private pedidosService: PedidosService,  private productosService: ProductoService,
@@ -155,8 +153,13 @@ mostrarRegistroEntrada(pedidos:TwPedidoProducto ) {
   this.pedido=pedidos;
 this.mostrarEntrega=true;
 this.submitted = false;
+this.pedidoOrg=this.pedido;
 
-//console.log(pedidos);
+console.log(pedidos);
+console.log(this.pedido);
+
+console.log(this.pedidoOrg);
+
 
 
 
@@ -183,6 +186,7 @@ saveProduct(producto: TcProducto) {
 
 guardarIngresoProducto(){
 
+
   this.entregaProducto(this.pedido);
 
 }
@@ -192,6 +196,13 @@ cerrar(){
 }
 
 entregaProducto(producto:TwPedidoProducto){
+
+  if(this.pedido.nCantidaRecibida==0 || this.pedido.nCantidaRecibida>this.pedido.nCantidadPedida ){
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Valor no valido, favor de verificar', life: 3000 });
+    this.cierraformulario.emit(false);      
+
+  }
+  else{
 
   if(producto.nCantidadPedida==producto.nCantidaRecibida){
     producto.nEstatus=true;
@@ -216,6 +227,7 @@ entregaProducto(producto:TwPedidoProducto){
   this.obtenerPedidoDetalle();
 
  });
+}
 
 
 }

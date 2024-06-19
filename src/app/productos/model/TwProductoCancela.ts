@@ -1,6 +1,7 @@
 import { TcUsuario } from "src/app/administracion/model/TcUsuario";
 import { TwCaja } from "./TwCaja";
 import { TwVenta } from "./TwVenta";
+import { TcProducto } from "./TcProducto";
 
 export class TwProductoCancela{
 
@@ -18,6 +19,9 @@ export class TwProductoCancela{
     twCaja:TwCaja
     tcUsuario:TcUsuario;
     twVenta:TwVenta;
+    penaliza:number;
+    sMotivo:string;
+    tcProducto:TcProducto;
 
 
 }

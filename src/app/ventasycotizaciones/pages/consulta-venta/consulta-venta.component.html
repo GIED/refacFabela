@@ -92,8 +92,11 @@
                     </td>
                     <td class="p-text-center"><span class="p-column-title">Estatus Venta</span>
                        
-                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red"> {{venta.tcEstatusVenta.sDescripcion}}</strong>
-                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'" > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
+                       
+                       
+                       
+                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion=='VENTA CANCELADA' || venta.tcEstatusVenta.sDescripcion== 'VENTA CANCELADA PARCIALMENTE'" style="color:red" (click)="cancelados(venta)"> {{venta.tcEstatusVenta.sDescripcion}} </strong>
+                        <strong *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.tcEstatusVenta.sDescripcion!= 'VENTA CANCELADA PARCIALMENTE'"   > {{venta.tcEstatusVenta.sDescripcion}}</strong> </td>
                       
                         <td *ngIf="venta.nTipoPago==1"><span class="p-column-title"></span>CRÉDITO  </td>
                         
@@ -114,7 +117,7 @@
                             <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green"
                             (click)="generarsSaldoFacorPdf(venta)"></button>
                             <button *ngIf="mostrarAjustes" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-purple" style="background: purple;"
-                            (click)="editar(venta)"></button>
+                            (click)="editar(venta)"></button>                       
                     </td>
                 </tr>
             </ng-template>
@@ -134,6 +137,15 @@
                 <app-form-actualiza-venta  [nIdVenta]="nIdVenta" (cerrar)="hideDialogAlter2($event)" ></app-form-actualiza-venta>
             </ng-template>
            
+        </p-dialog>
+
+        <p-dialog [(visible)]="mostrarCancelados" header="Productos Cancelados" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <app-venta-producto-cancela  [nIdVenta]="nIdVenta" (cerrar)="hideDialogAlter3($event)" ></app-venta-producto-cancela>
+            </ng-template>   
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter3()"></button>
+            </ng-template>        
         </p-dialog>
 
         <p-toolbar styleClass="p-mb-4">

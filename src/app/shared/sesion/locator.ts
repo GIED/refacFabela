@@ -129,6 +129,7 @@ static guardarMaquina= '/guardarMaquina';
 static consultaProductoVentaMesId='/consultaProductoVentaMesId?';
 static consultaProductoVenta='/ventasProductoHistoria?';
 static obtenerVentaProductoId='/obtenerVentaProductoId?';
+static obtenerVentaProductosCancelaId='/obtenerVentaProductosCancelaId?';
 static consultarVentaId='/obtenerVentaId?';
 static consultarMaquinaCliente='/obtenerMaquinasCliente?';
 static generarVentaPdf='/getVenta?';

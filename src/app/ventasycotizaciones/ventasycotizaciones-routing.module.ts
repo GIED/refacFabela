@@ -33,7 +33,7 @@ const routes: Routes = [
         component: ConsultaCotizacionComponent,
       },
       {
-        path: "cancela-venta",canActivate:[ProdGuardService], data: {expectedRol: ['admin']},
+        path: "cancela-venta",canActivate:[ProdGuardService], data: {expectedRol: ['admin','caja']},
         component: CancelaVentaComponent,
       },
       {
