@@ -1,0 +1,254 @@
+<div class="p-grid">
+	<div class="p-col-12">
+		<p-toast></p-toast>	
+		<div class="card">			
+			<div class="p-text-center"><h2>Balance general proveeedores</h2></div>
+			<div class="p-grid p-fluid">
+				<div class="p-col-12 p-lg-8">	
+					<div class="card">
+						<div class="p-text-center"><h3 class="p-test-center">Saldos pendientes por moneda</h3></div>
+						<div class="p-d-flex p-justify-center">
+						<!--	<p-chart type="pie" [data]="pieData" [options]="pieOptions" [style]="{'width': '25%'}">
+							</p-chart>-->
+						</div>
+                        <div class="p-grid">
+                            <div class="p-col-4">
+                              <div class="box"><strong>{{datoCambio.fecha}} </strong></div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"><strong> Valor cambio BM </strong></div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"><p-tag styleClass="p-mr-2" severity="danger"><strong>$ {{datoCambio.dato}} PESOS/DOLAR </strong></p-tag></div>
+                            </div>
+                          </div>
+                       
+                        <div class="p-grid" style="background: gainsboro;">
+                            <div class="p-col-4">
+                              <div class="box"><strong>Total facturas </strong></div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"><strong>Total Abonos </strong></div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"><strong>Total Adeudo </strong></div>
+                            </div>
+                          </div>
+                          <div class="p-grid">
+                            <div class="p-col-4">
+                              <div class="box"> $ {{totalFacturasPeso | number}} PESOS</div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"> $ {{totalAbonosPeso | number }} PESOS</div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"><p-tag styleClass="p-mr-2" severity="success"> $ {{saldoPendientePagoPeso | number }} PESOS</p-tag></div>
+                            </div>
+                          </div>
+
+                          <div class="p-grid">
+                            <div class="p-col-4">
+                              <div class="box"> $ {{totalFacturasUsd | number}} USD</div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"> $ {{totalAbonosUsd | number}} USD</div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"><p-tag styleClass="p-mr-2" severity="success"> $ {{saldoPendientePagoUsd | number}} USD</p-tag> <p-tag styleClass="p-mr-2" severity="danger"> $ {{saldoPendientePagoUsd * datoCambio.dato | number}} PESOS</p-tag></div>
+                            </div>
+                          </div>
+
+
+					</div>
+				</div>
+
+
+                <div class="p-col-12 p-lg-4">	
+					<div class="card">
+						<div class="p-text-center"><h3 class="centerText">Totales</h3></div>
+						<div class="p-d-flex p-justify-center">
+						<!--	<p-chart type="pie" [data]="pieData" [options]="pieOptions" [style]="{'width': '25%'}">
+							</p-chart>-->
+						</div>
+                        <div class="p-grid">
+                            <div class="p-col-12">
+                              <div class="box p-text-center"><p-tag styleClass="p-mr-2" severity="success"> <strong><h4>$ {{(saldoPendientePagoUsd * datoCambio.dato) + saldoPendientePagoPeso | number}}  PESOS</h4></strong></p-tag></div>
+                            </div>                          
+                          </div>
+                       
+                        <div class="p-grid" style="background: gainsboro;">
+                            <div class="p-col-6">
+                              <div class="box"><strong>Vencido en pesos </strong></div>
+                            </div>
+                            <div class="p-col-6">
+                              <div class="box"><strong>Vencido en usd </strong></div>
+                            </div>
+                          
+                          </div>
+                          <div class="p-grid">
+                            <div class="p-col-6">
+                                <div class="box"><p-tag styleClass="p-mr-2" severity="danger"> $ {{saldoPendientePagoPeso | number }} PESOS</p-tag></div>
+                              </div>
+                            <div class="p-col-6">
+                              <div class="box"><p-tag styleClass="p-mr-2" severity="danger"> $ {{saldoPendientePagoPeso | number }} PESOS</p-tag></div>
+                            </div>
+                          </div>                   
+
+
+					</div>
+				</div>
+		<!--		<div class="p-col-12 p-lg-6">	
+					<div class="card">
+						<div class="p-text-center"><h3>Balance General</h3></div>
+						<p-table [value]="car"    >
+							<ng-template pTemplate="header" >
+								<tr>
+									<th class="p-text-center" style="background:#aa7ea2; color:white" >
+										Total Inicial
+									</th>
+									<th class="p-text-center"  style="background:#aa7ea2; color:white" >
+										Abonos
+									</th>
+									<th class="p-text-center"  style="background:#aa7ea2; color:white" >
+										Saldo Total
+									</th>
+									<th class="p-text-center" s style="background:#aa7ea2; color:white" >
+									    Total Vencidos
+									</th>
+									<th class="p-text-center"  style="background:#aa7ea2; color:white" >
+										Total Regular
+									</th>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="body" let-car >
+								<tr >
+									<td class="p-text-center"  >
+										{{totalesCreditos.nTotalVenta | number}}
+									  </td>
+									  <td class="p-text-center" >
+										{{totalesCreditos.nAbonos | number}}
+									  </td>
+									<td class="p-text-center" >
+										{{totalesCreditos.nSaldoTotalGeneral | number}}
+									 
+									</td>
+									<td class="p-text-center">
+										{{totalesCreditos.nTotalVencidos}}
+								</td>
+								<td class="p-text-center">
+									{{totalesCreditos.nTotalRegular}}
+							</td>
+								</tr>
+							</ng-template>
+						</p-table>
+						<div class="p-col-4 p-offset-4">
+													
+									<button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+										class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+								
+						</div>
+					</div>
+				</div>-->
+			</div>
+			<p-table #dt [value]="listaBalalceProveedores"  [rows]="10" [paginator]="true"
+				[globalFilterFields]="['tcProveedore.sRfc','tcProveedore.sRazonSocial','sMoneda','totalFacturas', 'totalAbonos','saldoPendientePago','totalPorPagar','totalVencidas']"
+				 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+				[showCurrentPageReport]="true">
+				<ng-template pTemplate="caption">
+					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+						<h5 class="p-m-0">Listado de créditos</h5>
+						<span class="p-input-icon-left">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+								placeholder="Buscar cliente" />
+						</span>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+					
+						<th pSortableColumn="tcProveedore.sRfc">RFC<p-sortIcon field="tcProveedore.sRfc"></p-sortIcon> </th>
+						<!--<th>Image</th>-->
+						<th pSortableColumn="tcProveedore.sRazonSocial">Razón social <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon>
+						</th>						
+						<th pSortableColumn="sMoneda">Moneda <p-sortIcon field="sMoneda"></p-sortIcon>
+						</th>
+
+						<th pSortableColumn="totalFacturas">Total facturas <p-sortIcon field="totalFacturas"></p-sortIcon>
+						</th>
+						<th pSortableColumn="totalAbonos">Total Abonos<p-sortIcon field="totalAbonos"></p-sortIcon>
+						</th>
+						<th pSortableColumn="saldoPendientePago">Total por pagar <p-sortIcon field="saldoPendientePago"></p-sortIcon>
+						</th>
+						<th pSortableColumn="totalPorPagar">Facturas regulares <p-sortIcon field="totalPorPagar"></p-sortIcon>
+						</th>
+						<th pSortableColumn="totalVencidas">Facturas vencidas <p-sortIcon field="totalVencidas"></p-sortIcon>
+						</th>
+                        <th >Estatus
+						</th>	
+                        <th></th>					
+											
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-cliente>
+					<tr>
+					
+					
+						<!--	<td><span class="p-column-title">Image</span>
+							<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
+						</td>-->
+						<td><span class="p-column-title">RFC</span>
+							{{cliente.tcProveedore.sRfc}}
+						</td>
+						<td class="p-test-center"> <span class="p-column-title">Razón social</span>
+							{{cliente.tcProveedore.sRazonSocial}}
+						</td>
+						<td class="p-test-center"> <span class="p-column-title">Moneda</span>
+							{{cliente.sMoneda}}
+						</td>
+						<td><span class="p-column-title">Total Facturas</span>
+							{{cliente.totalFacturas | number}}
+						</td>
+						<td><span class="p-column-title">Total abonos</span>
+							{{cliente.totalAbonos | number}}
+						</td>
+						<td><span class="p-column-title">Saldo pendiente pago</span>
+							{{cliente.saldoPendientePago | number}}
+						</td>
+                        <td><span class="p-column-title">Facturas regulares</span>
+							{{cliente.totalPorPagar | number}}
+						</td>
+                        <td><span class="p-column-title">facturas vencidas</span>
+							{{cliente.totalVencidas | number}}
+						</td>
+						
+						
+					
+						<td class="p-text-center"><span class="p-column-title">Estatus General</span>
+							<div *ngIf="cliente.totalVencidas>0">
+							<p-tag styleClass="p-mr-2" severity="danger">VENCIDO</p-tag>
+						  </div>
+						  <div *ngIf="cliente.totalVencidas==0">
+							<p-tag styleClass="p-mr-2" severity="success">REGULAR</p-tag>
+						  </div>
+						</td>
+						<td>
+							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+								(click)="consultaVentaDetalleId(cliente)"></button> 
+								<button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-mr-2"
+									(click)="genenerHistorialAbonoVentaPDF(cliente)"></button>
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="summary">
+					<div class="p-d-flex p-ai-center p-jc-between">
+						En total hay {{listaClientesCredito ? listaClientesCredito.length : 0 }} clientes con crédito activo.
+					</div>
+				</ng-template>
+			</p-table>
+		</div>
+		
+           
+	</div>
+</div>
