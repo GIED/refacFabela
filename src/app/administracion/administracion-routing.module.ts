@@ -10,6 +10,7 @@ import { AdminCajaComponent } from './pages/admin-caja/admin-caja.component';
 import { TraspasoVentaACreditoComponent } from './pages/traspaso-venta-acredito/traspaso-venta-acredito.component';
 import { ProductosCanceladosComponent } from "./pages/productos-cancelados/productos-cancelados.component";
 import { ConsultaAjusteInventarioComponent } from "./pages/consulta-ajuste-inventario/consulta-ajuste-inventario.component";
+import { FacturasProveedorComponent } from "./pages/facturas-proveedor/facturas-proveedor.component";
 
 const routes: Routes = [
   {
@@ -58,6 +59,10 @@ const routes: Routes = [
       {
         path: "consulta-ajuste-inventario",
         component: ConsultaAjusteInventarioComponent,
+      },
+      {
+        path: "facturas-proveedor",
+        component: FacturasProveedorComponent,
       },
     ],
   },

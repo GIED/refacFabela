@@ -70,6 +70,10 @@ export class AppMenuComponent implements OnInit {
                         label: 'Ajuste Inventario', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/consulta-ajuste-inventario'], visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
 
+                    {
+                        label: 'Facturas proveedor', icon: 'pi pi-fw pi-credit-card', routerLink: ['../administracion/facturas-proveedor'], visible:this.realRol==='admin' 
+                    },
+
                     
                    
 

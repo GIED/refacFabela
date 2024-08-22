@@ -16,6 +16,7 @@ import { TcMarca } from 'src/app/productos/model/TcMarca';
 import { TwGasto } from 'src/app/productos/model/TwGasto';
 import { TcGasto } from 'src/app/productos/model/TcGasto';
 import { TcCp } from 'src/app/productos/model/TcCp';
+import { TcMoneda } from 'src/app/productos/model/TcMoneda';
 
 @Injectable({
   providedIn: 'root'
@@ -111,6 +112,12 @@ export class CatalogoService {
     let url = environment.servicios.apiRefacFabela + locator.obtenerCpLike+'cp='+valor;
     return this.http.get<TcCp>(url);
   }
+
+  obtenerMonedas(){
+    let url= environment.servicios.apiRefacFabela + locator.consultaMonedas;
+    return this.http.get<TcMoneda[]>(url);
+  }
+
 
 
   

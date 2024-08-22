@@ -89,7 +89,6 @@ export class ModalProductoComponent implements OnInit {
         this.listaGanancia=resultado3;
         this.listaMarca=resultado4;
 
-            //console.log(this.producto);
         if (this.producto != null) {
           this.editProducto(this.producto);
           this.fProducto.sNoParte.disable();

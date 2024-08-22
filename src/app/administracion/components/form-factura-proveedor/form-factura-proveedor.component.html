@@ -1,0 +1,107 @@
+<form [formGroup]="formulario" autocomplete="off">
+  <!--  <input type="text" pInputText formControlName="nId" hidden />-->
+    
+    <div class="p-grid">
+        <!--
+        <div class="p-field p-col-6">
+            <label for="nId">ID</label>
+            <input type="text" pInputText name="nId" formControlName="nId" [class.is-invalid]="validanId" />
+            <small class="p-error" *ngIf="validanId">*ID es requerido.</small>
+          </div>
+        -->
+          
+          <div class="p-field p-col-6">
+            <label for="s_folio_factura">Folio Factura</label>
+            <input type="text" pInputText name="s_folio_factura" formControlName="s_folio_factura" [class.is-invalid]="validaSFolioFactura" oninput="this.value = this.value.toUpperCase()" />
+            <small class="p-error" *ngIf="validaSFolioFactura">*Folio Factura es requerido.</small>
+          </div>
+
+          <div class="p-field p-col-6">
+            <label for="marca">Proveedor</label>
+            <p-dropdown [options]="listaProvedores" formControlName="n_id_proveedor" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaNIdProveedor" placeholder="Seleccine un proveedor"
+                [showClear]="true"></p-dropdown>
+                <small class="p-error" *ngIf="validaNIdProveedor">*ID Proveedor es requerido.</small>
+            </div>
+          
+         
+          
+          <div class="p-field p-col-6">
+            <label for="d_fecha_inicio_factura">Fecha Inicio Factura</label>
+            <input type="date" pInputText name="d_fecha_inicio_factura" formControlName="d_fecha_inicio_factura" [class.is-invalid]="validaDFechaInicioFactura" />
+            <small class="p-error" *ngIf="validaDFechaInicioFactura">*Fecha Inicio Factura es requerida.</small>
+          </div>
+          
+          <div class="p-field p-col-6">
+            <label for="d_fecha_termino_factura">Fecha Término Factura</label>
+            <input type="date" pInputText name="d_fecha_termino_factura" formControlName="d_fecha_termino_factura" [class.is-invalid]="validaDFechaTerminoFactura" />
+            <small class="p-error" *ngIf="validaDFechaTerminoFactura">*Fecha Término Factura es requerida.</small>
+          </div>
+
+          <!-- 
+          <div class="p-field p-col-6">
+            <label for="n_id_usuario">ID Usuario</label>
+            <input type="text" pInputText name="n_id_usuario" formControlName="n_id_usuario" [class.is-invalid]="validaNIdUsuario" />
+            <small class="p-error" *ngIf="validaNIdUsuario">*ID Usuario es requerido.</small>
+          </div>
+         
+          <div class="p-field p-col-6">
+            <label for="n_estatus_factura_proveedor">Estatus Factura Proveedor</label>
+            <input type="text" pInputText name="n_estatus_factura_proveedor" formControlName="n_estatus_factura_proveedor" [class.is-invalid]="validaNEstatusFacturaProveedor" />
+            <small class="p-error" *ngIf="validaNEstatusFacturaProveedor">*Estatus Factura Proveedor es requerido.</small>
+          </div>
+          
+          <div class="p-field p-col-6">
+            <label for="d_fecha_pago_factura">Fecha Pago Factura</label>
+            <input type="date" pInputText name="d_fecha_pago_factura" formControlName="d_fecha_pago_factura" [class.is-invalid]="validaDFechaPagoFactura" />
+            <small class="p-error" *ngIf="validaDFechaPagoFactura">*Fecha Pago Factura es requerida.</small>
+          </div>-->
+          
+          <div class="p-field p-col-6">
+            <label for="n_monto_factura">Monto Factura</label>
+            <input type="number" pInputText name="n_monto_factura" formControlName="n_monto_factura" [class.is-invalid]="validaNMontoFactura" />
+            <small class="p-error" *ngIf="validaNMontoFactura">*Monto Factura es requerido.</small>
+          </div>
+          
+         
+          <div class="p-field p-col-6">
+            <label for="marca">Moneda</label>
+            <p-dropdown [options]="listaMonedas" formControlName="n_id_moneda" optionLabel="sMoneda" optionValue="nId"  [class.is-invalid]="validaNIdMoneda" placeholder="Seleccine una moneda"
+                [showClear]="true"></p-dropdown>
+                <small class="p-error" *ngIf="validaNIdMoneda">* Moneda es requerido.</small>
+            </div>
+          
+          <div class="p-field p-col-12">
+            <label for="s_nota">Nota</label>
+            <textarea type="text" pInputText name="s_nota" formControlName="s_nota" [class.is-invalid]="validaSNota" ></textarea>
+            <small class="p-error" *ngIf="validaSNota">*Nota es requerida.</small>
+          </div>
+    </div>
+</form>
+<div class="p-grid p-jc-end">
+    <div class="p-col-8">
+        <div class="box"></div>
+    </div>
+    <div class="p-col-2">
+        <div class="box">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="cerrarModal()"></button>
+        </div>
+    </div>
+    <div class="p-col-2">
+        <div class="box">
+            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveFactura()"></button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--   <pre>
+  estado del formulario: {{formulario.valid}}
+  <br>
+  status: {{formulario.status}}
+</pre>
+    <pre>
+  {{formulario.value | json}}
+</pre>
+-->

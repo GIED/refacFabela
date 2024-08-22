@@ -15,6 +15,12 @@ static consultaCatalogoRazonSocial='/catalogosDatoFactura'
 // api para proveedores
 static obtenerProveedores='/obtenerProveedores';
 static guardarProveedores='/guardarProveedores';
+static obtenerBalalcenProveedores='/facturacionProveedor/obtenerBalacesProveedores';
+static obtenertTipoCambioBM='/facturacionProveedor/tipoCambioBM';
+static guardarFacturaProveedor='/facturacionProveedor/guardarFacturaProveedor'
+
+
+
 //api para usuarios
 static obtenerUsuarios='/obtenerUsuarios';
 static nuevoUsuario = '/nuevo';
@@ -35,6 +41,8 @@ static consultaGananciaId= '/catalogoGananciaId?';
 static consultaFormaPago='/catalogoFormaPago';
 static consultaFormaPagoId='/catalogoFormaPagoId?';
 static consultaGastosCaja='/gastosCaja?';
+
+static consultaMonedas='/catalogoMoneda';
 static obtenerCatalogoGastos='/catalogoGasto';
 static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';

@@ -18,13 +18,15 @@ import { TraspasoVentaACreditoComponent } from './pages/traspaso-venta-acredito/
 import { FormTraspasoVentaACreditoComponent } from './components/form-traspaso-venta-acredito/form-traspaso-venta-acredito.component';
 import { ProductosCanceladosComponent } from './pages/productos-cancelados/productos-cancelados.component';
 import { ConsultaAjusteInventarioComponent } from './pages/consulta-ajuste-inventario/consulta-ajuste-inventario.component';
+import { FacturasProveedorComponent } from './pages/facturas-proveedor/facturas-proveedor.component';
+import { FormFacturaProveedorComponent } from './components/form-factura-proveedor/form-factura-proveedor.component';
 
 
 
 
 @NgModule({
     
-  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent, TraspasoVentaACreditoComponent, FormTraspasoVentaACreditoComponent, ProductosCanceladosComponent, ConsultaAjusteInventarioComponent],
+  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent, TraspasoVentaACreditoComponent, FormTraspasoVentaACreditoComponent, ProductosCanceladosComponent, ConsultaAjusteInventarioComponent, FacturasProveedorComponent, FormFacturaProveedorComponent],
   imports: [
     AdministracionRoutingModule,   
     PrimeModule,
