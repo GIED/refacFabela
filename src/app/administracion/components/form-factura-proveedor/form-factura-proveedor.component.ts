@@ -159,7 +159,7 @@ saveFactura(){
    this.twFacturasProveedor.nIdMoneda=this.formulario.get('n_id_moneda').value;
    this.twFacturasProveedor.nMontoFactura=this.formulario.get('n_monto_factura').value;
    this.twFacturasProveedor.nEstatusFacturaProveedor=1;
-   this.twFacturasProveedor.nIdUsuario=8;
+   this.twFacturasProveedor.nIdUsuario=this.tokenService.getIdUser();
    this.twFacturasProveedor.sNota=this.formulario.get('s_nota').value;
 
     
