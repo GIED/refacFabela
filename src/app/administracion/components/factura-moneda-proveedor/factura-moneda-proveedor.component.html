@@ -1,0 +1,133 @@
+<div class="p-grid">
+    <div class="p-col-12">
+        <p-toast></p-toast>
+        <div class="card">
+            <div class="p-text-center">
+                <h3>Facturas del proveedor/moneda</h3>
+            </div>     
+            <p-table #dt [value]="listafacturasMoneda" responsiveLayout="scroll"  [rows]="10"
+                [paginator]="true"
+                [globalFilterFields]="['nId','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
+                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar Venta" />
+                        </span>
+
+                        <span class="p-input-icon-right">
+                            <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
+                                <button pButton pRipple type="button" label="Ventas por entregar" class="p-button-success" (click)="consultaVentas()"></button>
+                            </div> 
+                        </span>
+
+
+                       
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="nId">No. Venta<p-sortIcon field="nId"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcCliente.sRfc">Rfc<p-sortIcon field="tcCliente.sRfc"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcCliente.sRazonSocial">Razón Social<p-sortIcon
+                                field="tcCliente.sRazonSocial"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nTotalVenta">Total Venta<p-sortIcon field="nTotalVenta"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nTotalAbono">Total Abonos<p-sortIcon field="nTotalAbono"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="descuento">Descuento<p-sortIcon field="descuento"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="nSaldoTotal">Saldo Final<p-sortIcon field="nSaldoTotal"></p-sortIcon>
+                        </th>
+
+                        <th pSortableColumn="dFechaVenta">Fecha Venta<p-sortIcon field="dFechaVenta"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcEstatusVenta.sDescripcion">Estatus Venta<p-sortIcon
+                                field="tcEstatusVenta.sDescripcion"></p-sortIcon>
+
+                        <th pSortableColumn="tcTipoVenta.sDescripcion">Estatus Venta<p-sortIcon
+                                    field="tcTipoVenta.sDescripcion"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="tcUsuario.sNombreusuario">Vendedor<p-sortIcon
+                                field="tcUsuario.sNombreusuario"></p-sortIcon>
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-venta let-expanded="expanded">
+                    <tr>
+                        <td><span class="p-column-title">No. Venta</span> {{venta.nId}}
+                        </td>
+                        <td><span class="p-column-title">Rfc</span> {{venta.tcCliente.sRfc}}
+                        </td>
+                        <td><span class="p-column-title">Razón Social</span> {{venta.tcCliente.sRazonSocial}}
+                        </td>
+                        <td><span class="p-column-title">Total Venta</span>{{venta.nTotalVenta | number}}
+                        </td>
+                        <td><span class="p-column-title">Total Abonos</span>{{venta.nTotalAbono | number}}
+                        </td>
+                        <td><span class="p-column-title">Descuento</span>{{venta.descuento | number}}
+                        </td>
+                        <td><span class="p-column-title">Saldo Final</span>
+                            <p-tag styleClass="p-mr-2" severity="success">{{venta.nSaldoTotal | number}}</p-tag>
+                        </td>
+
+                        <td><span class="p-column-title">Fecha Venta</span> {{venta.dFechaVenta |  date  }}
+                        </td>
+                        <td class="p-text-center"><span class="p-column-title">Estatus Venta</span>
+
+                            {{venta.tcEstatusVenta.sDescripcion}}</td>
+                            <td class="p-text-center"><span class="p-column-title">Tipo Venta</span>
+
+                                {{venta.tcTipoVenta.sDescripcion}}</td>
+
+                        <td class="p-text-center"><span class="p-column-title">Vendedor</span>
+
+                            {{venta.tcUsuario.sNombreUsuario}}
+                        </td>
+
+                        <td>
+                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+                                (click)="detalleVentaProductos(venta)"></button>
+                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                                (click)="generarVentaPdf(venta)"></button>
+                            
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="right">
+                    <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                        class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <div class="p-grid p-jc-end">
+                <div class="p-col-8">
+                    <div class="box"></div>
+                </div>
+                <div class="p-col-2">
+                    <div class="box">
+                        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="cerrarDetalle()"></button>
+                    </div>
+                </div>
+               
+            </div>
+
+        
+
+        </div>
+
+
+        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    </div>
+</div>
