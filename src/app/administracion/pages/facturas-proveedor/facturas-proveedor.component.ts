@@ -24,6 +24,8 @@ export class FacturasProveedorComponent implements OnInit {
   datoCambio:DataSerie;
   mostrarFormulario:boolean=false;
   titulo:string;
+  detalleFacturasProveedor:boolean=false;
+  vwFacturasBalanceProveedor:VwFacturasBalanceProveedor;
 
 
   constructor( private messageService: MessageService,
@@ -105,10 +107,19 @@ export class FacturasProveedorComponent implements OnInit {
   cerrarDialogo(){
 
    this.inicializarBalance();
+   this.detalleFacturasProveedor=false;
 
     this.mostrarFormulario=false;
     this.cargainicial();
 
+
+  }
+
+  consultarDetalleFacturaMonedas(vwFacturasBalanceProveedor: VwFacturasBalanceProveedor){
+
+    this.detalleFacturasProveedor=true;
+    this.vwFacturasBalanceProveedor=vwFacturasBalanceProveedor;
+    console.log(vwFacturasBalanceProveedor);
 
   }
 

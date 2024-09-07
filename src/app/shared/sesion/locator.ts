@@ -18,6 +18,12 @@ static guardarProveedores='/guardarProveedores';
 static obtenerBalalcenProveedores='/facturacionProveedor/obtenerBalacesProveedores';
 static obtenertTipoCambioBM='/facturacionProveedor/tipoCambioBM';
 static guardarFacturaProveedor='/facturacionProveedor/guardarFacturaProveedor'
+static guardarAbonoFacturaProveedor='/facturacionProveedor/guardarAbonoFactura'
+
+static obtenerFacturasProveedorMoneda='/facturacionProveedor/obtenerFacturasProveedor?';
+static obtenerFacturasProveedorMonedaBalance='/facturacionProveedor/obtenerFacturasProveedorBalance?';
+
+
 
 
 

@@ -1,5 +1,18 @@
 <router-outlet> </router-outlet>
-<app-spinner></app-spinner>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" [fullScreen]="true" size="medium" color="#fff" type="ball-atom" class="custom-spinner">
+    <div class="spinner-content">
+      <img src="../assets/layout/images/logoFabelajemkal.png" alt="Loading..." class="spinner-image" style="max-width: 300px; border-radius: 20px;
+       display: block;
+  margin: 20px auto; /* Centrar la imagen */
+  border-radius: 10px; /* Bordes redondeados (opcional) */
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5), /* Sombra blanca suave */
+              0 0 40px rgba(255, 255, 255, 0.3), /* Sombra más intensa */
+              0 0 60px rgba(255, 255, 255, 0.1); /* Sombra aún más intensa */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+      ">
+      <p style="color: white" class="text-center">Cargando...</p>
+    </div>
+  </ngx-spinner>
 <p-toast></p-toast>
 
 

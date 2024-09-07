@@ -7,6 +7,8 @@ import { Proveedores } from '../interfaces/proveedores';
 import { VwFacturasBalanceProveedor } from 'src/app/productos/model/VwFacturasBalanceProveedor';
 import { DataSerie } from 'src/app/productos/model/DataSerie';
 import { TwFacturasProveedor } from '../../productos/model/TwFacturasProveedor';
+import { BalanceFacturaProveedorMoneda } from 'src/app/productos/model/BalanceFacturaProveedorMoneda';
+import { TwAbonoFacturaProveedor } from '../../productos/model/TwAbonoFacturaProveedor';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +43,23 @@ export class ProveedorService {
   guardaFacturaProveedor(twFacturasProveedor: TwFacturasProveedor){
     let url = environment.servicios.apiRefacFabela+locator.guardarFacturaProveedor;
     return this.http.post<TwFacturasProveedor>(url,twFacturasProveedor);
+  }
+
+  getFacturasProveedorMoneda(vwFacturasBalanceProveedor:VwFacturasBalanceProveedor) {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerFacturasProveedorMoneda+'nIdProveedor='+vwFacturasBalanceProveedor.id.nIdProveedor+'&nIdMoneda='+vwFacturasBalanceProveedor.id.nIdMoneda;
+    return this.http.get<VwFacturasBalanceProveedor[]>(url);
+  }
+
+  getFacturasProveedorMonedaBalance(vwFacturasBalanceProveedor:VwFacturasBalanceProveedor) {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerFacturasProveedorMonedaBalance+'nIdProveedor='+vwFacturasBalanceProveedor.id.nIdProveedor+'&nIdMoneda='+vwFacturasBalanceProveedor.id.nIdMoneda;
+    return this.http.get<BalanceFacturaProveedorMoneda[]>(url);
+  }
+  
+  guardaAbonoFacturaProveedor(TwAbonoFacturaProveedor: TwAbonoFacturaProveedor){
+    let url = environment.servicios.apiRefacFabela+locator.guardarAbonoFacturaProveedor;
+    return this.http.post<TwAbonoFacturaProveedor>(url,TwAbonoFacturaProveedor);
   }
 
 

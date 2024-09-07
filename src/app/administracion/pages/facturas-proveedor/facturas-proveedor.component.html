@@ -244,7 +244,7 @@
 						</td>
 						<td>
 							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
-								(click)="consultaVentaDetalleId(cliente)"></button> 
+								(click)="consultarDetalleFacturaMonedas(cliente)"></button> 
 								<button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-mr-2"
 									(click)="genenerHistorialAbonoVentaPDF(cliente)"></button>
 						</td>
@@ -268,4 +268,14 @@ styleClass="p-fluid">
 	<app-form-factura-proveedor (cerrar)="cerrarDialogo($event)" ></app-form-factura-proveedor>
 	
 </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="detalleFacturasProveedor" [style]="{width: '80vw', height: '80vh'}"
+ header="Facturas Activas" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">
+<ng-template pTemplate="content">
+<app-factura-moneda-proveedor (cerrar)="cerrarDialogo($event)" [vwFacturasBalanceProveedor]="vwFacturasBalanceProveedor" >   </app-factura-moneda-proveedor>
+</ng-template>
+
+
+
 </p-dialog>
