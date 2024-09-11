@@ -32,7 +32,7 @@ export class ProveedorService {
 
     let url = environment.servicios.apiRefacFabela + locator.obtenerBalalcenProveedores;
     return this.http.get<VwFacturasBalanceProveedor[]>(url);
-  }
+  }  
 
   getTipoCambioBM() {
 
@@ -56,10 +56,32 @@ export class ProveedorService {
     let url = environment.servicios.apiRefacFabela + locator.obtenerFacturasProveedorMonedaBalance+'nIdProveedor='+vwFacturasBalanceProveedor.id.nIdProveedor+'&nIdMoneda='+vwFacturasBalanceProveedor.id.nIdMoneda;
     return this.http.get<BalanceFacturaProveedorMoneda[]>(url);
   }
+
+  getBalanceFactura(nIdFactura:number) {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerBalanceFactura+'nIdFactura='+nIdFactura;
+    return this.http.get<BalanceFacturaProveedorMoneda>(url);
+  }
+  getFacturaProveedor(nIdFactura:number) {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerFacturaProveedor+'nIdFactura='+nIdFactura;
+    return this.http.get<TwFacturasProveedor>(url);
+  }
+
+  getAbonosFacturaProveedor(nIdFactura:number) {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerAbonosFacturaProveedor+'nIdFactura='+nIdFactura;
+    return this.http.get<TwAbonoFacturaProveedor[]>(url);
+  }
   
   guardaAbonoFacturaProveedor(TwAbonoFacturaProveedor: TwAbonoFacturaProveedor){
     let url = environment.servicios.apiRefacFabela+locator.guardarAbonoFacturaProveedor;
     return this.http.post<TwAbonoFacturaProveedor>(url,TwAbonoFacturaProveedor);
+  }
+  getFacturasSinCobrar() {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenertFacturasSinCobrar;
+    return this.http.get<BalanceFacturaProveedorMoneda[]>(url);
   }
 
 

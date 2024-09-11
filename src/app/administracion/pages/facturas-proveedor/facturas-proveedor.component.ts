@@ -4,6 +4,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { VwFacturasBalanceProveedor } from 'src/app/productos/model/VwFacturasBalanceProveedor';
 import { ProveedorService } from '../../service/proveedor.service';
 import { DataSerie } from 'src/app/productos/model/DataSerie';
+import { TwFacturasProveedor } from 'src/app/productos/model/TwFacturasProveedor';
+import { BalanceFacturaProveedorMoneda } from 'src/app/productos/model/BalanceFacturaProveedorMoneda';
 
 @Component({
   selector: 'app-facturas-proveedor',
@@ -26,11 +28,17 @@ export class FacturasProveedorComponent implements OnInit {
   titulo:string;
   detalleFacturasProveedor:boolean=false;
   vwFacturasBalanceProveedor:VwFacturasBalanceProveedor;
+  listaFacturasSinCobrar:BalanceFacturaProveedorMoneda[];
+  totalVencidos:number=0;
+  totalRegulares:number=0;
+  montoFactura:number=0;
+  montoAbono:number=0;
 
 
   constructor( private messageService: MessageService,
     private confirmationService: ConfirmationService,   private fb: FormBuilder, private proveedorService: ProveedorService) {
       this.datoCambio=new DataSerie();
+      this.listaFacturasSinCobrar=[];
      }
 
   ngOnInit(): void {
@@ -46,7 +54,6 @@ export class FacturasProveedorComponent implements OnInit {
 
     this.datoCambio=new DataSerie();
     this.proveedorService.getTipoCambioBM().subscribe(data2=>{
-      console.log(data2);
       this.datoCambio=data2;
     })
 
@@ -56,7 +63,6 @@ export class FacturasProveedorComponent implements OnInit {
     this.proveedorService.getBalanceFacturasProveedores().subscribe(data=>{
 
       this.listaBalalceProveedores=data;
-      console.log(this.listaBalalceProveedores);
 
 
       for (let index = 0; index < this.listaBalalceProveedores.length; index++) {
@@ -75,12 +81,9 @@ export class FacturasProveedorComponent implements OnInit {
         
       }
 
-      console.log(this.totalFacturasPeso);
-      console.log(this.totalAbonosPeso);
-      console.log(this.saldoPendientePagoPeso);
-      console.log(this.totalFacturasUsd);
-      console.log(this.totalAbonosUsd);
-      console.log(this.saldoPendientePagoUsd);
+   
+
+      this.obtenerFacturasSinPagar();
 
     })
 
@@ -102,6 +105,8 @@ export class FacturasProveedorComponent implements OnInit {
     this.saldoPendientePagoUsd=0
     this.cambio=0
     this.datoCambio=null;
+    this.totalRegulares=0;
+    this.totalVencidos=0;
   }
   
   cerrarDialogo(){
@@ -119,7 +124,48 @@ export class FacturasProveedorComponent implements OnInit {
 
     this.detalleFacturasProveedor=true;
     this.vwFacturasBalanceProveedor=vwFacturasBalanceProveedor;
-    console.log(vwFacturasBalanceProveedor);
+
+  }
+
+  obtenerFacturasSinPagar(){
+
+
+   this.proveedorService.getFacturasSinCobrar().subscribe(facturas=>{
+   
+    this.listaFacturasSinCobrar=facturas;
+    
+
+    for (let index = 0; index < this.listaFacturasSinCobrar.length; index++) {
+      this.montoFactura=0;
+      this.montoAbono=0;
+
+      if (this.listaFacturasSinCobrar[index].twFacturasProveedor.nIdMoneda=== 2) {
+       this.montoFactura = this.listaFacturasSinCobrar[index].twFacturasProveedor.nMontoFactura*this.datoCambio.dato;  // Multiplica por el tipo de cambio si es USD
+       this.montoAbono = this.listaFacturasSinCobrar[index].totalAbonos*this.datoCambio.dato;
+      }
+      else{
+        this.montoFactura=this.listaFacturasSinCobrar[index].twFacturasProveedor.nMontoFactura;
+        this.montoAbono = this.listaFacturasSinCobrar[index].totalAbonos;
+
+
+      }
+      
+      if(this.listaFacturasSinCobrar[index].estatusFactura=='PAGO VENCIDO'){
+      this.totalVencidos +=  this.montoFactura-this.montoAbono;
+       }
+       if(this.listaFacturasSinCobrar[index].estatusFactura=='POR PAGAR'){
+        this.totalRegulares += this.montoFactura-this.montoAbono;
+         }
+      
+      }
+
+ 
+
+
+
+   })
+
+
 
   }
 

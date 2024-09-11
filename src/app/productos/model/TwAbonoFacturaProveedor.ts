@@ -1,3 +1,5 @@
+import { TwFacturasProveedor } from "./TwFacturasProveedor";
+
 export class TwAbonoFacturaProveedor{
     nId: number;  // Clave primaria autogenerada
     nIdFacturaProveedor: number;  // Factura Proveedor
@@ -7,5 +9,5 @@ export class TwAbonoFacturaProveedor{
     nIdUsuario: number;  // ID del usuario que realizó el abono
     sNota: string;  // Nota sobre el abono
     nIdFormaPago: number;  // ID de la forma de pago
-    twFacturasProveedor: TwAbonoFacturaProveedor
+    twFacturasProveedor: TwFacturasProveedor
 }

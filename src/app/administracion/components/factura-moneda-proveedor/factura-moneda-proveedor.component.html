@@ -1,6 +1,6 @@
 <div class="p-grid">
     <div class="p-col-12">
-        <p-toast></p-toast>
+        
         <div class="card">
             <div class="p-text-center">
                 <h3>Facturas del proveedor/moneda</h3>
@@ -90,7 +90,7 @@
 							<div *ngIf="venta.estatusFactura=='PAGO VENCIDO'">
 							<p-tag styleClass="p-mr-2" severity="danger">PAGO VENCIDO</p-tag>
 						  </div>
-						  <div *ngIf="venta.totalVeestatusFacturancidas=='POR PAGAR'">
+						  <div *ngIf="venta.estatusFactura=='POR PAGAR'">
 							<p-tag styleClass="p-mr-2" severity="success">POR PAGAR</p-tag>
 						  </div>
 						</td>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="p-col-2">
                     <div class="box">
-                        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="cerrarDetalle()"></button>
+                        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="cerrarDetalle()"></button>
                     </div>
                 </div>
                
@@ -130,7 +130,7 @@
             <!--FORMULARIO DE REGISTRO DE ABONOS A FACTURAS DEL PROVEEDOR-->
             
         <p-dialog [(visible)]="banAbonoFacturaProveedor"  header="Abono factura del proveedor"
-        [style]="{width: '60vw', height: '60vh'}"
+        [style]="{width: '60vw', height: '70vh'}"
         header="Facturas Activas" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">        
             <ng-template pTemplate="content">
                <div class="p-grid">
@@ -143,21 +143,92 @@
                         <div><strong>Saldo final: $ {{saldoFinal | number}} </strong> </div>                     
 
                     </p-panel> 
+                    <p-panel header="Registro de Pago"  >
 
-                <form [formGroup]="formulario">        
+                <form [formGroup]="formulario">
+                
+                
+                    <label for="marca">Forma de pago</label>
+                    <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId"
+                        [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago" [showClear]="true"></p-dropdown>
+                    <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>   
+                
+                
+                
                     <div class="p-field">
                         <label for="name">Abono</label>
-                        <p-inputNumber id="nMonto" formControlName="nMonto" id="nMonto"
-                        mode="currency" currency="USD" locale="en-US" [class.is-invalid]="nMonto"></p-inputNumber>
-
+                        <p-inputNumber id="nMonto" formControlName="nMonto" id="nMonto" mode="currency" currency="USD" locale="en-US"
+                            [class.is-invalid]="nMonto"></p-inputNumber>
+                
                         <small *ngIf="validasMonto" class="p-error">Monto no valido.</small>
-                    </div>        
+                    </div>
+                
+                    <label for="sNota">Nota</label>
+                    <textarea id="sNota" formControlName="sNota" [autoResize]="true"  [rows]="5" [cols]="30" pInputTextarea autoResize="autoResize"
+                        [class.is-invalid]="validaNota" placeholder="Escribe una nota aquí"></textarea>
+                    <small class="p-error" *ngIf="validaNota">Se requiere una nota.</small>
+
                 </form>
                 <button pButton pRipple label="Agregar Abono"  class="p-button-success" (click)="guardar()"></button>
-
+            </p-panel>
                </div>
-               <div class="p-col-6">
-               hola
+               <div class="p-col-8">
+                <p-panel header="Lista de pagos realizados"  >
+
+                    <p-table *ngIf="banTablaAbonos"  #dt [value]="listaAbonos" responsiveLayout="scroll"  [rows]="5"
+                    [paginator]="true"
+                    [globalFilterFields]="['dFechaAbono','nMontoAbono']"
+                    [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                    currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                    [showCurrentPageReport]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Buscar abono" />
+                            </span>
+                            <!--
+    
+                            <span class="p-input-icon-right">
+                                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
+                                    <button pButton pRipple type="button" label="Ventas por entregar" class="p-button-success" (click)="consultaVentas()"></button>
+                                </div> 
+                            </span>
+                            -->
+    
+                           
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                        
+                            <th pSortableColumn="dFechaAbono" class="text-center">Fecha del abono<p-sortIcon field="dFechaAbono"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nMontoAbono" class="text-center">Monto del abono<p-sortIcon
+                                    field="nMontoAbono"></p-sortIcon>
+                            </th>
+                            <th class="text-center">Nota
+                        </th>
+                          
+                       
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-abono let-expanded="expanded">
+                        <tr>
+                           
+                            <td class="text-center"><span class="p-column-title">Fecha del abono</span> {{abono.dFechaAbono | date}}
+                            </td>
+                            <td class="text-center"><span class="p-column-title">Monto del abono</span> {{abono.nMontoAbono | number}}
+                            </td>
+                            <td class="text-center"><span class="p-column-title">Nota</span> {{abono.sNota}}
+                            </td>
+                          
+                            
+                        </tr>
+                    </ng-template>
+                </p-table>
+                </p-panel>
 
                </div>
             </div>
@@ -165,7 +236,7 @@
                     
             </ng-template>        
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger"
                     (click)="hideDialog()"></button>
             </ng-template>
         
@@ -181,6 +252,6 @@
         </div>
 
 
-        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+       
     </div>
 </div>

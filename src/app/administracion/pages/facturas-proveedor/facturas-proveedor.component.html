@@ -1,6 +1,5 @@
 <div class="p-grid">
-	<div class="p-col-12">
-		<p-toast></p-toast>	
+	<div class="p-col-12">	
 		<div class="card">			
 			<div class="p-text-center"><h2>Balance general proveedores</h2></div>
 			<p-toolbar styleClass="p-mb-4">
@@ -87,19 +86,19 @@
                        
                         <div class="p-grid" style="background: gainsboro;">
                             <div class="p-col-6">
-                              <div class="box"><strong>Vencido en pesos </strong></div>
+                              <div class="box text-center"><strong>Vencido en pesos </strong></div>
                             </div>
                             <div class="p-col-6">
-                              <div class="box"><strong>Vencido en usd </strong></div>
+                              <div class="box text-center"><strong>Regulares en pesos </strong></div>
                             </div>
                           
                           </div>
                           <div class="p-grid">
                             <div class="p-col-6">
-                                <div class="box"><p-tag styleClass="p-mr-2" severity="danger"> $ {{saldoPendientePagoPeso | number }} PESOS</p-tag></div>
+                                <div class="box text-center"><p-tag styleClass="p-mr-2" severity="danger"> $ {{totalVencidos | number }} PESOS</p-tag></div>
                               </div>
                             <div class="p-col-6">
-                              <div class="box"><p-tag styleClass="p-mr-2" severity="danger"> $ {{saldoPendientePagoPeso | number }} PESOS</p-tag></div>
+                              <div class="box text-center"><p-tag styleClass="p-mr-2" severity="success"> $ {{totalRegulares | number }} PESOS</p-tag></div>
                             </div>
                           </div>                   
 
@@ -177,26 +176,26 @@
 				<ng-template pTemplate="header">
 					<tr>
 					
-						<th pSortableColumn="tcProveedore.sRfc">RFC<p-sortIcon field="tcProveedore.sRfc"></p-sortIcon> </th>
+						<th pSortableColumn="tcProveedore.sRfc" class="text-center">RFC<p-sortIcon field="tcProveedore.sRfc"></p-sortIcon> </th>
 						<!--<th>Image</th>-->
-						<th pSortableColumn="tcProveedore.sRazonSocial">Razón social <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon>
+						<th pSortableColumn="tcProveedore.sRazonSocial" class="text-center">Razón social <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon>
 						</th>						
-						<th pSortableColumn="sMoneda">Moneda <p-sortIcon field="sMoneda"></p-sortIcon>
+						<th pSortableColumn="sMoneda" class="text-center">Moneda <p-sortIcon field="sMoneda"></p-sortIcon>
 						</th>
 
-						<th pSortableColumn="totalFacturas">Total facturas <p-sortIcon field="totalFacturas"></p-sortIcon>
+						<th pSortableColumn="totalFacturas" class="text-center">Total facturas <p-sortIcon field="totalFacturas"></p-sortIcon>
 						</th>
-						<th pSortableColumn="totalAbonos">Total Abonos<p-sortIcon field="totalAbonos"></p-sortIcon>
+						<th pSortableColumn="totalAbonos" class="text-center">Total Abonos<p-sortIcon field="totalAbonos"></p-sortIcon>
 						</th>
-						<th pSortableColumn="saldoPendientePago">Total por pagar <p-sortIcon field="saldoPendientePago"></p-sortIcon>
+						<th pSortableColumn="saldoPendientePago" class="text-center">Total por pagar <p-sortIcon field="saldoPendientePago"></p-sortIcon>
 						</th>
-						<th pSortableColumn="totalPorPagar">Facturas regulares <p-sortIcon field="totalPorPagar"></p-sortIcon>
+						<th pSortableColumn="totalPorPagar" class="text-center">Facturas regulares <p-sortIcon field="totalPorPagar"></p-sortIcon>
 						</th>
-						<th pSortableColumn="totalVencidas">Facturas vencidas <p-sortIcon field="totalVencidas"></p-sortIcon>
+						<th pSortableColumn="totalVencidas" class="text-center">Facturas vencidas <p-sortIcon field="totalVencidas"></p-sortIcon>
 						</th>
-                        <th >Estatus
+                        <th class="text-center" >Estatus
 						</th>	
-                        <th></th>					
+                        <th class="text-center">Acción</th>					
 											
 					</tr>
 				</ng-template>
@@ -207,28 +206,28 @@
 						<!--	<td><span class="p-column-title">Image</span>
 							<img [src]="'assets/demo/images/product/' + product.image" [alt]="product.name" width="100" class="p-shadow-4" />
 						</td>-->
-						<td><span class="p-column-title">RFC</span>
+						<td class="text-center"><span class="p-column-title">RFC</span>
 							{{cliente.tcProveedore.sRfc}}
 						</td>
-						<td class="p-test-center"> <span class="p-column-title">Razón social</span>
+						<td class="p-test-center text-center"> <span class="p-column-title">Razón social</span>
 							{{cliente.tcProveedore.sRazonSocial}}
 						</td>
-						<td class="p-test-center"> <span class="p-column-title">Moneda</span>
+						<td class="p-test-center text-center"> <span class="p-column-title">Moneda</span>
 							{{cliente.sMoneda}}
 						</td>
-						<td><span class="p-column-title">Total Facturas</span>
+						<td class="text-center"><span class="p-column-title">Total Facturas</span>
 							{{cliente.totalFacturas | number}}
 						</td>
-						<td><span class="p-column-title">Total abonos</span>
+						<td class="text-center"><span class="p-column-title">Total abonos</span>
 							{{cliente.totalAbonos | number}}
 						</td>
-						<td><span class="p-column-title">Saldo pendiente pago</span>
+						<td class="text-center"><span class="p-column-title">Saldo pendiente pago</span>
 							{{cliente.saldoPendientePago | number}}
 						</td>
-                        <td><span class="p-column-title">Facturas regulares</span>
+                        <td class="text-center"><span class="p-column-title">Facturas regulares</span>
 							{{cliente.totalPorPagar | number}}
 						</td>
-                        <td><span class="p-column-title">facturas vencidas</span>
+                        <td class="text-center"><span class="p-column-title">facturas vencidas</span>
 							{{cliente.totalVencidas | number}}
 						</td>
 						
@@ -242,11 +241,11 @@
 							<p-tag styleClass="p-mr-2" severity="success">REGULAR</p-tag>
 						  </div>
 						</td>
-						<td>
+						<td class="text-center">
 							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
 								(click)="consultarDetalleFacturaMonedas(cliente)"></button> 
-								<button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-mr-2"
-									(click)="genenerHistorialAbonoVentaPDF(cliente)"></button>
+							<!--<button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-mr-2"
+									(click)="genenerHistorialAbonoVentaPDF(cliente)"></button>-->	
 						</td>
 					</tr>
 				</ng-template>
