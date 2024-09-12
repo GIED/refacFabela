@@ -1,10 +1,10 @@
-<div class="layout-sidebar" [ngClass]="{'layout-sidebar-active': appMain.sidebarActive}" (click)="appMain.onSidebarClick($event)" (mouseover)="appMain.sidebarActive=true" (mouseleave)="appMain.sidebarActive=false" style="background: rgb(223, 221, 221); text-decoration: none;">
-    <div class="sidebar-logo">
+<div class="layout-sidebar" [ngClass]="{'layout-sidebar-active': appMain.sidebarActive}" (click)="appMain.onSidebarClick($event)" (mouseover)="appMain.sidebarActive=true" (mouseleave)="appMain.sidebarActive=false" style="background: #EDE6DB; text-decoration: none;">
+    <div class="sidebar-logo" style="text-decoration: none;">
         <a href="#" class="sidebar-pin" title="Toggle Menu" (click)="appMain.onToggleMenuClick($event)" style="text-decoration: none;">
             <i class="pi pi-lock" *ngIf="appMain.staticMenuActive" style="text-decoration: none ;"></i>
             <i class="pi pi-lock-open" *ngIf="!appMain.staticMenuActive" style="text-decoration: none ;"></i>
         </a>
-        <a routerLink="/inicio/inicio-general">
+        <a routerLink="/inicio/inicio-general" style="text-decoration: none;">
             <img alt="logo" src="assets/layout/images/LOGO.png"  />
             <span class="app-name">Fabela</span>
         </a>

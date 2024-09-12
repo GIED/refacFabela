@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 @Component({
     selector: 'app-footer',
     template: `
-        <div class="layout-footer" style="background: #aa7ea2">
+        <div class="layout-footer" style="background: linear-gradient(100deg, #78866B 20%, #EDE6DB 110%)">
 			<div class="logo-text">
 				<img src="assets/layout/images/LOGO.png" alt="mirage-layout" />
 				<div class="text">

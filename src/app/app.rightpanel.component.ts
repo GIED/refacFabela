@@ -5,7 +5,7 @@ import {AppMainComponent} from './app.main.component';
     selector: 'app-rightpanel',
     template: `
         <div class="layout-rightpanel" (click)="appMain.onRightPanelClick($event)">
-			<div class="right-panel-header" style="background:#aa7ea2;">				
+			<div class="right-panel-header" style="background:linear-gradient(100deg, #78866B 20%, #EDE6DB 110%);">				
 				<a href="#" class="rightpanel-exit-button" (click)="appMain.onRightPanelClose($event)">
 					<i class="pi pi-times"></i>
 				</a>

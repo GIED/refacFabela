@@ -5,7 +5,7 @@ import { TokenService } from './shared/service/token.service';
 @Component({
     selector: 'app-topbar',
     template: `
-        <div class="layout-topbar" style="background: #aa7ea2" >
+        <div class="layout-topbar" style="background: linear-gradient(100deg, #78866B 20%, #EDE6DB 110%)" >
 			<div class="layout-topbar-wrapper">
                 <div class="layout-topbar-left">
 					<div class="layout-topbar-logo-wrapper">
@@ -30,7 +30,7 @@ import { TokenService } from './shared/service/token.service';
                 <div class="layout-topbar-right fadeInDown">
 					<ul class="layout-topbar-actions">
 						<li>
-							<div style="background: white; color: #aa7ea2; height:23px; border-radius:20px; width:220px; text-align:center;"><strong><p style="color:#aa7ea2;">Bienvenida(o): {{nombreUsuario}} </p></strong></div>
+							<div style="background: white; color: linear-gradient(100deg, #78866B 20%, #EDE6DB 110%); height:23px; border-radius:20px; width:220px; text-align:center;"><strong><p style="color:linear-gradient(100deg, #78866B 20%, #EDE6DB 110%);">Bienvenida(o): {{nombreUsuario}} </p></strong></div>
 						</li>
 						
 						<li #profile class="topbar-item profile-item" [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === profile}">

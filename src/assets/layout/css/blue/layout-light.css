@@ -303,8 +303,8 @@ body.hidden-overflow {
 
 a {
   text-decoration: none;
-  color: #9199a9;
-  color: var(--primary-color);
+  /*color: #9199a9;*/
+  /*color: var(--primary-color);*/
 }
 
 .layout-main-mask {
