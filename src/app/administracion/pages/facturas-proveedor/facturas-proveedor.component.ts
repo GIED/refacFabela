@@ -43,6 +43,14 @@ export class FacturasProveedorComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargainicial();
+    this.datoCambio=new DataSerie();
+    this.proveedorService.getTipoCambioBM().subscribe(data2=>{
+      this.datoCambio=data2;
+      if(data2 == null || data2 == undefined){
+        this.datoCambio= new DataSerie();
+        this,this.datoCambio.dato=20;
+      }
+    })
 
 
   }
@@ -52,10 +60,7 @@ export class FacturasProveedorComponent implements OnInit {
 
     this.titulo='Registro de facturas del proveedor'
 
-    this.datoCambio=new DataSerie();
-    this.proveedorService.getTipoCambioBM().subscribe(data2=>{
-      this.datoCambio=data2;
-    })
+    
 
 
 
