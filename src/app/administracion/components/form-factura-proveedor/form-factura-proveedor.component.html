@@ -37,24 +37,6 @@
             <small class="p-error" *ngIf="validaDFechaTerminoFactura">*Fecha Término Factura es requerida.</small>
           </div>
 
-          <!-- 
-          <div class="p-field p-col-6">
-            <label for="n_id_usuario">ID Usuario</label>
-            <input type="text" pInputText name="n_id_usuario" formControlName="n_id_usuario" [class.is-invalid]="validaNIdUsuario" />
-            <small class="p-error" *ngIf="validaNIdUsuario">*ID Usuario es requerido.</small>
-          </div>
-         
-          <div class="p-field p-col-6">
-            <label for="n_estatus_factura_proveedor">Estatus Factura Proveedor</label>
-            <input type="text" pInputText name="n_estatus_factura_proveedor" formControlName="n_estatus_factura_proveedor" [class.is-invalid]="validaNEstatusFacturaProveedor" />
-            <small class="p-error" *ngIf="validaNEstatusFacturaProveedor">*Estatus Factura Proveedor es requerido.</small>
-          </div>
-          
-          <div class="p-field p-col-6">
-            <label for="d_fecha_pago_factura">Fecha Pago Factura</label>
-            <input type="date" pInputText name="d_fecha_pago_factura" formControlName="d_fecha_pago_factura" [class.is-invalid]="validaDFechaPagoFactura" />
-            <small class="p-error" *ngIf="validaDFechaPagoFactura">*Fecha Pago Factura es requerida.</small>
-          </div>-->
           
           <div class="p-field p-col-6">
             <label for="n_monto_factura">Monto Factura</label>
@@ -69,6 +51,13 @@
                 [showClear]="true"></p-dropdown>
                 <small class="p-error" *ngIf="validaNIdMoneda">* Moneda es requerido.</small>
             </div>
+
+            <div class="p-field p-col-6">
+              <label for="marca">Razón social</label>
+              <p-dropdown [options]="listaDatosFactura" formControlName="n_id_razon_social" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaSRazonSocial" placeholder="Seleccine una razón social"
+                  [showClear]="true"></p-dropdown>
+                  <small class="p-error" *ngIf="validaSRazonSocial">*Razón social requerida.</small>
+              </div>
           
           <div class="p-field p-col-12">
             <label for="s_nota">Nota</label>

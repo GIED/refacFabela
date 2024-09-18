@@ -12,6 +12,8 @@ import { AuthService } from '../../../shared/service/auth.service';
 import { TokenService } from '../../../shared/service/token.service';
 import { Observable } from 'rxjs';
 import { ReturnStatement } from '@angular/compiler';
+import { DatosFacturaDto } from 'src/app/productos/model/DatosFacturaDto';
+import { ClienteService } from '../../service/cliente.service';
 
 @Component({
   selector: 'app-factura-moneda-proveedor',
@@ -39,13 +41,17 @@ export class FacturaMonedaProveedorComponent implements OnInit {
   saldoFinal:number=0;
   listaFormaPago:TcFormaPago[];
   banTablaAbonos: boolean=false;
+  listaDatosFactura:DatosFacturaDto[];
 
 
   constructor( private messageService: MessageService,
-    private confirmationService: ConfirmationService, private catalogoService:CatalogoService, private _tokenService: TokenService,   private fb: FormBuilder, private proveedorService: ProveedorService) { 
+   private catalogoService:CatalogoService, private _tokenService: TokenService,   private fb: FormBuilder, private proveedorService: ProveedorService,
+    
+  ) { 
   this.banAbonoFacturaProveedor=false;
   this.twAbonoFacturaProveedor=new TwAbonoFacturaProveedor();
   this.listaAbonos=[];
+  this.listaDatosFactura=[];
 
     }
 
@@ -53,8 +59,11 @@ export class FacturaMonedaProveedorComponent implements OnInit {
 
     this.getFacturasProveedorMoneda();
     this.getFormasPago();
+ 
 
   }
+
+
 
   // INICIA CON LA CREACIÓN DEL FORMULARIO 
    crearformulario(balanceFacturaProveedorMoneda: BalanceFacturaProveedorMoneda){

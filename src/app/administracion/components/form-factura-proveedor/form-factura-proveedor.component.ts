@@ -8,6 +8,8 @@ import { ProveedorService } from '../../service/proveedor.service';
 import { Proveedores } from '../../interfaces/proveedores';
 import { TcMoneda } from 'src/app/productos/model/TcMoneda';
 import { TwFacturasProveedor } from '../../../productos/model/TwFacturasProveedor';
+import { ClienteService } from '../../service/cliente.service';
+import { DatosFacturaDto } from 'src/app/productos/model/DatosFacturaDto';
 
 @Component({
   selector: 'app-form-factura-proveedor',
@@ -23,6 +25,7 @@ export class FormFacturaProveedorComponent implements OnInit {
   listaProvedores: Proveedores[];
   listaMonedas: TcMoneda[];
   twFacturasProveedor:TwFacturasProveedor;
+  listaDatosFactura:DatosFacturaDto[];
   constructor(
 
     private fb: FormBuilder, 
@@ -30,17 +33,28 @@ export class FormFacturaProveedorComponent implements OnInit {
               private messageService: MessageService,
               private usuarioService: UsuarioService,
               private tokenService: TokenService, 
-              private proveedorService: ProveedorService
+              private proveedorService: ProveedorService, 
+              private clienteService: ClienteService
   ) {
 
     this.twFacturasProveedor=new TwFacturasProveedor();
+    this.listaDatosFactura=[];
    }
 
   ngOnInit(): void {
     this.consultaproveedores();
     this.getMonegas();
-
+    this.getDatosFactura();
     this.crearFormulario();
+  }
+
+  getDatosFactura(){
+
+    this.clienteService.obtenerCatalogoRazonSocial().subscribe(data2=>{
+  this.listaDatosFactura=data2
+
+    })
+
   }
 
   getMonegas(){
@@ -65,25 +79,18 @@ export class FormFacturaProveedorComponent implements OnInit {
   crearFormulario() {
   
     this.formulario = this.fb.group({
-      /*nId: ['', []],*/
       s_folio_factura: ['', [Validators.required]],
       n_id_proveedor: ['', [Validators.required]],
       d_fecha_inicio_factura: ['', []],
-      d_fecha_termino_factura: ['', [Validators.required]],      
-      /* n_id_usuario: ['', [Validators.required]],      
-      n_estatus_factura_proveedor: ['', [Validators.required]],
-      d_fecha_pago_factura: ['', []], */
+      d_fecha_termino_factura: ['', [Validators.required]],
       n_monto_factura: ['', [Validators.required]],
       n_id_moneda: ['', [Validators.required]],
       s_nota: ['', [Validators.required]],
+      n_id_razon_social: ['', [Validators.required]],
     })
     
   }
- /*
-  get validanId() {
-    return this.formulario.get('nId').invalid && this.formulario.get('nId').touched;
-  } */
-  
+ 
   get validaSFolioFactura() {
     return this.formulario.get('s_folio_factura').invalid && this.formulario.get('s_folio_factura').touched;
   }
@@ -99,18 +106,6 @@ export class FormFacturaProveedorComponent implements OnInit {
   get validaDFechaTerminoFactura() {
     return this.formulario.get('d_fecha_termino_factura').invalid && this.formulario.get('d_fecha_termino_factura').touched;
   }
-  /*
-  get validaNIdUsuario() {
-    return this.formulario.get('n_id_usuario').invalid && this.formulario.get('n_id_usuario').touched;
-  }
-  
-  get validaNEstatusFacturaProveedor() {
-    return this.formulario.get('n_estatus_factura_proveedor').invalid && this.formulario.get('n_estatus_factura_proveedor').touched;
-  }
-  
-  get validaDFechaPagoFactura() {
-    return this.formulario.get('d_fecha_pago_factura').invalid && this.formulario.get('d_fecha_pago_factura').touched;
-  } */
   
   get validaNMontoFactura() {
     return this.formulario.get('n_monto_factura').invalid && this.formulario.get('n_monto_factura').touched;
@@ -122,6 +117,9 @@ export class FormFacturaProveedorComponent implements OnInit {
   
   get validaSNota() {
     return this.formulario.get('s_nota').invalid && this.formulario.get('s_nota').touched;
+  }
+  get validaSRazonSocial() {
+    return this.formulario.get('n_id_razon_social').invalid && this.formulario.get('n_id_razon_social').touched;
   }
 
   get fProducto(){
@@ -161,6 +159,7 @@ saveFactura(){
    this.twFacturasProveedor.nEstatusFacturaProveedor=1;
    this.twFacturasProveedor.nIdUsuario=this.tokenService.getIdUser();
    this.twFacturasProveedor.sNota=this.formulario.get('s_nota').value;
+   this.twFacturasProveedor.nIdRazonSocial=this.formulario.get('n_id_razon_social').value;
 
     
     this.proveedorService.guardaFacturaProveedor(this.twFacturasProveedor).subscribe(data=>{

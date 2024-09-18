@@ -10,4 +10,5 @@ export class TwFacturasProveedor{
 	 nMontoFactura:number;	
 	 nIdMoneda:number;	
 	 sNota:string;
+	 nIdRazonSocial:number;
 }
