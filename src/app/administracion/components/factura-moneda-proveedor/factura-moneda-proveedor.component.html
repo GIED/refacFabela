@@ -130,7 +130,7 @@
             <!--FORMULARIO DE REGISTRO DE ABONOS A FACTURAS DEL PROVEEDOR-->
             
         <p-dialog [(visible)]="banAbonoFacturaProveedor"  header="Abono factura del proveedor"
-        [style]="{width: '60vw', height: '70vh'}"
+        [style]="{width: '80vw', height: '100vh'}"
         header="Facturas Activas" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">        
             <ng-template pTemplate="content">
                <div class="p-grid">
@@ -152,6 +152,11 @@
                     <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId"
                         [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago" [showClear]="true"></p-dropdown>
                     <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>   
+                
+                    <label for="cuenta">Cuenta Bancaria</label>
+                    <p-dropdown [options]="listaCuentasBancarias" formControlName="idCuentaBancaria" optionLabel="displayLabel" optionValue="nId"
+                        [class.is-invalid]="validaCuentaBancaria" placeholder="Seleccine cuenta bancaria" [showClear]="true"></p-dropdown>
+                    <small class="p-error" *ngIf="validaCuentaBancaria">Se requiere una forma de pago.</small>   
                 
                 
                 
@@ -208,6 +213,9 @@
                             <th pSortableColumn="nMontoAbono" class="text-center">Monto del abono<p-sortIcon
                                     field="nMontoAbono"></p-sortIcon>
                             </th>
+                            <th pSortableColumn="nCuentaBancaria" class="text-center">Cuenta bancaria<p-sortIcon
+                                field="nCuentaBancaria"></p-sortIcon>
+                            </th>
                             <th class="text-center">Nota
                         </th>
                           
@@ -220,6 +228,8 @@
                             <td class="text-center"><span class="p-column-title">Fecha del abono</span> {{abono.dFechaAbono | date}}
                             </td>
                             <td class="text-center"><span class="p-column-title">Monto del abono</span> {{abono.nMontoAbono | number}}
+                            </td>
+                            <td class="text-center"><span class="p-column-title">Banco</span> {{abono.tcCuentaBancaria.sBanco+'-'+abono.tcCuentaBancaria.sTerminacion}}
                             </td>
                             <td class="text-center"><span class="p-column-title">Nota</span> {{abono.sNota}}
                             </td>

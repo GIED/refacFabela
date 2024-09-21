@@ -57,6 +57,8 @@ static consultaFormaPagoId='/catalogoFormaPagoId?';
 static consultaGastosCaja='/gastosCaja?';
 
 static consultaMonedas='/catalogoMoneda';
+static consultaCuentasBancariasRazon='/getCuentasBanciariasRazon?';
+
 static obtenerCatalogoGastos='/catalogoGasto';
 static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';

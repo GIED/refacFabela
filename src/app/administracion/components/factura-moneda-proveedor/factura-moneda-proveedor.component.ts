@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { ReturnStatement } from '@angular/compiler';
 import { DatosFacturaDto } from 'src/app/productos/model/DatosFacturaDto';
 import { ClienteService } from '../../service/cliente.service';
+import { TcCuentaBancaria } from 'src/app/productos/model/TcCuentaBancaria';
 
 @Component({
   selector: 'app-factura-moneda-proveedor',
@@ -42,6 +43,7 @@ export class FacturaMonedaProveedorComponent implements OnInit {
   listaFormaPago:TcFormaPago[];
   banTablaAbonos: boolean=false;
   listaDatosFactura:DatosFacturaDto[];
+  listaCuentasBancarias:TcCuentaBancaria[];
 
 
   constructor( private messageService: MessageService,
@@ -52,6 +54,7 @@ export class FacturaMonedaProveedorComponent implements OnInit {
   this.twAbonoFacturaProveedor=new TwAbonoFacturaProveedor();
   this.listaAbonos=[];
   this.listaDatosFactura=[];
+  this.listaCuentasBancarias=[];
 
     }
 
@@ -60,6 +63,23 @@ export class FacturaMonedaProveedorComponent implements OnInit {
     this.getFacturasProveedorMoneda();
     this.getFormasPago();
  
+
+  }
+
+  
+  consultarCuentasBancariasRazon(nIdRazonSocial:number){
+
+
+    this.catalogoService.getCuentasBanciariasRazon(nIdRazonSocial).subscribe(data5 => {
+      this.listaCuentasBancarias = data5;
+
+      this.listaCuentasBancarias = this.listaCuentasBancarias.map(cuenta => ({
+        ...cuenta,
+        displayLabel: `${cuenta.sBanco} - ${cuenta.sTerminacion}`
+      }));
+      console.log(data5);
+    });
+
 
   }
 
@@ -79,13 +99,18 @@ export class FacturaMonedaProveedorComponent implements OnInit {
     this.formulario = this.fb.group({
       nMonto: ['', [Validators.required]],
       idFormaPago: ['', [Validators.required]],
+      idCuentaBancaria: ['', [Validators.required]],
       sNota: ['', [Validators.required]]
     });  
+
+    this.consultarCuentasBancariasRazon(this.balanceFacturaMonedaDTO.twFacturasProveedor.nIdRazonSocial);
+
    
 
     // CONSULTA LOS ABONOS DE LA FACTURA SELECCIONADA
     this.getAbonosFactura(balanceFacturaProveedorMoneda.nId);
 
+    
    }
 
 
@@ -96,6 +121,11 @@ export class FacturaMonedaProveedorComponent implements OnInit {
   }
   get validaFormaPago() {
     const control = this.formulario.get('idFormaPago');
+    return control?.invalid && control?.touched;
+  }
+
+  get validaCuentaBancaria() {
+    const control = this.formulario.get('idCuentaBancaria');
     return control?.invalid && control?.touched;
   }
   get validaNota() {
@@ -116,6 +146,7 @@ export class FacturaMonedaProveedorComponent implements OnInit {
         this.twAbonoFacturaProveedor.nIdFacturaProveedor = this.balanceFacturaMonedaDTO.nId;
         this.twAbonoFacturaProveedor.nEstatusAbono = 1;
         this.twAbonoFacturaProveedor.nIdFormaPago = this.formulario.get('idFormaPago').value;
+        this.twAbonoFacturaProveedor.nIdCuentaBancaria = this.formulario.get('idCuentaBancaria').value;
         this.twAbonoFacturaProveedor.nIdUsuario = this._tokenService.getIdUser();
         this.twAbonoFacturaProveedor.sNota = this.formulario.get('sNota').value;;
         this.twAbonoFacturaProveedor.dFechaAbono = new Date();
