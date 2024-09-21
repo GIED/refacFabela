@@ -170,12 +170,10 @@ this.mostrarProductosCotizacionCliente=true;
 
     this.mostrarCotizacionesVigentes=false;
 
-    console.log('Esta es la cotización a modificar', nIdCotizacion );
 
 
   this.ventasCotizacionService.obtenerCotizacionProducto(nIdCotizacion).subscribe(data=>{
 
-    console.log('Estos son los productos de la venta', data);
 
    for (let index = 0; index < data.length; index++) {
     let productoEnLista:TvStockProducto=new TvStockProducto();
@@ -184,13 +182,9 @@ this.mostrarProductosCotizacionCliente=true;
     productoEnLista.tcProducto.nPrecioConIva=data[index].nTotalUnitario;
 
     productoEnLista.tcProducto.nPrecioSinIva=data[index].nPrecioUnitario;
-    console.log(productoEnLista.tcProducto.nPrecioConIva);
     productoEnLista.tcProducto.nPrecio=data[index].nPrecioUnitario;
-    console.log(productoEnLista.tcProducto.nPrecio);
     productoEnLista.tcProducto.nPrecioIva=data[index].nIvaPartida;
-    console.log(productoEnLista.tcProducto.nPrecioIva);
     productoEnLista.tcProducto.nPrecioPeso=data[index].nPrecioUnitario;
-    console.log(productoEnLista.tcProducto.nPrecioPeso);
     productoEnLista.nCantidad=data[index].nCantidad;    
     this.listaProductos.push(productoEnLista);
     this.total =+data[index].nTotalPartida;

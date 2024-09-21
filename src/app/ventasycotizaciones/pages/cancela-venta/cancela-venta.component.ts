@@ -158,7 +158,6 @@ cancelaVenta(ventaProductoDto:VentaProductoDto){
      this.VentaProductoCancelaDto.sMotivo=this.sMotivo;
      this.VentaProductoCancelaDto.penaliza=this.penaliza;
 
-     console.log( this.VentaProductoCancelaDto.penaliza);
 
 
       this.ventasService.cancelarVentaProducto(this.VentaProductoCancelaDto).subscribe(data => {

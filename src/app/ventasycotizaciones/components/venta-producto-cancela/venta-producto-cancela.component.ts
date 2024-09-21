@@ -31,7 +31,6 @@ export class VentaProductoCancelaComponent implements OnInit {
 
       this.listaProductosCancela=data;
 
-      console.log( this.listaProductosCancela);
 
     })
  

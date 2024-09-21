@@ -165,7 +165,7 @@ export class CobrarComponent implements OnInit {
 
   guardaSaldoUtilizado(twSaldoUtilizado:TwSaldoUtilizado){
 
-    console.log('Voy a guargar el saldo utilizado',twSaldoUtilizado );
+
 
   this.ventasService.guardaSaldoUtilizado(twSaldoUtilizado).subscribe(data=>{
 
@@ -180,7 +180,7 @@ export class CobrarComponent implements OnInit {
   guardaVentaCobro(trVentaCobro:TrVentaCobro){
 
   
-    console.log('Voy a guargar el cobro',trVentaCobro );
+
     this.ventasService.guardaVentaCobro(trVentaCobro).subscribe(data=>{
      
       this.consultaPagosParciales(data.nId);
@@ -225,7 +225,6 @@ export class CobrarComponent implements OnInit {
         this.saldoUtilizado.nIdVentaUtilizado=this.ventaSaldoFavor.nId;
 
        // Se guarda    
-       console.log('Esto es el saldo utilizado que se guardará',this.saldoUtilizado);
        this.guardaSaldoUtilizado( this.saldoUtilizado);
        
        this.ventaCobro.nIdVenta=this.ventaSaldoFavor.nId;
@@ -233,7 +232,6 @@ export class CobrarComponent implements OnInit {
        this.ventaCobro.dFecha=new Date();
        this.ventaCobro.nEstatus=1;
        this.ventaCobro.nIdFormaPago=11;
-       console.log('Esto es lo que se cobrara en venta cobro',this.ventaCobro);
      
        
        this.guardaVentaCobro(this.ventaCobro);
@@ -324,7 +322,6 @@ export class CobrarComponent implements OnInit {
 
           this.ventasService.guardarVentaCompleta(this.twVenta).subscribe(data=>{
 
-            console.log('Se guardo el cobro')
 
             this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Se guardo el cobro', life: 3000 });
 
@@ -360,7 +357,6 @@ export class CobrarComponent implements OnInit {
     this.ventasService.consultaVentaDetalleId(nId).subscribe(data => {
       this.ventaSaldoFavor = data;
 
-      console.log( this.ventaSaldoFavor);
 
       if (this.ventaSaldoFavor.nIdTipoVenta === 3) {
         this.state = true;
@@ -483,14 +479,12 @@ export class CobrarComponent implements OnInit {
 
     } 
     else {
-      console.log(this.fProducto.monto.value - this.restan);
 
       if ((this.fProducto.monto.value - this.restan)>=0.01) {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El total a pagar no puede ser mayor al adeudo', life: 3000 });
       }
       else {
 
-        console.log('Entre a guardar el cobro');
 
 
         this.ventaCobro.nIdVenta = this.ventaSaldoFavor.nId;
@@ -501,8 +495,7 @@ export class CobrarComponent implements OnInit {
         this.ventaCobro.nMonto = this.fProducto.monto.value;
         // this.ventaCobro.nMonto.toFixed(2);
 
-        console.log(this.fProducto.idFormaPago.value);
-        console.log(this.fProducto.monto.value);  
+       
         
         this. banGuardar=false;
 

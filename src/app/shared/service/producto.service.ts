@@ -37,23 +37,23 @@ export class ProductoService {
 
   obtenerTotalBodegasIdProducto(nId:number){
     let url =environment.servicios.apiRefacFabela + locator.obtenerTotalBodegasIdProducto+'id='+nId;
-    console.log(url);
+  
     return this.http.get<TvStockProducto>(url);
   }
   
   obtenerVentaStock(fechaInicio: string, fechaFinal:string){
     let url =environment.servicios.apiRefacFabela + locator.obtenerVentaStockFecha+'dFechaInicio='+fechaInicio+'&dFechaFinal='+fechaFinal;
-    console.log(url);
+  
     return this.http.get<TvVentaStock[]>(url);
   }
   obtenerVentasCancelaFecha(fechaInicio: string, fechaFinal:string){
     let url =environment.servicios.apiRefacFabela + locator.obtenerVentasCancelaFecha+'fechaInicio='+fechaInicio+'&fechaTermino='+fechaFinal;
-    console.log(url);
+  
     return this.http.get<TwVentaProductoCancela[]>(url);
   }
   obtenerProductosAjustadosFecha(fechaInicio: string, fechaFinal:string){
     let url =environment.servicios.apiRefacFabela + locator.obtenerProductosAjustadosFecha+'fechaInicio='+fechaInicio+'&fechaTermino='+fechaFinal;
-    console.log(url);
+  
     return this.http.get<TwAjusteInventario[]>(url);
   }
 

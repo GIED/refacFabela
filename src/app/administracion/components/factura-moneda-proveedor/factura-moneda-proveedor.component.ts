@@ -77,7 +77,7 @@ export class FacturaMonedaProveedorComponent implements OnInit {
         ...cuenta,
         displayLabel: `${cuenta.sBanco} - ${cuenta.sTerminacion}`
       }));
-      console.log(data5);
+      //console.log(data5);
     });
 
 

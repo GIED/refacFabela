@@ -135,12 +135,12 @@ export class FormClienteComponent implements OnInit {
       this.tcCp = data;
 
       if (this.tcCp != undefined || this.tcCp != null) {
-        console.log('encontre los datos del cogigo postal')
+       // console.log('encontre los datos del cogigo postal')
         this.cpExiste = false;
         this.banGuardar=true;
       }
       else {
-        console.log('No encontre los datos del codigo postal')
+       // console.log('No encontre los datos del codigo postal')
         this.formulario.setErrors({ 'formularioInvalido': true });
         this.cpExiste = true;
         this.banGuardar=false;
@@ -171,7 +171,7 @@ export class FormClienteComponent implements OnInit {
     this.fclientes.sClave.setValue(this.objCliente.sClave);
     this.fclientes.nCp.setValue(this.objCliente.tcCp.sCp);
     this.fclientes.nDatosValidados.setValue(this.objCliente.nDatosValidados);
-    console.log(this.objCliente.nDatosValidados);
+    // console.log(this.objCliente.nDatosValidados);
 
 
     if (this.objCliente.tcRegimenFiscal !== null && this.objCliente.tcRegimenFiscal !== undefined) {
@@ -218,8 +218,8 @@ export class FormClienteComponent implements OnInit {
         this.cliente.nDescuento = this.objCliente.nDescuento;
         this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito        
         this.cliente.nCp = this.tcCp.nId;
-        console.log('esto es lo que voy a actualizar', this.cliente);
-        console.log('esto es lo que voy a actualizar', this.fclientes);
+       // esto es lo que voy a actualizar', this.cliente);
+       // console.log('esto es lo que voy a actualizar', this.fclientes);
 
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;

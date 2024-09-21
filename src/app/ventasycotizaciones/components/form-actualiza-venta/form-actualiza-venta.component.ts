@@ -81,16 +81,13 @@ export class FormActualizaVentaComponent implements OnInit {
 
   inputCliente(){ 
 
-    console.log('entre a el inout del cliente')
     this.mostrarDetalleCliente=false;
 
     if (this.clienteCtrl.valid) {
-      console.log(this.clienteCtrl.value);
 
 
       if(this.clienteCtrl.value.length>5){
         this.clienteService.obtenerClientesLike(this.clienteCtrl.value).subscribe(cliente => {
-          console.log(cliente.length);
           if (cliente.length != 0) {
             this.listaCliente=cliente;
             this.mostrarSugerenciasCliente=true;
@@ -117,7 +114,6 @@ export class FormActualizaVentaComponent implements OnInit {
       .pipe(debounceTime(500))
       .subscribe(valor => { 
         this.clienteService.obtenerClientesLike(valor).subscribe(cliente => {
-          console.log(cliente.length);
           if (cliente.length != 0) {
             this.listaCliente=cliente;
             this.mostrarSugerenciasCliente=true;
@@ -153,7 +149,6 @@ export class FormActualizaVentaComponent implements OnInit {
   this.ventasService.obtnerVentaId(venta).subscribe(data=>{
 
   this.twVenta=data;
-  console.log( this.twVenta);
 
 
   })
@@ -164,16 +159,13 @@ export class FormActualizaVentaComponent implements OnInit {
 
   valorSeleccionadoCliente(){
 
-    console.log('Este el el valor seleccionado',this.clienteSeleccionadoCtrl.value);
   this.productosFiltrados=[];
   this.mostrarSugerenciasCliente=false;
   this.clienteSeleccionado=this.clienteSeleccionadoCtrl.value;
-  console.log(this.clienteSeleccionado);
   this.clienteCtrl.setValue(this.clienteSeleccionado.sRazonSocial);
   this.twVenta.tcCliente=this.clienteSeleccionado;
   this.twVenta.nIdCliente=this.clienteSeleccionado.nId;
 
-  console.log('Asigne esta venta al cliente',this.twVenta);
 
   
 
@@ -234,8 +226,7 @@ export class FormActualizaVentaComponent implements OnInit {
         forkJoin([this.ventasService.consultaVentaDetalleId(this.twVenta.nId),  this.clienteService.obtenerSaldoGeneralCliente(this.twVenta.tcCliente.nId)]).subscribe(
           ([resultadoServicio1, resultadoServicio2]) => {
             
-            console.log('Resultado del servicio 1:', resultadoServicio1);
-        console.log('Resultado del servicio 2:', resultadoServicio2);
+         
             
             /*Si la venta es crédito */
             if(this.twVenta.nTipoPago==1){
@@ -258,8 +249,7 @@ export class FormActualizaVentaComponent implements OnInit {
                         }
                         
 
-                console.log('Saldo disponible',saldoDisponible);
-                console.log('Total de la venta',totalVenta);
+           
 
                if(saldoDisponible>totalVenta){
 

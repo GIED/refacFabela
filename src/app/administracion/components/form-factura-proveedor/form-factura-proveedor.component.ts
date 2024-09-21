@@ -60,7 +60,7 @@ export class FormFacturaProveedorComponent implements OnInit {
   getMonegas(){
     this.catalogoService.obtenerMonedas().subscribe(data2=>{
       this.listaMonedas=data2;
-      console.log(this.listaMonedas);
+    
     })
   }
 
@@ -69,7 +69,7 @@ export class FormFacturaProveedorComponent implements OnInit {
   this.proveedorService.getProveedores().subscribe(data=>{
    
     this.listaProvedores=data;
-    console.log(this,this.listaProvedores);
+  
 
   })
 
@@ -164,13 +164,13 @@ saveFactura(){
     
     this.proveedorService.guardaFacturaProveedor(this.twFacturasProveedor).subscribe(data=>{
 
-      console.log('esto es lo que guarde',data);
+      
       this.limpiarFormulario();
       this.cerrar.emit(false);
 
     }) 
 
-      console.log( this.twFacturasProveedor);
+     
     
   }
   

@@ -73,9 +73,7 @@ export class FacturacionComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log(this.venta);
-    console.log(this.uuid);
-
+ 
    if(this.venta!=null && this.uuid!=null && this.pdf && this.xml ){
     
 
@@ -86,7 +84,6 @@ export class FacturacionComponent implements OnInit {
       
       this.formData= new FormData();
       this.subirFacturaDto=data;
-      console.log(this.subirFacturaDto);
       this.obtenerFacruras();
       this.mostrarFormularioFactura=false;
 
@@ -190,10 +187,8 @@ export class FacturacionComponent implements OnInit {
           this.nuevaFormaPago = this.ListaTrVentaCobro[index].tcFormapago.sDescripcion
 
            /*Si el  monto de pago en efectivo es mayor o igual a dos mil la factura sale por definir para hacer el complemento de pago*/
-           console.log(this.ListaTrVentaCobro[index].nMonto );
           if (this.ListaTrVentaCobro[index].nMonto >= 2000 && this.ListaTrVentaCobro[index].tcFormapago.nId == 1) {
             this.efectivoValida = true;
-            console.log('Entre a activar la bamdera de cobro por definir');
           }
           else {
             this.efectivoValida = false;
@@ -215,7 +210,6 @@ export class FacturacionComponent implements OnInit {
       
        /*Si el tipo de pago es a crédito o el numero de formas de pago es mayor a 1 se realiza la factura por cobrar*/
       if( this.tvVentasFactura.nTipoPago==1 || this.ListaTrVentaCobro.length>1 || this.efectivoValida ){ 
-        console.log('Entre a pasar el pago por definir con sus variables')    
         this.tvVentasFactura.formaPago=22;
         this.tvVentasFactura.tcFormapago.nId=22;
         this.tvVentasFactura.tcFormapago.sClave='99';

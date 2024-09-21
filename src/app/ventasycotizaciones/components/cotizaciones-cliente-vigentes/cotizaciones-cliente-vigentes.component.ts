@@ -25,11 +25,9 @@ export class CotizacionesClienteVigentesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Esté es el dato que me ha llegado', this.nICliente)
 
     this.ventasCotizacionesService.obtenerCotizacionClienteVigente(this.nICliente).subscribe(data=>{
       this.listaCotizacionesVigentes=data;
-     console.log(this.listaCotizacionesVigentes);
       
     })
 

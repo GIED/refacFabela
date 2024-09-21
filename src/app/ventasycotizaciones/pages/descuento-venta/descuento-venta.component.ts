@@ -86,11 +86,9 @@ crearFormulario() {
 
 abrirAjustePrecio( ventaProductoDto:VentaProductoDto){
 
-  console.log(ventaProductoDto);
 
   this.ventasService.obtenerVentaProductoId(ventaProductoDto.nIdVenta,ventaProductoDto.nIdProducto).subscribe(data=>{
     this.twVentasProducto=data;
-    console.log(this.twVentasProducto);
     this.mostrarSimulador=true;
     this.nuevoPrecioUnitario=this.twVentasProducto.nPrecioUnitario;
 
@@ -112,7 +110,6 @@ guardarNuevoPrecio(){
 
   this.ventasService.actualizaVentaProducto(this.twVentasProducto).subscribe(data=>{
 
-    console.log('Se guardo esta información',data);
     this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se guardo el descuento', life: 3000});
     this.mostrarProductos=false;
     this.mostrarSimulador=false;
@@ -125,7 +122,6 @@ guardarNuevoPrecio(){
 }
 
 calcularNuevoPrecio(){
-  console.log('Estó es lo que se tiene que consultar',this.twVentasProducto);
   this.calculaPrecio.cantidad=this.twVentasProducto.nCantidad;
   this.calculaPrecio.precioUnitario=this.nuevoPrecioUnitario;
 
