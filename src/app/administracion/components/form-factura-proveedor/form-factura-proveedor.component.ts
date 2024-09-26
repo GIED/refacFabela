@@ -87,6 +87,7 @@ export class FormFacturaProveedorComponent implements OnInit {
       n_id_moneda: ['', [Validators.required]],
       s_nota: ['', [Validators.required]],
       n_id_razon_social: ['', [Validators.required]],
+      n_especial: [false],
     })
     
   }
@@ -121,6 +122,7 @@ export class FormFacturaProveedorComponent implements OnInit {
   get validaSRazonSocial() {
     return this.formulario.get('n_id_razon_social').invalid && this.formulario.get('n_id_razon_social').touched;
   }
+  
 
   get fProducto(){
     return this.formulario.controls;
@@ -160,6 +162,13 @@ saveFactura(){
    this.twFacturasProveedor.nIdUsuario=this.tokenService.getIdUser();
    this.twFacturasProveedor.sNota=this.formulario.get('s_nota').value;
    this.twFacturasProveedor.nIdRazonSocial=this.formulario.get('n_id_razon_social').value;
+
+   if(this.formulario.get('n_especial').value==false){
+    this.twFacturasProveedor.nEspecial=false;
+   }
+   else{
+    this.twFacturasProveedor.nEspecial=true;
+  }
 
     
     this.proveedorService.guardaFacturaProveedor(this.twFacturasProveedor).subscribe(data=>{

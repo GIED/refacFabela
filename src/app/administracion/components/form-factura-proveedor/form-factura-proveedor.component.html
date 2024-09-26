@@ -58,6 +58,12 @@
                   [showClear]="true"></p-dropdown>
                   <small class="p-error" *ngIf="validaSRazonSocial">*Razón social requerida.</small>
               </div>
+              
+            <div class="p-field p-col-6">
+              
+              <p-checkbox class="m-4"  formControlName="n_especial" label="Venta Especial" [binary]="true" inputId="binary"></p-checkbox>            
+                  
+              </div>
           
           <div class="p-field p-col-12">
             <label for="s_nota">Nota</label>

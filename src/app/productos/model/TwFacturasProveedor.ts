@@ -11,4 +11,5 @@ export class TwFacturasProveedor{
 	 nIdMoneda:number;	
 	 sNota:string;
 	 nIdRazonSocial:number;
+	 nEspecial:boolean;
 }
