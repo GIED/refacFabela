@@ -64,7 +64,7 @@
                 <ng-template pTemplate="body" let-venta let-expanded="expanded">
                     <tr>
                        
-                        <td><span class="p-column-title">Rfc</span> {{venta.twFacturasProveedor.sFolioFactura}}
+                        <td><span class="p-column-title">Rfc</span><p-tag  severity="warning" *ngIf="venta.twFacturasProveedor.nEspecial==true"> {{venta.twFacturasProveedor.sFolioFactura}}</p-tag> <div *ngIf="venta.twFacturasProveedor.nEspecial==false">{{venta.twFacturasProveedor.sFolioFactura}}</div>
                         </td>
                         <td><span class="p-column-title">RFC</span> {{venta.twFacturasProveedor.tcProveedore.sRfc}}
                         </td>
@@ -75,16 +75,16 @@
                         <td><span class="p-column-title">Fecha Termino Factura</span>{{venta.twFacturasProveedor.dFechaTerminoFactura | date}}
                         </td>
                         <td><span class="p-column-title">Moneda</span>
-                            <p-tag styleClass="p-mr-2" severity="success">{{venta.twFacturasProveedor.tcMoneda.sMoneda }}</p-tag>
+                            {{venta.twFacturasProveedor.tcMoneda.sMoneda }}
                         </td>
                         <td><span class="p-column-title">Monto Factura</span>
-                            <p-tag styleClass="p-mr-2" severity="success">{{venta.twFacturasProveedor.nMontoFactura | number}}</p-tag>
+                            {{venta.twFacturasProveedor.nMontoFactura | number}}
                         </td>
                         <td><span class="p-column-title">Total abonos</span>
-                            <p-tag styleClass="p-mr-2" severity="success">{{venta.totalAbonos | number}}</p-tag>
+                            {{venta.totalAbonos | number}}
                         </td>
                         <td><span class="p-column-title">Saldo Final</span>
-                            <p-tag styleClass="p-mr-2" severity="success">{{(venta.twFacturasProveedor.nMontoFactura-venta.totalAbonos) | number}}</p-tag>
+                            <p-tag styleClass="p-mr-2" severity="info">{{(venta.twFacturasProveedor.nMontoFactura-venta.totalAbonos) | number}}</p-tag>
                         </td>
                         <td class="p-text-center"><span class="p-column-title">Estatus General</span>
 							<div *ngIf="venta.estatusFactura=='PAGO VENCIDO'">
