@@ -15,6 +15,7 @@ import { ReturnStatement } from '@angular/compiler';
 import { DatosFacturaDto } from 'src/app/productos/model/DatosFacturaDto';
 import { ClienteService } from '../../service/cliente.service';
 import { TcCuentaBancaria } from 'src/app/productos/model/TcCuentaBancaria';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-factura-moneda-proveedor',
@@ -39,7 +40,7 @@ export class FacturaMonedaProveedorComponent implements OnInit {
 
   totalFactura:number=0;
   totalAbonos:number=0;
-  saldoFinal:number=0;
+  saldoFinal:Decimal
   listaFormaPago:TcFormaPago[];
   banTablaAbonos: boolean=false;
   listaDatosFactura:DatosFacturaDto[];
@@ -62,6 +63,7 @@ export class FacturaMonedaProveedorComponent implements OnInit {
 
     this.getFacturasProveedorMoneda();
     this.getFormasPago();
+    console.log(this.vwFacturasBalanceProveedor)
  
 
   }
@@ -83,6 +85,15 @@ export class FacturaMonedaProveedorComponent implements OnInit {
 
   }
 
+  calculate(valor1, valor2): Decimal {
+    const value1 = new Decimal(valor1);
+    const value2 = new Decimal(valor2);    
+    // Usar el método 'plus' para sumar
+    const result = value1.minus(value2);    
+    console.log(result.toString()); // Muestra '61.00'
+    return result;
+  }
+
 
 
   // INICIA CON LA CREACIÓN DEL FORMULARIO 
@@ -93,7 +104,7 @@ export class FacturaMonedaProveedorComponent implements OnInit {
     this.balanceFacturaMonedaDTO=balanceFacturaProveedorMoneda;
     this.totalFactura=this.balanceFacturaMonedaDTO.twFacturasProveedor.nMontoFactura;
     this.totalAbonos=this.balanceFacturaMonedaDTO.totalAbonos;
-    this.saldoFinal=this.totalFactura-this.totalAbonos;
+    this.saldoFinal=this.calculate( this.totalFactura,this.totalAbonos);
     
     // CREA EL FORMULARIO
     this.formulario = this.fb.group({
@@ -139,7 +150,7 @@ export class FacturaMonedaProveedorComponent implements OnInit {
     
 
   guardar() {
-    if (this.formulario.valid) {
+    if (this.formulario.valid) {  
 
       if (this.saldoFinal >= this.formulario.get('nMonto').value) {
         this.twAbonoFacturaProveedor.nMontoAbono = this.formulario.get('nMonto').value;

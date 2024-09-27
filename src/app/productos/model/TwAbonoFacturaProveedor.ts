@@ -1,10 +1,11 @@
+import Decimal from "decimal.js";
 import { TcCuentaBancaria } from "./TcCuentaBancaria";
 import { TwFacturasProveedor } from "./TwFacturasProveedor";
 
 export class TwAbonoFacturaProveedor{
     nId: number;  // Clave primaria autogenerada
     nIdFacturaProveedor: number;  // Factura Proveedor
-    nMontoAbono: number;  // Monto del abono
+    nMontoAbono: Decimal;  // Monto del abono
     dFechaAbono: Date;  // Fecha del abono
     nEstatusAbono: number;  // Estatus del abono
     nIdUsuario: number;  // ID del usuario que realizó el abono
