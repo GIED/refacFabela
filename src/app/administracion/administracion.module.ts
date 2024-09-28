@@ -21,13 +21,14 @@ import { ConsultaAjusteInventarioComponent } from './pages/consulta-ajuste-inven
 import { FacturasProveedorComponent } from './pages/facturas-proveedor/facturas-proveedor.component';
 import { FormFacturaProveedorComponent } from './components/form-factura-proveedor/form-factura-proveedor.component';
 import { FacturaMonedaProveedorComponent } from './components/factura-moneda-proveedor/factura-moneda-proveedor.component';
+import { HistoriaFacturaProveedorComponent } from './components/historia-factura-proveedor/historia-factura-proveedor.component';
 
 
 
 
 @NgModule({
     
-  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent, TraspasoVentaACreditoComponent, FormTraspasoVentaACreditoComponent, ProductosCanceladosComponent, ConsultaAjusteInventarioComponent, FacturasProveedorComponent, FormFacturaProveedorComponent, FacturaMonedaProveedorComponent],
+  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent, TraspasoVentaACreditoComponent, FormTraspasoVentaACreditoComponent, ProductosCanceladosComponent, ConsultaAjusteInventarioComponent, FacturasProveedorComponent, FormFacturaProveedorComponent, FacturaMonedaProveedorComponent, HistoriaFacturaProveedorComponent],
   imports: [
     AdministracionRoutingModule,   
     PrimeModule,

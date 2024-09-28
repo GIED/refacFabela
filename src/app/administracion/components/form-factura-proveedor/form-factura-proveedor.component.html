@@ -1,14 +1,7 @@
 <form [formGroup]="formulario" autocomplete="off">
-  <!--  <input type="text" pInputText formControlName="nId" hidden />-->
+ 
     
-    <div class="p-grid">
-        <!--
-        <div class="p-field p-col-6">
-            <label for="nId">ID</label>
-            <input type="text" pInputText name="nId" formControlName="nId" [class.is-invalid]="validanId" />
-            <small class="p-error" *ngIf="validanId">*ID es requerido.</small>
-          </div>
-        -->
+    <div class="p-grid">       
           
           <div class="p-field p-col-6">
             <label for="s_folio_factura">Folio Factura</label>
@@ -21,8 +14,7 @@
             <p-dropdown [options]="listaProvedores" formControlName="n_id_proveedor" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaNIdProveedor" placeholder="Seleccine un proveedor"
                 [showClear]="true"></p-dropdown>
                 <small class="p-error" *ngIf="validaNIdProveedor">*ID Proveedor es requerido.</small>
-            </div>
-          
+            </div>    
          
           
           <div class="p-field p-col-6">

@@ -7,6 +7,10 @@
                     <button pButton pRipple label="Registrar Factura" icon="pi pi-plus"
                         class="p-button-success p-mr-2 p-mb-2" (click)="abrirFormulario()"></button>
                 </ng-template>
+				<ng-template pTemplate="right">
+                    <button pButton pRipple label="historial de facturas" icon="pi pi-search"
+                        class="p-button-info p-mr-2 p-mb-2" (click)="abrirhistorial()"></button>
+                </ng-template>
                
             </p-toolbar>
 
@@ -212,7 +216,11 @@ styleClass="p-fluid">
 <ng-template pTemplate="content">
 <app-factura-moneda-proveedor (cerrar)="cerrarDialogo($event)" [vwFacturasBalanceProveedor]="vwFacturasBalanceProveedor" >   </app-factura-moneda-proveedor>
 </ng-template>
+</p-dialog>
 
-
-
+<p-dialog [(visible)]="mostrarHistorial" [style]="{width: '80vw', height: '80vh'}"
+ header="Historal de Facturas del proveedor" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">
+<ng-template pTemplate="content">
+<app-historia-factura-proveedor (cerrar)="cerrarDialogo($event)"  >   </app-historia-factura-proveedor>
+</ng-template>
 </p-dialog>

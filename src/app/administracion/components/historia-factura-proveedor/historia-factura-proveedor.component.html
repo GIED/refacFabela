@@ -1,0 +1,26 @@
+
+
+            
+                <form [formGroup]="formulario" autocomplete="off">
+                    <div class="p-grid">
+                        <div class="p-field p-col-6">
+                            <label for="marca">Proveedor</label>
+                            <p-dropdown [options]="listaProvedores" formControlName="n_id_proveedor" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaNIdProveedor" placeholder="Seleccine un proveedor"
+                                [showClear]="true"></p-dropdown>
+                                <small class="p-error" *ngIf="validaNIdProveedor">* El Proveedor es requerido.</small>
+                            </div>
+
+                            <div class="p-field p-col-6">
+                                <label for="marca">Moneda</label>
+                                <p-dropdown [options]="listaMonedas" formControlName="n_id_moneda" optionLabel="sMoneda" optionValue="nId"  [class.is-invalid]="validaNIdMoneda" placeholder="Seleccine una moneda"
+                                    [showClear]="true"></p-dropdown>
+                                    <small class="p-error" *ngIf="validaNIdMoneda">* Moneda es requerida.</small>
+                                </div>
+                    </div>
+                    <div class="box">
+                        <button pButton pRipple label="Consultar"  class="p-button-info" (click)="onSubmit()"></button>
+                    </div>
+                </form>
+            
+
+

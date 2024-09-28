@@ -33,6 +33,7 @@ export class FacturasProveedorComponent implements OnInit {
   totalRegulares:number=0;
   montoFactura:number=0;
   montoAbono:number=0;
+  mostrarHistorial:boolean=false;
 
 
   constructor( private messageService: MessageService,
@@ -123,6 +124,10 @@ export class FacturasProveedorComponent implements OnInit {
     this.cargainicial();
 
 
+  }
+
+  abrirhistorial(){
+    this.mostrarHistorial=true;    
   }
 
   consultarDetalleFacturaMonedas(vwFacturasBalanceProveedor: VwFacturasBalanceProveedor){
