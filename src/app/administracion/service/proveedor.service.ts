@@ -56,6 +56,11 @@ export class ProveedorService {
     let url = environment.servicios.apiRefacFabela + locator.obtenerFacturasProveedorMonedaBalance+'nIdProveedor='+vwFacturasBalanceProveedor.id.nIdProveedor+'&nIdMoneda='+vwFacturasBalanceProveedor.id.nIdMoneda;
     return this.http.get<BalanceFacturaProveedorMoneda[]>(url);
   }
+  getFacturasProveedorMonedaBalanceHistoria(nIdProveedor:number, nIdMoneda:number ) {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerFacturasProveedorMonedaBalanceHistoria+'nIdProveedor='+nIdProveedor+'&nIdMoneda='+nIdMoneda;
+    return this.http.get<BalanceFacturaProveedorMoneda[]>(url);
+  }
 
   getBalanceFactura(nIdFactura:number) {
 

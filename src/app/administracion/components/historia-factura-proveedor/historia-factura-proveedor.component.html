@@ -1,26 +1,236 @@
+<div class="p-grid">
+    <div class="p-col-12">
 
+        
+        <form [formGroup]="formulario" autocomplete="off">
+            <div class="p-grid">
+                <div class="p-field p-col-6">
+                    <label for="marca">Proveedor</label>
+                    <p-dropdown [options]="listaProvedores" formControlName="n_id_proveedor" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaNIdProveedor" placeholder="Seleccine un proveedor"
+                        [showClear]="true"></p-dropdown>
+                        <small class="p-error" *ngIf="validaNIdProveedor">* El Proveedor es requerido.</small>
+                    </div>
+
+                    <div class="p-field p-col-6">
+                        <label for="marca">Moneda</label>
+                        <p-dropdown [options]="listaMonedas" formControlName="n_id_moneda" optionLabel="sMoneda" optionValue="nId"  [class.is-invalid]="validaNIdMoneda" placeholder="Seleccine una moneda"
+                            [showClear]="true"></p-dropdown>
+                            <small class="p-error" *ngIf="validaNIdMoneda">* Moneda es requerida.</small>
+                        </div>
+            </div>
+            <div class="box">
+                <button pButton pRipple label="Consultar"  class="p-button-info" (click)="onSubmit()"></button>
+            </div>
+        </form>
+        
+        <div class="card">
+           
+            <p-table  #dt [value]="listaHistorialFactura" responsiveLayout="scroll" [columns]="cols"  [rows]="20"
+                [paginator]="true"
+                [globalFilterFields]="['twFacturasProveedor.sFolioFactura','twFacturasProveedor.tcProveedore.sRfc','twFacturasProveedor.tcProveedore.sRazonSocial','twFacturasProveedor.dFechaInicioFactura','twFacturasProveedor.dFechaTerminoFactura','twFacturasProveedor.tcMoneda.sMoneda','twFacturasProveedor.nMontoFactura','totalAbonos','estatusFactura', 'twFacturasProveedor.dFechaPagoFactura']"
+                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} facturas"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar Factura" />
+                        </span>
+                    
+
+                       
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                    
+                        <th pSortableColumn="twFacturasProveedor.sFolioFactura">Folio Factura<p-sortIcon field="twFacturasProveedor.sFolioFactura"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="twFacturasProveedor.tcProveedore.sRfc">RFC<p-sortIcon
+                                field="twFacturasProveedor.tcProveedore.sRfc"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="twFacturasProveedor.tcProveedore.sRazonSocial">Razón social<p-sortIcon field="twFacturasProveedor.tcProveedore.sRazonSocial"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="twFacturasProveedor.dFechaInicioFactura">Fecha inicio factura<p-sortIcon field="twFacturasProveedor.dFechaInicioFactura"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="twFacturasProveedor.dFechaTerminoFactura">Fecha termino factura<p-sortIcon field="twFacturasProveedor.dFechaInicioFactura"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="twFacturasProveedor.tcMoneda.sMoneda">Moneda<p-sortIcon field="twFacturasProveedor.tcMoneda.sMoneda"></p-sortIcon>
+                        </th>
+
+                        <th pSortableColumn="twFacturasProveedor.nMontoFactura">Monto factura<p-sortIcon field="twFacturasProveedor.nMontoFactura"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="totalAbonos">Total abonos<p-sortIcon
+                                field="totalAbonos"></p-sortIcon>
+
+                        <th pSortableColumn="tcTipoVenta.sDescripcion">Saldo final
+                                   
+                        </th>
+                        <th pSortableColumn="twFacturasProveedor.dFechaPagoFactura">Fecha de pago<p-sortIcon field="twFacturasProveedor.dFechaPagoFactura"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="estatusFactura">Estatus factura<p-sortIcon
+                                field="estatusFactura"></p-sortIcon>
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-venta let-expanded="expanded">
+                    <tr>
+                       
+                        <td><span class="p-column-title">Rfc</span><p-tag  severity="warning" *ngIf="venta.twFacturasProveedor.nEspecial==true"> {{venta.twFacturasProveedor.sFolioFactura}}</p-tag> <div *ngIf="venta.twFacturasProveedor.nEspecial==false">{{venta.twFacturasProveedor.sFolioFactura}}</div>
+                        </td>
+                        <td><span class="p-column-title">RFC</span> {{venta.twFacturasProveedor.tcProveedore.sRfc}}
+                        </td>
+                        <td><span class="p-column-title">Razón social</span>{{venta.twFacturasProveedor.tcProveedore.sRazonSocial}}
+                        </td>
+                        <td><span class="p-column-title">Fecha Inico Factura</span>{{venta.twFacturasProveedor.dFechaInicioFactura | date}}
+                        </td>
+                        <td><span class="p-column-title">Fecha Termino Factura</span>{{venta.twFacturasProveedor.dFechaTerminoFactura | date}}
+                        </td>
+                        <td><span class="p-column-title">Moneda</span>
+                            {{venta.twFacturasProveedor.tcMoneda.sMoneda }}
+                        </td>
+                        <td><span class="p-column-title">Monto Factura</span>
+                            {{venta.twFacturasProveedor.nMontoFactura | number}}
+                        </td>
+                        <td><span class="p-column-title">Total abonos</span>
+                            {{venta.totalAbonos | number}}
+                        </td>
+                        <td><span class="p-column-title">Saldo Final</span>
+                            <p-tag styleClass="p-mr-2" severity="info">{{(venta.twFacturasProveedor.nMontoFactura-venta.totalAbonos) | number}}</p-tag>
+                        </td>
+                        <td><span class="p-column-title">Fecha de pago</span>
+                            {{(venta.twFacturasProveedor.dFechaPagoFactura) | date}}
+                        </td>
+                        <td class="p-text-center"><span class="p-column-title">Estatus General</span>
+							<div *ngIf="venta.estatusFactura=='PAGO VENCIDO'">
+							<p-tag styleClass="p-mr-2" severity="danger">PAGO VENCIDO</p-tag>
+						  </div>
+						  <div *ngIf="venta.estatusFactura=='POR PAGAR'">
+							<p-tag styleClass="p-mr-2" severity="success">POR PAGAR</p-tag>
+						  </div>
+                          <div *ngIf="venta.estatusFactura=='PAGADA'">
+							<p-tag styleClass="p-mr-2" severity="success">PAGADA</p-tag>
+						  </div>
+						</td>
+
+
+                        <td>
+                            <button  pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-info p-mr-2"
+                                (click)="getAbonosFactura(venta.nId)"></button>
+                           
+                            
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div class="p-grid p-jc-end">
+                <div class="p-col-8">
+                    <div class="box"></div>
+                </div>
+                <div class="p-col-2">
+                    <div class="box">
+                        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="cerrarDetalle()"></button>
+                    </div>
+                </div>
+               
+            </div>
+            <div class="p-col-4 p-offset-4">
+													
+                <button *ngIf="listaHistorialFactura.length > 0" type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                    class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>           
+              
+                </div>
 
             
-                <form [formGroup]="formulario" autocomplete="off">
-                    <div class="p-grid">
-                        <div class="p-field p-col-6">
-                            <label for="marca">Proveedor</label>
-                            <p-dropdown [options]="listaProvedores" formControlName="n_id_proveedor" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaNIdProveedor" placeholder="Seleccine un proveedor"
-                                [showClear]="true"></p-dropdown>
-                                <small class="p-error" *ngIf="validaNIdProveedor">* El Proveedor es requerido.</small>
-                            </div>
 
-                            <div class="p-field p-col-6">
-                                <label for="marca">Moneda</label>
-                                <p-dropdown [options]="listaMonedas" formControlName="n_id_moneda" optionLabel="sMoneda" optionValue="nId"  [class.is-invalid]="validaNIdMoneda" placeholder="Seleccine una moneda"
-                                    [showClear]="true"></p-dropdown>
-                                    <small class="p-error" *ngIf="validaNIdMoneda">* Moneda es requerida.</small>
-                                </div>
-                    </div>
-                    <div class="box">
-                        <button pButton pRipple label="Consultar"  class="p-button-info" (click)="onSubmit()"></button>
-                    </div>
-                </form>
+        </div>
+
+
+        <p-dialog [(visible)]="banAbonoFacturaProveedor"  header="Abono factura del proveedor"
+        [style]="{width: '80vw', height: '100vh'}"
+        header="Facturas del proveedor" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">        
+             
+
+                    <p-table   #dt [value]="listaAbonos" responsiveLayout="scroll"  [rows]="5"
+                    [paginator]="true"
+                    [globalFilterFields]="['dFechaAbono','nMontoAbono']"
+                    [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                    currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                    [showCurrentPageReport]="true">
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Buscar abono" />
+                            </span>
+                            <!--
+    
+                            <span class="p-input-icon-right">
+                                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
+                                    <button pButton pRipple type="button" label="Ventas por entregar" class="p-button-success" (click)="consultaVentas()"></button>
+                                </div> 
+                            </span>
+                            -->
+    
+                           
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                        
+                            <th pSortableColumn="dFechaAbono" class="text-center">Fecha del abono<p-sortIcon field="dFechaAbono"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nMontoAbono" class="text-center">Monto del abono<p-sortIcon
+                                    field="nMontoAbono"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="nCuentaBancaria" class="text-center">Cuenta bancaria<p-sortIcon
+                                field="nCuentaBancaria"></p-sortIcon>
+                            </th>
+                            <th class="text-center">Nota
+                        </th>
+                          
+                       
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-abono let-expanded="expanded">
+                        <tr>
+                           
+                            <td class="text-center"><span class="p-column-title">Fecha del abono</span> {{abono.dFechaAbono | date}}
+                            </td>
+                            <td class="text-center"><span class="p-column-title">Monto del abono</span> {{abono.nMontoAbono | number}}
+                            </td>
+                            <td class="text-center"><span class="p-column-title">Banco</span> {{abono.tcCuentaBancaria.sBanco+'-'+abono.tcCuentaBancaria.sTerminacion}}
+                            </td>
+                            <td class="text-center"><span class="p-column-title">Nota</span> {{abono.sNota}}
+                            </td>
+                          
+                            
+                        </tr>
+                    </ng-template>
+                </p-table>
+                
+        
+        
+        </p-dialog>
+
+
+
+        </div>
+
+       
+
+
+
+
+
+
+
+
+</div>
             
 
 

@@ -5,6 +5,8 @@ import { ProveedorService } from '../../service/proveedor.service';
 import { Proveedores } from '../../interfaces/proveedores';
 import { TcMoneda } from 'src/app/productos/model/TcMoneda';
 import { CatalogoService } from 'src/app/shared/service/catalogo.service';
+import { BalanceFacturaProveedorMoneda } from 'src/app/productos/model/BalanceFacturaProveedorMoneda';
+import { TwAbonoFacturaProveedor } from 'src/app/productos/model/TwAbonoFacturaProveedor';
 
 @Component({
   selector: 'app-historia-factura-proveedor',
@@ -17,12 +19,32 @@ export class HistoriaFacturaProveedorComponent implements OnInit {
   formulario: FormGroup;
   listaProvedores: Proveedores[];
   listaMonedas: TcMoneda[];
+  listaAbonos: TwAbonoFacturaProveedor[];
+  banAbonoFacturaProveedor: boolean = false;
+  cols:any;
+  listaHistorialFactura:  BalanceFacturaProveedorMoneda[] = [];
 
 
 
 
   constructor(private messageService: MessageService,
-    private confirmationService: ConfirmationService, private fb: FormBuilder, private proveedorService: ProveedorService, private catalogoService: CatalogoService) { }
+    private confirmationService: ConfirmationService, private fb: FormBuilder, private proveedorService: ProveedorService, private catalogoService: CatalogoService) {
+      this.listaHistorialFactura=[];
+      this.cols = [
+        { field: 'twFacturasProveedor.sFolioFactura', header: 'Folio' },
+        { field: 'twFacturasProveedor.tcProveedore.sRfc', header: 'rfc' },
+        { field: 'twFacturasProveedor.tcProveedore.sRazonSocial', header: 'razon' },
+        { field: 'twFacturasProveedor.dFechaInicioFactura', header: 'fecha inicio' },
+        { field: 'twFacturasProveedor.dFechaTerminoFactura', header: 'termino factura' },
+        { field: 'twFacturasProveedor.tcMoneda.sMoneda', header: 'moneda' },
+        { field: 'twFacturasProveedor.nMontoFactura', header: 'monto' },
+        { field: 'totalAbonos', header: 'total abonos' },
+        { field: 'estatusFactura', header: 'estatus factura' },
+        { field: 'twFacturasProveedor.dFechaPagoFactura', header: 'fecha pago' }       
+
+    ]
+
+     }
 
   ngOnInit() {
 
@@ -36,6 +58,10 @@ export class HistoriaFacturaProveedorComponent implements OnInit {
       n_id_moneda: [null, Validators.required]
     });
   }
+  cerrarDetalle(){
+    this.cerrar.emit(false);
+    }
+
 
 
   getMonegas() {
@@ -83,9 +109,34 @@ export class HistoriaFacturaProveedorComponent implements OnInit {
       });
     }else{ 
       this.formulario.markAllAsTouched(); // Marca todos los campos como tocados
-      console.log('formulario valido');
+
+      this.listaHistorialFactura=[];
+      
+      this.proveedorService.getFacturasProveedorMonedaBalanceHistoria(this.formulario.get('n_id_proveedor').value, this.formulario.get('n_id_moneda').value).subscribe(data=>{       
+        this.listaHistorialFactura=data;
+        this.formulario.reset();
+
+      })
     }
   }
+
+  getAbonosFactura(nId:number){
+    this.banAbonoFacturaProveedor=true;
+
+    // CONSULTA LOS ABONOS DE LAS FACTURAS
+    this.proveedorService.getAbonosFacturaProveedor(nId).subscribe(
+       
+      data => {
+        
+        this.listaAbonos = data || [];  // Si data es null o undefined, asigna un array vacío
+       
+      },
+      error => {
+        console.error('Error al obtener los abonos:', error);
+      
+      }
+    );
+      }
 
 
 

@@ -103,7 +103,7 @@
 				
 			</div>	
 			</div>
-			<p-table #dt [value]="listaBalalceProveedores"  [rows]="10" [paginator]="true"
+			<p-table #dt [value]="listaBalalceProveedores"  [rows]="10" [paginator]="true" [columns]="cols" [exportFilename]="'balance_provedores'"
 				[globalFilterFields]="['tcProveedore.sRfc','tcProveedore.sRazonSocial','sMoneda','totalFacturas', 'totalAbonos','saldoPendientePago','totalPorPagar','totalVencidas']"
 				 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
 				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
@@ -192,11 +192,15 @@
 					</tr>
 				</ng-template>
 				<ng-template pTemplate="summary">
-					<div class="p-d-flex p-ai-center p-jc-between">
-						En total hay {{listaClientesCredito ? listaClientesCredito.length : 0 }} clientes con crédito activo.
-					</div>
+				
+					<span class="p-input-icon-left">
+						<i class="pi pi-search"></i>
+						<button *ngIf="listaBalalceProveedores.length > 0" type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+							class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>       
+					</span>
 				</ng-template>
 			</p-table>
+			
 		</div>
 		
            

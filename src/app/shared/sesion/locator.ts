@@ -18,23 +18,14 @@ static guardarProveedores='/guardarProveedores';
 static obtenerBalalcenProveedores='/facturacionProveedor/obtenerBalacesProveedores';
 static obtenertTipoCambioBM='/facturacionProveedor/tipoCambioBM';
 static obtenertFacturasSinCobrar='/facturacionProveedor/obtenerFacturaProveedorBalanceActivas';
-
 static guardarFacturaProveedor='/facturacionProveedor/guardarFacturaProveedor'
 static guardarAbonoFacturaProveedor='/facturacionProveedor/guardarAbonoFactura'
-
 static obtenerFacturasProveedorMoneda='/facturacionProveedor/obtenerFacturasProveedor?';
 static obtenerFacturasProveedorMonedaBalance='/facturacionProveedor/obtenerFacturasProveedorBalance?';
+static obtenerFacturasProveedorMonedaBalanceHistoria='/facturacionProveedor/obtenerFacturasProveedorBalanceHitoria?';
 static obtenerBalanceFactura='/facturacionProveedor/obtenerBalanceFactura?';
 static obtenerFacturaProveedor='/facturacionProveedor/obtenerFacturaProveedor?';
-
-
 static obtenerAbonosFacturaProveedor='/facturacionProveedor/obtenerAbonosFactura?';
-
-
-
-
-
-
 //api para usuarios
 static obtenerUsuarios='/obtenerUsuarios';
 static nuevoUsuario = '/nuevo';
@@ -55,10 +46,8 @@ static consultaGananciaId= '/catalogoGananciaId?';
 static consultaFormaPago='/catalogoFormaPago';
 static consultaFormaPagoId='/catalogoFormaPagoId?';
 static consultaGastosCaja='/gastosCaja?';
-
 static consultaMonedas='/catalogoMoneda';
 static consultaCuentasBancariasRazon='/getCuentasBanciariasRazon?';
-
 static obtenerCatalogoGastos='/catalogoGasto';
 static consultaEstatusVentaId='/catalogoEstatusId?';
 static consultarCajaActiva='/cajaActiva';
@@ -77,20 +66,16 @@ static guardarProducto= '/guardarProducto';
 static guardarGasto= '/guardarGasto';
 static borrarGasto= '/borrarGasto';
 static guardarProductoGeneral= '/guardarProductoGeneral';
-
 static calcularPrecioProducto= '/calcularNuevoPrecio';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerHistoriaIngresoProducto='/obtenerHistoriaIngresoProducto?';
 static obtenerHistorialStockProducto='/obtenerHistorialStockProducto?';
 static obtenerProductosCaneladosId='/obtenerProductosCancelaId?';
-
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
 static obtenerTotalBodegasIdProducto='/obtenerTotalBodegasIdProducto?';
 static obtenerVentaStockFecha='/obtenerVentasStockFecha?';
 static obtenerVentasCancelaFecha='/obtenerProductosCanceladosFecha?';
 static obtenerProductosAjustadosFecha='/obtenerProductosAjusteFecha?';
-
-
 //productos alternativos
 static obtenerProductosalternativosId='/obtenerProductosAlternativos?';
 static obtenerProductosalternativosIdDescuento='/obtenerProductosAlternativosDescuento?';

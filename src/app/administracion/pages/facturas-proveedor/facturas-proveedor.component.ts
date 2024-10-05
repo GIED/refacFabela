@@ -14,7 +14,7 @@ import { BalanceFacturaProveedorMoneda } from 'src/app/productos/model/BalanceFa
 })
 export class FacturasProveedorComponent implements OnInit {
 
-  listaBalalceProveedores: VwFacturasBalanceProveedor[];
+  listaBalalceProveedores: VwFacturasBalanceProveedor[]=[];
   totalFacturasPeso:number=0;
   totalAbonosPeso:number=0;
   saldoPendientePagoPeso: number=0;
@@ -28,18 +28,32 @@ export class FacturasProveedorComponent implements OnInit {
   titulo:string;
   detalleFacturasProveedor:boolean=false;
   vwFacturasBalanceProveedor:VwFacturasBalanceProveedor;
-  listaFacturasSinCobrar:BalanceFacturaProveedorMoneda[];
+  listaFacturasSinCobrar:BalanceFacturaProveedorMoneda[]=[];
   totalVencidos:number=0;
   totalRegulares:number=0;
   montoFactura:number=0;
   montoAbono:number=0;
   mostrarHistorial:boolean=false;
+  cols:any;
 
 
   constructor( private messageService: MessageService,
     private confirmationService: ConfirmationService,   private fb: FormBuilder, private proveedorService: ProveedorService) {
       this.datoCambio=new DataSerie();
       this.listaFacturasSinCobrar=[];
+      this.cols = [
+    
+        { field: 'tcProveedore.sRfc', header: 'rfc' },
+        { field: 'tcProveedore.sRazonSocial', header: 'razon' },
+        { field: 'sMoneda', header: 'moneda' },
+        { field: 'totalFacturas', header: 'total facturas' },
+        { field: 'totalAbonos', header: 'total abonos' },
+        { field: 'saldoPendientePago', header: 'saldo pendiente' },
+        { field: 'totalPorPagar', header: 'total por pagar' },
+        { field: 'totalVencidas', header: 'total vencidas' },       
+     
+
+    ]
      }
 
   ngOnInit(): void {
@@ -47,6 +61,9 @@ export class FacturasProveedorComponent implements OnInit {
     
 
 
+  }
+  getEstatus(totalVencidas: number): string {
+    return totalVencidas > 0 ? 'VENCIDO' : 'REGULAR';
   }
 
 
@@ -119,7 +136,7 @@ export class FacturasProveedorComponent implements OnInit {
 
    this.inicializarBalance();
    this.detalleFacturasProveedor=false;
-
+   this.mostrarHistorial=false;
     this.mostrarFormulario=false;
     this.cargainicial();
 
