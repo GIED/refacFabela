@@ -5,6 +5,7 @@ import { HistorialProductoComponent } from './pages/historial-producto/historial
 import { RegistroProductoComponent } from './pages/registro-producto/registro-producto.component';
 import { RegistroPedidosComponent } from './pages/administracion-pedidos/registro-pedidos.component';
 import { VentaStockCeroComponent } from './pages/venta-stock-cero/venta-stock-cero.component';
+import { ComprasProductoComponent } from './pages/compras-producto/compras-producto.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,9 @@ const routes: Routes = [
           {
             path:'venta-stock-cero',   component:VentaStockCeroComponent,
             },
+            {
+              path:'compras-producto',   component:ComprasProductoComponent,
+              },
        
     ]
     

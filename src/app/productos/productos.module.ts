@@ -21,6 +21,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HistorialStockProductoComponent } from './components/historial-stock-producto/historial-stock-producto.component';
 import { ProductosCanceladosComponent } from './components/productos-cancelados/productos-cancelados.component';
+import { ComprasProductoComponent } from './pages/compras-producto/compras-producto.component';
+import { FechaRangoComponent } from './components/fecha-rango/fecha-rango.component';
 
 
 
@@ -44,7 +46,9 @@ import { ProductosCanceladosComponent } from './components/productos-cancelados/
     ModalProductosBodegaComponent,
     VentaStockCeroComponent,
     HistorialStockProductoComponent,
-    ProductosCanceladosComponent    
+    ProductosCanceladosComponent,
+    ComprasProductoComponent,
+    FechaRangoComponent    
     
   ],
   imports: [
@@ -73,7 +77,8 @@ import { ProductosCanceladosComponent } from './components/productos-cancelados/
     RegistroPedidosComponent,
     PedidoProductosComponent,
     AltaPedidosComponent,
-    VentaStockCeroComponent
+    VentaStockCeroComponent,
+    ComprasProductoComponent
 
   ]
 })

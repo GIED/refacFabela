@@ -26,3 +26,84 @@ a{
   text-decoration: none;
 
 }
+
+:root {
+  --primary-text-color: #333333; /* Texto principal */
+  --secondary-text-color: #555555; /* Encabezados */
+  --background-color: #F8F9FA; /* Fondo general */
+  --link-color: #999999; /* Enlaces */
+  --hover-link-color: #666666; /* Hover de enlaces */
+}
+
+/* Aplicación global */
+body {
+  color: var(--primary-text-color);
+  background-color: var(--background-color);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--secondary-text-color);
+}
+
+/* Texto secundario */
+p, span, small {
+  color: var(--muted-text-color);
+}
+
+/* Enlaces */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--hover-link-color);
+  text-decoration: underline;
+}
+
+/* Tablas PrimeNG */
+.p-datatable .p-datatable-tbody > tr > td {
+  color: var(--primary-text-color);
+  font-size: 0.85rem; /* Tamaño más pequeño para contenido de tabla */
+  padding: 4px 8px; /* Espaciado reducido */
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  color: var(--secondary-text-color);
+  font-size: 0.9rem; /* Tamaño ligeramente mayor en encabezados */
+  background-color: #EDEDED; /* Fondo sutil para encabezados */
+}
+
+/* Pie de tabla */
+.p-datatable .p-datatable-tfoot > tr > td {
+  color: var(--muted-text-color);
+  padding: 4px 8px;
+}
+
+/* Fondo de paneles PrimeNG */
+.p-panel {
+  background-color: #ffffff; /* Fondo blanco para los paneles */
+  color: var(--primary-text-color);
+}
+/*Reducir el tamaño de la fuente en el cuerpo de la tabla */
+.p-datatable-customers .p-datatable-tbody > tr > td {
+    font-size: 0.7rem; /* Ajusta el tamaño de la fuente */
+    padding: 4px 8px; /* Reduce el espacio entre celdas */
+  }
+  
+  /* Reducir el tamaño de la fuente en el encabezado de la tabla */
+  .p-datatable-customers .p-datatable-thead > tr > th {
+    font-size: 0.75rem; /* Ajusta el tamaño de la fuente en encabezados */
+    padding: 6px 10px; /* Reduce el padding del encabezado */
+  }
+  
+  /* Opcional: Estilo del pie de página si existe */
+  .p-datatable-customers .p-datatable-tfoot > tr > td {
+    font-size: 0.7rem; /* Ajusta el tamaño de la fuente en el pie de tabla */
+    padding: 4px 8px;
+  }
+
+
+

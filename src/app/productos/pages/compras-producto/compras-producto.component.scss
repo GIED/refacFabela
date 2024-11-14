@@ -1,0 +1,24 @@
+.card-sin-fondo{
+    background-color: transparent;
+     border: none;
+      padding: 10px;
+
+}
+
+/* Reducir el tamaño de la fuente en el cuerpo de la tabla */
+.p-datatable-customers .p-datatable-tbody > tr > td {
+    font-size: 0.4rem; /* Ajusta el tamaño de la fuente */
+    padding: 4px 8px; /* Reduce el espacio entre celdas */
+  }
+  
+  /* Reducir el tamaño de la fuente en el encabezado de la tabla */
+  .p-datatable-customers .p-datatable-thead > tr > th {
+    font-size: 0.45rem; /* Ajusta el tamaño de la fuente en encabezados */
+    padding: 6px 10px; /* Reduce el padding del encabezado */
+  }
+  
+  /* Opcional: Estilo del pie de página si existe */
+  .p-datatable-customers .p-datatable-tfoot > tr > td {
+    font-size: 0.4rem; /* Ajusta el tamaño de la fuente en el pie de tabla */
+    padding: 4px 8px;
+  }

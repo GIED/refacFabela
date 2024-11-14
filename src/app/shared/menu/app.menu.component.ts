@@ -137,6 +137,9 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Venta Stock', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/venta-stock-cero'], visible:this.realRol==='admin'
                     },
+                    {
+                        label: 'Compras producto', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/compras-producto'], visible:this.realRol==='admin'
+                    },
                    
                 ]
             },

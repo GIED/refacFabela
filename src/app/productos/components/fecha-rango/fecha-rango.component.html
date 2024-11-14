@@ -1,0 +1,21 @@
+<form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="fechaInicio">Fecha Inicio</label>
+        <input type="date" id="fechaInicio" formControlName="fechaInicio" class="p-inputtext p-component" />
+        <small *ngIf="formulario.get('fechaInicio')?.invalid && formulario.get('fechaInicio')?.touched">
+          La fecha de inicio es requerida.
+        </small>
+      </div>
+  
+      <div class="p-field">
+        <label for="fechaTermino">Fecha Término</label>
+        <input type="date" id="fechaTermino" formControlName="fechaTermino" class="p-inputtext p-component" />
+        <small *ngIf="formulario.get('fechaTermino')?.invalid && formulario.get('fechaTermino')?.touched">
+          La fecha de término es requerida.
+        </small>
+      </div>
+  
+      <button type="submit" pButton label="Enviar" [disabled]="formulario.invalid"></button>
+    </div>
+  </form>

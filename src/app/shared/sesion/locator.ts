@@ -192,5 +192,10 @@ static facturarComplemento='/facturacion/complemento?'
 static consultaFacturas='/facturacion/ventasFacturadas';
 
 
+//Compras
+
+static consultaUltimaCompraProduc='/productosVendidosFechaCompra?';
+
+
 
 }
