@@ -1,109 +1,203 @@
 <div class="p-grid" style="min-height: 100vh;">
-  
-    <!-- Primera columna -->
-    <div class="p-col-12 p-md-3" style="min-height: 100%; height: auto;">
-      <div class="p-grid" style="min-height: 100%; height: auto;">
-        
-        <!-- Primer contenedor apilado -->
-        <div class="p-col-12" style="min-height: 350px; height: auto;">
-          <div class="p-panel" style="min-height: 350px; height: auto; background-color: #d9edf7;">
-            <div class="p-col-12 text-center mt-4">  <h4>Consulta por ultima fecha compra</h4></div> 
-            <div class="card card-sin-fondo">
-                <app-fecha-rango (fechasSeleccionadas)="recibirFechas($event)"></app-fecha-rango>
-            </div>
-            
+
+  <!-- Primera columna -->
+  <div class="p-col-12 p-md-3" style="min-height: 100%; height: auto;">
+    <div class="p-grid" style="min-height: 100%; height: auto;">
+
+      <!-- Primer contenedor apilado -->
+      <div class="p-col-12" style="min-height: 350px; height: auto;">
+        <div class="p-panel" style="min-height: 350px; height: auto; background-color: #d9edf7;">
+          <div class="p-col-12 text-center mt-4">
+            <h4>Consulta por ultima fecha compra</h4>
           </div>
-        </div>
-  
-        <!-- Segundo contenedor apilado -->
-        <div class="p-col-12" style="min-height: 350px; height: auto;">
-          <div class="p-panel" style="min-height: 350px; height: auto; background-color: #f2dede;">
-            <p>Contenido del segundo contenedor apilado</p>
+          <div class="card card-sin-fondo">
+            <app-fecha-rango (fechasSeleccionadas)="recibirFechas($event)"></app-fecha-rango>
           </div>
-        </div>
-  
-        <!-- Tercer contenedor apilado -->
-        <div class="p-col-12" style="min-height: 350px; height: auto;">
-          <div class="p-panel" style="min-height: 350px; height: auto; background-color: #dff0d8;">
-            <p>Contenido del tercer contenedor apilado</p>
-          </div>
+
         </div>
       </div>
-    </div>
-  
-    <!-- Segunda columna -->
-    <div class="p-col-12 p-md-9" style="min-height: 100%; height: auto;">
-      <div class="p-grid" style="min-height: 100%; height: auto;">
-        
-        <!-- Primer contenedor apilado -->
-        <div class="p-col-12" style="min-height: 600px; height: auto;">
-          <div class="p-panel" style="min-height: 600px; height: auto; background-color: #e6e6fa;">
-            <div class="card mt-4 card-sin-fondo" style="height: auto;">
-              <div class="p-col-12 text-center mt-4">  <h3>Lista de productos por su ultima fecha de compra</h3></div> 
-              <p-table class="mt-2" #dt [value]="listaProductosUltimaCompra" [rows]="5" [paginator]="true" [scrollable]="true" scrollHeight="flex" 
-                       
-                       [globalFilterFields]="['sDescripcion', 'sProducto', 'sMarca', 'sMoneda', 'nSugerenciaCompra', 'nStockSugerido', 'nTotalUnitarioCalculado']"
-                       [rowHover]="true" dataKey="nId" styleClass="p-datatable-customers"
-                       currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-                       [showCurrentPageReport]="true">
-              
-                <ng-template pTemplate="caption">
-                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                       
-                        <span class="p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar producto" />
-                        </span>
-                    </div>
-                </ng-template>
-  
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="sProducto" class="text-center">Producto <p-sortIcon field="sProducto"></p-sortIcon> </th>
-                        <th pSortableColumn="sDescripcion" class="text-center">Descripción <p-sortIcon field="sDescripcion"></p-sortIcon> </th>
-                        <th pSortableColumn="sMarca" class="text-center">Marca <p-sortIcon field="sMarca"></p-sortIcon> </th>
-                        <th pSortableColumn="sMoneda" class="text-center">Moneda <p-sortIcon field="sMoneda"></p-sortIcon> </th>
-                        <th pSortableColumn="nStockSugerido" class="text-center">Stock Sugerido <p-sortIcon field="nStockSugerido"></p-sortIcon> </th>
-                        <th pSortableColumn="nSugerenciaCompra" class="text-center">Sugerencia de Compra <p-sortIcon field="nSugerenciaCompra"></p-sortIcon> </th>
-                        <th pSortableColumn="nTotalUnitarioCalculado" class="text-center">Total Calculado <p-sortIcon field="nTotalUnitarioCalculado"></p-sortIcon> </th>
-                        <th class="text-center">Acción</th>
-                    </tr>
-                </ng-template>
-  
-                <ng-template pTemplate="body" let-producto>
-                    <tr>
-                        <td class="text-center"><span class="p-column-title">Producto</span>{{producto.sProducto}}</td>
-                        <td class="text-center"><span class="p-column-title">Descripción</span>{{producto.sDescripcion}}</td>
-                        <td class="text-center"><span class="p-column-title">Marca</span>{{producto.sMarca}}</td>
-                        <td class="text-center"><span class="p-column-title">Moneda</span>{{producto.sMoneda}}</td>
-                        <td class="text-center"><span class="p-column-title">Stock Sugerido</span>{{producto.nStockSugerido | number}}</td>
-                        <td class="text-center"><span class="p-column-title">Sugerencia de Compra</span>{{producto.nSugerenciaCompra | number}}</td>
-                        <td class="text-center"><span class="p-column-title">Total Calculado</span>{{producto.nTotalUnitarioCalculado | currency:producto.sMoneda}}</td>
-                        <td class="text-center">
-                            <button pButton pRipple icon="pi pi-shopping-cart" class="p-button-rounded p-button-info p-mr-2" (click)="agregarProducto(producto)"></button>
-                        </td>
-                    </tr>
-                </ng-template>
-  
-                <ng-template pTemplate="summary">
-                    <div class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <button *ngIf="listaProductosUltimaCompra.length > 0" type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar productos"
-                            class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
-                    </div>
-                </ng-template>
-              </p-table>
-            </div>
-          </div>
+
+      <!-- Segundo contenedor apilado -->
+      <div class="p-col-12" style="min-height: 350px; height: auto;">
+        <div class="p-panel" style="min-height: 350px; height: auto; background-color: #f2dede;">
+          <p>Contenido del segundo contenedor apilado</p>
         </div>
-  
-        <!-- Segundo contenedor apilado -->
-        <div class="p-col-12" style="min-height: 600px; height: auto;">
-          <div class="p-panel" style="min-height: 600px; height: auto; background-color: #f5f5dc;">
-            <p>Contenido del segundo contenedor apilado (columna 2)</p>
-          </div>
+      </div>
+
+      <!-- Tercer contenedor apilado -->
+      <div class="p-col-12" style="min-height: 350px; height: auto;">
+        <div class="p-panel" style="min-height: 350px; height: auto; background-color: #dff0d8;">
+          <p>Contenido del tercer contenedor apilado</p>
         </div>
-        
       </div>
     </div>
   </div>
+
+  <!-- Segunda columna -->
+  <div class="p-col-12 p-md-9" style="min-height: 100%; height: auto;">
+    <div class="p-grid" style="min-height: 100%; height: auto;">
+
+      <!-- Primer contenedor apilado -->
+      <div class="p-col-12" style="min-height: 600px; height: auto;">
+        <div class="p-panel" style="min-height: 600px; height: auto; background-color: #e6e6fa;">
+          <div class="card mt-4 card-sin-fondo" style="height: auto;">
+            <div class="p-col-12 text-center mt-4">
+              <h3>Lista de productos por su ultima fecha de compra</h3>
+            </div>
+            <p-table class="mt-2" #dt [value]="listaProductosUltimaCompra" [rows]="5" [paginator]="true"
+              [scrollable]="true" scrollHeight="flex"
+              [globalFilterFields]="['sDescripcion', 'sProducto', 'sMarca', 'sMoneda', 'nSugerenciaCompra', 'nStockSugerido', 'nTotalUnitarioCalculado','nCantidad', 'dUltimaFechaCompra']"
+              [rowHover]="true" dataKey="nId" styleClass="p-datatable-customers"
+              currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+              [showCurrentPageReport]="true">
+
+              <ng-template pTemplate="caption">
+                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+
+                  <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                      placeholder="Buscar producto" />
+                  </span>
+                </div>
+              </ng-template>
+
+              <ng-template pTemplate="header">
+                <tr>
+                  <th pSortableColumn="sNoParte" class="text-center">Producto <p-sortIcon field="sNoParte"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="sProducto" class="text-center">Producto <p-sortIcon
+                      field="sProducto"></p-sortIcon> </th>
+                  <th pSortableColumn="sDescripcion" class="text-center">Descripción <p-sortIcon
+                      field="sDescripcion"></p-sortIcon> </th>
+                  <th pSortableColumn="sMarca" class="text-center">Marca <p-sortIcon field="sMarca"></p-sortIcon> </th>
+                  <th pSortableColumn="sMoneda" class="text-center">Moneda <p-sortIcon field="sMoneda"></p-sortIcon>
+                  </th>
+                  <th pSortableColumn="dUltimaFechaCompra" class="text-center">Ultima compra <p-sortIcon
+                      field="dUltimaFechaCompra"></p-sortIcon> </th>
+                  <th pSortableColumn="nCantidad" class="text-center">Stock actual <p-sortIcon
+                      field="nCantidad"></p-sortIcon> </th>
+                  <th pSortableColumn="nStockSugerido" class="text-center">Stock Sugerido <p-sortIcon
+                      field="nStockSugerido"></p-sortIcon> </th>
+                  <th pSortableColumn="nSugerenciaCompra" class="text-center">Sugerencia de Compra <p-sortIcon
+                      field="nSugerenciaCompra"></p-sortIcon> </th>
+                  <th pSortableColumn="nTotalUnitarioCalculado" class="text-center">Total Calculado <p-sortIcon
+                      field="nTotalUnitarioCalculado"></p-sortIcon> </th>
+                  <th class="text-center">Acción</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-producto>
+                <tr>
+                  <td class="text-center"><span class="p-column-title">No parte</span>{{producto.sNoParte}}</td>
+                  <td class="text-center"><span class="p-column-title">Producto</span>{{producto.sProducto}}</td>
+                  <td class="text-center"><span class="p-column-title">Descripción</span>{{producto.sDescripcion}}</td>
+                  <td class="text-center"><span class="p-column-title">Marca</span>{{producto.sMarca}}</td>
+                  <td class="text-center"><span class="p-column-title">Moneda</span>{{producto.sMoneda}}</td>
+                  <td class="text-center"><span class="p-column-title">Ultima compra</span>{{producto.dUltimaFechaCompra
+                    | date}}</td>
+                  <td class="text-center"><span class="p-column-title">Stock Sugerido</span>{{producto.nCantidad |
+                    number}}</td>
+                  <td class="text-center"><span class="p-column-title">Stock Sugerido</span>{{producto.nStockSugerido |
+                    number}}</td>
+                  <td class="text-center"><span class="p-column-title">Sugerencia de
+                      Compra</span>{{producto.nSugerenciaCompra | number}}</td>
+                  <td class="text-center"><span class="p-column-title">Total
+                      Calculado</span>{{producto.nTotalUnitarioCalculado | currency }}</td>
+                  <td class="text-center">
+                    <button pButton pRipple icon="pi pi-shopping-cart" class="p-button-rounded p-button-info p-mr-2"
+                      (click)="agregarProducto(producto)"></button>
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="summary">
+                <div class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <button *ngIf="listaProductosUltimaCompra.length > 0" type="button" pButton pRipple
+                    icon="pi pi-file-excel" label="Exportar productos" class="p-button-help p-mb-2"
+                    (click)="dt.exportCSV()"></button>
+                </div>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segundo contenedor apilado -->
+      <div class="p-col-12" style="min-height: 600px; height: auto;">
+        <div class="p-panel" style="min-height: 600px; height: auto; background-color: #f5f5dc;">
+          <p>Contenido del segundo contenedor apilado (columna 2)</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AQUI INCIA EL FORMULARIO DE REGISTRO DE PRODUCTOS COMPRA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   -->
+  <p-dialog [(visible)]="dialogo" [style]="{width: '80vw', height: '80vh'}" header="Registro de pedido" [modal]="true"
+    styleClass="p-fluid" [closable]="true" [autoZIndex]="true" [maximizable]="true">
+    <ng-template pTemplate="content">
+      <div class="p-grid" style="min-height: 100vh;">
+        <!-- Primera columna -->
+        <div class="p-col-12 p-md-3" style="min-height: 100%; height: auto;">
+          <div class="p-grid" style="min-height: 100%; height: auto;">
+
+            <!-- Primer contenedor apilado -->
+            <div class="p-col-12" style="min-height: 350px; height: auto;">
+              <div class="p-panel" style="min-height: 350px; height: auto; background-color: #d9edf7;">
+                <div class="p-col-12 text-center mt-4">
+                  <h4>Consulta por ultima fecha compra</h4>
+                </div>
+                <div class="card card-sin-fondo">
+                  <app-fecha-rango (fechasSeleccionadas)="recibirFechas($event)"></app-fecha-rango>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Segundo contenedor apilado -->
+            <div class="p-col-12" style="min-height: 350px; height: auto;">
+              <div class="p-panel" style="min-height: 350px; height: auto; background-color: #f2dede;">
+                <p>Contenido del segundo contenedor apilado</p>
+              </div>
+            </div>
+
+            <!-- Tercer contenedor apilado -->
+            <div class="p-col-12" style="min-height: 350px; height: auto;">
+              <div class="p-panel" style="min-height: 350px; height: auto; background-color: #dff0d8;">
+                <p>Contenido del tercer contenedor apilado</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Segunda columna -->
+        <div class="p-col-12 p-md-9" style="min-height: 100%; height: auto;">
+          <div class="p-grid" style="min-height: 100%; height: auto;">
+
+            <!-- Primer contenedor apilado -->
+            <div class="p-col-12" style="min-height: 600px; height: auto;">
+              <div class="p-panel" style="min-height: 600px; height: auto; background-color: #e6e6fa;">
+                <div class="card mt-4 card-sin-fondo" style="height: auto;">
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Segundo contenedor apilado -->
+            <div class="p-col-12" style="min-height: 600px; height: auto;">
+              <div class="p-panel" style="min-height: 600px; height: auto; background-color: #f5f5dc;">
+                <p>Contenido del segundo contenedor apilado (columna 2)</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </ng-template>
+  </p-dialog>
+
+   <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AQUI TERMINA EL FORMULARIO DE REGISTRO DE PRODUCTOS COMPRA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   -->
+</div>

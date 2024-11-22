@@ -48,7 +48,7 @@ import { FechaRangoComponent } from './components/fecha-rango/fecha-rango.compon
     HistorialStockProductoComponent,
     ProductosCanceladosComponent,
     ComprasProductoComponent,
-    FechaRangoComponent    
+    FechaRangoComponent,
     
   ],
   imports: [
@@ -78,7 +78,7 @@ import { FechaRangoComponent } from './components/fecha-rango/fecha-rango.compon
     PedidoProductosComponent,
     AltaPedidosComponent,
     VentaStockCeroComponent,
-    ComprasProductoComponent
+    ComprasProductoComponent,
 
   ]
 })

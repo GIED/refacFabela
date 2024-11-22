@@ -4,6 +4,8 @@ import { locator } from 'src/app/shared/sesion/locator';
 import { environment } from 'src/environments/environment';
 import { VwMetaProductoCompra } from '../../model/VwMetaProductoCompra';
 import { ComprasService } from '../../../shared/service/compras.service';
+import { MessageModule } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-compras-producto',
@@ -13,13 +15,27 @@ import { ComprasService } from '../../../shared/service/compras.service';
 export class ComprasProductoComponent implements OnInit {
   datosRecibidos: { fechaInicio: string; fechaTermino: string } | null = null;
   listaProductosUltimaCompra:VwMetaProductoCompra[];
+  vwMetaProductoCompra:VwMetaProductoCompra;
+  dialogo:boolean;
+  
 
-  constructor(private comprasService:ComprasService) { 
+  constructor(private comprasService:ComprasService,  private messageService: MessageService ) { 
     this.datosRecibidos=null;
     this.listaProductosUltimaCompra=[];
+    this.vwMetaProductoCompra=new VwMetaProductoCompra();
+    this.dialogo=false;
   }
 
   ngOnInit(): void {
+   
+    const today = new Date();
+    this.getProductosUltimaFechaCompra(today.toISOString().split('T')[0], today.toISOString().split('T')[0])
+
+  }
+
+  cerrarFormulario(event:boolean){
+
+    this.dialogo=false;
 
   }
 
@@ -53,6 +69,15 @@ export class ComprasProductoComponent implements OnInit {
      console.log(data);
 
     });
+
+  }
+  
+  agregarProducto(producto:VwMetaProductoCompra){
+    this.dialogo=true;
+    this.vwMetaProductoCompra=producto;
+
+    console.log( producto);
+    
 
   }
  
