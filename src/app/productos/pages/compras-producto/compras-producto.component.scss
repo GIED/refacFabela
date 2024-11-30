@@ -21,3 +21,9 @@
     font-size: 0.4rem; /* Ajusta el tamaño de la fuente en el pie de tabla */
     padding: 4px 8px;
   }
+  .center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

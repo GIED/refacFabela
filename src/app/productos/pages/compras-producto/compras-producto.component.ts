@@ -6,6 +6,7 @@ import { VwMetaProductoCompra } from '../../model/VwMetaProductoCompra';
 import { ComprasService } from '../../../shared/service/compras.service';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
+import { VenCotProdAnoDto } from '../../model/VenCotProdAnoDto';
 
 @Component({
   selector: 'app-compras-producto',
@@ -17,6 +18,7 @@ export class ComprasProductoComponent implements OnInit {
   listaProductosUltimaCompra:VwMetaProductoCompra[];
   vwMetaProductoCompra:VwMetaProductoCompra;
   dialogo:boolean;
+  listaAnoVentaCot:VenCotProdAnoDto[];
   
 
   constructor(private comprasService:ComprasService,  private messageService: MessageService ) { 
@@ -24,6 +26,7 @@ export class ComprasProductoComponent implements OnInit {
     this.listaProductosUltimaCompra=[];
     this.vwMetaProductoCompra=new VwMetaProductoCompra();
     this.dialogo=false;
+    this.listaAnoVentaCot=[];
   }
 
   ngOnInit(): void {
@@ -76,7 +79,23 @@ export class ComprasProductoComponent implements OnInit {
     this.dialogo=true;
     this.vwMetaProductoCompra=producto;
 
-    console.log( producto);
+
+    this.comprasService.obtenerVenCotProdAnoDto(this.vwMetaProductoCompra.nId).subscribe(data=>{
+      this.listaAnoVentaCot=data;
+
+      
+
+    })
+
+     
+
+
+
+
+
+
+
+ 
     
 
   }

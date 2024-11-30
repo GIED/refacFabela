@@ -263,9 +263,32 @@
         <!-- Segunda fila -->
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1">
           <div class="p-d-flex p-flex-column" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
-            <!-- Contenido del primer contenedor apilado (fila 2) -->
+            <div class="p-3 mt-4">
+              <div class="p-col-12 text-center mt-4">
+                <h4>Desglose Año</h4>
+              </div>
+              <p-table class="mt-2" #dt [value]="listaAnoVentaCot" [rows]="5" [paginator]="true" [scrollable]="true" scrollHeight="flex" [globalFilterFields]="['ano', 'totalVentas', 'totalCotizaciones']"
+              [rowHover]="true" dataKey="ano" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true">      
+          
+                  <ng-template pTemplate="header">
+                      <tr>
+                          <th pSortableColumn="ano" class="center-content">Año <p-sortIcon field="ano"></p-sortIcon></th>
+                          <th pSortableColumn="totalVentas" class="center-content">Ventas<p-sortIcon field="totalVentas"></p-sortIcon> </th>
+                          <th pSortableColumn="totalCotizaciones" class="center-content">Cotizaciones <p-sortIcon field="totalCotizaciones"></p-sortIcon> </th>               
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-dato>
+                      <tr>
+                          <td class="center-content"><span class="p-column-title">Año</span>{{dato.ano}}</td>
+                          <td class="center-content"><span class="p-column-title">Total Ventas</span>{{dato.totalVentas}}</td>
+                          <td class="center-content"><span class="p-column-title">Total Cotizaciones</span>{{dato.totalCotizaciones}}</td>                
+                      </tr>
+                  </ng-template>          
+              </p-table>
+          </div>
           </div>
         </div>
+
         <div class="p-col-12 p-md-8 p-p-2 p-shadow-1 ">
           <div class="p-d-flex p-flex-column " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; margin: 13px;">
             <!-- Contenido del segundo contenedor apilado (fila 2) -->

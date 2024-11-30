@@ -195,6 +195,7 @@ static consultaFacturas='/facturacion/ventasFacturadas';
 //Compras
 
 static consultaUltimaCompraProduc='/productosVendidosFechaCompra?';
+static consultaVenCotProdAnoDto='/ventaCotizaProdAno?';
 
 
 
