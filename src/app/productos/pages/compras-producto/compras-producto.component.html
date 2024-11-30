@@ -135,69 +135,148 @@
   </div>
 
   <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AQUI INCIA EL FORMULARIO DE REGISTRO DE PRODUCTOS COMPRA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   -->
-  <p-dialog [(visible)]="dialogo" [style]="{width: '80vw', height: '80vh'}" header="Registro de pedido" [modal]="true"
-    styleClass="p-fluid" [closable]="true" [autoZIndex]="true" [maximizable]="true">
+  
+  <p-dialog [(visible)]="dialogo" [style]="{width: '80vw', height: '80vh'}" header="Registro de pedido" [modal]="true" styleClass="p-fluid" [closable]="true" [autoZIndex]="true" [maximizable]="true">
     <ng-template pTemplate="content">
-      <div class="p-grid" style="min-height: 100vh;">
-        <!-- Primera columna -->
-        <div class="p-col-12 p-md-3" style="min-height: 100%; height: auto;">
-          <div class="p-grid" style="min-height: 100%; height: auto;">
-
-            <!-- Primer contenedor apilado -->
-            <div class="p-col-12" style="min-height: 350px; height: auto;">
-              <div class="p-panel" style="min-height: 350px; height: auto; background-color: #d9edf7;">
-                <div class="p-col-12 text-center mt-4">
-                  <h4>Consulta por ultima fecha compra</h4>
-                </div>
-                <div class="card card-sin-fondo">
-                  <app-fecha-rango (fechasSeleccionadas)="recibirFechas($event)"></app-fecha-rango>
-                </div>
-
+      <div class="p-grid p-nogutter " style="min-height: 30vh;">
+        <!-- Primera fila -->
+        <div class="p-col-12 p-md-4 p-p-2 p-shadow-1 ">
+          <div class="p-d-flex p-flex-column  " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; ">
+            <div class="p-col-12 text-center mt-4">
+              <h4>Consulta por última fecha compra</h4>
+            </div>
+            <div class="card-sin-fondo" style="padding: 25px;">
+              <app-fecha-rango (fechasSeleccionadas)="recibirFechas($event)" ></app-fecha-rango>
+            </div>
+          </div>
+        </div>
+        <div class="p-col-12 p-md-4 p-p-2 p-shadow-1 ">
+          <div class="p-d-flex p-flex-column " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+            <div class="p-col-12 text-center mt-4">
+              <h4>Datos del producto</h4>
+            </div>
+                  <div class="p-grid p-dir-col p-nogutter m-4">
+                    <div class="p-col-12  p-pr-2 ">
+                      <div class="p-d-flex p-jc-between">
+                        <div>No. Parte:</div>
+                        <div>{{vwMetaProductoCompra.sNoParte}}</div>
+                      </div>
+                    </div>
+                    <div class="p-col-12  p-pr-2">
+                      <div class="p-d-flex p-jc-between">
+                        <div>Producto:</div>
+                        <div>{{vwMetaProductoCompra.sProducto}}</div>
+                      </div>
+                    </div>
+                    <div class="p-col-12  p-pr-2">
+                      <div class="p-d-flex p-jc-between">
+                        <div>Descripción:</div>
+                        <div>{{vwMetaProductoCompra.sDescripcion}}</div>
+                      </div>
+                    </div>
+                    <div class="p-col-12  p-pr-2">
+                      <div class="p-d-flex p-jc-between">
+                        <div>Marca:</div>
+                        <div>{{vwMetaProductoCompra.sMarca}}</div>
+                      </div>
+                    </div>
+                    <div class="p-col-12  p-pr-2">
+                      <div class="p-d-flex p-jc-between">
+                        <div>Precio compra:</div>
+                        <div>{{vwMetaProductoCompra.nPrecio}}</div>
+                      </div>
+                    </div>
+                    <div class="p-col-12  p-pr-2">
+                      <div class="p-d-flex p-jc-between">
+                        <div>Moneda:</div>
+                        <div>{{vwMetaProductoCompra.sMoneda}}</div>
+                      </div>
+                    </div>
+                    <div class="p-col-12  p-pr-2">
+                      <div class="p-d-flex p-jc-between">
+                        <div>Precio público:</div>
+                        <div>{{vwMetaProductoCompra.nPrecioUnitarioCalculado}}</div>
+                      </div>
+                    </div>                    
+                    <div class="p-col-12  p-pr-2">
+                      <div class="p-d-flex p-jc-between">
+                        <div>Ganancia:</div>
+                        <div>{{vwMetaProductoCompra.nGanancia}}%</div>
+                      </div>
+                    </div>
+                    <div class="p-col-12  p-pr-2">
+                      <div class="p-d-flex p-jc-between">
+                        <div>Descuento:</div>
+                        <div>{{vwMetaProductoCompra.nIdDescuento}}%</div>
+                      </div>
+                    </div>
+                  </div>
+          </div>
+        </div>
+        <div class="p-col-12 p-md-4 p-p-2 p-shadow-1">
+          <div class="p-d-flex p-flex-column" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+            <div class="card-sin-fondo ">
+              <div class="p-col-12 text-center mt-4">
+                <h4>Inventario</h4>
               </div>
+
+              <div class="p-grid p-dir-col p-nogutter m-4">
+                <div class="p-col-12  p-pr-2 ">
+                  <div class="p-d-flex p-jc-between">
+                    <div>Stock actual:</div>
+                    <div class="box" ><p-tag  severity="info" ><strong><div>{{vwMetaProductoCompra.nCantidad}}</div></strong></p-tag></div>
+                  </div>
+                </div>
+                <div class="p-col-12  p-pr-2">
+                  <div class="p-d-flex p-jc-between">
+                    <div>Mínimo requerido:</div>
+                    <div class="box"><p-tag  severity="warning"><strong><div>{{vwMetaProductoCompra.nStockMinimoRequerido}}</div></strong></p-tag></div>
+                  </div>
+                </div>
+                <div class="p-col-12  p-pr-2">
+                  <div class="p-d-flex p-jc-between">
+                    <div>Máximo requerido:</div>
+                    <div class="box"><p-tag  severity="danger"><strong><div>{{vwMetaProductoCompra.nStockMaximoRequerido}}</div></strong></p-tag></div>
+                  </div>
+                </div>
+                <div class="p-col-12  p-pr-2">
+                  <div class="p-d-flex p-jc-between">
+                    <div>Sugerencia compra:</div>
+                    <div class="box"><p-tag  severity="success"><strong><div>{{vwMetaProductoCompra.nSugerenciaCompra}}</div></strong></p-tag></div>
+                  </div>
+                </div>
+                
+              </div>
+              <div class="p-grid">
+                <div class="p-col text-center " style="min-height: auto; background-color: #08a777; border-radius: 10px; margin:15px; color: white;">1</div>
+                <div class="p-col text-center " style="min-height: auto; background-color: #08a777; border-radius: 10px; margin:15px; color: white;">1</div>
+                <div class="p-col text-center " style="min-height: auto; background-color: #08a777; border-radius: 10px; margin:15px; color: white;">1</div>
             </div>
 
-            <!-- Segundo contenedor apilado -->
-            <div class="p-col-12" style="min-height: 350px; height: auto;">
-              <div class="p-panel" style="min-height: 350px; height: auto; background-color: #f2dede;">
-                <p>Contenido del segundo contenedor apilado</p>
-              </div>
-            </div>
+            
 
-            <!-- Tercer contenedor apilado -->
-            <div class="p-col-12" style="min-height: 350px; height: auto;">
-              <div class="p-panel" style="min-height: 350px; height: auto; background-color: #dff0d8;">
-                <p>Contenido del tercer contenedor apilado</p>
-              </div>
+
             </div>
           </div>
         </div>
 
-        <!-- Segunda columna -->
-        <div class="p-col-12 p-md-9" style="min-height: 100%; height: auto;">
-          <div class="p-grid" style="min-height: 100%; height: auto;">
-
-            <!-- Primer contenedor apilado -->
-            <div class="p-col-12" style="min-height: 600px; height: auto;">
-              <div class="p-panel" style="min-height: 600px; height: auto; background-color: #e6e6fa;">
-                <div class="card mt-4 card-sin-fondo" style="height: auto;">
-
-                </div>
-              </div>
-            </div>
-
-            <!-- Segundo contenedor apilado -->
-            <div class="p-col-12" style="min-height: 600px; height: auto;">
-              <div class="p-panel" style="min-height: 600px; height: auto; background-color: #f5f5dc;">
-                <p>Contenido del segundo contenedor apilado (columna 2)</p>
-              </div>
-            </div>
-
+        <!-- Segunda fila -->
+        <div class="p-col-12 p-md-4 p-p-2 p-shadow-1">
+          <div class="p-d-flex p-flex-column" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+            <!-- Contenido del primer contenedor apilado (fila 2) -->
           </div>
         </div>
+        <div class="p-col-12 p-md-8 p-p-2 p-shadow-1 ">
+          <div class="p-d-flex p-flex-column " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; margin: 13px;">
+            <!-- Contenido del segundo contenedor apilado (fila 2) -->
+             
+          </div>
+        </div>
+        
       </div>
-
     </ng-template>
-  </p-dialog>
+</p-dialog>
+  
 
    <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AQUI TERMINA EL FORMULARIO DE REGISTRO DE PRODUCTOS COMPRA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   -->
 </div>
