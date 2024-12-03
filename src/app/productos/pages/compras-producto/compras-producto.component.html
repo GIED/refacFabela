@@ -141,7 +141,7 @@
       <div class="p-grid p-nogutter " style="min-height: 30vh;">
         <!-- Primera fila -->
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1 ">
-          <div class="p-d-flex p-flex-column  " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; ">
+          <div class="p-d-flex p-flex-column  p-shadow-5 " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; ">
             <div class="p-col-12 text-center mt-4">
               <h4>Consulta por última fecha compra</h4>
             </div>
@@ -151,7 +151,7 @@
           </div>
         </div>
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1 ">
-          <div class="p-d-flex p-flex-column " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+          <div class="p-d-flex p-flex-column p-shadow-5 " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
             <div class="p-col-12 text-center mt-4">
               <h4>Datos del producto</h4>
             </div>
@@ -214,7 +214,7 @@
           </div>
         </div>
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1">
-          <div class="p-d-flex p-flex-column" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+          <div class="p-d-flex p-flex-column p-shadow-5" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
             <div class="card-sin-fondo ">
               <div class="p-col-12 text-center mt-4">
                 <h4>Inventario</h4>
@@ -245,6 +245,12 @@
                     <div class="box"><p-tag  severity="success"><strong><div>{{vwMetaProductoCompra.nSugerenciaCompra}}</div></strong></p-tag></div>
                   </div>
                 </div>
+                <div class="p-col-12  p-pr-2">
+                  <div class="p-d-flex p-jc-between">
+                    <div>última compra:</div>
+                    <div class="box"><p-tag  severity="success"><strong><div>{{vwMetaProductoCompra.dUltimaFechaCompra}}</div></strong></p-tag></div>
+                  </div>
+                </div>
                 
               </div>
               <div class="p-grid">
@@ -262,8 +268,8 @@
 
         <!-- Segunda fila -->
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1">
-          <div class="p-d-flex p-flex-column" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
-            <div class="p-3 mt-4">
+          <div class="p-d-flex p-flex-column p-shadow-5" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+            <div class="p-3 mt-2">
               <div class="p-col-12 text-center mt-4">
                 <h4>Desglose Año</h4>
               </div>
@@ -290,7 +296,7 @@
         </div>
 
         <div class="p-col-12 p-md-8 p-p-2 p-shadow-1 ">
-          <div class="p-d-flex p-flex-column " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; margin: 13px;">
+          <div class="p-d-flex p-flex-column p-shadow-5 " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; margin: 13px;">
             <!-- Contenido del segundo contenedor apilado (fila 2) -->
              
           </div>
