@@ -18,6 +18,9 @@ static guardarProveedores='/guardarProveedores';
 static obtenerBalalcenProveedores='/facturacionProveedor/obtenerBalacesProveedores';
 static obtenertTipoCambioBM='/facturacionProveedor/tipoCambioBM';
 static obtenertFacturasSinCobrar='/facturacionProveedor/obtenerFacturaProveedorBalanceActivas';
+static obtenertProveedoresLike='/consultarProveedoresLike?';
+
+
 static guardarFacturaProveedor='/facturacionProveedor/guardarFacturaProveedor'
 static guardarAbonoFacturaProveedor='/facturacionProveedor/guardarAbonoFactura'
 static obtenerFacturasProveedorMoneda='/facturacionProveedor/obtenerFacturasProveedor?';
@@ -195,6 +198,8 @@ static consultaFacturas='/facturacion/ventasFacturadas';
 //Compras
 
 static consultaUltimaCompraProduc='/productosVendidosFechaCompra?';
+static consultaVantaCotizacionIdProducto='/productosVendidosCotizadosIdProducto?';
+
 static consultaVenCotProdAnoDto='/ventaCotizaProdAno?';
 
 

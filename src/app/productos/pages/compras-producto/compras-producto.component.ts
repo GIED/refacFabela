@@ -7,6 +7,10 @@ import { ComprasService } from '../../../shared/service/compras.service';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { VenCotProdAnoDto } from '../../model/VenCotProdAnoDto';
+import { ProveedorService } from '../../../administracion/service/proveedor.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Proveedores } from 'src/app/administracion/interfaces/proveedores';
+import { TcProducto } from '../../model/TcProducto';
 
 @Component({
   selector: 'app-compras-producto',
@@ -19,20 +23,47 @@ export class ComprasProductoComponent implements OnInit {
   vwMetaProductoCompra:VwMetaProductoCompra;
   dialogo:boolean;
   listaAnoVentaCot:VenCotProdAnoDto[];
+  lineChartData2: any
+  lineChartOptions: any;
+  ano: string[];
+  ventas: number[];
+  cotizaciones: number[];
+  form: FormGroup;
+  filteredProveedores: Proveedores[];
+  proveedorSeleccionado:Proveedores;
+  totalVentas:number;
+  totalCotizaciones:number;
+  efectividad:number;
+  producto:TcProducto;
   
 
-  constructor(private comprasService:ComprasService,  private messageService: MessageService ) { 
+  constructor(private comprasService:ComprasService,  private messageService: MessageService, private proveedorService:ProveedorService, private fb: FormBuilder ) { 
     this.datosRecibidos=null;
     this.listaProductosUltimaCompra=[];
     this.vwMetaProductoCompra=new VwMetaProductoCompra();
     this.dialogo=false;
     this.listaAnoVentaCot=[];
+    this.ano=[];
+    this.ventas=[];
+    this.cotizaciones=[];
+    this.proveedorSeleccionado=null;
+    this.totalVentas=0;
+    this.totalCotizaciones=0;
+    this.efectividad=0;
+
+
   }
 
   ngOnInit(): void {
    
     const today = new Date();
-    this.getProductosUltimaFechaCompra(today.toISOString().split('T')[0], today.toISOString().split('T')[0])
+    this.getProductosUltimaFechaCompra(today.toISOString().split('T')[0], today.toISOString().split('T')[0]);
+    
+    // CREA EL FORMULARIO DE REGISTRO DE PEDIDO PRODUCTO
+    this.form = this.fb.group({
+      proveedor: [null, Validators.required],
+      cantidad: [null, [Validators.required, Validators.pattern('^[0-9]*$')]]   
+    });
 
   }
 
@@ -74,6 +105,14 @@ export class ComprasProductoComponent implements OnInit {
     });
 
   }
+
+  calcularEfectividad(totalVentas: number, totalCotizaciones: number): number {
+    if (totalCotizaciones === 0) {
+      return 0; // Evitar división por cero
+    }
+    const efectividad = (totalVentas / totalCotizaciones) * 100;
+    return parseFloat(efectividad.toFixed(2));
+  }
   
   agregarProducto(producto:VwMetaProductoCompra){
     this.dialogo=true;
@@ -81,24 +120,135 @@ export class ComprasProductoComponent implements OnInit {
 
 
     this.comprasService.obtenerVenCotProdAnoDto(this.vwMetaProductoCompra.nId).subscribe(data=>{
-      this.listaAnoVentaCot=data;
+            this.listaAnoVentaCot=data;
+   
+      this.ano=[];
+      this.cotizaciones=[];
+      this.ventas=[];
+
+
+      for (let index = 0; index < data.length; index++) {
+        this.ano.push(data[index].ano);
+        this.cotizaciones.push(data[index].totalCotizaciones);
+        this.ventas.push(data[index].totalVentas);
+        this.totalVentas+=data[index].totalVentas;
+        this.totalCotizaciones+=data[index].totalCotizaciones;
+    }
+
+    this.efectividad=this.calcularEfectividad( this.totalVentas, this.totalCotizaciones);
+    
+    
+
+
+
+    this.lineChartData2 = {
+        labels: this.ano,
+        datasets: [
+            {
+                label: 'Cotizaciones',
+                data: this.cotizaciones,
+                borderColor: [
+                    'purple'
+                ],
+                borderWidth: 3,
+                fill: false,
+                tension: .4
+            },
+            {
+                label: 'Ventas',
+                data: this.ventas,
+                borderColor: [
+                    'green'
+                ],
+                borderWidth: 3,
+                fill: false,
+                tension: .4
+            }
+        ]
+        
+    };
+    this.lineChartOptions = {
+      responsive: true,
+      plugins: {
+          legend: {
+              position: 'top',
+          },
+          title: {
+              display: true,
+              text: 'Ventas y cotizaciones por año'
+          }
+      },  scales: {
+        y: {
+            ticks: {
+                stepSize: 1, // Esto asegura que los pasos sean de 1 en 1
+                callback: function(value) {
+                    return Number.isInteger(value) ? value : null; // Solo muestra números enteros
+                }
+            }
+        }
+    }
+  };
+
+
+
+
+
+
+
+
 
       
 
     })
 
-     
+  } 
+
+  onProductoSeleccionado(producto: TcProducto) {
+   
+    this.listaProductosUltimaCompra=[];
+   
+    this.comprasService.obtenerProductosVentaCotizacionIdProducto(producto.nId).subscribe(data=>{  
+      
+      this.listaProductosUltimaCompra=data;
+
+  
+
+
+
+    });
 
 
 
 
 
-
-
- 
-    
-
+    console.log('Producto seleccionado:', producto);
   }
- 
+
+
+  search(event: any) {
+    const query = event.query;
+    this.proveedorService.getResults(query).subscribe(data => {
+      this.filteredProveedores = data;
+    });
+  }
+
+  onSelect(event: any) {
+    this.proveedorSeleccionado = event;
+    console.log('Proveedor seleccionado:', this.proveedorSeleccionado);
+  }
+
+  onSubmit() {
+    if (this.form.valid) {
+      const formData = this.form.value;
+      console.log('Formulario enviado:', formData);
+      this.form.reset();
+    }
+  }
+
+
+
+
+
+
 
 }

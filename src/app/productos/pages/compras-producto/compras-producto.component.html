@@ -6,7 +6,8 @@
 
       <!-- Primer contenedor apilado -->
       <div class="p-col-12" style="min-height: 350px; height: auto;">
-        <div class="p-panel" style="min-height: 350px; height: auto; background-color: #d9edf7;">
+        <div class="p-d-flex p-flex-column p-shadow-5 "
+          style="min-height: 350px; background-color: #F2F3F4; border-radius: 10px;">
           <div class="p-col-12 text-center mt-4">
             <h4>Consulta por ultima fecha compra</h4>
           </div>
@@ -19,14 +20,21 @@
 
       <!-- Segundo contenedor apilado -->
       <div class="p-col-12" style="min-height: 350px; height: auto;">
-        <div class="p-panel" style="min-height: 350px; height: auto; background-color: #f2dede;">
-          <p>Contenido del segundo contenedor apilado</p>
+        <div class="p-d-flex p-flex-column p-shadow-5 " style="min-height: 350px; background-color: #F2F3F4; border-radius: 10px;">
+
+          <div class="p-col-12 text-center mt-4">
+            <h4>Consulta por parte</h4>
+          </div>
+          <div class="card card-sin-fondo">
+            <app-input-busqueda (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>
+          </div>
         </div>
       </div>
 
       <!-- Tercer contenedor apilado -->
       <div class="p-col-12" style="min-height: 350px; height: auto;">
-        <div class="p-panel" style="min-height: 350px; height: auto; background-color: #dff0d8;">
+        <div class="p-d-flex p-flex-column p-shadow-5 "
+          style="min-height: 350px; background-color: #F2F3F4; border-radius: 10px;">
           <p>Contenido del tercer contenedor apilado</p>
         </div>
       </div>
@@ -39,17 +47,18 @@
 
       <!-- Primer contenedor apilado -->
       <div class="p-col-12" style="min-height: 600px; height: auto;">
-        <div class="p-panel" style="min-height: 600px; height: auto; background-color: #e6e6fa;">
-          <div class="card mt-4 card-sin-fondo" style="height: auto;">
-            <div class="p-col-12 text-center mt-4">
-              <h3>Lista de productos por su ultima fecha de compra</h3>
+        <div class="p-d-flex p-flex-column p-shadow-5 "
+          style="min-height: 600px; background-color: #F2F3F4; border-radius: 10px;">
+          <div class="card card-sin-fondo" style="height: auto;">
+            <div class="p-col-12 text-center mt-2">
+              <h4>Lista de productos por su ultima fecha de compra</h4>
             </div>
             <p-table class="mt-2" #dt [value]="listaProductosUltimaCompra" [rows]="5" [paginator]="true"
-              [scrollable]="true" scrollHeight="flex"
+              [scrollable]="true" 
               [globalFilterFields]="['sDescripcion', 'sProducto', 'sMarca', 'sMoneda', 'nSugerenciaCompra', 'nStockSugerido', 'nTotalUnitarioCalculado','nCantidad', 'dUltimaFechaCompra']"
-              [rowHover]="true" dataKey="nId" styleClass="p-datatable-customers"
+              [rowHover]="true" dataKey="nId" styleClass="p-datatable-customers min-width-table"
               currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-              [showCurrentPageReport]="true">
+              [showCurrentPageReport]="true" >
 
               <ng-template pTemplate="caption">
                 <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
@@ -64,7 +73,7 @@
 
               <ng-template pTemplate="header">
                 <tr>
-                  <th pSortableColumn="sNoParte" class="text-center">Producto <p-sortIcon field="sNoParte"></p-sortIcon>
+                  <th pSortableColumn="sNoParte" class="text-center">No parte <p-sortIcon field="sNoParte"></p-sortIcon>
                   </th>
                   <th pSortableColumn="sProducto" class="text-center">Producto <p-sortIcon
                       field="sProducto"></p-sortIcon> </th>
@@ -89,22 +98,22 @@
 
               <ng-template pTemplate="body" let-producto>
                 <tr>
-                  <td class="text-center"><span class="p-column-title">No parte</span>{{producto.sNoParte}}</td>
-                  <td class="text-center"><span class="p-column-title">Producto</span>{{producto.sProducto}}</td>
-                  <td class="text-center"><span class="p-column-title">Descripción</span>{{producto.sDescripcion}}</td>
-                  <td class="text-center"><span class="p-column-title">Marca</span>{{producto.sMarca}}</td>
-                  <td class="text-center"><span class="p-column-title">Moneda</span>{{producto.sMoneda}}</td>
-                  <td class="text-center"><span class="p-column-title">Ultima compra</span>{{producto.dUltimaFechaCompra
+                  <td class="center-content"><span class="p-column-title">No parte</span>{{producto.sNoParte}}</td>
+                  <td class="center-content"><span class="p-column-title">Producto</span>{{producto.sProducto}}</td>
+                  <td class="center-content"><span class="p-column-title">Descripción</span>{{producto.sDescripcion}}</td>
+                  <td class="center-content"><span class="p-column-title">Marca</span>{{producto.sMarca}}</td>
+                  <td class="center-content"><span class="p-column-title">Moneda</span>{{producto.sMoneda}}</td>
+                  <td class="center-content"><span class="p-column-title">Ultima compra</span>{{producto.dUltimaFechaCompra
                     | date}}</td>
-                  <td class="text-center"><span class="p-column-title">Stock Sugerido</span>{{producto.nCantidad |
+                  <td class="center-content"><span class="p-column-title">Stock Sugerido</span>{{producto.nCantidad |
                     number}}</td>
-                  <td class="text-center"><span class="p-column-title">Stock Sugerido</span>{{producto.nStockSugerido |
+                  <td class="center-content"><span class="p-column-title">Stock Sugerido</span>{{producto.nStockSugerido |
                     number}}</td>
-                  <td class="text-center"><span class="p-column-title">Sugerencia de
+                  <td class="center-content"><span class="p-column-title">Sugerencia de
                       Compra</span>{{producto.nSugerenciaCompra | number}}</td>
-                  <td class="text-center"><span class="p-column-title">Total
+                  <td class="center-content"><span class="p-column-title">Total
                       Calculado</span>{{producto.nTotalUnitarioCalculado | currency }}</td>
-                  <td class="text-center">
+                  <td class="center-content">
                     <button pButton pRipple icon="pi pi-shopping-cart" class="p-button-rounded p-button-info p-mr-2"
                       (click)="agregarProducto(producto)"></button>
                   </td>
@@ -126,7 +135,8 @@
 
       <!-- Segundo contenedor apilado -->
       <div class="p-col-12" style="min-height: 600px; height: auto;">
-        <div class="p-panel" style="min-height: 600px; height: auto; background-color: #f5f5dc;">
+        <div class="p-d-flex p-flex-column p-shadow-5 "
+          style="min-height: 600px; background-color: #F2F3F4; border-radius: 10px;">
           <p>Contenido del segundo contenedor apilado (columna 2)</p>
         </div>
       </div>
@@ -135,86 +145,111 @@
   </div>
 
   <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AQUI INCIA EL FORMULARIO DE REGISTRO DE PRODUCTOS COMPRA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   -->
-  
-  <p-dialog [(visible)]="dialogo" [style]="{width: '80vw', height: '80vh'}" header="Registro de pedido" [modal]="true" styleClass="p-fluid" [closable]="true" [autoZIndex]="true" [maximizable]="true">
+
+  <p-dialog [(visible)]="dialogo" [style]="{width: '90vw', height: '80vh'}" header="Registro de pedido" [modal]="true"
+    styleClass="p-fluid" [closable]="true" [autoZIndex]="true" [maximizable]="true">
     <ng-template pTemplate="content">
       <div class="p-grid p-nogutter " style="min-height: 30vh;">
         <!-- Primera fila -->
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1 ">
-          <div class="p-d-flex p-flex-column  p-shadow-5 " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; ">
+          <div class="p-d-flex p-flex-column  p-shadow-5 "
+            style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; ">
             <div class="p-col-12 text-center mt-4">
-              <h4>Consulta por última fecha compra</h4>
+              <h4>Registro de pedido producto</h4>
             </div>
             <div class="card-sin-fondo" style="padding: 25px;">
-              <app-fecha-rango (fechasSeleccionadas)="recibirFechas($event)" ></app-fecha-rango>
+              <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div>
+                  <label for="proveedor">Proveedor</label>
+                  <p-autoComplete formControlName="proveedor" [suggestions]="filteredProveedores"
+                    (completeMethod)="search($event)" (onSelect)="onSelect($event)" field="sRazonSocial"
+                    [dropdown]="true" [virtualScroll]="true" [virtualScrollItemSize]="3" [scrollHeight]="'150px'">>
+                  </p-autoComplete>
+                  <div *ngIf="form.get('proveedor').invalid && form.get('proveedor').touched">
+                    <small class="p-error">Proveedor es requerido.</small>
+                  </div>
+                </div>
+                <div>
+                  <label for="cantidad">Cantidad</label>
+                  <p-inputNumber type="number" formControlName="cantidad" id="cantidad" mode="decimal" [min]="1"
+                    [useGrouping]="false"></p-inputNumber>
+                  <div *ngIf="form.get('cantidad').invalid && form.get('cantidad').touched">
+                    <small class="p-error">Cantidad debe ser un número entero positivo.</small>
+                  </div>
+                </div>
+                <button button pButton type="button" label="Guardar" type="submit" [disabled]="form.invalid"
+                  class="mt-4"></button>
+              </form>
             </div>
           </div>
         </div>
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1 ">
-          <div class="p-d-flex p-flex-column p-shadow-5 " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+          <div class="p-d-flex p-flex-column p-shadow-5 "
+            style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
             <div class="p-col-12 text-center mt-4">
               <h4>Datos del producto</h4>
             </div>
-                  <div class="p-grid p-dir-col p-nogutter m-4">
-                    <div class="p-col-12  p-pr-2 ">
-                      <div class="p-d-flex p-jc-between">
-                        <div>No. Parte:</div>
-                        <div>{{vwMetaProductoCompra.sNoParte}}</div>
-                      </div>
-                    </div>
-                    <div class="p-col-12  p-pr-2">
-                      <div class="p-d-flex p-jc-between">
-                        <div>Producto:</div>
-                        <div>{{vwMetaProductoCompra.sProducto}}</div>
-                      </div>
-                    </div>
-                    <div class="p-col-12  p-pr-2">
-                      <div class="p-d-flex p-jc-between">
-                        <div>Descripción:</div>
-                        <div>{{vwMetaProductoCompra.sDescripcion}}</div>
-                      </div>
-                    </div>
-                    <div class="p-col-12  p-pr-2">
-                      <div class="p-d-flex p-jc-between">
-                        <div>Marca:</div>
-                        <div>{{vwMetaProductoCompra.sMarca}}</div>
-                      </div>
-                    </div>
-                    <div class="p-col-12  p-pr-2">
-                      <div class="p-d-flex p-jc-between">
-                        <div>Precio compra:</div>
-                        <div>{{vwMetaProductoCompra.nPrecio}}</div>
-                      </div>
-                    </div>
-                    <div class="p-col-12  p-pr-2">
-                      <div class="p-d-flex p-jc-between">
-                        <div>Moneda:</div>
-                        <div>{{vwMetaProductoCompra.sMoneda}}</div>
-                      </div>
-                    </div>
-                    <div class="p-col-12  p-pr-2">
-                      <div class="p-d-flex p-jc-between">
-                        <div>Precio público:</div>
-                        <div>{{vwMetaProductoCompra.nPrecioUnitarioCalculado}}</div>
-                      </div>
-                    </div>                    
-                    <div class="p-col-12  p-pr-2">
-                      <div class="p-d-flex p-jc-between">
-                        <div>Ganancia:</div>
-                        <div>{{vwMetaProductoCompra.nGanancia}}%</div>
-                      </div>
-                    </div>
-                    <div class="p-col-12  p-pr-2">
-                      <div class="p-d-flex p-jc-between">
-                        <div>Descuento:</div>
-                        <div>{{vwMetaProductoCompra.nIdDescuento}}%</div>
-                      </div>
-                    </div>
-                  </div>
+            <div class="p-grid p-dir-col p-nogutter m-4">
+              <div class="p-col-12  p-pr-2 ">
+                <div class="p-d-flex p-jc-between">
+                  <div>No. Parte:</div>
+                  <div>{{vwMetaProductoCompra.sNoParte}}</div>
+                </div>
+              </div>
+              <div class="p-col-12  p-pr-2">
+                <div class="p-d-flex p-jc-between">
+                  <div>Producto:</div>
+                  <div>{{vwMetaProductoCompra.sProducto}}</div>
+                </div>
+              </div>
+              <div class="p-col-12  p-pr-2">
+                <div class="p-d-flex p-jc-between">
+                  <div>Descripción:</div>
+                  <div>{{vwMetaProductoCompra.sDescripcion}}</div>
+                </div>
+              </div>
+              <div class="p-col-12  p-pr-2">
+                <div class="p-d-flex p-jc-between">
+                  <div>Marca:</div>
+                  <div>{{vwMetaProductoCompra.sMarca}}</div>
+                </div>
+              </div>
+              <div class="p-col-12  p-pr-2">
+                <div class="p-d-flex p-jc-between">
+                  <div>Precio compra:</div>
+                  <div>{{vwMetaProductoCompra.nPrecio}}</div>
+                </div>
+              </div>
+              <div class="p-col-12  p-pr-2">
+                <div class="p-d-flex p-jc-between">
+                  <div>Moneda:</div>
+                  <div>{{vwMetaProductoCompra.sMoneda}}</div>
+                </div>
+              </div>
+              <div class="p-col-12  p-pr-2">
+                <div class="p-d-flex p-jc-between">
+                  <div>Precio público:</div>
+                  <div>{{vwMetaProductoCompra.nPrecioUnitarioCalculado}}</div>
+                </div>
+              </div>
+              <div class="p-col-12  p-pr-2">
+                <div class="p-d-flex p-jc-between">
+                  <div>Ganancia:</div>
+                  <div>{{vwMetaProductoCompra.nGanancia}}%</div>
+                </div>
+              </div>
+              <div class="p-col-12  p-pr-2">
+                <div class="p-d-flex p-jc-between">
+                  <div>Descuento:</div>
+                  <div>{{vwMetaProductoCompra.nIdDescuento}}%</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1">
-          <div class="p-d-flex p-flex-column p-shadow-5" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+          <div class="p-d-flex p-flex-column p-shadow-5"
+            style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
             <div class="card-sin-fondo ">
               <div class="p-col-12 text-center mt-4">
                 <h4>Inventario</h4>
@@ -224,43 +259,56 @@
                 <div class="p-col-12  p-pr-2 ">
                   <div class="p-d-flex p-jc-between">
                     <div>Stock actual:</div>
-                    <div class="box" ><p-tag  severity="info" ><strong><div>{{vwMetaProductoCompra.nCantidad}}</div></strong></p-tag></div>
+                    <div class="box"><p-tag severity="info"><strong>
+                          <div>{{vwMetaProductoCompra.nCantidad}}</div>
+                        </strong></p-tag></div>
                   </div>
                 </div>
                 <div class="p-col-12  p-pr-2">
                   <div class="p-d-flex p-jc-between">
                     <div>Mínimo requerido:</div>
-                    <div class="box"><p-tag  severity="warning"><strong><div>{{vwMetaProductoCompra.nStockMinimoRequerido}}</div></strong></p-tag></div>
+                    <div class="box"><p-tag severity="warning"><strong>
+                          <div>{{vwMetaProductoCompra.nStockMinimoRequerido}}</div>
+                        </strong></p-tag></div>
                   </div>
                 </div>
                 <div class="p-col-12  p-pr-2">
                   <div class="p-d-flex p-jc-between">
                     <div>Máximo requerido:</div>
-                    <div class="box"><p-tag  severity="danger"><strong><div>{{vwMetaProductoCompra.nStockMaximoRequerido}}</div></strong></p-tag></div>
+                    <div class="box"><p-tag severity="danger"><strong>
+                          <div>{{vwMetaProductoCompra.nStockMaximoRequerido}}</div>
+                        </strong></p-tag></div>
                   </div>
                 </div>
                 <div class="p-col-12  p-pr-2">
                   <div class="p-d-flex p-jc-between">
                     <div>Sugerencia compra:</div>
-                    <div class="box"><p-tag  severity="success"><strong><div>{{vwMetaProductoCompra.nSugerenciaCompra}}</div></strong></p-tag></div>
+                    <div class="box"><p-tag severity="success"><strong>
+                          <div>{{vwMetaProductoCompra.nSugerenciaCompra}}</div>
+                        </strong></p-tag></div>
                   </div>
                 </div>
                 <div class="p-col-12  p-pr-2">
                   <div class="p-d-flex p-jc-between">
                     <div>última compra:</div>
-                    <div class="box"><p-tag  severity="success"><strong><div>{{vwMetaProductoCompra.dUltimaFechaCompra}}</div></strong></p-tag></div>
+                    <div class="box"><p-tag severity="success"><strong>
+                          <div>{{vwMetaProductoCompra.dUltimaFechaCompra}}</div>
+                        </strong></p-tag></div>
                   </div>
                 </div>
-                
+
               </div>
               <div class="p-grid">
-                <div class="p-col text-center " style="min-height: auto; background-color: #08a777; border-radius: 10px; margin:15px; color: white;">1</div>
-                <div class="p-col text-center " style="min-height: auto; background-color: #08a777; border-radius: 10px; margin:15px; color: white;">1</div>
-                <div class="p-col text-center " style="min-height: auto; background-color: #08a777; border-radius: 10px; margin:15px; color: white;">1</div>
-            </div>
-
-            
-
+                <div class="p-col text-center "
+                  style="min-height: auto; background-color: #FFABAB; border-radius: 10px; margin:10px; color: #333333;">
+                  Ventas:{{totalVentas}}</div>
+                <div class="p-col text-center "
+                  style="min-height: auto; background-color: #A0E7E5; border-radius: 10px; margin:10px; color: #333333;">
+                  Cotizaciones:{{totalCotizaciones}}</div>
+                <div class="p-col text-center "
+                  style="min-height: auto; background-color: #B4F8C8; border-radius: 10px; margin:10px; color: #333333;">
+                  Efectividad: {{efectividad}}%</div>
+              </div>
 
             </div>
           </div>
@@ -268,44 +316,54 @@
 
         <!-- Segunda fila -->
         <div class="p-col-12 p-md-4 p-p-2 p-shadow-1">
-          <div class="p-d-flex p-flex-column p-shadow-5" style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
-            <div class="p-3 mt-2">
+          <div class="p-d-flex p-flex-column p-shadow-5"
+            style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px;">
+            <div class="p-2 mt-1">
               <div class="p-col-12 text-center mt-4">
                 <h4>Desglose Año</h4>
               </div>
-              <p-table class="mt-2" #dt [value]="listaAnoVentaCot" [rows]="5" [paginator]="true" [scrollable]="true" scrollHeight="flex" [globalFilterFields]="['ano', 'totalVentas', 'totalCotizaciones']"
-              [rowHover]="true" dataKey="ano" styleClass="p-datatable-customers" currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true">      
-          
-                  <ng-template pTemplate="header">
-                      <tr>
-                          <th pSortableColumn="ano" class="center-content">Año <p-sortIcon field="ano"></p-sortIcon></th>
-                          <th pSortableColumn="totalVentas" class="center-content">Ventas<p-sortIcon field="totalVentas"></p-sortIcon> </th>
-                          <th pSortableColumn="totalCotizaciones" class="center-content">Cotizaciones <p-sortIcon field="totalCotizaciones"></p-sortIcon> </th>               
-                      </tr>
-                  </ng-template>
-                  <ng-template pTemplate="body" let-dato>
-                      <tr>
-                          <td class="center-content"><span class="p-column-title">Año</span>{{dato.ano}}</td>
-                          <td class="center-content"><span class="p-column-title">Total Ventas</span>{{dato.totalVentas}}</td>
-                          <td class="center-content"><span class="p-column-title">Total Cotizaciones</span>{{dato.totalCotizaciones}}</td>                
-                      </tr>
-                  </ng-template>          
+              <p-table class="mt-2" #dt [value]="listaAnoVentaCot" [rows]="5" [paginator]="true" [scrollable]="true"
+                scrollHeight="flex" [globalFilterFields]="['ano', 'totalVentas', 'totalCotizaciones']" [rowHover]="true"
+                dataKey="ano" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                [showCurrentPageReport]="true">
+
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th pSortableColumn="ano" class="center-content">Año <p-sortIcon field="ano"></p-sortIcon></th>
+                    <th pSortableColumn="totalVentas" class="center-content">Ventas<p-sortIcon
+                        field="totalVentas"></p-sortIcon> </th>
+                    <th pSortableColumn="totalCotizaciones" class="center-content">Cotizaciones <p-sortIcon
+                        field="totalCotizaciones"></p-sortIcon> </th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-dato>
+                  <tr>
+                    <td class="center-content"><span class="p-column-title">Año</span>{{dato.ano}}</td>
+                    <td class="center-content"><span class="p-column-title">Total Ventas</span>{{dato.totalVentas}}</td>
+                    <td class="center-content"><span class="p-column-title">Total
+                        Cotizaciones</span>{{dato.totalCotizaciones}}</td>
+                  </tr>
+                </ng-template>
               </p-table>
-          </div>
+            </div>
           </div>
         </div>
 
         <div class="p-col-12 p-md-8 p-p-2 p-shadow-1 ">
-          <div class="p-d-flex p-flex-column p-shadow-5 " style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; margin: 13px;">
-            <!-- Contenido del segundo contenedor apilado (fila 2) -->
-             
+          <div class="p-d-flex p-flex-column p-shadow-5 "
+            style="min-height: 300px; background-color: #F2F3F4; border-radius: 10px; margin: 13px;">
+
+            <p-chart id="dashboard-chart" type="line" [data]="lineChartData2" [options]="lineChartOptions"
+              height="280px"></p-chart>
+
           </div>
         </div>
-        
+
       </div>
     </ng-template>
-</p-dialog>
-  
+  </p-dialog>
 
-   <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AQUI TERMINA EL FORMULARIO DE REGISTRO DE PRODUCTOS COMPRA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   -->
+
+  <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AQUI TERMINA EL FORMULARIO DE REGISTRO DE PRODUCTOS COMPRA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   -->
 </div>

@@ -9,6 +9,8 @@ import { DataSerie } from 'src/app/productos/model/DataSerie';
 import { TwFacturasProveedor } from '../../productos/model/TwFacturasProveedor';
 import { BalanceFacturaProveedorMoneda } from 'src/app/productos/model/BalanceFacturaProveedorMoneda';
 import { TwAbonoFacturaProveedor } from '../../productos/model/TwAbonoFacturaProveedor';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -90,4 +92,14 @@ export class ProveedorService {
   }
 
 
+  getResults(query: string): Observable<any[]> {
+    if (query.length < 3) {
+      return of([]);
+    }
+    let url = environment.servicios.apiRefacFabela+ locator.obtenertProveedoresLike+'busqueda='+ query;
+    return this.http.get<Proveedores[]>(url).pipe(
+      map(response => response || [])
+    );
+
+  }
 }

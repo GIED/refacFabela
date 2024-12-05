@@ -17,6 +17,10 @@ export class ComprasService {
     let url= environment.servicios.apiRefacFabela + locator.consultaUltimaCompraProduc+'FechaIncio='+fechaInico+'&FechaTermino='+fechaTermino;
     return this.http.get<VwMetaProductoCompra[]>(url);
   }
+  obtenerProductosVentaCotizacionIdProducto(idProducto:number){
+    let url= environment.servicios.apiRefacFabela + locator.consultaVantaCotizacionIdProducto+'idProducto='+idProducto;
+    return this.http.get<VwMetaProductoCompra[]>(url);
+  }
 
   obtenerVenCotProdAnoDto(idProducto:number){
     let url= environment.servicios.apiRefacFabela + locator.consultaVenCotProdAnoDto+'idProducto='+idProducto;
