@@ -31,11 +31,8 @@ export class FechaRangoComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.formulario.valid) {
-      console.log('Formulario válido:', this.formulario.value);
+    if (this.formulario.valid) {     
       this.fechasSeleccionadas.emit(this.formulario.value); // Emite los valores al padre
-
-
     } else {
       console.log('Formulario inválido');
     }

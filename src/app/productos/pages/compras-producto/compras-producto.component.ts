@@ -17,7 +17,10 @@ import { TcProducto } from '../../model/TcProducto';
   templateUrl: './compras-producto.component.html',
   styleUrls: ['./compras-producto.component.scss']
 })
+
+
 export class ComprasProductoComponent implements OnInit {
+  
   datosRecibidos: { fechaInicio: string; fechaTermino: string } | null = null;
   listaProductosUltimaCompra:VwMetaProductoCompra[];
   vwMetaProductoCompra:VwMetaProductoCompra;
@@ -35,6 +38,12 @@ export class ComprasProductoComponent implements OnInit {
   totalCotizaciones:number;
   efectividad:number;
   producto:TcProducto;
+  products: any = [
+    { id: 1, name: 'Producto 1', price: 100, quantity: 1 },
+    { id: 2, name: 'Producto 2', price: 200, quantity: 2 },
+    // Agrega más productos según sea necesario
+  ];
+ 
   
 
   constructor(private comprasService:ComprasService,  private messageService: MessageService, private proveedorService:ProveedorService, private fb: FormBuilder ) { 
@@ -66,6 +75,7 @@ export class ComprasProductoComponent implements OnInit {
     });
 
   }
+  
 
   cerrarFormulario(event:boolean){
 
@@ -83,27 +93,16 @@ export class ComprasProductoComponent implements OnInit {
      this.getProductosUltimaFechaCompra(today.toISOString().split('T')[0], today.toISOString().split('T')[0]);
 
     }
-    else{
-      console.log("voy a consultar ", this.datosRecibidos);
+    else{     
       this.getProductosUltimaFechaCompra( this.datosRecibidos.fechaInicio, this.datosRecibidos.fechaTermino);
-
-
     }
-    
-    console.log('Fechas recibidas:', this.datosRecibidos);
-    console.log('Fechas recibidas:', this.datosRecibidos.fechaInicio);
-
-  }
+   }
 
   getProductosUltimaFechaCompra(fechaInico:String, fechatermino:String){
    
     this.comprasService.obtenerProductosUltimaCompra(fechaInico,fechatermino).subscribe(data=>{
       this.listaProductosUltimaCompra=data;
-
-     console.log(data);
-
     });
-
   }
 
   calcularEfectividad(totalVentas: number, totalCotizaciones: number): number {
@@ -137,10 +136,6 @@ export class ComprasProductoComponent implements OnInit {
 
     this.efectividad=this.calcularEfectividad( this.totalVentas, this.totalCotizaciones);
     
-    
-
-
-
     this.lineChartData2 = {
         labels: this.ano,
         datasets: [
@@ -216,12 +211,7 @@ export class ComprasProductoComponent implements OnInit {
 
 
     });
-
-
-
-
-
-    console.log('Producto seleccionado:', producto);
+ 
   }
 
 
@@ -234,13 +224,11 @@ export class ComprasProductoComponent implements OnInit {
 
   onSelect(event: any) {
     this.proveedorSeleccionado = event;
-    console.log('Proveedor seleccionado:', this.proveedorSeleccionado);
   }
 
   onSubmit() {
     if (this.form.valid) {
       const formData = this.form.value;
-      console.log('Formulario enviado:', formData);
       this.form.reset();
     }
   }
