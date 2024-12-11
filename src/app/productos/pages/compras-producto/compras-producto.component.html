@@ -21,6 +21,18 @@
       <!-- Segundo contenedor apilado -->
       <div class="p-col-12" style="min-height: 350px; height: auto;">
         <div class="p-d-flex p-flex-column p-shadow-5 " style="min-height: 350px; background-color: #F2F3F4; border-radius: 10px;">
+           
+           
+          <div class="p-col-12 text-center mt-4">
+            <h4>Registro Producto</h4>
+          </div>
+          <div class="card card-sin-fondo">
+            <button pButton pRipple label="Nuevo Producto" icon="pi pi-plus"
+            class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
+          </div>
+
+
+
 
           <div class="p-col-12 text-center mt-4">
             <h4>Consulta por parte</h4>
@@ -364,6 +376,14 @@
       </div>
     </ng-template>
   </p-dialog>
+
+  <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+      <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
+          (guardarProducto)="saveProduct($event)"></app-modal-producto>
+  </ng-template>
+</p-dialog>
 
 
   <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AQUI TERMINA EL FORMULARIO DE REGISTRO DE PRODUCTOS COMPRA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   -->

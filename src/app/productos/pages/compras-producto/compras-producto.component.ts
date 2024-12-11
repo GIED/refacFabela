@@ -11,6 +11,7 @@ import { ProveedorService } from '../../../administracion/service/proveedor.serv
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Proveedores } from 'src/app/administracion/interfaces/proveedores';
 import { TcProducto } from '../../model/TcProducto';
+import { ProductoService } from 'src/app/shared/service/producto.service';
 
 @Component({
   selector: 'app-compras-producto',
@@ -43,10 +44,12 @@ export class ComprasProductoComponent implements OnInit {
     { id: 2, name: 'Producto 2', price: 200, quantity: 2 },
     // Agrega más productos según sea necesario
   ];
+  productDialog:boolean;
+  titulo:string;
  
   
 
-  constructor(private comprasService:ComprasService,  private messageService: MessageService, private proveedorService:ProveedorService, private fb: FormBuilder ) { 
+  constructor(private comprasService:ComprasService,  private messageService: MessageService, private proveedorService:ProveedorService, private fb: FormBuilder, private productosService: ProductoService ) { 
     this.datosRecibidos=null;
     this.listaProductosUltimaCompra=[];
     this.vwMetaProductoCompra=new VwMetaProductoCompra();
@@ -59,6 +62,8 @@ export class ComprasProductoComponent implements OnInit {
     this.totalVentas=0;
     this.totalCotizaciones=0;
     this.efectividad=0;
+    this.productDialog=false;
+    this.titulo=null;
 
 
   }
@@ -75,6 +80,30 @@ export class ComprasProductoComponent implements OnInit {
     });
 
   }
+
+  openNew() {
+    this.producto = null;
+    this.productDialog = true;
+    this.titulo = "Registro de Productos"
+}
+
+hideDialog(){
+  this.productDialog=false;
+}
+saveProduct(producto: TcProducto) {
+
+  if (producto.nId) {
+      this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
+          this.messageService.add({ severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000 });
+      });
+  }
+  else {
+      this.productosService.guardaProducto(producto).subscribe(productoNuevo => {
+          this.messageService.add({ severity: 'success', summary: 'Registro Correcto', detail: 'Producto registrado correctamente', life: 3000 });
+      });
+  }
+
+}
   
 
   cerrarFormulario(event:boolean){
