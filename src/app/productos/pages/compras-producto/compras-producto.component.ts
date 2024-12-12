@@ -12,6 +12,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Proveedores } from 'src/app/administracion/interfaces/proveedores';
 import { TcProducto } from '../../model/TcProducto';
 import { ProductoService } from 'src/app/shared/service/producto.service';
+import { UsuarioComponent } from '../../../administracion/pages/usuario/usuario.component';
+import { TokenService } from 'src/app/shared/service/token.service';
+import { TwCarritoCompraPedido } from '../../model/TwCarritoCompraPedido';
 
 @Component({
   selector: 'app-compras-producto',
@@ -46,10 +49,14 @@ export class ComprasProductoComponent implements OnInit {
   ];
   productDialog:boolean;
   titulo:string;
+  listaTwCarritoCompraPedido:TwCarritoCompraPedido[];
  
   
 
-  constructor(private comprasService:ComprasService,  private messageService: MessageService, private proveedorService:ProveedorService, private fb: FormBuilder, private productosService: ProductoService ) { 
+  constructor(private comprasService:ComprasService,  private messageService: MessageService, private proveedorService:ProveedorService, private fb: FormBuilder, private productosService: ProductoService,
+    private tokenService: TokenService,
+
+   ) { 
     this.datosRecibidos=null;
     this.listaProductosUltimaCompra=[];
     this.vwMetaProductoCompra=new VwMetaProductoCompra();
@@ -64,6 +71,7 @@ export class ComprasProductoComponent implements OnInit {
     this.efectividad=0;
     this.productDialog=false;
     this.titulo=null;
+    this.listaTwCarritoCompraPedido=[];
 
 
   }
@@ -78,6 +86,9 @@ export class ComprasProductoComponent implements OnInit {
       proveedor: [null, Validators.required],
       cantidad: [null, [Validators.required, Validators.pattern('^[0-9]*$')]]   
     });
+    console.log(this.tokenService.getIdUser())
+
+    this.consultaCarritoCompraPedido(this.tokenService.getIdUser());
 
   }
 
@@ -260,6 +271,18 @@ saveProduct(producto: TcProducto) {
       const formData = this.form.value;
       this.form.reset();
     }
+  }
+
+  consultaCarritoCompraPedido(idUsuario:number){
+
+   this.comprasService.obtenerCarritoCompra(idUsuario).subscribe(data=>{
+   console.log(data, 'estos son los datos del carrito');
+   this.listaTwCarritoCompraPedido=data;
+   })
+
+
+
+
   }
 
 

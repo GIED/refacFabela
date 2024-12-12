@@ -201,6 +201,7 @@ static consultaUltimaCompraProduc='/productosVendidosFechaCompra?';
 static consultaVantaCotizacionIdProducto='/productosVendidosCotizadosIdProducto?';
 
 static consultaVenCotProdAnoDto='/ventaCotizaProdAno?';
+static consultaCarritoPedido='/productosCarritoCompraUsuario?';
 
 
 

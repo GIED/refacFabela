@@ -45,9 +45,8 @@
 
       <!-- Tercer contenedor apilado -->
       <div class="p-col-12" style="min-height: 350px; height: auto;">
-        <div class="p-d-flex p-flex-column p-shadow-5 "
-          style="min-height: 350px; background-color: #F2F3F4; border-radius: 10px;">
-          <p>Contenido del tercer contenedor apilado</p>
+        <div class="p-d-flex p-flex-column p-shadow-5 " style="min-height: 350px; background-color: #F2F3F4; border-radius: 10px;">
+        
         </div>
       </div>
     </div>
@@ -59,14 +58,13 @@
 
       <!-- Primer contenedor apilado -->
       <div class="p-col-12" style="min-height: 600px; height: auto;">
-        <div class="p-d-flex p-flex-column p-shadow-5 "
-          style="min-height: 600px; background-color: #F2F3F4; border-radius: 10px;">
+        <div class="p-d-flex p-flex-column p-shadow-5 "  style="min-height: 600px; background-color: #F2F3F4; border-radius: 10px;">
           <div class="card card-sin-fondo" style="height: auto;">
             <div class="p-col-12 text-center mt-2">
               <h4>Lista de productos por su ultima fecha de compra</h4>
             </div>
             
-            <p-table class="mt-2" #dt [value]="listaProductosUltimaCompra" [rows]="5" [paginator]="true" [scrollable]="true"
+            <p-table class="mt-2" #dt [value]="listaProductosUltimaCompra" [rows]="6" [paginator]="true" [scrollable]="true"
               scrollHeight="300px"
               [globalFilterFields]="['sDescripcion', 'sProducto', 'sMarca', 'sMoneda', 'nSugerenciaCompra', 'nStockSugerido', 'nTotalUnitarioCalculado','nCantidad', 'dUltimaFechaCompra']"
               [rowHover]="true" dataKey="nId" styleClass="p-datatable-customers min-width-table"
@@ -149,8 +147,14 @@
 
       <!-- Segundo contenedor apilado -->
       <div class="p-col-12" style="min-height: 600px; height: auto;">
-        <div class="p-d-flex p-flex-column p-shadow-5 "style="min-height: 600px; background-color: #F2F3F4; border-radius: 10px;">
-          <p>Contenido del segundo contenedor apilado (columna 2)</p>
+        <div class="p-d-flex p-flex-column p-shadow-5 "style="min-height: 600px; background:  #D1E7DD; border-radius: 10px;">
+          <div class="card card-sin-fondo" style="height: auto;">
+            <div class="p-col-12 text-center mt-2">
+              <h4 style=" border-radius: 10px; min-height: 30px;">Lista de productos por comprar</h4>
+            </div>
+            <app-carrito-pedido  [listaTwCarritoCompraPedido]="listaTwCarritoCompraPedido"   ></app-carrito-pedido>
+          </div>
+      
         </div>
       </div>
 

@@ -23,6 +23,7 @@ import { HistorialStockProductoComponent } from './components/historial-stock-pr
 import { ProductosCanceladosComponent } from './components/productos-cancelados/productos-cancelados.component';
 import { ComprasProductoComponent } from './pages/compras-producto/compras-producto.component';
 import { FechaRangoComponent } from './components/fecha-rango/fecha-rango.component';
+import { CarritoPedidoComponent } from './components/carrito-pedido/carrito-pedido.component';
 
 
 
@@ -49,6 +50,7 @@ import { FechaRangoComponent } from './components/fecha-rango/fecha-rango.compon
     ProductosCanceladosComponent,
     ComprasProductoComponent,
     FechaRangoComponent,
+    CarritoPedidoComponent,
     
   ],
   imports: [

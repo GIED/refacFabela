@@ -4,6 +4,7 @@ import { VwMetaProductoCompra } from 'src/app/productos/model/VwMetaProductoComp
 import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 import { VenCotProdAnoDto } from 'src/app/productos/model/VenCotProdAnoDto';
+import { TwCarritoCompraPedido } from 'src/app/productos/model/TwCarritoCompraPedido';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,11 @@ export class ComprasService {
   obtenerVenCotProdAnoDto(idProducto:number){
     let url= environment.servicios.apiRefacFabela + locator.consultaVenCotProdAnoDto+'idProducto='+idProducto;
     return this.http.get<VenCotProdAnoDto[]>(url);
+  }
+
+  obtenerCarritoCompra(idUsuario:number){
+    let url= environment.servicios.apiRefacFabela + locator.consultaCarritoPedido+'idUsuario='+idUsuario;
+    return this.http.get<TwCarritoCompraPedido[]>(url);
   }
 
 

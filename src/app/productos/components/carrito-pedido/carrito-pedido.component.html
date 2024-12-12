@@ -1,0 +1,45 @@
+<p-table class="mt-2" #dt [value]="listaTwCarritoCompraPedido" [rows]="6" [paginator]="true" [scrollable]="true"
+  scrollHeight="300px"
+  [globalFilterFields]="['tcProducto.sNoParte', 'tcProducto.sProducto', 'tcProducto.sMarca', 'dFechaRegistro', 'nCantidad', 'tcProveedor.sRazonSocial']"
+  [rowHover]="true" dataKey="id" styleClass="p-datatable-customers min-width-table"
+  currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true">
+
+  <ng-template pTemplate="caption">
+    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+          placeholder="Buscar producto" />
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="tcProducto.sNoParte" class="text-center" style="width: 10%">No parte <p-sortIcon    field="tcProducto.sNoParte"></p-sortIcon></th>
+      <th pSortableColumn="tcProducto.sProducto" class="text-center" style="width: 10%">Producto <p-sortIcon     field="tcProducto.sProducto"></p-sortIcon></th>     
+      <th pSortableColumn="tcProducto.sMarca" class="text-center" style="width: 10%">Marca <p-sortIcon field="tcProducto.sMarca"></p-sortIcon>    </th>     
+      <th pSortableColumn="tcProveedor.sRazonSocial" class="text-center" style="width: 10%">Proveedor <p-sortIcon field="tcProveedor.sRazonSocial"></p-sortIcon>    </th>     
+
+      <th pSortableColumn="dFechaRegistro" class="text-center" style="width: 10%">Fecha registro <p-sortIcon     field="dFechaRegistro"></p-sortIcon></th>
+      <th pSortableColumn="nCantidad" class="text-center" style="width: 10%">Cantidad <p-sortIcon     field="nCantidad"></p-sortIcon></th>     
+      <th class="text-center" style="width: 10%">Acción</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-product>
+    <tr>
+      <td class="center-content" style="width: 10%"><span class="p-column-title">No parte</span>{{product.tcProducto.sNoParte}}</td>
+      <td class="center-content" style="width: 10%"><span class="p-column-title">Producto</span>{{product.tcProducto.sProducto}}</td>
+      <td class="center-content" style="width: 15%"><span  class="p-column-title">Marca</span>{{product.tcProducto.sMarca}}</td>
+      <td class="center-content" style="width: 15%"><span  class="p-column-title">Proveedor</span>{{product.tcProveedor.sRazonSocial}}</td>
+      <td class="center-content" style="width: 10%"><span class="p-column-title">Marca</span>{{product.dFechaRegistro || date}}</td>
+      <td class="center-content" style="width: 10%"><span class="p-column-title">Moneda</span>{{product.nCantidad}}</td>     
+    
+      <td class="center-content" style="width: 10%">
+        <button pButton pRipple icon="pi pi-shopping-cart" class="p-button-rounded p-button-info p-mr-2"
+          (click)="addProduct(product)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
