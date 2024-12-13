@@ -50,6 +50,8 @@ export class ComprasProductoComponent implements OnInit {
   productDialog:boolean;
   titulo:string;
   listaTwCarritoCompraPedido:TwCarritoCompraPedido[];
+
+  twCarritoCompraPedido: TwCarritoCompraPedido;
  
   
 
@@ -72,6 +74,7 @@ export class ComprasProductoComponent implements OnInit {
     this.productDialog=false;
     this.titulo=null;
     this.listaTwCarritoCompraPedido=[];
+    this.twCarritoCompraPedido= new TwCarritoCompraPedido();
 
 
   }
@@ -242,14 +245,8 @@ saveProduct(producto: TcProducto) {
    
     this.listaProductosUltimaCompra=[];
    
-    this.comprasService.obtenerProductosVentaCotizacionIdProducto(producto.nId).subscribe(data=>{  
-      
+    this.comprasService.obtenerProductosVentaCotizacionIdProducto(producto.nId).subscribe(data=>{        
       this.listaProductosUltimaCompra=data;
-
-  
-
-
-
     });
  
   }
@@ -269,7 +266,26 @@ saveProduct(producto: TcProducto) {
   onSubmit() {
     if (this.form.valid) {
       const formData = this.form.value;
-      this.form.reset();
+
+      /*  SE LLENA EL OBJETO PARA EL GUARDADO DEL  */
+      this.twCarritoCompraPedido.nIdUsuario=this.tokenService.getIdUser();
+      this.twCarritoCompraPedido.nIdProducto=this.vwMetaProductoCompra.nId;
+      this.twCarritoCompraPedido.nCantidad=this.form.get('cantidad').value;
+      this.twCarritoCompraPedido.nIdProveedor=this.proveedorSeleccionado.nId;
+      this.twCarritoCompraPedido.dFechaRegistro=new Date();
+      this.twCarritoCompraPedido.nEstatus=1;
+
+
+      this.comprasService.guardaProductoCarritoPedido(this.twCarritoCompraPedido).subscribe(data=>{
+       this.listaTwCarritoCompraPedido=null;
+       console.log('Se guardo el producto', this.twCarritoCompraPedido ); 
+       this.consultaCarritoCompraPedido(this.tokenService.getIdUser());
+       this.form.reset();
+       this.dialogo=false;
+       this.proveedorSeleccionado=null;       
+
+      });
+
     }
   }
 
@@ -278,12 +294,17 @@ saveProduct(producto: TcProducto) {
    this.comprasService.obtenerCarritoCompra(idUsuario).subscribe(data=>{
    console.log(data, 'estos son los datos del carrito');
    this.listaTwCarritoCompraPedido=data;
-   })
-
-
-
+   });
 
   }
+
+  consultarCarro(){
+
+    this.consultaCarritoCompraPedido(this.tokenService.getIdUser());
+
+  }
+
+  
 
 
 

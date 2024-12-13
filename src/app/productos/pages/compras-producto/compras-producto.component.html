@@ -152,7 +152,7 @@
             <div class="p-col-12 text-center mt-2">
               <h4 style=" border-radius: 10px; min-height: 30px;">Lista de productos por comprar</h4>
             </div>
-            <app-carrito-pedido  [listaTwCarritoCompraPedido]="listaTwCarritoCompraPedido"   ></app-carrito-pedido>
+            <app-carrito-pedido  [listaTwCarritoCompraPedido]="listaTwCarritoCompraPedido"  (cerrar)="consultarCarro()" ></app-carrito-pedido>
           </div>
       
         </div>

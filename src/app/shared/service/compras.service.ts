@@ -32,6 +32,15 @@ export class ComprasService {
     let url= environment.servicios.apiRefacFabela + locator.consultaCarritoPedido+'idUsuario='+idUsuario;
     return this.http.get<TwCarritoCompraPedido[]>(url);
   }
+  guardaProductoCarritoPedido(twCarritoCompraPedido: TwCarritoCompraPedido){
+    let url = environment.servicios.apiRefacFabela + locator.guardarProductoCarritoPedido;
+    return this.http.post<TwCarritoCompraPedido>(url,twCarritoCompraPedido);
+  }
+
+  deteteCarritoCompraProducto(nIdProducto:number){
+    let url= environment.servicios.apiRefacFabela + locator.deleteCarritoPedidoProducto+'nId='+nIdProducto;
+    return this.http.get<boolean>(url);
+  }
 
 
 

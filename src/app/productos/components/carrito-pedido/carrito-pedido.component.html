@@ -20,7 +20,6 @@
       <th pSortableColumn="tcProducto.sProducto" class="text-center" style="width: 10%">Producto <p-sortIcon     field="tcProducto.sProducto"></p-sortIcon></th>     
       <th pSortableColumn="tcProducto.sMarca" class="text-center" style="width: 10%">Marca <p-sortIcon field="tcProducto.sMarca"></p-sortIcon>    </th>     
       <th pSortableColumn="tcProveedor.sRazonSocial" class="text-center" style="width: 10%">Proveedor <p-sortIcon field="tcProveedor.sRazonSocial"></p-sortIcon>    </th>     
-
       <th pSortableColumn="dFechaRegistro" class="text-center" style="width: 10%">Fecha registro <p-sortIcon     field="dFechaRegistro"></p-sortIcon></th>
       <th pSortableColumn="nCantidad" class="text-center" style="width: 10%">Cantidad <p-sortIcon     field="nCantidad"></p-sortIcon></th>     
       <th class="text-center" style="width: 10%">Acción</th>
@@ -37,8 +36,8 @@
       <td class="center-content" style="width: 10%"><span class="p-column-title">Moneda</span>{{product.nCantidad}}</td>     
     
       <td class="center-content" style="width: 10%">
-        <button pButton pRipple icon="pi pi-shopping-cart" class="p-button-rounded p-button-info p-mr-2"
-          (click)="addProduct(product)"></button>
+        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2"
+          (click)="deleteProductoCarrito(product)"></button>
       </td>
     </tr>
   </ng-template>

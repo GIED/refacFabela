@@ -11,6 +11,7 @@ export class TwCarritoCompraPedido{
     dFechaRegistro: Date;
     dFechaLlegada: Date;
     nEstatus: number;
+    nIdProveedor:number;
     TcProducto:TcProducto;
     TcUsuario:Usuarios;
     TcProveedor:Proveedores

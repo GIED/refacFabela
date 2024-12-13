@@ -66,6 +66,7 @@ static obtenerProductosLike= '/obtenerProductosLike?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static obtenerProductosNoParte= '/obtenerProductosNoParte?';
 static guardarProducto= '/guardarProducto';
+static guardarProductoCarritoPedido= '/guardarProductoCarritoCompraUsuario';
 static guardarGasto= '/guardarGasto';
 static borrarGasto= '/borrarGasto';
 static guardarProductoGeneral= '/guardarProductoGeneral';
@@ -202,6 +203,7 @@ static consultaVantaCotizacionIdProducto='/productosVendidosCotizadosIdProducto?
 
 static consultaVenCotProdAnoDto='/ventaCotizaProdAno?';
 static consultaCarritoPedido='/productosCarritoCompraUsuario?';
+static deleteCarritoPedidoProducto='/borrarProductoCarritoCompraUsuario?';
 
 
 
