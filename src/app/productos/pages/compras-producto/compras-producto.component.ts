@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { VwMetaProductoCompra } from '../../model/VwMetaProductoCompra';
 import { ComprasService } from '../../../shared/service/compras.service';
 import { MessageModule } from 'primeng/message';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { VenCotProdAnoDto } from '../../model/VenCotProdAnoDto';
 import { ProveedorService } from '../../../administracion/service/proveedor.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -15,6 +15,9 @@ import { ProductoService } from 'src/app/shared/service/producto.service';
 import { UsuarioComponent } from '../../../administracion/pages/usuario/usuario.component';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { TwCarritoCompraPedido } from '../../model/TwCarritoCompraPedido';
+import { PedidosService } from 'src/app/shared/service/pedidos.service';
+import { PedidoDto } from '../../model/PedidoDto';
+import { TwPedidoProducto } from '../../model/TwPedidoProducto';
 
 @Component({
   selector: 'app-compras-producto',
@@ -50,13 +53,15 @@ export class ComprasProductoComponent implements OnInit {
   productDialog:boolean;
   titulo:string;
   listaTwCarritoCompraPedido:TwCarritoCompraPedido[];
-
   twCarritoCompraPedido: TwCarritoCompraPedido;
+  pedidoDto:PedidoDto;
+  twPedidoProducto: TwPedidoProducto[];
+  twPedidoProductoDto:TwPedidoProducto;
  
   
 
   constructor(private comprasService:ComprasService,  private messageService: MessageService, private proveedorService:ProveedorService, private fb: FormBuilder, private productosService: ProductoService,
-    private tokenService: TokenService,
+    private tokenService: TokenService,private confirmationService: ConfirmationService, private pedidosService:PedidosService
 
    ) { 
     this.datosRecibidos=null;
@@ -75,6 +80,9 @@ export class ComprasProductoComponent implements OnInit {
     this.titulo=null;
     this.listaTwCarritoCompraPedido=[];
     this.twCarritoCompraPedido= new TwCarritoCompraPedido();
+    this.pedidoDto=new PedidoDto();
+    this.twPedidoProducto= [];
+    this.twPedidoProductoDto= new TwPedidoProducto();
 
 
   }
@@ -94,6 +102,104 @@ export class ComprasProductoComponent implements OnInit {
     this.consultaCarritoCompraPedido(this.tokenService.getIdUser());
 
   }
+
+  confirm() {
+    this.confirmationService.confirm({
+      message: '¿Estás seguro de que deseas generar el pedido? Una vez generado, no podrás agregar más productos al pedido.',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.guardarPedido();
+      }
+    });
+  }
+
+  guardarPedido() {
+    
+    /*SE LLENA EL OBJETO PARA GUARADR EL PEDIDO EN PEDIDOS */
+   this.pedidoDto.nId=null;
+   this.pedidoDto.nIdUsuario=this.tokenService.getIdUser();
+   this.pedidoDto.nEstatus=0;
+   this.pedidoDto.sCvePedido=this.generarClavePedido();
+   this.pedidoDto.dFechaPedido=new Date();
+
+   for (let index = 0; index < this.listaTwCarritoCompraPedido.length; index++) {
+    this.twPedidoProductoDto=new TwPedidoProducto();
+    this.twPedidoProductoDto.nIdProducto=this.listaTwCarritoCompraPedido[index].nIdProducto;
+    this.twPedidoProductoDto.nMotivoPedido=1;
+    this.twPedidoProductoDto.nCantidadPedida=this.listaTwCarritoCompraPedido[index].nCantidad;
+    this.twPedidoProductoDto.nIdProveedor=this.listaTwCarritoCompraPedido[index].nIdProveedor;
+    this.twPedidoProductoDto.nEstatus=true;
+    this.twPedidoProductoDto.nIdUsuario=this.tokenService.getIdUser();
+    this.twPedidoProductoDto.sClavePedido=this.generarClavePedido();
+
+    this.twPedidoProducto.push(this.twPedidoProductoDto);
+
+ 
+
+    
+   }
+    
+   /* SE ASIGNA LA LISTA AL OBETO DE GUARDADO DE PEDIDO DEL OBJETO DTO */
+   this.pedidoDto.twPedidoProducto= this.twPedidoProducto;
+
+   /*SE GUARDA EL PEDIDO */
+   this.pedidosService.guardaPedido(this.pedidoDto).subscribe(data=>{
+   /*SE ASIGA EL PEDIDO GUARDADO AL PEDIDO DTO */
+    this.pedidoDto=data;
+     
+      for (let index = 0; index < this.listaTwCarritoCompraPedido.length; index++) {
+        this.listaTwCarritoCompraPedido[index].nIdPedido=this.pedidoDto.nId
+        this.listaTwCarritoCompraPedido[index].nEstatus=2
+        this.comprasService.guardaProductoCarritoPedido(this.listaTwCarritoCompraPedido[index]).subscribe(data=>{{           
+          console.log('se guardo el cambio de estatus de y pedido de:',data);
+        }})
+        
+      }
+
+      this.listaTwCarritoCompraPedido=[];
+
+      this.consultarCarro();
+   
+   
+       console.log('Pedido guardado');
+   
+
+
+    
+   })
+
+   
+  }
+
+
+  generarClavePedido(): string {
+    const fecha = this.obtenerFechaActual();
+    const numeroRandom = this.generarNumeroRandom();
+    return `${fecha}${numeroRandom}`;
+  }
+
+  obtenerFechaActual(): string {
+    const fecha = new Date();
+    const año = fecha.getFullYear();
+    const mes = ('0' + (fecha.getMonth() + 1)).slice(-2);
+    const dia = ('0' + fecha.getDate()).slice(-2);
+    return `${año}${mes}${dia}`;
+  }
+
+  generarNumeroRandom(): string {
+    return Math.floor(1000000000 + Math.random() * 9000000000).toString();
+  }
+
+
+
+
+
+
+
+
 
   openNew() {
     this.producto = null;
