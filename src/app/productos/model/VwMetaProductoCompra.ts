@@ -23,4 +23,5 @@ export class VwMetaProductoCompra {
     nStockSugerido!: number;
     nSugerenciaCompra!: number;
     TwProductoBodega!: TwProductoBodega[];
+    nAgregado!:boolean;
   }

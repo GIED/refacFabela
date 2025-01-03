@@ -14,5 +14,7 @@ export class TwCarritoCompraPedido{
     nIdProveedor:number;
     TcProducto:TcProducto;
     TcUsuario:Usuarios;
-    TcProveedor:Proveedores
+    TcProveedor:Proveedores;
+    estaEnUltimaCompra:boolean;
+
 }

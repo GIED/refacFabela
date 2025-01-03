@@ -63,7 +63,7 @@
               <h4>Lista de productos por su ultima fecha de compra</h4>
             </div>
             
-            <p-table class="mt-2" #dt [value]="listaProductosUltimaCompra" [rows]="6" [paginator]="true" [scrollable]="true"
+            <p-table class="mt-2" #dt2 [value]="listaProductosUltimaCompra" [rows]="6" [paginator]="true" [scrollable]="true"
               scrollHeight="300px"
               [globalFilterFields]="['sDescripcion', 'sProducto', 'sMarca', 'sMoneda', 'nSugerenciaCompra', 'nStockSugerido', 'nTotalUnitarioCalculado','nCantidad', 'dUltimaFechaCompra']"
               [rowHover]="true" dataKey="nId" styleClass="p-datatable-customers min-width-table"
@@ -106,7 +106,7 @@
               </ng-template>
             
               <ng-template pTemplate="body" let-producto>
-                <tr>
+                <tr [style.backgroundColor]="producto.nAgregado ? ' #D1E7DD' : ''" >
                   <td class="center-content" style="width: 10%"><span class="p-column-title">No parte</span>{{producto.sNoParte}}
                   </td>
                   <td class="center-content" style="width: 10%"><span class="p-column-title">Producto</span>{{producto.sProducto}}
@@ -124,7 +124,7 @@
                   <td class="center-content" style="width: 10%"><span class="p-column-title">Sugerencia de
                       Compra</span>{{producto.nSugerenciaCompra | number}}</td>
                   <td class="center-content" style="width: 15%"><span class="p-column-title">Total
-                      Calculado</span>{{producto.nTotalUnitarioCalculado | currency }}</td>
+                      Calculado</span>{{producto.nTotalUnitarioCalculado | currency }}</td>                     
                   <td class="center-content" style="width: 10%">
                     <button pButton pRipple icon="pi pi-shopping-cart" class="p-button-rounded p-button-info p-mr-2"
                       (click)="agregarProducto(producto)"></button>
@@ -155,6 +155,7 @@
              <p-confirmDialog></p-confirmDialog>
             <button class="p-md-12 p-m-4" pButton type="button" label="Guardar" icon="pi pi-check" (click)="confirm()"></button>
           </div>
+          
           
       
         </div>
@@ -390,6 +391,15 @@
       <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
           (guardarProducto)="saveProduct($event)"></app-modal-producto>
   </ng-template>
+</p-dialog>
+
+
+
+<p-dialog header="Mensaje" [(visible)]="displayDialog" [closable]="true" [modal]="true" [dismissableMask]="true">
+  
+<p>El pedido se ha guardado exitosamente</p>
+ <div class="p-col-12 text-center"> <h1>{{pedidoGuardado}}</h1></div>
+ <p>Este diálogo se cerrará automáticamente después de 10 segundos.</p>
 </p-dialog>
 
 

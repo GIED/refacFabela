@@ -14,11 +14,26 @@ export class CarritoPedidoComponent implements OnInit {
 
   @Input() listaTwCarritoCompraPedido:TwCarritoCompraPedido[];
   @Output() cerrar: EventEmitter<Boolean> = new EventEmitter();
+  cols: any[];
+  
 
 
-  constructor(private comprasService:ComprasService, private messageService: MessageService) { }
+  constructor(private comprasService:ComprasService, private messageService: MessageService) { 
+
+    this.cols = [
+      { field: 'tcProducto.sNoParte', header: 'No Parte' },
+      { field: 'tcProducto.sProducto', header: 'Producto' },
+      { field: 'tcProducto.sMarca', header: 'Marca' },
+      { field: 'dFechaRegistro', header: 'Fecha Registro' },
+      { field: 'nCantidad', header: 'Cantidad' },
+      { field: 'tcProveedor.sRazonSocial', header: 'Proveedor' }
+    ];
+
+  }
 
   ngOnInit(): void {
+
+    
 
   }
 

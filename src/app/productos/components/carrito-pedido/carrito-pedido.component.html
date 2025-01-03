@@ -1,4 +1,4 @@
-<p-table class="mt-2" #dt [value]="listaTwCarritoCompraPedido" [rows]="6" [paginator]="true" [scrollable]="true"
+<p-table class="mt-2" #dt [value]="listaTwCarritoCompraPedido"  [columns]="cols" [rows]="6" [paginator]="true" [scrollable]="true"
   scrollHeight="300px"
   [globalFilterFields]="['tcProducto.sNoParte', 'tcProducto.sProducto', 'tcProducto.sMarca', 'dFechaRegistro', 'nCantidad', 'tcProveedor.sRazonSocial']"
   [rowHover]="true" dataKey="id" styleClass="p-datatable-customers min-width-table"
@@ -15,13 +15,14 @@
   </ng-template>
 
   <ng-template pTemplate="header">
-    <tr>
+    <tr  >
       <th pSortableColumn="tcProducto.sNoParte" class="text-center" style="width: 10%">No parte <p-sortIcon    field="tcProducto.sNoParte"></p-sortIcon></th>
       <th pSortableColumn="tcProducto.sProducto" class="text-center" style="width: 10%">Producto <p-sortIcon     field="tcProducto.sProducto"></p-sortIcon></th>     
       <th pSortableColumn="tcProducto.sMarca" class="text-center" style="width: 10%">Marca <p-sortIcon field="tcProducto.sMarca"></p-sortIcon>    </th>     
       <th pSortableColumn="tcProveedor.sRazonSocial" class="text-center" style="width: 10%">Proveedor <p-sortIcon field="tcProveedor.sRazonSocial"></p-sortIcon>    </th>     
       <th pSortableColumn="dFechaRegistro" class="text-center" style="width: 10%">Fecha registro <p-sortIcon     field="dFechaRegistro"></p-sortIcon></th>
-      <th pSortableColumn="nCantidad" class="text-center" style="width: 10%">Cantidad <p-sortIcon     field="nCantidad"></p-sortIcon></th>     
+      <th pSortableColumn="nCantidad" class="text-center" style="width: 10%">Cantidad <p-sortIcon     field="nCantidad"></p-sortIcon></th>   
+      
       <th class="text-center" style="width: 10%">Acción</th>
     </tr>
   </ng-template>
@@ -42,3 +43,11 @@
     </tr>
   </ng-template>
 </p-table>
+
+<p-toolbar styleClass="p-mb-4">
+  <ng-template pTemplate="right">
+      <button [disabled]="listaTwCarritoCompraPedido.length === 0" type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+          class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+         
+  </ng-template>
+</p-toolbar>
