@@ -1,6 +1,6 @@
 <p-table class="mt-2" #dt [value]="listaTwCarritoCompraPedido"  [columns]="cols" [rows]="6" [paginator]="true" [scrollable]="true"
   scrollHeight="300px"
-  [globalFilterFields]="['tcProducto.sNoParte', 'tcProducto.sProducto', 'tcProducto.sMarca', 'dFechaRegistro', 'nCantidad', 'tcProveedor.sRazonSocial']"
+  [globalFilterFields]="['tcProducto.sNoParte', 'tcProducto.sProducto', 'tcProducto.sMarca', 'dFechaPedido', 'nCantidadPedida', 'tcProveedor.sRazonSocial']"
   [rowHover]="true" dataKey="id" styleClass="p-datatable-customers min-width-table"
   currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros" [showCurrentPageReport]="true">
 
@@ -32,9 +32,9 @@
       <td class="center-content" style="width: 10%"><span class="p-column-title">No parte</span>{{product.tcProducto.sNoParte}}</td>
       <td class="center-content" style="width: 10%"><span class="p-column-title">Producto</span>{{product.tcProducto.sProducto}}</td>
       <td class="center-content" style="width: 15%"><span  class="p-column-title">Marca</span>{{product.tcProducto.sMarca}}</td>
-      <td class="center-content" style="width: 15%"><span  class="p-column-title">Proveedor</span>{{product.tcProveedor.sRazonSocial}}</td>
-      <td class="center-content" style="width: 10%"><span class="p-column-title">Marca</span>{{product.dFechaRegistro || date}}</td>
-      <td class="center-content" style="width: 10%"><span class="p-column-title">Moneda</span>{{product.nCantidad}}</td>     
+      <td class="center-content" style="width: 15%"><span  class="p-column-title">Proveedor</span>{{product.tcProveedore.sRazonSocial}}</td>
+      <td class="center-content" style="width: 10%"><span class="p-column-title">Marca</span>{{product.dFechaPedido || date}}</td>
+      <td class="center-content" style="width: 10%"><span class="p-column-title">Moneda</span>{{product.nCantidadPedida}}</td>     
     
       <td class="center-content" style="width: 10%">
         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2"

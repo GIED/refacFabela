@@ -131,14 +131,14 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Historial', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/historial-producto'], visible:this.realRol==='admin' || this.realRol==='almacen' || this.realRol==='ventas'
                     },
-                    {
+                   /* {
                         label: 'Registro de pedidos', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/registro-pedidos'],visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
                     {
                         label: 'Venta Stock', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/venta-stock-cero'], visible:this.realRol==='admin'
-                    },
+                    },*/
                     {
-                        label: 'Compras producto', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/compras-producto'], visible:this.realRol==='admin'
+                        label: 'Pedidos', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/compras-producto'], visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
                    
                 ]

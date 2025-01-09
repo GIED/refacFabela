@@ -12,6 +12,7 @@ export class TvPedidoDetalle{
     nTotalSinEntregar: number;
     nTotalEntregados: number;
     nIdVenta:number;
+    
 
 
 }

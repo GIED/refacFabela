@@ -126,7 +126,7 @@ export class AltaPedidosComponent implements OnInit {
     this.twPedidoProducto.nIdProducto = producto.nId;
     this.twPedidoProducto.nCantidadPedida = this.fProducto.nCantidadCtrl.value;
     this.twPedidoProducto.nIdProveedor = this.fProducto.nIdProveedorCtrl.value;
-    this.twPedidoProducto.nEstatus = false;
+    this.twPedidoProducto.nEstatus = 1;
     this.twPedidoProducto.nIdUsuario = this.tokenService.getIdUser();
 
     // se valida si ya se guado el pedido general, si no se guarda

@@ -42,10 +42,97 @@
         </div>
       </div>
 
-      <!-- Tercer contenedor apilado -->
+      <!-- Tercer contenedor apilado lista de pedidos registrados -->
       <div class="p-col-12" style="min-height: 350px; height: auto;">
         <div class="p-d-flex p-flex-column p-shadow-5 " style="min-height: 350px; background-color: #F2F3F4; border-radius: 10px;">
         
+          <p-table #dt [value]="listaPedidoDetalle" [rows]="5" [paginator]="true"
+          [globalFilterFields]="['nId','dFechaPedido','sNombreUsuario','sNombreUsuario','nIdVenta','nTotalProductos','nEstatus', 'nIdVenta']" 
+          [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+          currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+          [showCurrentPageReport]="true">
+          <ng-template pTemplate="caption">
+              <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                  <h5 class="p-m-0">Administración de pedidos</h5>
+                  <span class="p-input-icon-left">
+                      <i class="pi pi-search"></i>
+                      <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                          placeholder="Buscar Pedido" />
+                  </span>
+              </div>
+          </ng-template>
+              <ng-template pTemplate="header">
+                  <tr>
+                  
+                      <th pSortableColumn="nId">Pedido
+                          <p-sortIcon field="nId"></p-sortIcon>
+                      </th>
+                    
+                      <th pSortableColumn="dFechaPedido">Fecha de Pedido
+                          <p-sortIcon field="dFechaPedido"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="sNombreUsuario">Usuario
+                          <p-sortIcon field="sNombreUsuario"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="nTotalProductos">Total de Productos
+                          <p-sortIcon field="nTotalProductos"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="nIdVenta">Venta
+                          <p-sortIcon field="nIdVenta"></p-sortIcon>
+                      </th>                        
+                      <th pSortableColumn="nEstatus">Estatus Pedido
+                          <p-sortIcon field="nEstatus"></p-sortIcon>
+                      </th>
+                      <th pSortableColumn="nEstatus">Acción                         
+                      </th>
+                  
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-pedido>
+                  <tr>
+                      <td class="p-text-center"><span class="p-column-title">Pedido</span> {{pedido.nId}}
+                      </td>
+                   
+                      <td><span class="p-column-title">Fecha de Pedido</span> {{pedido.dFechaPedido | date}}
+                      </td>
+                      <td><span class="p-column-title">Usuario</span> {{pedido.sNombreUsuario}}
+                      </td>
+                      <td><span class="p-column-title p-text-center">Total de Productos</span><div class="p-text-center"> {{pedido.nTotalProductos}}</div>
+                      </td> 
+                      
+                      <td><span class="p-column-title  p-text-center">Venta</span>{{pedido.nIdVenta}}</td>
+                     
+                      <td><span class="p-column-title  p-text-center">Estatus Pedido</span><div class="p-text-center"><div *ngIf="pedido.nEstatus==0">Activo</div> <div *ngIf="pedido.nEstatus==1">Cerrado</div></div>
+                      </td> 
+                      <td> 
+                          
+                        <!-- <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger"
+                              (click)="editarPedido(pedido.nId)"></button>-->
+                          <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
+                              (click)="consultaProductosRegistrados(pedido.nId)"></button>
+                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                              (click)="generarPedidoPdf(pedido.nId)"></button>
+
+                            
+                              
+                          <!--  <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                              (click)="editarProducto(pedido.tcProducto)"></button>
+                          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                              (click)="deleteProduct(pedido.tcProducto)"></button> -->
+                      </td>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="summary">
+                  <div class="p-d-flex p-ai-center p-jc-between">
+                      Total de Pedidos: {{listaPedidoDetalle ? listaPedidoDetalle.length : 0 }}
+                  </div>
+              </ng-template>
+          </p-table>
+
+
+
+
+
         </div>
       </div>
     </div>
@@ -146,7 +233,7 @@
 
       <!-- Segundo contenedor apilado -->
       <div class="p-col-12" style="min-height: 600px; height: auto;">
-        <div class="p-d-flex p-flex-column p-shadow-5 "style="min-height: 600px; background:  #D1E7DD; border-radius: 10px;">
+        <div class="p-d-flex p-flex-column p-shadow-5 "style="min-height: 600px; background:  #E0E0E0; border-radius: 10px;">
           <div class="card card-sin-fondo" style="height: auto;">
             <div class="p-col-12 text-center mt-2">
               <h4 style=" border-radius: 10px; min-height: 30px;">Lista de productos por comprar</h4>
@@ -391,6 +478,89 @@
       <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
           (guardarProducto)="saveProduct($event)"></app-modal-producto>
   </ng-template>
+</p-dialog>
+
+
+<!--Este dialogo muestra los productos del pedido con su estatus-->
+
+<p-dialog [(visible)]="detalleDialog" [style]="{width: '1200px'}" header="Detalle del Pedido" [modal]="true"
+styleClass="p-fluid" [closable]="false">
+<ng-template pTemplate="content">             
+    
+ 
+               <!--Tabla de productos general-->
+               <p-table #dt [value]="listaPedidos"  [rows]="10" [columns]="cols" [paginator]="true"
+               [globalFilterFields]="['nId','sClavePedido','tcProducto.sNoParte','tcProducto.sProducto','nCantidadPedida','tcProveedore.sRazonSocial', 'tcUsuario.sNombreUsuario']" [(selection)]="selectedProducts"
+               [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+               currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+               [showCurrentPageReport]="true">
+                   <ng-template pTemplate="caption">
+                       <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                           <h5 class="p-m-0">Productos del Pedido</h5>
+                           <span class="p-input-icon-left">
+                               <i class="pi pi-search"></i>
+                               <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                   placeholder="Buscar producto..." />
+                           </span>
+                       </div>
+                   </ng-template>
+                   <ng-template pTemplate="header">
+                       <tr>
+                       
+                          
+                           
+                           <th pSortableColumn="tcProducto.sNoParte">No Parte<p-sortIcon field="tcProducto.sNoParte"></p-sortIcon> </th>
+                           <th pSortableColumn="tcProducto.sProducto">Producto <p-sortIcon field="tcProducto.sProducto"></p-sortIcon> </th>                        
+                           <th pSortableColumn="tcProveedore.sRazonSocial">Proveedor <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon></th>
+                           <th pSortableColumn="tcUsuario.sNombreUsuario">Usuaurio <p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon></th>
+                           <th pSortableColumn="nCantidadPedida">Cantidad Pedida<p-sortIcon field="nCantidadPedida"></p-sortIcon></th>
+                           <th pSortableColumn="nCantidaRecibida">Cantidad Recibida<p-sortIcon field="nCantidaRecibida"></p-sortIcon></th>
+                           <th pSortableColumn="nCantidaRecibida">Diferencia<p-sortIcon field="nDiferencia"></p-sortIcon></th>                       
+                           <th  pSortableColumn="tcEstatusPedidoProducto.sEstatus">Estatus <p-sortIcon field="tcEstatusPedidoProducto.sEstatus"></p-sortIcon></th>
+                           <th *ngIf="banIngreso" pSortableColumn="sRfc">Fecha Ingreso <p-sortIcon field="sRfc"></p-sortIcon></th>         
+                       
+                       
+                       </tr>
+                   </ng-template>
+                   <ng-template pTemplate="body" let-pedido>
+                       <tr>
+                         
+                         
+                           <td><span class="p-column-title">No Parte</span> {{pedido.tcProducto.sNoParte}}</td>
+                           <td><span class="p-column-title">Producto</span> {{pedido.tcProducto.sProducto}}</td>                       
+                           <td><span class="p-column-title">Proveedor</span> {{pedido.tcProveedore.sRazonSocial}}</td> 
+                           <td><span class="p-column-title">Usuario</span> {{pedido.tcUsuario.sNombreUsuario}}</td> 
+                           <td><span class="p-column-title">Cantidad Pedida</span> {{pedido.nCantidadPedida}}</td> 
+                           <td><span class="p-column-title">Cantidad Recibida</span> {{pedido.nCantidaRecibida}}</td>                                     
+                           <td><span class="p-column-title">Direrencia</span><div *ngIf="pedido.nCantidadPedida!=pedido. nCantidaRecibida" style="background: red ; color:white; text-align:center ; border-radius: 20px; max-width: 40px;">{{pedido.nCantidadPedida-pedido. nCantidaRecibida}}</div> 
+                               <div *ngIf="pedido.nCantidadPedida==pedido. nCantidaRecibida" style="background: green ; color:white; text-align:center ; border-radius: 20px; max-width: 40px;">{{pedido.nCantidadPedida-pedido. nCantidaRecibida}}</div>
+                           </td>
+                           <td><span class="p-column-title">Estatus</span> {{pedido.tcEstatusPedidoProducto.sEstatus}} </td>                 
+                                             
+                           <td *ngIf="banIngreso"><span class="p-column-title">Fecha Ingreso</span> {{pedido.dFechaRecibida | date}}</td>
+                     
+                       </tr>
+                   </ng-template>
+                   <ng-template pTemplate="summary">
+                       <div class="p-d-flex p-ai-center p-jc-between">
+                           Total de Productos: {{listaPedidos ? listaPedidos.length : 0 }}
+                       </div>                     
+                   </ng-template>
+                   
+               </p-table>
+               <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="right">
+                    <button [disabled]="listaPedidos.length === 0" type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                        class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                       
+                </ng-template>
+              </p-toolbar>
+
+</ng-template>
+<ng-template pTemplate="footer">
+    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+        (click)="hideDialogDetalle()"></button>
+</ng-template>
 </p-dialog>
 
 

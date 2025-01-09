@@ -3,6 +3,8 @@ import { VwMetaProductoCompra } from '../../model/VwMetaProductoCompra';
 import { TwCarritoCompraPedido } from '../../model/TwCarritoCompraPedido';
 import { ComprasService } from '../../../shared/service/compras.service';
 import { MessageService } from 'primeng/api';
+import { PedidosService } from 'src/app/shared/service/pedidos.service';
+import { TwPedidoProducto } from '../../model/TwPedidoProducto';
 
 @Component({
   selector: 'app-carrito-pedido',
@@ -18,15 +20,15 @@ export class CarritoPedidoComponent implements OnInit {
   
 
 
-  constructor(private comprasService:ComprasService, private messageService: MessageService) { 
+  constructor(private comprasService:ComprasService, private messageService: MessageService, private pedidoservice: PedidosService) { 
 
     this.cols = [
       { field: 'tcProducto.sNoParte', header: 'No Parte' },
       { field: 'tcProducto.sProducto', header: 'Producto' },
       { field: 'tcProducto.sMarca', header: 'Marca' },
-      { field: 'dFechaRegistro', header: 'Fecha Registro' },
-      { field: 'nCantidad', header: 'Cantidad' },
-      { field: 'tcProveedor.sRazonSocial', header: 'Proveedor' }
+      { field: 'dFechaPedido', header: 'Fecha Registro' },
+      { field: 'nCantidadPedida', header: 'Cantidad' },
+      { field: 'tcProveedore.sRazonSocial', header: 'Proveedor' }
     ];
 
   }
@@ -43,8 +45,9 @@ export class CarritoPedidoComponent implements OnInit {
 
   deleteProductoCarrito(twCarritoCompraPedido:TwCarritoCompraPedido){
 
+     console.log('Es lo que voy a borrar',twCarritoCompraPedido);
    
-    this.comprasService.deteteCarritoCompraProducto(twCarritoCompraPedido.nId).subscribe(data=>{
+    this.pedidoservice.borrarProductoPedidoId(twCarritoCompraPedido.nId).subscribe(data=>{
 
      if(data){        
       this.messageService.add({ severity: 'success', summary: 'Registro borrado', detail: 'El producto fue descartado del pedido', life: 3000 });

@@ -154,15 +154,6 @@ mostrarRegistroEntrada(pedidos:TwPedidoProducto ) {
 this.mostrarEntrega=true;
 this.submitted = false;
 this.pedidoOrg=this.pedido;
-
-console.log(pedidos);
-console.log(this.pedido);
-
-console.log(this.pedidoOrg);
-
-
-
-
 }
 saveProduct(producto: TcProducto) {
 
@@ -205,7 +196,7 @@ entregaProducto(producto:TwPedidoProducto){
   else{
 
   if(producto.nCantidadPedida==producto.nCantidaRecibida){
-    producto.nEstatus=true;
+    producto.nEstatus=3;
 
   }
 
@@ -232,6 +223,22 @@ entregaProducto(producto:TwPedidoProducto){
 
 }
 
+
+productoNoLlego(){
+    this.pedido.nEstatus=4    
+  this.pedidosService.guardaIngresoProductoPedido(this.pedido).subscribe(data=>{
+    this.obtenerPedidoDetalle();
+    this.mostrarEntrega=false;
+
+  })
+
+}
+
+
+
+
+
+
 hideDialog(valor: boolean) {
   this.productDialog = valor;
 }
@@ -254,7 +261,7 @@ findIndexById(id: number): number {
 }
 
 obtenerPedidoDetalle(){
-  this.pedidosService.obtenerPedidosDetalleEstatus(0).subscribe(data=>{
+  this.pedidosService.obtenerPedidosDetalleEstatus(2).subscribe(data=>{
       this.listaPedidoDetalle.emit(data);
      // console.log(data);
     });

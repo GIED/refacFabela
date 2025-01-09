@@ -132,7 +132,7 @@
                     <td><span class="p-column-title">Cantidad</span>{{producto.nCantidadPedida}}</td>
                     <td><span class="p-column-title">Proveedor</span>{{producto.tcProveedore.sRazonSocial}}</td>
                     <td>
-                        <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(producto)"
+                        <button *ngIf="pedido.tcEstatusPedidoProducto.nId<=2" pButton pRipple icon="pi pi-trash" (click)="quitarProducto(producto)"
                             class="p-button-rounded p-button-danger p-mr-2"></button>
                     </td>
                 </tr>

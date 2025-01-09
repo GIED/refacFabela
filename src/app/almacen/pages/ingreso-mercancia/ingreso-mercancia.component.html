@@ -48,6 +48,10 @@
                         <th pSortableColumn="nEstatus">Estatus
                             <p-sortIcon field="nEstatus"></p-sortIcon>
                         </th>
+                        <th pSortableColumn="accion">Acción
+                          
+                        </th>
+
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-pedido>
@@ -97,7 +101,7 @@
 
            <!--Detalle de pedidos-->
 
-        <p-dialog [(visible)]="detalleDialog" [style]="{width: '1200px'}" header="Detalle del Pedido" [modal]="true"
+        <p-dialog [(visible)]="detalleDialog" [style]="{width: '90vw', height: '90vh'}" [closable]="true" [autoZIndex]="true" [maximizable]="true" header="Detalle del Pedido" [modal]="true"
             styleClass="p-fluid" [closable]="false">
             <ng-template pTemplate="content">      
                 <app-pedido-productos [listaPedidos]="listaPedidos"  [banIngreso]="true" (listaPedidoDetalle)="obtenerPedidosEstatusActualiza($event)"  >  </app-pedido-productos>

@@ -98,11 +98,14 @@ static obtenerProductosPedido='/obtenerProductosPedido?';
 static obtenerPedidosEstatus='/obtenerPedidosEstatus?';
 static obtenerPedidos='/obtenerPedidos'
 static obtenerPedidosId='/obtenerPedidoId?'
+static obteneCarritoPedidoUsuario='/obteneCarritoPedidoUsuario?'
 static guardaPedido= '/guardarPedido';
 static guardaPedidoGeneral= '/guardaPedidoGeneral';
 static guardaPedidoProducto= '/guardaPedidoProducto';
 static guardaIngresoProductoPedido= '/ingresoProductoPedido';
 static borrarProductoPedido= '/borrarPedidoProducto';
+static borrarPedidoProductoId= '/borrarPedidoProductoId?';
+
 static generarPedidoPdf='/getPedidoId?';
 
 //Inventario

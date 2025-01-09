@@ -2,12 +2,13 @@
 
     <div class="p-col-12">
         <div class="card">
+             <!--Se comenta el apartado de registro de nuevo pedido
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="left">
                     <button pButton pRipple label="Nuevo Pedido" icon="pi pi-plus"
                         class="p-button-success p-mr-2 p-mb-2" (click)="nuevoPedido()"></button>
                 </ng-template>
-            </p-toolbar>
+            </p-toolbar>-->
 
                <!--Tabla de productos general-->
             <p-table #dt [value]="listaPedidoDetalle" [rows]="10" [paginator]="true"
@@ -49,6 +50,8 @@
                         <th pSortableColumn="nEstatus">Estatus Pedido
                             <p-sortIcon field="nEstatus"></p-sortIcon>
                         </th>
+                        <th pSortableColumn="nEstatus">Acción                         
+                        </th>
                     
                     </tr>
                 </ng-template>
@@ -71,8 +74,8 @@
                         </td> 
                         <td> 
                             
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger"
-                                (click)="editarPedido(pedido.nId)"></button>
+                          <!-- <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger"
+                                (click)="editarPedido(pedido.nId)"></button>-->
                             <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
                                 (click)="consultaProductosRegistrados(pedido.nId)"></button>
                           <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"

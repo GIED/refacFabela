@@ -27,6 +27,10 @@ export class PedidosService {
       let url = environment.servicios.apiRefacFabela + locator.borrarProductoPedido;
       return this.http.post<any>(url,twPedidoProducto);
     }
+    borrarProductoPedidoId(id:number){
+      let url = environment.servicios.apiRefacFabela + locator.borrarPedidoProductoId+'nId='+id;
+      return this.http.get<boolean>(url);
+    }
     obtenerPedidosDetalleEstatus(nEstatus:number){
         let url = environment.servicios.apiRefacFabela + locator.obtenerPedidosEstatus+"nEstatus="+nEstatus;
         return this.http.get<TvPedidoDetalle[]>(url);
@@ -34,6 +38,11 @@ export class PedidosService {
       obtenerPedidosDetalle(){
         let url = environment.servicios.apiRefacFabela + locator.obtenerPedidos;
         return this.http.get<TvPedidoDetalle[]>(url);
+      }
+
+      obtenerProductosCarritoUsuario(idUsuario:number){
+        let url = environment.servicios.apiRefacFabela + locator.obteneCarritoPedidoUsuario+"nIdUsuario="+idUsuario;
+        return this.http.get<TwPedidoProducto[]>(url);
       }
       obtenerPedidosId(nIdPedido:number){
         let url = environment.servicios.apiRefacFabela + locator.obtenerPedidosId+"nIdPedido="+nIdPedido;

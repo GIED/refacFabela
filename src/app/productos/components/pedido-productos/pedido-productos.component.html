@@ -5,7 +5,7 @@
           
 
                <!--Tabla de productos general-->
-            <p-table #dt [value]="listaPedidos" [rows]="10" [paginator]="true"
+            <p-table #dt [value]="listaPedidos"  [rows]="10" [paginator]="true"
             [globalFilterFields]="['nId','sClavePedido','tcProducto.sNoParte','tcProducto.sProducto','nCantidadPedida','tcProveedore.sRazonSocial', 'tcUsuario.sNombreUsuario']" [(selection)]="selectedProducts"
             [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
             currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
@@ -25,35 +25,16 @@
                     
                        
                         
-                        <th pSortableColumn="tcProducto.sNoParte">No Parte
-                            <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="tcProducto.sProducto">Producto
-                            <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
-                        </th>
-                        
-                        <th pSortableColumn="tcProveedore.sRazonSocial">Proveedor
-                            <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="tcUsuario.sNombreUsuario">Usuaurio
-                            <p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon>
-                            
-                        </th>
-                        <th pSortableColumn="nCantidadPedida">Cantidad Pedida
-                            <p-sortIcon field="nCantidadPedida"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="nCantidaRecibida">Cantidad Recibida
-                            <p-sortIcon field="nCantidaRecibida"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="nCantidaRecibida">Diferencia
-                            <p-sortIcon field="nCantidaRecibida"></p-sortIcon>
-                        </th>
-                       
-                        <td *ngIf="banIngreso" pSortableColumn="sRfc">Recibido
-                            <p-sortIcon field="sRfc"></p-sortIcon>
-
-                        <td *ngIf="banIngreso" pSortableColumn="sRfc">Fecha Ingreso
-                                <p-sortIcon field="sRfc"></p-sortIcon>
+                        <th pSortableColumn="tcProducto.sNoParte">No Parte<p-sortIcon field="tcProducto.sNoParte"></p-sortIcon> </th>
+                        <th pSortableColumn="tcProducto.sProducto">Producto <p-sortIcon field="tcProducto.sProducto"></p-sortIcon> </th>                        
+                        <th pSortableColumn="tcProveedore.sRazonSocial">Proveedor <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon></th>
+                        <th pSortableColumn="tcUsuario.sNombreUsuario">Usuaurio <p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon></th>
+                        <th pSortableColumn="nCantidadPedida">Cantidad Pedida<p-sortIcon field="nCantidadPedida"></p-sortIcon></th>
+                        <th pSortableColumn="nCantidaRecibida">Cantidad Recibida<p-sortIcon field="nCantidaRecibida"></p-sortIcon></th>
+                        <th pSortableColumn="nCantidaRecibida">Diferencia<p-sortIcon field="nDiferencia"></p-sortIcon></th>                       
+                        <th  pSortableColumn="tcEstatusPedidoProducto.sEstatus">Estatus <p-sortIcon field="tcEstatusPedidoProducto.sEstatus"></p-sortIcon></th>
+                        <th *ngIf="banIngreso" pSortableColumn="sRfc">Fecha Ingreso <p-sortIcon field="sRfc"></p-sortIcon></th>         
+                        <th pSortableColumn="accion">Acción </th>
                     
                     
                     </tr>
@@ -62,33 +43,22 @@
                     <tr>
                       
                       
-                        <td><span class="p-column-title">No Parte</span> {{pedido.tcProducto.sNoParte}}
+                        <td><span class="p-column-title">No Parte</span> {{pedido.tcProducto.sNoParte}}</td>
+                        <td><span class="p-column-title">Producto</span> {{pedido.tcProducto.sProducto}}</td>                       
+                        <td><span class="p-column-title">Proveedor</span> {{pedido.tcProveedore.sRazonSocial}}</td> 
+                        <td><span class="p-column-title">Usuario</span> {{pedido.tcUsuario.sNombreUsuario}}</td> 
+                        <td><span class="p-column-title">Cantidad Pedida</span> {{pedido.nCantidadPedida}}</td> 
+                        <td><span class="p-column-title">Cantidad Recibida</span> {{pedido.nCantidaRecibida}}</td>                                     
+                        <td><span class="p-column-title">Direrencia</span><div *ngIf="pedido.nCantidadPedida!=pedido. nCantidaRecibida" style="background: red ; color:white; text-align:center ; border-radius: 20px; max-width: 40px;">{{pedido.nCantidadPedida-pedido. nCantidaRecibida}}</div> 
+                            <div *ngIf="pedido.nCantidadPedida==pedido. nCantidaRecibida" style="background: green ; color:white; text-align:center ; border-radius: 20px; max-width: 40px;">{{pedido.nCantidadPedida-pedido. nCantidaRecibida}}</div>
                         </td>
-                        <td><span class="p-column-title">Producto</span> {{pedido.tcProducto.sProducto}}
-                        </td>                       
-                        <td><span class="p-column-title">Proveedor</span> {{pedido.tcProveedore.sRazonSocial}}
-                        </td> 
-                        <td><span class="p-column-title">Cantidad Pedida</span> {{pedido.tcUsuario.sNombreUsuario}}
-                        </td> 
-                        <td><span class="p-column-title">Diferencia</span> {{pedido.nCantidadPedida}}
-                        </td> 
-                        <td><span class="p-column-title">Recibido</span> {{pedido.nCantidaRecibida}}
-                        </td> 
-                        <td><span class="p-column-title">Status</span><div *ngIf="pedido.nCantidadPedida!=pedido. nCantidaRecibida" style="background: red ; color:white; text-align:center ; border-radius: 20px;">{{pedido.nCantidadPedida-pedido. nCantidaRecibida}}</div> 
-                            <div *ngIf="pedido.nCantidadPedida==pedido. nCantidaRecibida" style="background: green ; color:white; text-align:center ; border-radius: 20px;">{{pedido.nCantidadPedida-pedido. nCantidaRecibida}}</div>
-                        </td>
-      
-                        
-                       
-                        <td *ngIf="banIngreso"> <div *ngIf="pedido.nEstatus==true">Entregado</div> <div *ngIf="pedido.nEstatus==false">Pendiente de entrega</div> </td>
-                        <td *ngIf="banIngreso"><span class="p-column-title">Fecha Ingreso</span> {{pedido.dFechaRecibida | date}}
-                         </td>
+                        <td><span class="p-column-title">Estatus</span> {{pedido.tcEstatusPedidoProducto.sEstatus}} </td>                 
+                                          
+                        <td *ngIf="banIngreso"><span class="p-column-title">Fecha Ingreso</span> {{pedido.dFechaRecibida | date}}</td>
                         <td>
-                            <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2"
-                                (click)="detalleProduct(pedido.tcProducto.nId)"></button>   
-                                <button *ngIf="pedido.nEstatus==false || pedido.nEstatus==null " pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2"
-                                (click)="mostrarRegistroEntrada(pedido)"></button> 
-                                <button  *ngIf="banIngreso" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="confirm(pedido)"></button>                          
+                                <button  pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-mr-2" (click)="detalleProduct(pedido.tcProducto.nId)"></button>   
+                                <button *ngIf="pedido.nEstatus==2" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2" (click)="mostrarRegistroEntrada(pedido)"></button> 
+                                <button  *ngIf="banIngreso && pedido.tcEstatusPedidoProducto.nId<=2" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="confirm(pedido)"></button>                          
                                 <button pButton pRipple icon="pi pi-home" class="p-button-rounded p-button-success p-mr-2" (click)="modalProductoBodega(pedido)" pTooltip="Movimiento Interno"></button>
 
                                
@@ -128,10 +98,13 @@
             </div>
         </ng-template>
         <ng-template pTemplate="footer">
+            <button pButton pRipple label="No llego" icon="pi pi-danger" class="p-button-text red-button"
+        (click)="productoNoLlego()"></button>
             <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
                 (click)="cerrar()"></button>
             <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
                 (click)="guardarIngresoProducto()"></button>
+                
         </ng-template>
     </p-dialog>
 
