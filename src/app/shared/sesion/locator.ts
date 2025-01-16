@@ -62,6 +62,8 @@ static consultarUsoCfdi='/catalogoUsoCfdi';
 //api productos
 static obtenerProductos= '/obtenerProductos';
 static obtenerProductoId= '/obtenerProductoId?';
+static obtenerProductoBeanId= '/obtenerProductoBeanId?';
+
 static obtenerProductosLike= '/obtenerProductosLike?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static obtenerProductosNoParte= '/obtenerProductosNoParte?';

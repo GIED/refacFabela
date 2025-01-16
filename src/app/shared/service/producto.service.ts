@@ -29,6 +29,10 @@ export class ProductoService {
     let url = environment.servicios.apiRefacFabela + locator.obtenerProductoId+'nId='+nId;
     return this.http.get<TcProducto[]>(url);
   }
+  obtenerProductoBeanId(nId:number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerProductoBeanId+'nId='+nId;
+    return this.http.get<TcProducto>(url);
+  }
   
   obtenerProductosLike(producto:string){
     let url = environment.servicios.apiRefacFabela + locator.obtenerProductosLike +'producto='+producto;

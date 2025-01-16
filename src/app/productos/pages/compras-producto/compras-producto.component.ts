@@ -20,6 +20,8 @@ import { PedidoDto } from '../../model/PedidoDto';
 import { TwPedidoProducto } from '../../model/TwPedidoProducto';
 import { forkJoin, Observable } from 'rxjs';
 import { TvPedidoDetalle } from '../../model/TvPedidoDetalle';
+import { TwVentasProducto } from '../../model/TwVentasProducto';
+import { VentasService } from 'src/app/shared/service/ventas.service';
 
 @Component({
   selector: 'app-compras-producto',
@@ -59,11 +61,12 @@ export class ComprasProductoComponent implements OnInit {
   listaPedidoDetalle:TvPedidoDetalle[];
   listaPedidos:TwPedidoProducto[];
   detalleDialog: boolean = false;
-
+  banMustraVentasProducto:boolean=false;
+  listaVentasProducto:TwVentasProducto[];
 
 
   constructor(private comprasService: ComprasService, private messageService: MessageService, private proveedorService: ProveedorService, private fb: FormBuilder, private productosService: ProductoService,
-    private tokenService: TokenService, private confirmationService: ConfirmationService, private pedidosService: PedidosService
+    private tokenService: TokenService, private confirmationService: ConfirmationService, private pedidosService: PedidosService, private ventasService:VentasService
 
   ) {
     this.datosRecibidos = null;
@@ -84,6 +87,7 @@ export class ComprasProductoComponent implements OnInit {
     this.pedidoDto = new PedidoDto();
     this.twPedidoProductoDto = new TwPedidoProducto();
     this.twPedidoProducto= new TwPedidoProducto();
+    this.listaVentasProducto=[];
    
     this.cols = [
       { field: 'tcProducto.sNoParte', header: 'No Parte' },
@@ -234,6 +238,16 @@ export class ComprasProductoComponent implements OnInit {
     this.titulo = "Registro de Productos"
   }
 
+  editarProducto(){
+
+   this.productosService.obtenerProductoBeanId(this.vwMetaProductoCompra.nId).subscribe(data=>{
+    this.producto=data;
+    this.productDialog = true;
+    this.titulo = "Actualización Producto";
+   });
+
+  }
+
    /* cierra el fomulario de registro de producto */
   hideDialog() {
     this.productDialog = false;
@@ -243,6 +257,14 @@ export class ComprasProductoComponent implements OnInit {
   saveProduct(producto: TcProducto) {
     if (producto.nId) {
       this.productosService.guardaProducto(producto).subscribe(productoActualizado => {
+        this.vwMetaProductoCompra.sMarca=productoActualizado.sMarca;
+        this.vwMetaProductoCompra.nPrecio=productoActualizado.nPrecio;
+        this.vwMetaProductoCompra.sMoneda=productoActualizado.sMoneda;
+        this.vwMetaProductoCompra.nIdDescuento=productoActualizado.nIdDescuento;
+        this.vwMetaProductoCompra.nTotalUnitarioCalculado=productoActualizado.nPrecioConIva;
+        this.vwMetaProductoCompra.nGanancia=productoActualizado.nIdGanancia;
+        this.vwMetaProductoCompra.sDescripcion=productoActualizado.sDescripcion;
+
         this.messageService.add({ severity: 'success', summary: 'Producto Actualizado', detail: 'Producto actualizado correctamente', life: 3000 });
       });
     }
@@ -376,7 +398,7 @@ export class ComprasProductoComponent implements OnInit {
 
 /*Agrega los productos al carrito */
   agregarProducto(producto: VwMetaProductoCompra) {
-     console.log(producto);
+     //console.log(producto);
     // Realiza la búsqueda del producto en la lista
     const existingProduct = this.listaTwCarritoCompraPedido.find(product => product.nIdProducto === producto.nId);
     // Evalúa si el producto existe en la lista
@@ -556,8 +578,43 @@ generarPedidoPdf(nId:number){
     );
   }
 
+muestraVentasProducto(){
+   
+  let ventasProducto=this.ventasService.obtenerProductoVenta(this.vwMetaProductoCompra.nId);
+  this.banMustraVentasProducto=true;
 
+  forkJoin([
+          ventasProducto 
+        ]).subscribe(resultado => {         
+          this.listaVentasProducto=resultado[0];     
+  
+        })  
 
+}
+
+generarVentaPdf(idVenta:number){
+
+  this.ventasService.generarVentaPdf(idVenta).subscribe(resp => {
+
+    
+      const file = new Blob([resp], { type: 'application/pdf' });
+      //console.log('file: ' + file.size);
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'venta_' + idVenta + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'comprobante de venta Generado', life: 3000});
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
+       
+      } else {
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de venta', life: 3000});
+      }
+
+  });
+
+}
 
 
 
