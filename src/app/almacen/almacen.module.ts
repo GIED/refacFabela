@@ -17,6 +17,7 @@ import { VentaProductosDetalleEntregaComponent } from './components/venta-produc
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActualizaProductoAlmacenComponent } from './components/actualiza-producto-almacen/actualiza-producto-almacen.component';
 import { AjusteInventarioComponent } from './components/ajuste-inventario/ajuste-inventario.component';
+import { RegistroProductoFacturaComponent } from './pages/registro-producto-factura/registro-producto-factura.component';
 
 
 
@@ -28,7 +29,8 @@ import { AjusteInventarioComponent } from './components/ajuste-inventario/ajuste
     EntregaDeMercanciaComponent,
     VentaProductosDetalleEntregaComponent,
     ActualizaProductoAlmacenComponent,
-    AjusteInventarioComponent
+    AjusteInventarioComponent,
+    RegistroProductoFacturaComponent
   ],
   imports: [
     AlmacenRoutingModule,

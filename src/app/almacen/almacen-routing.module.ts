@@ -6,6 +6,7 @@ import { IngresoMercanciaComponent } from "./pages/ingreso-mercancia/ingreso-mer
 import { InventarioComponent } from "./pages/inventario/inventario.component";
 import { StockMinimoComponent } from "./pages/stock-minimo/stock-minimo.component";
 import { TraspasosComponent } from "./pages/traspasos/traspasos.component";
+import { RegistroProductoFacturaComponent } from "./pages/registro-producto-factura/registro-producto-factura.component";
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
       {
         path: "stock-minimo",
         component: StockMinimoComponent,
+      },
+      {
+        path: "factura-producto",
+        component: RegistroProductoFacturaComponent,
       },
     ],
   },

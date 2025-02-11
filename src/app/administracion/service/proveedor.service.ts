@@ -75,6 +75,12 @@ export class ProveedorService {
     return this.http.get<TwFacturasProveedor>(url);
   }
 
+  getFacturasPendienteIngreso() {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerFacturasPendienteIngreso;
+    return this.http.get<TwFacturasProveedor[]>(url);
+  }
+
   getAbonosFacturaProveedor(nIdFactura:number) {
 
     let url = environment.servicios.apiRefacFabela + locator.obtenerAbonosFacturaProveedor+'nIdFactura='+nIdFactura;

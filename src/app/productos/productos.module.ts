@@ -52,6 +52,7 @@ import { CarritoPedidoComponent } from './components/carrito-pedido/carrito-pedi
     FechaRangoComponent,
     CarritoPedidoComponent,
     
+    
   ],
   imports: [
     CommonModule,

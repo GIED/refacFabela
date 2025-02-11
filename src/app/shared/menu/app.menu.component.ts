@@ -116,6 +116,9 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Enterega de mercancia', icon: 'pi pi-fwpi-amazon', routerLink: ['../almacen/entrega-de-mercancia'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
+                    {
+                        label: 'Factura-productos', icon: 'pi pi-fwpi-amazon', routerLink: ['../almacen/factura-producto'], visible:this.realRol==='admin'  || this.realRol==='almacen'
+                    },
                   /*  {
                         label: 'Stock mínimo', icon: 'pi pi-fw pi-spinner', routerLink: ['../almacen/stock-minimo']
                     },*/
