@@ -1,0 +1,89 @@
+<div class="p-grid">
+    <!-- Primera fila: columna de todo el ancho -->
+    <div class="p-col-12">
+      <div class="card">
+        <h5>Folio</h5>
+        <p>{{vwFacturaProductoBalance.sFolioFactura}}</p>
+      </div>
+    </div>
+  
+    <!-- Segunda fila: dividida en dos columnas -->
+    <div class="p-col-12 p-md-6">
+      <div class="card">
+        <h5>Segunda Fila - Columna 1</h5>
+        <div class="p-grid p-fluid">
+          <div class="p-col-12">
+            <div class="card">
+              <h5>Formulario de Producto</h5>
+              <form [formGroup]="formGrp" class="p-fluid p-pt-4">
+                <div class="p-field p-grid">
+                  <label for="noParte" class="p-col-12 p-md-2">No Parte</label>
+                  <div class="p-col-12 p-md-10">
+                    <app-input-busqueda (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>
+                  
+                  </div>
+                </div>
+        
+                <div class="p-field p-grid">
+                  <label for="marca" class="p-col-12 p-md-2">Marca</label>
+                  <div class="p-col-12 p-md-10">
+                    <p-dropdown
+                      id="marca"
+                      [options]="listaMarca"
+                      formControlName="marca"
+                      optionLabel="sMarca"
+                      optionValue="nId"
+                      placeholder="Seleccione una marca"
+                      [showClear]="true"
+                    ></p-dropdown>
+                   
+                  </div>
+                </div>
+        
+                <div class="p-field p-grid">
+                  <label for="cantidad" class="p-col-12 p-md-2">Cantidad</label>
+                  <div class="p-col-12 p-md-10">
+                    <input
+                      id="cantidad"
+                      type="number"
+                      pInputText
+                      formControlName="cantidad"
+                      placeholder="Ingrese la cantidad"
+                    />
+                   
+                  </div>
+                </div>
+        
+                <div class="p-field p-grid">
+                  <label for="precio" class="p-col-12 p-md-2">Precio</label>
+                  <div class="p-col-12 p-md-10">
+                    <input
+                      id="precio"
+                      type="text"
+                      pInputText
+                      formControlName="precio"
+                      placeholder="Ingrese el precio"
+                    />
+                  
+                  </div>
+                </div>
+        
+                <div class="p-field p-grid">
+                  <div class="p-col-12 p-md-2"></div>
+                  <div class="p-col-12 p-md-10">
+                    <button pButton type="submit" label="Guardar" [disabled]="formGrp.invalid"></button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p-col-12 p-md-6">
+      <div class="card">
+        <h5>Segunda Fila - Columna 2</h5>
+        <p>Contenido de la segunda columna de la segunda fila.</p>
+      </div>
+    </div>
+  </div>

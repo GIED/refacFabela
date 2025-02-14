@@ -435,6 +435,7 @@ export class ComprasProductoComponent implements OnInit {
 
   /*selecciona el producto que sale en la busqueda */
   onProductoSeleccionado(producto: TcProducto) {
+    console.log(producto);
     this.listaProductosUltimaCompra = [];
     this.comprasService.obtenerProductosVentaCotizacionIdProducto(producto.nId).subscribe(data => {
       this.listaProductosUltimaCompra = data;

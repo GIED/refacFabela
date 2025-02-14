@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { PrimeModule } from '../shared/prime/prime.module';
 import { AlmacenRoutingModule } from './almacen-routing.module';
 
@@ -17,6 +17,9 @@ import { VentaProductosDetalleEntregaComponent } from './components/venta-produc
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActualizaProductoAlmacenComponent } from './components/actualiza-producto-almacen/actualiza-producto-almacen.component';
 import { AjusteInventarioComponent } from './components/ajuste-inventario/ajuste-inventario.component';
+import { RegistroProductoFacturaComponent } from './pages/registro-producto-factura/registro-producto-factura.component';
+import { FormRegistroProductoFacturaComponent } from './components/form-registro-producto-factura/form-registro-producto-factura.component';
+
 
 
 
@@ -28,7 +31,9 @@ import { AjusteInventarioComponent } from './components/ajuste-inventario/ajuste
     EntregaDeMercanciaComponent,
     VentaProductosDetalleEntregaComponent,
     ActualizaProductoAlmacenComponent,
-    AjusteInventarioComponent
+    AjusteInventarioComponent,
+    RegistroProductoFacturaComponent,
+    FormRegistroProductoFacturaComponent
   ],
   imports: [
     AlmacenRoutingModule,
@@ -44,6 +49,7 @@ import { AjusteInventarioComponent } from './components/ajuste-inventario/ajuste
 
   
   
-  providers:[CountryService, ProductService]
+  providers:[CountryService, ProductService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class AlmacenModule { }

@@ -11,6 +11,7 @@ import { BalanceFacturaProveedorMoneda } from 'src/app/productos/model/BalanceFa
 import { TwAbonoFacturaProveedor } from '../../productos/model/TwAbonoFacturaProveedor';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { VwFacturaProductoBalance } from 'src/app/productos/model/VwFacturaProductoBalance';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +74,18 @@ export class ProveedorService {
 
     let url = environment.servicios.apiRefacFabela + locator.obtenerFacturaProveedor+'nIdFactura='+nIdFactura;
     return this.http.get<TwFacturasProveedor>(url);
+  }
+
+  getFacturasPendienteIngreso() {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerFacturasPendienteIngreso;
+    return this.http.get<TwFacturasProveedor[]>(url);
+  }
+
+  getFacturasEstatusAlmacenEstatus(nEstatus:number) {
+
+    let url = environment.servicios.apiRefacFabela + locator.obtenerFacturasProductoAlmacenEstatus+'nEstatusAlmacen='+ nEstatus;
+    return this.http.get<VwFacturaProductoBalance[]>(url);
   }
 
   getAbonosFacturaProveedor(nIdFactura:number) {

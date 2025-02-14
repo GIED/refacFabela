@@ -66,13 +66,13 @@ a:hover {
 /* Tablas PrimeNG */
 .p-datatable .p-datatable-tbody > tr > td {
   color: var(--primary-text-color);
-  font-size: 0.85rem; /* Tamaño más pequeño para contenido de tabla */
+  font-size: 1.5rem; /* Tamaño más pequeño para contenido de tabla */
   padding: 4px 8px; /* Espaciado reducido */
 }
 
 .p-datatable .p-datatable-thead > tr > th {
   color: var(--secondary-text-color);
-  font-size: 0.9rem; /* Tamaño ligeramente mayor en encabezados */
+  font-size: 1.4rem; /* Tamaño ligeramente mayor en encabezados */
   background-color: #EDEDED; /* Fondo sutil para encabezados */
 }
 
@@ -89,7 +89,7 @@ a:hover {
 }
 /*Reducir el tamaño de la fuente en el cuerpo de la tabla */
 .p-datatable-customers .p-datatable-tbody > tr > td {
-    font-size: 0.7rem; /* Ajusta el tamaño de la fuente */
+    font-size: 0.9rem; /* Ajusta el tamaño de la fuente */
     padding: 4px 8px; /* Reduce el espacio entre celdas */
   }
   
