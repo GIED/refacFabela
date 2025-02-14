@@ -1,88 +1,80 @@
-<p>registro-producto-factura works!</p><div class="p-grid">
-	<div class="p-col-12">	
-		<div class="card">			
-			
-
-            <p-table #dt [value]="listaFacturaProveedor" [rows]="10" [paginator]="true" [exportFilename]="'Facturas por ingresar'"
-            [globalFilterFields]="['tcProveedore.sRfc','tcProveedore.sRazonSocial']"
-            [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
-            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-            [showCurrentPageReport]="true">
-            <ng-template pTemplate="caption">
-                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                    <h5 class="p-m-0">Listado de créditos</h5>
-                    <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                            placeholder="Buscar cliente" />
-                    </span>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-                <tr>
-                    <th pSortableColumn="tcProveedore.sRfc" class="text-center">RFC<p-sortIcon field="tcProveedore.sRfc"></p-sortIcon> </th>
-                    <th pSortableColumn="tcProveedore.sRazonSocial" class="text-center">Razón social <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon></th>
-                    <th pSortableColumn="sMoneda" class="text-center">Moneda <p-sortIcon field="sMoneda"></p-sortIcon></th>                    
-                    <th pSortableColumn="sFolioFactura" class="text-center">Folio Factura <p-sortIcon field="sFolioFactura"></p-sortIcon></th>
-                    <th pSortableColumn="dFechaInicioFactura" class="text-center">Fecha Inicio <p-sortIcon field="dFechaInicioFactura"></p-sortIcon></th>
-                    <th pSortableColumn="nMontoFactura" class="text-center">Monto Factura <p-sortIcon field="nMontoFactura"></p-sortIcon></th>
-                    <th pSortableColumn="nEstatusIngresoAlmacen" class="text-center">Estatus Ingreso Almacén <p-sortIcon field="nEstatusIngresoAlmacen"></p-sortIcon></th>
-                   
-                   <!-- <th class="text-center">Acción</th>-->
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-cliente>
-                <tr>
-                    <td class="text-center"><span class="p-column-title">RFC</span>{{cliente.tcProveedore.sRfc}}</td>
-                    <td class="p-test-center text-center"><span class="p-column-title">Razón social</span>{{cliente.tcProveedore.sRazonSocial}}</td>
-                    <td class="p-test-center text-center"><span class="p-column-title">Moneda</span>{{cliente.tcMoneda.sMoneda}}</td>
-                    
-                    <td class="text-center"><span class="p-column-title">Folio Factura</span>{{cliente.sFolioFactura}}</td>
-                    <td class="text-center"><span class="p-column-title">Fecha Inicio</span>{{cliente.dFechaInicioFactura | date}}</td>                    
-                    <td class="text-center"><span class="p-column-title">Monto Factura</span>{{cliente.nMontoFactura | number}}</td>                   
-                    <td class="text-center"><span class="p-column-title">Estatus Ingreso Almacén</span>{{cliente.nEstatusIngresoAlmacen ? 'INGRESADO' : 'PENDIENTE'}}</td>
-                   <!--
-                    <td class="text-center">
-                        <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
-                            (click)="consultarDetalleFacturaMonedas(cliente)"></button>
-                    </td>-->
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="summary">
-                <span class="p-input-icon-left">
-                    <i class="pi pi-search"></i>
-                    <button *ngIf="listaFacturaProveedor.length > 0" type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
-                        class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
-                </span>
-            </ng-template>
-        </p-table>
-	
-			
-		</div>
-		
-           
-	</div>
+<div class="p-grid">
+  <div class="p-col-12">
+    <div class="card">
+      <p-table
+        #dt
+        [value]="listaFacturaProveedor"
+        [rows]="10"
+        [paginator]="true"
+        [exportFilename]="'Facturas por ingresar'"
+        [globalFilterFields]="['nId','tcProveedor.sRfc', 'tcProveedor.sRazonSocial','tcMoneda.sMoneda','sFolioFactura','dFechaInicioFactura','nTotalNoParte','nTotalProductos','nEstatusIngresoAlmacen']"
+        [rowHover]="true"
+        dataKey="id"
+        styleClass="p-datatable-customers"
+        currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+        [showCurrentPageReport]="true"
+      >
+        <ng-template pTemplate="caption">
+          <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+            <h5 class="p-m-0">Buscar Factura</h5>
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Buscar Factura"
+              />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="nId" class="text-center">Id Factura<p-sortIcon field="nId"></p-sortIcon></th>
+            <th pSortableColumn="sFolioFactura" class="text-center">Folio Factura<p-sortIcon field="sFolioFactura"></p-sortIcon></th>
+            <th pSortableColumn="tcProveedor.sRfc" class="text-center">RFC<p-sortIcon field="tcProveedor.sRfc"></p-sortIcon></th>
+            <th pSortableColumn="tcProveedor.sRazonSocial" class="text-center">Razón social<p-sortIcon field="tcProveedor.sRazonSocial"></p-sortIcon></th>
+            <th pSortableColumn="tcMoneda.sMoneda" class="text-center">Moneda<p-sortIcon field="tcMoneda.sMoneda"></p-sortIcon></th>           
+            <th pSortableColumn="dFechaInicioFactura" class="text-center">Fecha Inicio<p-sortIcon field="dFechaInicioFactura"></p-sortIcon></th> 
+            <th pSortableColumn="nTotalNoParte" class="text-center">Total de No Parte<p-sortIcon field="nTotalNoParte"></p-sortIcon></th>      
+            <th pSortableColumn="nTotalProductos" class="text-center">Total de Productos<p-sortIcon field="nTotalProductos"></p-sortIcon></th>           
+            <th pSortableColumn="nEstatusIngresoAlmacen" class="text-center">Estatus Ingreso Almacén<p-sortIcon field="nEstatusIngresoAlmacen"></p-sortIcon>
+            <th  class="text-center">Acción</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-factura>
+          <tr> 
+            <td class="text-center"><span class="p-column-title">Id Factura</span>{{ factura.nId }}</td>
+            <td class="text-center"><span class="p-column-title">Folio Factura</span>{{ factura.sFolioFactura }}</td>
+            <td class="text-center"><span class="p-column-title">RFC</span>{{ factura.tcProveedor.sRfc }}</td>
+            <td class="p-test-center text-center"><span class="p-column-title">Razón social</span>{{ factura.tcProveedor.sRazonSocial }}</td>
+            <td class="p-test-center text-center"><span class="p-column-title">Moneda</span>{{ factura.tcMoneda.sMoneda }}</td>           
+            <td class="text-center"><span class="p-column-title">Fecha Inicio</span>{{ factura.dFechaInicioFactura | date }}</td> 
+            <td class="text-center"><span class="p-column-title">Total de No Parte</span>{{ factura.nTotalNoParte}}</td> 
+            <td class="text-center"><span class="p-column-title">otal de Producto</span>{{ factura.nTotalProductos}}</td>        
+            <td class="text-center"><span class="p-column-title">Estatus Ingreso Almacén</span>{{ factura.nEstatusIngresoAlmacen ? 'PRODUCINGRESADO' : 'PENDIENTE' }}</td>
+           <td class="text-center"> <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info p-mr-2" (click)="mostarRegistroProductoFactura(factura)"></button></td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <button
+              *ngIf="listaFacturaProveedor.length > 0"
+              type="button"
+              pButton
+              pRipple
+              icon="pi pi-file-excel"
+              label="Exportar consulta"
+              class="p-button-help p-mb-2"
+              (click)="dt.exportCSV()"
+            ></button>
+          </span>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
 </div>
-<!--
-<p-dialog [(visible)]="mostrarFormulario" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
-styleClass="p-fluid">
-<ng-template pTemplate="content">
-	<app-form-factura-proveedor (cerrar)="cerrarDialogo($event)" ></app-form-factura-proveedor>
-	
-</ng-template>
-</p-dialog>
 
-<p-dialog [(visible)]="detalleFacturasProveedor" [style]="{width: '80vw', height: '80vh'}"
- header="Facturas Activas" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">
-<ng-template pTemplate="content">
-<app-factura-moneda-proveedor (cerrar)="cerrarDialogo($event)" [vwFacturasBalanceProveedor]="vwFacturasBalanceProveedor" >   </app-factura-moneda-proveedor>
-</ng-template>
-</p-dialog>
 
-<p-dialog [(visible)]="mostrarHistorial" [style]="{width: '80vw', height: '80vh'}"
- header="Historal de Facturas del proveedor" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">
-<ng-template pTemplate="content">
-<app-historia-factura-proveedor (cerrar)="cerrarDialogo($event)"  >   </app-historia-factura-proveedor>
-</ng-template>
-</p-dialog>
--->
+

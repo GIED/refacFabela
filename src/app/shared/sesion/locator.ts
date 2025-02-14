@@ -29,6 +29,8 @@ static obtenerFacturasProveedorMonedaBalanceHistoria='/facturacionProveedor/obte
 static obtenerBalanceFactura='/facturacionProveedor/obtenerBalanceFactura?';
 static obtenerFacturaProveedor='/facturacionProveedor/obtenerFacturaProveedor?';
 static obtenerFacturasPendienteIngreso='/facturacionProveedor/obtenerFacturasPendienteIngreso';
+static obtenerFacturasProductoAlmacenEstatus='/facturacionProveedor/obtenerFacturaProductoBalanceEstatus?';
+
 static obtenerAbonosFacturaProveedor='/facturacionProveedor/obtenerAbonosFactura?';
 //api para usuarios
 static obtenerUsuarios='/obtenerUsuarios';
