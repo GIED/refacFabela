@@ -64,6 +64,7 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
       
 
    this.marca.setValue(producto.nIdMarca);
+   this.noParte.setValue(producto.sNoParte+'-'+producto.sProducto);
 
 
 
