@@ -63,6 +63,9 @@ export class ComprasProductoComponent implements OnInit {
   detalleDialog: boolean = false;
   banMustraVentasProducto:boolean=false;
   listaVentasProducto:TwVentasProducto[];
+  existingProduct:TwPedidoProducto;
+  
+  
 
 
   constructor(private comprasService: ComprasService, private messageService: MessageService, private proveedorService: ProveedorService, private fb: FormBuilder, private productosService: ProductoService,
@@ -88,6 +91,7 @@ export class ComprasProductoComponent implements OnInit {
     this.twPedidoProductoDto = new TwPedidoProducto();
     this.twPedidoProducto= new TwPedidoProducto();
     this.listaVentasProducto=[];
+    this.existingProduct=new TwPedidoProducto();
    
     this.cols = [
       { field: 'tcProducto.sNoParte', header: 'No Parte' },
@@ -400,7 +404,7 @@ export class ComprasProductoComponent implements OnInit {
   agregarProducto(producto: VwMetaProductoCompra) {
      //console.log(producto);
     // Realiza la búsqueda del producto en la lista
-    const existingProduct = this.listaTwCarritoCompraPedido.find(product => product.nIdProducto === producto.nId);
+    const existingProduct = this.listaTwCarritoCompraPedido.find(product => product.nIdProducto===producto.nId );
     // Evalúa si el producto existe en la lista
     if (existingProduct) {
       this.confirmationService.confirm({
@@ -412,7 +416,9 @@ export class ComprasProductoComponent implements OnInit {
         accept: () => {
           this.dialogo = true;
           this.vwMetaProductoCompra = producto;
+          if(this.vwMetaProductoCompra){
           this.consulaDatosProdcuto();
+          }
         },
         reject: () => {
           this.dialogo = false;
@@ -421,7 +427,9 @@ export class ComprasProductoComponent implements OnInit {
     } else {
       this.dialogo = true;
       this.vwMetaProductoCompra = producto;
-      this.consulaDatosProdcuto();
+      if(this.vwMetaProductoCompra){
+        this.consulaDatosProdcuto();
+        }
     }
   }
 
@@ -456,22 +464,26 @@ export class ComprasProductoComponent implements OnInit {
       this.twPedidoProducto.nIdProveedor = this.proveedorSeleccionado.nId;
       this.twPedidoProducto.dFechaPedido = new Date();
       this.twPedidoProducto.nEstatus = 1;
-      const existingProduct = this.listaTwCarritoCompraPedido.find(product => product.nIdProducto === this.vwMetaProductoCompra.nId);
-      if (existingProduct) {
-        existingProduct.nCantidadPedida += this.twPedidoProducto.nCantidadPedida;
-        this.twPedidoProducto = existingProduct;
+      this.existingProduct = this.listaTwCarritoCompraPedido.find(product => product.nIdProducto === this.vwMetaProductoCompra.nId && product.nIdProveedor===this.proveedorSeleccionado.nId );
+      if (this.existingProduct) {
+        this.existingProduct.nCantidadPedida += this.twPedidoProducto.nCantidadPedida;
+        this.twPedidoProducto = this.existingProduct;
        // console.log('ya existe el producrto, lo voy a actualizar');
       }
       this.pedidosService.guardaPedidoProducto(this.twPedidoProducto).subscribe(data => {
-       // this.listaTwCarritoCompraPedido = null;
-        //console.log('Se guardo el producto', this.twCarritoCompraPedido);
+      
+        //console.log('Se guardo el producto', this.twPedidoProducto);
+
+        if(data){
+          this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Guardado con éxito', life: 6000 });
+        }
         this.consultaCarritoCompraPedido(this.tokenService.getIdUser()).subscribe(
           data => {
             this.listaTwCarritoCompraPedido = data;
             this.listaProductosUltimaCompra = this.marcarProductosAgrgadosCarrito(this.listaProductosUltimaCompra, this.listaTwCarritoCompraPedido);
           },
           error => {
-          //  console.error('Error al obtener productos:', error);
+            console.error('Error al obtener productos:', error);
           }
         );
         /*limpia el formulario y deja listo para el siguinete producto */
@@ -481,6 +493,9 @@ export class ComprasProductoComponent implements OnInit {
         this.totalVentas=0;
         this.totalCotizaciones=0;
         this.efectividad=0;
+        this.existingProduct=new TwPedidoProducto();
+        this.twPedidoProducto=new TwPedidoProducto();
+        
       });
     }
   }
