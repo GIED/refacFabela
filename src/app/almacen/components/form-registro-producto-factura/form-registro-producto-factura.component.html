@@ -8,25 +8,39 @@
     </div>
   
     <!-- Segunda fila: dividida en dos columnas -->
-    <div class="p-col-12 p-md-6">
-      <div class="card">
-        <h5>Segunda Fila - Columna 1</h5>
+    <div class="p-col-12 p-md-6">     
+     
         <div class="p-grid p-fluid">
           <div class="p-col-12">
             <div class="card">
-              <h5>Formulario de Producto</h5>
-              <form [formGroup]="formGrp" class="p-fluid p-pt-4">
-                <div class="p-field p-grid">
-                  <label for="noParte" class="p-col-12 p-md-2">No Parte</label>
-                  <div class="p-col-12 p-md-10">
-                    <app-input-busqueda (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>
-                  
+             <div class="p-col-12 text-center"> <h5>Busqueda del producto</h5></div>
+
+              <div class="p-field p-grid">
+                <div class="p-col-12 p-md-10">
+                  <app-input-busqueda (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>                
+                </div>
+              </div>
+
+              <div class="card"  *ngIf="banProductoSeleccionado">
+                <div class="p-col-12 text-center"> <h5>Registro Factura-Producto</h5></div>
+              <form [formGroup]="formGrp" class="p-fluid p-pt-4">              
+
+                <div class="p-field p-grid">                
+                  <div class="p-col-12 p-md-12">                    
+                   <label for="no_parte">Parte seleccionada</label>
+                    <input
+                      id="precio"
+                      type="text"
+                      pInputText
+                      formControlName="noParte"
+                      placeholder="No parte"
+                    />                  
                   </div>
                 </div>
         
                 <div class="p-field p-grid">
-                  <label for="marca" class="p-col-12 p-md-2">Marca</label>
-                  <div class="p-col-12 p-md-10">
+                  <div class="p-col-12 p-md-12">
+                    <label for="marca">Marca</label>
                     <p-dropdown
                       id="marca"
                       [options]="listaMarca"
@@ -41,8 +55,8 @@
                 </div>
         
                 <div class="p-field p-grid">
-                  <label for="cantidad" class="p-col-12 p-md-2">Cantidad</label>
-                  <div class="p-col-12 p-md-10">
+                  <div class="p-col-12 p-md-12">
+                    <label for="cantidad">Cantidad</label>
                     <input
                       id="cantidad"
                       type="number"
@@ -55,8 +69,8 @@
                 </div>
         
                 <div class="p-field p-grid">
-                  <label for="precio" class="p-col-12 p-md-2">Precio</label>
-                  <div class="p-col-12 p-md-10">
+                  <div class="p-col-12 p-md-12">
+                     <label for="precio">precio</label>
                     <input
                       id="precio"
                       type="text"
@@ -67,16 +81,32 @@
                   
                   </div>
                 </div>
+                <div class="p-field p-grid">
+                  <div class="p-col-12 p-md-12">
+                    <label for="moneda">moneda</label>
+                    <input
+                      id="modenda"
+                      type="text"
+                      pInputText
+                      formControlName="moneda"
+                      placeholder="Moneda"
+                    />                  
+                  </div>
+                </div>
         
                 <div class="p-field p-grid">
                   <div class="p-col-12 p-md-2"></div>
-                  <div class="p-col-12 p-md-10">
+                  <div class="p-col-12 p-md-12">
                     <button pButton type="submit" label="Guardar" [disabled]="formGrp.invalid"></button>
                   </div>
                 </div>
               </form>
             </div>
-          </div>
+
+
+
+            </div>
+          
         </div>
       </div>
     </div>

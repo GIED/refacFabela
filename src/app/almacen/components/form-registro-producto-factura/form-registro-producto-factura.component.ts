@@ -10,6 +10,7 @@ import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
 import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TcMarca } from 'src/app/productos/model/TcMarca';
+import { disable } from 'colors';
 
 @Component({
   selector: 'app-form-registro-producto-factura',
@@ -22,6 +23,7 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
    formGrp: FormGroup;
    vwFacturaProductoBalance:VwFacturaProductoBalance;
    listaMarca:TcMarca[]; // Aquí puedes cargar la lista de marcas
+   banProductoSeleccionado:boolean=false;
 
   constructor(private comprasService: ComprasService, public ref: DynamicDialogRef,
       public config: DynamicDialogConfig, private _catalogoService:CatalogoService ) { 
@@ -29,6 +31,7 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
       this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
     this.vwFacturaProductoBalance=new VwFacturaProductoBalance() ;
     this.listaMarca=[];
+    this.banProductoSeleccionado=false;
       }
 
   ngOnInit(): void {
@@ -51,10 +54,11 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
      //console.log( 'Esete es objeto que llega al modal',this.productoBodega )
       this.formGrp = new FormGroup({
 
-        noParte: new FormControl('', [Validators.required]),
-        marca: new FormControl('', [Validators.required]),
+        noParte: new FormControl({ value: '', disabled: true }, Validators.required),
+        marca: new FormControl({ value: '', disabled: true }, Validators.required),
         cantidad: new FormControl('', [Validators.required, Validators.min(1)]),
         precio: new FormControl('', [Validators.required , Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
+        moneda: new FormControl({ value: '', disabled: true }, Validators.required),
 
       
       });
@@ -62,9 +66,15 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
 
   onProductoSeleccionado(producto: TcProducto) {
       
+   if(producto){
+    this.banProductoSeleccionado=true;
+    this.marca.setValue(producto.nIdMarca);
+   this.noParte.setValue(producto.sNoParte+'-'+producto.sProducto);
+   this.moneda.setValue(producto.sMoneda);
 
-   this.marca.setValue(producto.nIdMarca);
 
+   }
+   
 
 
     }
@@ -85,6 +95,9 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     }
     get precio() {
       return this.formGrp.get('precio') as FormControl;
+    }
+    get moneda() {
+      return this.formGrp.get('moneda') as FormControl;
     }
         
 
