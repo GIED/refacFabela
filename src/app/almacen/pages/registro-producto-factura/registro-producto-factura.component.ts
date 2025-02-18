@@ -40,9 +40,16 @@ vwFacturaProductoBalance:VwFacturaProductoBalance;
   
 
 const ref = this.dialogService.open(FormRegistroProductoFacturaComponent, {
-     data: new ModelContainer(ModeActionOnModel.CREATING,  vwFacturaProductoBalance),
-     header: 'Registro de Productos por factura',
-     width: '70%'
+     data: new ModelContainer(ModeActionOnModel.EDITING,  vwFacturaProductoBalance),
+     header: 'Registro de Productos para la factura',
+      width: '90%',
+  height: '90%',
+  contentStyle: { 'max-height': '90%', 'overflow': 'auto' },
+  baseZIndex: 1000,
+  closable: true,
+  dismissableMask: true,
+  modal: true
+ 
  })
  ref.onClose.subscribe(() =>{
    ////console.log('data que se recibe al cerrar',data);

@@ -1,0 +1,49 @@
+.ui-steps .ui-steps-item {
+    width: 25%;
+}
+
+.ui-steps.steps-custom {
+    margin-bottom: 30px;
+}
+
+.ui-steps.steps-custom .ui-steps-item .ui-menuitem-link {
+    padding: 0 1em;
+    overflow: visible;
+}
+
+.ui-steps.steps-custom .ui-steps-item .ui-steps-number {
+    background-color: #0081c2;
+    color: #FFFFFF;
+    display: inline-block;
+    width: 36px;
+    border-radius: 50%;
+    margin-top: -14px;
+    margin-bottom: 10px;
+}
+
+.ui-steps.steps-custom .ui-steps-item .ui-steps-title {
+    color: #555555;
+}
+
+.titRegistro{
+    background: #8A2036;
+    font-size: 22px;
+    color: #FFFFFF;
+    height: 80px;
+    
+}
+
+.p-fieldset-legend-text {
+    font-size: 18px;
+    color: rgb(102, 51, 153);
+}
+
+.subtitRegistro{
+    height: 50  px;
+    /*width: 70%;*/
+    box-align: center   ;
+    /*background-color: rgb(245, 241, 248);*/
+    font-size: 17px;
+    text-align: center;
+    color: black;
+}

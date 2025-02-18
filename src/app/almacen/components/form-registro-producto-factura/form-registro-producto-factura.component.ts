@@ -23,7 +23,6 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
    formGrp: FormGroup;
    vwFacturaProductoBalance:VwFacturaProductoBalance;
    listaMarca:TcMarca[]; // Aquí puedes cargar la lista de marcas
-   banProductoSeleccionado:boolean=false;
 
   constructor(private comprasService: ComprasService, public ref: DynamicDialogRef,
       public config: DynamicDialogConfig, private _catalogoService:CatalogoService ) { 
@@ -31,16 +30,13 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
       this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
     this.vwFacturaProductoBalance=new VwFacturaProductoBalance() ;
     this.listaMarca=[];
-    this.banProductoSeleccionado=false;
       }
 
   ngOnInit(): void {
     
-    /* Se construye el formulario*/
-   this._initFormGroup();
-      // Cargar lista de marcas
    
-
+   this._initFormGroup();
+     
       this._catalogoService.obtenerMarcas().subscribe(data=>{
         this.listaMarca=data;
       
@@ -50,24 +46,24 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
 
   _initFormGroup(): void {
       let modelContainer: ModelContainer = this.config.data;
-      this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData) ? new VwFacturaProductoBalance() : modelContainer.modelData as VwFacturaProductoBalance;
-     //console.log( 'Esete es objeto que llega al modal',this.productoBodega )
+      this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData) ? new VwFacturaProductoBalance() : modelContainer.modelData as VwFacturaProductoBalance; 
       this.formGrp = new FormGroup({
-
         noParte: new FormControl({ value: '', disabled: true }, Validators.required),
         marca: new FormControl({ value: '', disabled: true }, Validators.required),
-        cantidad: new FormControl('', [Validators.required, Validators.min(1)]),
-        precio: new FormControl('', [Validators.required , Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
+        cantidad: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.min(1)]),
+        precio: new FormControl({ value: '', disabled: true }, [Validators.required , Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
         moneda: new FormControl({ value: '', disabled: true }, Validators.required),
-
-      
-      });
+    });
     }
 
   onProductoSeleccionado(producto: TcProducto) {
       
    if(producto){
-    this.banProductoSeleccionado=true;
+    this.cantidad.enable();
+    this.precio.enable();
+
+
+
     this.marca.setValue(producto.nIdMarca);
    this.noParte.setValue(producto.sNoParte+'-'+producto.sProducto);
    this.moneda.setValue(producto.sMoneda);
@@ -79,8 +75,14 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
 
     }
 
-   
-  
+    onSubmit(): void {
+      if (this.formGrp.valid) {
+        const formData = this.formGrp.value;
+        console.log('Formulario enviado:', formData);
+        // Aquí llamas al servicio para enviar los datos
+       
+      }
+    }
    
 
 
