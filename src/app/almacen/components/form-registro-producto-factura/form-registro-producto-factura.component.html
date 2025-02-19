@@ -1,146 +1,109 @@
 <div class="p-grid">
+  <div class="p-col-12" > 
+    <div class="card" style="background-color: #EFEFEF;">
+      <div class="card">
+        <div class="p-grid">
+          <div class="p-col-12 text-center"><h5>Datos de la factura</h5></div>
+          <div class="p-col-4 p-md-4 p-lg-4  ">  
+             <h5>Proveedor</h5>
+            <p>{{vwFacturaProductoBalance.tcProveedor.sRfc}} - {{vwFacturaProductoBalance.tcProveedor.sRazonSocial}}</p>
+           
+          </div>
+          <div class="p-col-4 p-md-4 p-lg-4 ">
+          <h5>Folio</h5>
+            <p>{{vwFacturaProductoBalance.sFolioFactura}}</p>
+          </div>        
+          <div class="p-col-4 p-md-4 p-lg-4">
+            <h5>Moneda</h5>
+            <p>{{vwFacturaProductoBalance.tcMoneda.sMoneda}}</p>
+          </div>
+
+          
+        </div>
+
+      </div>
+    </div>
+    
+  </div>    
   
 
   
     <!-- Segunda fila: dividida en dos columnas -->
-    <div class="p-col-12 p-md-6" >     
-     
-        <div class="p-grid p-fluid" >
-          <div class="p-col-12">
-            <div class="card" style="background-color: #EFEFEF;">
-              <div class="card">
-              <div class="p-col-12 text-center"> <h5>Busqueda del producto</h5></div>
-              <div class="p-field p-grid">
-                <div class="p-col-12 p-md-10">
-                  <app-input-busqueda (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>                
-                </div>
-              </div>
-            </div>
 
-              <div class="card"  >
-                <div class="p-col-12 text-center"> <h5>Registro Factura-Producto</h5></div>
-              <form [formGroup]="formGrp" (ngSubmit)="onSubmit()"  class="p-fluid p-pt-4">              
-
-                <div class="p-field p-grid">                
-                  <div class="p-col-12 p-md-12">                    
-                   <label for="no_parte">Parte seleccionada</label>
-                    <input
-                      id="noParte"
-                      type="text"
-                      pInputText
-                      formControlName="noParte"
-                      placeholder="No parte"
-                    /> 
-                    <div *ngIf="noParte.invalid || (noParte.dirty || noParte.touched)">
-                      <small class="p-error" *ngIf="noParte.errors?.required">Campo obligatorio</small>
-                  </div>                 
-                  </div>
-                </div>
-        
-                <div class="p-field p-grid">
-                  <div class="p-col-12 p-md-12">
-                    <label for="marca">Marca</label>
-                    <p-dropdown
-                      id="marca"
-                      [options]="listaMarca"
-                      formControlName="marca"
-                      optionLabel="sMarca"
-                      optionValue="nId"
-                      placeholder="Seleccione una marca"
-                      [showClear]="true"
-                    ></p-dropdown>
-                    <div *ngIf="marca.invalid || (marca.dirty || marca.touched)">
-                      <small class="p-error" *ngIf="marca.errors?.required">Campo obligatorio</small>
-                  </div>    
-                   
-                  </div>
-                </div>
-        
-                <div class="p-field p-grid">
-                  <div class="p-col-12 p-md-12">
-                    <label for="cantidad">Cantidad</label>
-                    <input
-                      id="cantidad"
-                      type="number"
-                      pInputText
-                      formControlName="cantidad"
-                      placeholder="Ingrese la cantidad"
-                    />
-                    <div *ngIf="cantidad.invalid || (cantidad.dirty || cantidad.touched)">
-                      <small class="p-error" *ngIf="cantidad.errors?.required">Campo obligatorio</small>
-                  </div>    
-                   
-                  </div>
-                </div>
-        
-                <div class="p-field p-grid">
-                  <div class="p-col-12 p-md-12">
-                     <label for="precio">precio</label>
-                    <input
-                      id="precio"
-                      type="text"
-                      pInputText
-                      formControlName="precio"
-                      placeholder="Ingrese el precio"
-                    />
-                    <div *ngIf="precio.invalid || (precio.dirty || precio.touched)">
-                      <small class="p-error" *ngIf="precio.errors?.required">Campo obligatorio</small>
-                  </div>    
-                  
-                  </div>
-                </div>
-                <div class="p-field p-grid">
-                  <div class="p-col-12 p-md-12">
-                    <label for="moneda">moneda</label>
-                    <input
-                      id="modenda"
-                      type="text"
-                      pInputText
-                      formControlName="moneda"
-                      placeholder="Moneda"
-                    />   
-                    <div *ngIf="moneda.invalid || (moneda.dirty || moneda.touched)">
-                      <small class="p-error" *ngIf="moneda.errors?.required">Campo obligatorio</small>
-                  </div>                   
-                  </div>
-                </div>
-        
-                <div class="p-field p-grid">
-                  <div class="p-col-12 p-md-2"></div>
-                  <div class="p-col-12 p-md-12">
-                    <button pButton type="submit" label="Guardar" [disabled]="formGrp.invalid"></button>
-                  </div>
-                </div>
-              </form>
-            </div>
-
-
-
-            </div>
-          
-        </div>
-      </div>
-    </div>
-    <div class="p-col-12 p-md-6">
+    <div class="p-col-12 p-md-12">
       <div class="card" style="background-color: #EFEFEF;">
-      <div class="card">
-      <div class="p-grid">
-        <div class="p-col-12 text-center"><h5>Datos de la factura</h5></div>
-        <div class="p-col-12 p-md-12 p-lg-12  ">  
-           <h5>Proveedor</h5>
-          <p>{{vwFacturaProductoBalance.tcProveedor.sRfc}} - {{vwFacturaProductoBalance.tcProveedor.sRazonSocial}}</p>
-         
-        </div>
-        <div class="p-col-6 p-md-6 p-lg-6 ">
-        <h5>Folio</h5>
-          <p>{{vwFacturaProductoBalance.sFolioFactura}}</p>
-        </div>        
-        <div class="p-col-6 p-md-6 p-lg-6">
-          <h5>Moneda</h5>
-          <p>{{vwFacturaProductoBalance.tcMoneda.sMoneda}}</p>
-        </div>
-      </div>
+        <div class="card">
+          <p-table
+              #dt
+              [value]="listaFacturaProducto"
+              [rows]="10"
+              [columns]="cols"
+              [paginator]="true"
+              [exportFilename]="'Productos Factura'"
+              [globalFilterFields]="[ 'tcProducto.sNoParte', 'tcProducto.sProducto', 'tcMarca.sMarca','nPrecioUnitario', 'nCantidad', 'dFechaRegistro', 'tcUsuario.sNombreUsuario']"
+              [rowHover]="true"
+              dataKey="nId"
+              styleClass="p-datatable-customers"
+              currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+              [showCurrentPageReport]="true"
+          > 
+          <ng-template pTemplate="caption">
+            <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+              <p-button label="Agregar Producto a la Factura" icon="pi pi-plus" iconPos="rigth" class="p-button-success" (click)="onFormProducto()"></p-button>
+
+              
+              <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  (input)="dt.filterGlobal($event.target.value, 'contains')"
+                  placeholder="Buscar Factura"
+                />
+              </span>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+                      <th pSortableColumn="tcProducto.sNoParte" class="text-center">No. Parte <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon></th>
+                      <th pSortableColumn="tcProducto.sProducto" class="text-center">Producto <p-sortIcon field="tcProducto.sProducto"></p-sortIcon></th>
+                      <th pSortableColumn="tcMarca.sMarca" class="text-center">Marca <p-sortIcon field="tcMarca.sMarca"></p-sortIcon></th>
+                      <th pSortableColumn="nPrecioUnitario" class="text-center">Precio Unitario <p-sortIcon field="nPrecioUnitario"></p-sortIcon></th>
+                      <th pSortableColumn="nCantidad" class="text-center">Cantidad <p-sortIcon field="nCantidad"></p-sortIcon></th>                                       
+                      <th pSortableColumn="dFechaRegistro" class="text-center">Fecha Registro <p-sortIcon field="dFechaRegistro"></p-sortIcon></th>                     
+                     <th pSortableColumn="tcUsuario.sNombreUsuario" class="text-center">Usuario Registra <p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon></th> 
+                     <th></th>   
+            </tr>
+          </ng-template>     
         
+              <ng-template pTemplate="body" let-producto>
+                  <tr>
+                      <td class="text-center"><span class="p-column-title">No. Parte</span>{{ producto.tcProducto.sNoParte }}</td>
+                      <td class="text-center"><span class="p-column-title">Producto</span>{{ producto.tcProducto.sProducto }}</td>
+                       <td class="text-center"><span class="p-column-title">Marca</span>{{ producto.tcMarca.sMarca}}</td>
+                      <td class="text-center"><span class="p-column-title">Precio Unitario</span>{{ producto.nPrecioUnitario | currency:'USD' }}</td>
+                      <td class="text-center"><span class="p-column-title">Cantidad</span>{{ producto.nCantidad }}</td>  
+                       <td class="text-center"><span class="p-column-title">Fecha Registro</span>{{ producto.dFechaRegistro | date:'short' }}</td>
+                      <td class="text-center"><span class="p-column-title">Usuario Registra</span>{{ producto.tcUsuario.sNombreUsuario }}</td>   
+                      <td class="text-center">
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2" (click)="editarProducto(producto)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="eliminarProducto(producto)"></button>
+                    </td>              
+                  </tr>
+              </ng-template>
+            
+          </p-table>
+          <div *ngIf="listaFacturaProducto.length>0">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="right">
+                    <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+                        class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                        
+                </ng-template>
+            </p-toolbar>
+        </div>
+         
+       
       </div>
     </div>
   </div>

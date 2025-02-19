@@ -80,6 +80,9 @@ static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerHistoriaIngresoProducto='/obtenerHistoriaIngresoProducto?';
 static obtenerHistorialStockProducto='/obtenerHistorialStockProducto?';
 static obtenerProductosCaneladosId='/obtenerProductosCancelaId?';
+/*Productos de la factura */
+static getProductosFacturaId='/facturacionProveedor/getProductoFacturaId?';
+
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
 static obtenerTotalBodegasIdProducto='/obtenerTotalBodegasIdProducto?';
 static obtenerVentaStockFecha='/obtenerVentasStockFecha?';

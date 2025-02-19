@@ -13,6 +13,7 @@ import { TwProductoCancela } from 'src/app/productos/model/TwProductoCancela';
 import { ProductoDescuentoDto } from 'src/app/productos/model/ProductoDescuentoDto';
 import { TwVentaProductoCancela } from 'src/app/productos/model/TwVentaProductoCancela';
 import { TwAjusteInventario } from 'src/app/productos/model/TwAjusteInventario';
+import { TwFacturaProveedorProducto } from './TwFacturaProveedorProducto';
 
 @Injectable({
   providedIn: 'root'
@@ -120,6 +121,11 @@ export class ProductoService {
   productosCanceladosId(nId: number){
     let url = environment.servicios.apiRefacFabela + locator.obtenerProductosCaneladosId+'id='+nId;
     return this.http.get<TwProductoCancela[]>(url);
+  }
+
+  getProductosFacturaId(nId: number){
+    let url = environment.servicios.apiRefacFabela + locator.getProductosFacturaId+'nIdFactura='+nId;
+    return this.http.get<TwFacturaProveedorProducto[]>(url);
   }
   
 

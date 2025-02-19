@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TcProducto } from 'src/app/productos/model/TcProducto';
 import { VwFacturaProductoBalance } from 'src/app/productos/model/VwFacturaProductoBalance';
 import { VwMetaProductoCompra } from 'src/app/productos/model/VwMetaProductoCompra';
@@ -11,6 +11,10 @@ import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
 import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TcMarca } from 'src/app/productos/model/TcMarca';
 import { disable } from 'colors';
+import { FormProductoFacturaComponent } from '../form-producto-factura/form-producto-factura.component';
+import { ProveedorService } from 'src/app/administracion/service/proveedor.service';
+import { ProductoService } from 'src/app/shared/service/producto.service';
+import { TwFacturaProveedorProducto } from 'src/app/shared/service/TwFacturaProveedorProducto';
 
 @Component({
   selector: 'app-form-registro-producto-factura',
@@ -22,85 +26,80 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
    modelContainer: ModelContainer;
    formGrp: FormGroup;
    vwFacturaProductoBalance:VwFacturaProductoBalance;
-   listaMarca:TcMarca[]; // Aquí puedes cargar la lista de marcas
+   listaFacturaProducto:TwFacturaProveedorProducto[];
+   cols: any[];
+   
 
-  constructor(private comprasService: ComprasService, public ref: DynamicDialogRef,
-      public config: DynamicDialogConfig, private _catalogoService:CatalogoService ) { 
+  constructor(private comprasService: ComprasService, public ref: DynamicDialogRef, public productoService:ProductoService,
+      public config: DynamicDialogConfig, private _catalogoService:CatalogoService,    public dialogService: DialogService, ) { 
       this.formGrp = new FormGroup({});
       this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
     this.vwFacturaProductoBalance=new VwFacturaProductoBalance() ;
-    this.listaMarca=[];
+    this.listaFacturaProducto=[];
+
+    this.cols = [
+      { field: 'tcProducto.sNoParte', header: 'No Parte' },
+      { field: 'tcProducto.sProducto', header: 'Producto' },
+      { field: 'tcMarca.sMarca', header: 'Marca' },
+      { field: 'nPrecioUnitario', header: 'Precio Unitario' },
+      { field: 'nCantidad', header: 'Cantidad' },
+      { field: 'dFechaRegistro', header: 'Fecha Registro' },
+      { field: 'tcUsuario.sNombreUsuario', header: 'Usuario Registra' }
+  ];
+    
       }
 
-  ngOnInit(): void {
-    
-   
-   this._initFormGroup();
-     
-      this._catalogoService.obtenerMarcas().subscribe(data=>{
-        this.listaMarca=data;
+  ngOnInit(): void {  
       
-      });
-
+    let modelContainer: ModelContainer = this.config.data;
+    this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData) ? new VwFacturaProductoBalance() : modelContainer.modelData as VwFacturaProductoBalance;
+    this.getProductosFactura();
   }
 
-  _initFormGroup(): void {
-      let modelContainer: ModelContainer = this.config.data;
-      this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData) ? new VwFacturaProductoBalance() : modelContainer.modelData as VwFacturaProductoBalance; 
-      this.formGrp = new FormGroup({
-        noParte: new FormControl({ value: '', disabled: true }, Validators.required),
-        marca: new FormControl({ value: '', disabled: true }, Validators.required),
-        cantidad: new FormControl({ value: '', disabled: true }, [Validators.required, Validators.min(1)]),
-        precio: new FormControl({ value: '', disabled: true }, [Validators.required , Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
-        moneda: new FormControl({ value: '', disabled: true }, Validators.required),
-    });
+  /*Recibe el Objeto VwFacturaProductoBalance */
+ 
+
+  
+  /*Este metodo muestra el formulario de registro un producto en la factura */
+    onFormProducto(){
+      const ref = this.dialogService.open(FormProductoFacturaComponent, {
+        data: new ModelContainer(ModeActionOnModel.CREATING, this.vwFacturaProductoBalance),
+        header: 'Formulario de registro producto-factura',
+         width: '70%',
+     height: '70%',
+     contentStyle: { 'max-height': '90%', 'overflow': 'auto' },
+     baseZIndex: 1000,
+     closable: true,
+     dismissableMask: true,
+     modal: true
+    
+    })
+    ref.onClose.subscribe(() =>{
+      ////console.log('data que se recibe al cerrar',data);
+      //this.obtenerBodegas(data.nIdProducto);
+    })
+
     }
 
-  onProductoSeleccionado(producto: TcProducto) {
-      
-   if(producto){
-    this.cantidad.enable();
-    this.precio.enable();
+    getProductosFactura(): void {
+      this.productoService.getProductosFacturaId(this.vwFacturaProductoBalance.nId).subscribe(data => {
+        this.listaFacturaProducto = data;
+        console.log(this.listaFacturaProducto);
+      });
+    }
+
+    editarProducto(twFacturaProveedorProducto:TwFacturaProveedorProducto){
+
+    }
+    eliminarProducto(twFacturaProveedorProducto:TwFacturaProveedorProducto){
+
+    }
 
 
-
-    this.marca.setValue(producto.nIdMarca);
-   this.noParte.setValue(producto.sNoParte+'-'+producto.sProducto);
-   this.moneda.setValue(producto.sMoneda);
-
-
-   }
    
 
 
-    }
-
-    onSubmit(): void {
-      if (this.formGrp.valid) {
-        const formData = this.formGrp.value;
-        console.log('Formulario enviado:', formData);
-        // Aquí llamas al servicio para enviar los datos
-       
-      }
-    }
-   
-
-
-    get noParte() {
-      return this.formGrp.get('noParte') as FormControl;
-    }
-    get marca() {
-      return this.formGrp.get('marca') as FormControl;
-    }
-    get cantidad() {
-      return this.formGrp.get('cantidad') as FormControl;
-    }
-    get precio() {
-      return this.formGrp.get('precio') as FormControl;
-    }
-    get moneda() {
-      return this.formGrp.get('moneda') as FormControl;
-    }
+    
         
 
 }

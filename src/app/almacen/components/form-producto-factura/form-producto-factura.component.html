@@ -1,0 +1,92 @@
+<div class="p-grid p-fluid">
+    <div class="p-col-12">
+        <div class="card" style="background-color: #EFEFEF;">
+            <div class="card">
+                <div class="p-col-12 text-center">
+                    <h5>Busqueda del producto</h5>
+                </div>
+                <div class="p-field p-grid">
+                    <div class="p-col-12 p-md-10">
+                        <app-input-busqueda
+                            (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="p-col-12 text-center">
+                    <h5>Producto seleccionado</h5>
+                </div>
+                <form [formGroup]="formGrp" (ngSubmit)="onSubmit()" class="p-fluid p-pt-4">
+
+                    <div class="p-field p-grid">
+                        <div class="p-col-12 p-md-12">
+                            <label for="no_parte">Parte seleccionada</label>
+                            <input id="noParte" type="text" pInputText formControlName="noParte"
+                                placeholder="No parte" />
+                            <div *ngIf="noParte.invalid || (noParte.dirty || noParte.touched)">
+                                <small class="p-error" *ngIf="noParte.errors?.required">Campo obligatorio</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-field p-grid">
+                        <div class="p-col-12 p-md-12">
+                            <label for="marca">Marca</label>
+                            <p-dropdown id="marca" [options]="listaMarca" formControlName="marca" optionLabel="sMarca"
+                                optionValue="nId" placeholder="Seleccione una marca" [showClear]="true"></p-dropdown>
+                            <div *ngIf="marca.invalid || (marca.dirty || marca.touched)">
+                                <small class="p-error" *ngIf="marca.errors?.required">Campo obligatorio</small>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="p-field p-grid">
+                        <div class="p-col-12 p-md-12">
+                            <label for="cantidad">Cantidad</label>
+                            <input id="cantidad" type="number" pInputText formControlName="cantidad"
+                                placeholder="Ingrese la cantidad" />
+                            <div *ngIf="cantidad.invalid || (cantidad.dirty || cantidad.touched)">
+                                <small class="p-error" *ngIf="cantidad.errors?.required">Campo obligatorio</small>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="p-field p-grid">
+                        <div class="p-col-12 p-md-12">
+                            <label for="precio">precio</label>
+                            <input id="precio" type="text" pInputText formControlName="precio"
+                                placeholder="Ingrese el precio" />
+                            <div *ngIf="precio.invalid || (precio.dirty || precio.touched)">
+                                <small class="p-error" *ngIf="precio.errors?.required">Campo obligatorio</small>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="p-field p-grid">
+                        <div class="p-col-12 p-md-12">
+                            <label for="moneda">moneda</label>
+                            <input id="modenda" type="text" pInputText formControlName="moneda" placeholder="Moneda" />
+                            <div *ngIf="moneda.invalid || (moneda.dirty || moneda.touched)">
+                                <small class="p-error" *ngIf="moneda.errors?.required">Campo obligatorio</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-field p-grid">
+                        <div class="p-col-12 p-md-2"></div>
+                        <div class="p-col-12 p-md-12">
+                            <button pButton type="submit" label="Guardar" [disabled]="formGrp.invalid"></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
