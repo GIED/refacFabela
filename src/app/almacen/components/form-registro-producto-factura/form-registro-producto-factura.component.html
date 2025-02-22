@@ -1,30 +1,23 @@
 <div class="p-grid">
-  <div class="p-col-12" > 
-    <div class="card" style="background-color: #EFEFEF;">
-      <div class="card">
+  <div class="p-col-12">
+    <div class="card p-p-2" style="background-color: #EFEFEF;">
+        <h5 class="p-text-center">Datos de la factura</h5>
         <div class="p-grid">
-          <div class="p-col-12 text-center"><h5>Datos de la factura</h5></div>
-          <div class="p-col-4 p-md-4 p-lg-4  ">  
-             <h5>Proveedor</h5>
-            <p>{{vwFacturaProductoBalance.tcProveedor.sRfc}} - {{vwFacturaProductoBalance.tcProveedor.sRazonSocial}}</p>
-           
-          </div>
-          <div class="p-col-4 p-md-4 p-lg-4 ">
-          <h5>Folio</h5>
-            <p>{{vwFacturaProductoBalance.sFolioFactura}}</p>
-          </div>        
-          <div class="p-col-4 p-md-4 p-lg-4">
-            <h5>Moneda</h5>
-            <p>{{vwFacturaProductoBalance.tcMoneda.sMoneda}}</p>
-          </div>
-
-          
+            <div class="p-col-4">
+                <h5>Proveedor</h5>
+                <p>{{vwFacturaProductoBalance.tcProveedor.sRfc}} - {{vwFacturaProductoBalance.tcProveedor.sRazonSocial}}</p>
+            </div>
+            <div class="p-col-4">
+                <h5>Folio</h5>
+                <p>{{vwFacturaProductoBalance.sFolioFactura}}</p>
+            </div>
+            <div class="p-col-4">
+                <h5>Moneda</h5>
+                <p>{{vwFacturaProductoBalance.tcMoneda.sMoneda}}</p>
+            </div>
         </div>
-
-      </div>
     </div>
-    
-  </div>    
+</div> 
   
 
   
@@ -48,21 +41,24 @@
               [showCurrentPageReport]="true"
           > 
           <ng-template pTemplate="caption">
-            <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-              <p-button label="Agregar Producto a la Factura" icon="pi pi-plus" iconPos="rigth" class="p-button-success" (click)="onFormProducto()"></p-button>
-
-              
-              <span class="p-input-icon-left">
-                <i class="pi pi-search"></i>
-                <input
-                  pInputText
-                  type="text"
-                  (input)="dt.filterGlobal($event.target.value, 'contains')"
-                  placeholder="Buscar Factura"
-                />
-              </span>
+            <div class="p-d-flex p-flex-column p-flex-md-row p-jc-between table-header">
+                <div class="p-col-12 p-md-6">
+                    <app-input-busqueda (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>
+                </div>
+                <div class="p-col-12 p-md-6 p-d-flex p-jc-end p-ai-center">
+                    <span class="p-input-icon-left p-fluid">
+                        <i class="pi pi-search"></i>
+                        <input
+                            pInputText
+                            type="text"
+                            (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Buscar Producto"
+                            class="p-inputtext"
+                        />
+                    </span>
+                </div>
             </div>
-          </ng-template>
+        </ng-template>
           <ng-template pTemplate="header">
             <tr>
                       <th pSortableColumn="tcProducto.sNoParte" class="text-center">No. Parte <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon></th>
@@ -83,7 +79,7 @@
                        <td class="text-center"><span class="p-column-title">Marca</span>{{ producto.tcMarca.sMarca}}</td>
                       <td class="text-center"><span class="p-column-title">Precio Unitario</span>{{ producto.nPrecioUnitario | currency:'USD' }}</td>
                       <td class="text-center"><span class="p-column-title">Cantidad</span>{{ producto.nCantidad }}</td>  
-                       <td class="text-center"><span class="p-column-title">Fecha Registro</span>{{ producto.dFechaRegistro | date:'short' }}</td>
+                       <td class="text-center"><span class="p-column-title">Fecha Registro</span>{{ producto.dFechaRegistro | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                       <td class="text-center"><span class="p-column-title">Usuario Registra</span>{{ producto.tcUsuario.sNombreUsuario }}</td>   
                       <td class="text-center">
                         <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2" (click)="editarProducto(producto)"></button>

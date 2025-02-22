@@ -72,6 +72,13 @@ static consultaNoParte= '/obtenerProductosNoParteLike?';
 static obtenerProductosNoParte= '/obtenerProductosNoParte?';
 static guardarProducto= '/guardarProducto';
 static guardarProductoCarritoPedido= '/guardarProductoCarritoCompraUsuario';
+
+/*Factura Proveedor Producto */
+
+static saveFacturaProducto= '/facturacionProveedor/saveProductoFactura';
+
+
+
 static guardarGasto= '/guardarGasto';
 static borrarGasto= '/borrarGasto';
 static guardarProductoGeneral= '/guardarProductoGeneral';

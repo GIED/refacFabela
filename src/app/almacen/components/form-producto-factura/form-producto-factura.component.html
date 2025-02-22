@@ -1,17 +1,7 @@
 <div class="p-grid p-fluid">
     <div class="p-col-12">
         <div class="card" style="background-color: #EFEFEF;">
-            <div class="card">
-                <div class="p-col-12 text-center">
-                    <h5>Busqueda del producto</h5>
-                </div>
-                <div class="p-field p-grid">
-                    <div class="p-col-12 p-md-10">
-                        <app-input-busqueda
-                            (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>
-                    </div>
-                </div>
-            </div>
+          
 
             <div class="card">
                 <div class="p-col-12 text-center">
@@ -76,9 +66,10 @@
                     </div>
 
                     <div class="p-field p-grid">
-                        <div class="p-col-12 p-md-2"></div>
-                        <div class="p-col-12 p-md-12">
-                            <button pButton type="submit" label="Guardar" [disabled]="formGrp.invalid"></button>
+                        <div class="p-col-12 p-d-flex p-jc-start">
+                            <span class="p-input-icon-left">
+                                <button pButton type="submit" label="Guardar" [disabled]="formGrp.invalid"></button>
+                            </span>
                         </div>
                     </div>
                 </form>

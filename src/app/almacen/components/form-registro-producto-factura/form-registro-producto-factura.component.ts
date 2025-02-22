@@ -15,6 +15,8 @@ import { FormProductoFacturaComponent } from '../form-producto-factura/form-prod
 import { ProveedorService } from 'src/app/administracion/service/proveedor.service';
 import { ProductoService } from 'src/app/shared/service/producto.service';
 import { TwFacturaProveedorProducto } from 'src/app/shared/service/TwFacturaProveedorProducto';
+import { ModelContainerData2 } from 'src/app/shared/utils/model-container-data2';
+import { TwFacturasProveedor } from '../../../productos/model/TwFacturasProveedor';
 
 @Component({
   selector: 'app-form-registro-producto-factura',
@@ -28,6 +30,8 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
    vwFacturaProductoBalance:VwFacturaProductoBalance;
    listaFacturaProducto:TwFacturaProveedorProducto[];
    cols: any[];
+   tcProductoSeleccionado:TcProducto;
+   twFacturaProveedorProducto:TwFacturaProveedorProducto
    
 
   constructor(private comprasService: ComprasService, public ref: DynamicDialogRef, public productoService:ProductoService,
@@ -56,14 +60,37 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     this.getProductosFactura();
   }
 
-  /*Recibe el Objeto VwFacturaProductoBalance */
+  onProductoSeleccionado(producto: TcProducto) {
+
+  this.tcProductoSeleccionado=producto;
+  this.onFormProducto();
+
+
+  }
  
 
+  private buscarProductoExistente(productoSeleccionado:TcProducto): TwFacturaProveedorProducto | null {
+    const producto = this.listaFacturaProducto.find(producto => producto.tcProducto.nId === productoSeleccionado.nId);
+    return producto ? producto : null;
+  }
   
   /*Este metodo muestra el formulario de registro un producto en la factura */
     onFormProducto(){
+      
+      if(this.buscarProductoExistente(this.tcProductoSeleccionado)){
+        console.log(this.buscarProductoExistente(this.tcProductoSeleccionado));
+
+      }
+      else{
+        console.log('no lo encontre')
+
+      }
+
+
+
+
       const ref = this.dialogService.open(FormProductoFacturaComponent, {
-        data: new ModelContainer(ModeActionOnModel.CREATING, this.vwFacturaProductoBalance),
+        data: new ModelContainerData2(ModeActionOnModel.CREATING, this.vwFacturaProductoBalance, this.tcProductoSeleccionado),
         header: 'Formulario de registro producto-factura',
          width: '70%',
      height: '70%',
@@ -75,8 +102,7 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     
     })
     ref.onClose.subscribe(() =>{
-      ////console.log('data que se recibe al cerrar',data);
-      //this.obtenerBodegas(data.nIdProducto);
+      this.getProductosFactura();
     })
 
     }
