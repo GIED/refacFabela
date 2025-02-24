@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { FacturasProveedorComponent } from 'src/app/administracion/pages/facturas-proveedor/facturas-proveedor.component';
 import { TcMarca } from 'src/app/productos/model/TcMarca';
 import { TcProducto } from 'src/app/productos/model/TcProducto';
 import { VwFacturaProductoBalance } from 'src/app/productos/model/VwFacturaProductoBalance';
@@ -25,68 +24,116 @@ export class FormProductoFacturaComponent implements OnInit {
   formGrp: FormGroup;
   vwFacturaProductoBalance: VwFacturaProductoBalance;
   tcProductoSeleccionado: TcProducto;
-  listaMarca: TcMarca[];
-  twFacturaProveedorProducto:TwFacturaProveedorProducto;
-  constructor(private _catalogoService: CatalogoService, public config: DynamicDialogConfig, public ref: DynamicDialogRef, 
-    public dialogService: DialogService, public _comprasService: ComprasService, private tokenService: TokenService, private _fecha:FechaService) {
+  listaMarca: TcMarca[] = [];
+  twFacturaProveedorProducto: TwFacturaProveedorProducto;
+  twFacturaProveedorProductoEdita: TwFacturaProveedorProducto;
+
+  modo: string;
+
+  constructor(
+    private catalogoService: CatalogoService,
+    public config: DynamicDialogConfig,
+    public ref: DynamicDialogRef,
+    public dialogService: DialogService,
+    private comprasService: ComprasService,
+    private tokenService: TokenService,
+    private fechaService: FechaService
+  ) {
     this.formGrp = new FormGroup({});
     this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
     this.vwFacturaProductoBalance = new VwFacturaProductoBalance();
-    this.listaMarca = []
-    this.tcProductoSeleccionado=new TcProducto();
-    this.twFacturaProveedorProducto=new TwFacturaProveedorProducto();
+    this.tcProductoSeleccionado = new TcProducto();
+    this.twFacturaProveedorProducto = new TwFacturaProveedorProducto();
+    this.twFacturaProveedorProductoEdita = new TwFacturaProveedorProducto();
+    this.modo = '';
   }
 
   ngOnInit(): void {
-
-    this._initFormGroup();
-
-    this._catalogoService.obtenerMarcas().subscribe(data => {
+    this.initFormGroup();
+    this.catalogoService.obtenerMarcas().subscribe(data => {
       this.listaMarca = data;
-
     });
   }
 
-  _initFormGroup(): void {
-    let modelContainer: ModelContainerData2 = this.config.data;
-    this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData1) ? new VwFacturaProductoBalance() : modelContainer.modelData1 as VwFacturaProductoBalance;
-    this.tcProductoSeleccionado = ObjectUtils.isEmpty(modelContainer.modelData2) ? new TcProducto() : modelContainer.modelData2 as TcProducto;
+  private initFormGroup(): void {
+    const modelContainer: ModelContainerData2 = this.config.data;
+    this.modo = modelContainer.modeAction;
 
+    if (this.modo === 'CREATE') {
+      this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData1) ? new VwFacturaProductoBalance() : modelContainer.modelData1 as VwFacturaProductoBalance;
+      this.tcProductoSeleccionado = ObjectUtils.isEmpty(modelContainer.modelData2) ? new TcProducto() : modelContainer.modelData2 as TcProducto;
+      console.log('Entre a crear',  this.vwFacturaProductoBalance, this.tcProductoSeleccionado);
+
+      if (this.vwFacturaProductoBalance && this.tcProductoSeleccionado) {
+        this.createFormGroup();
+      }
+    }
+
+    if (this.modo === 'EDIT') {
+      
+      this.twFacturaProveedorProductoEdita = ObjectUtils.isEmpty(modelContainer.modelData1) ? new TwFacturaProveedorProducto() : modelContainer.modelData1 as TwFacturaProveedorProducto;
+      this.tcProductoSeleccionado = ObjectUtils.isEmpty(modelContainer.modelData2) ? new TcProducto() : modelContainer.modelData2 as TcProducto;
+      console.log('Entre a Editar',  this.twFacturaProveedorProducto, this.tcProductoSeleccionado);
+      if (this.twFacturaProveedorProductoEdita && this.tcProductoSeleccionado) {
+        this.editFormGroup();
+      }
+    }
+  }
+
+  private createFormGroup(): void {
     this.formGrp = new FormGroup({
       noParte: new FormControl({ value: this.tcProductoSeleccionado.sNoParte, disabled: true }, Validators.required),
       marca: new FormControl({ value: this.tcProductoSeleccionado.nIdMarca, disabled: true }, Validators.required),
-      cantidad: new FormControl({ value: '' }, [Validators.required, Validators.min(1)]),
-      precio: new FormControl({ value: '' }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
+      cantidad: new FormControl(null, [Validators.required, Validators.min(1)]),
+      precio: new FormControl(null, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
       moneda: new FormControl({ value: this.vwFacturaProductoBalance.tcMoneda.sMoneda, disabled: true }, Validators.required),
     });
   }
 
+  private editFormGroup(): void {
+
+ 
+    this.formGrp = new FormGroup({
+      noParte: new FormControl({ value: this.twFacturaProveedorProductoEdita.tcProducto.sNoParte, disabled: true }, Validators.required),
+      marca: new FormControl({ value: this.twFacturaProveedorProductoEdita.nIdMarca, disabled: true }, Validators.required),
+      cantidad: new FormControl({ value: this.twFacturaProveedorProductoEdita.nCantidad, disabled: true }, [Validators.required, Validators.min(1)]),
+      precio: new FormControl({ value: this.twFacturaProveedorProductoEdita.nPrecioUnitario, disabled: true }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
+      moneda: new FormControl({ value: this.tcProductoSeleccionado.sMoneda, disabled: true }, Validators.required),
+    });
+  }
 
   onSubmit(): void {
     if (this.formGrp.valid) {
-      const formData = this.formGrp.value;
-     this.twFacturaProveedorProducto.nIdFacturaProveedor=this.vwFacturaProductoBalance.nId;
-     this.twFacturaProveedorProducto.nCantidad=this.formGrp.get('cantidad')?.value;  
-     this.twFacturaProveedorProducto.nPrecioUnitario=this.formGrp.get('precio')?.value;
-     this.twFacturaProveedorProducto.nIdMarca=this.tcProductoSeleccionado.nIdMarca;
-     this.twFacturaProveedorProducto.nEstatus=1;
-     this.twFacturaProveedorProducto.nIdProducto=this.tcProductoSeleccionado.nId;
-     this.twFacturaProveedorProducto.nIdUsuario=this.tokenService.getIdUser();     
-     this.twFacturaProveedorProducto.dFechaRegistro=this._fecha.obtenerFechaActualMexicoCentro();
+      if (this.modo === 'CREATE') {
+        this.prepareCreateData();
+      }
 
-     console.log('esto es lo que voy a guardar', this.twFacturaProveedorProducto)
+      if (this.modo === 'EDIT') {
+        this.prepareEditData();
+      }
 
-     this._comprasService.saveProductoFactura(this.twFacturaProveedorProducto).subscribe(data=>{{
-      
-      console.log('esto es lo que guarde', data);
-      this.ref.close();
-
-     }})
-
-
+      this.comprasService.saveProductoFactura(this.twFacturaProveedorProducto).subscribe(data => {
+        console.log('esto es lo que guarde', data);
+        this.ref.close();
+      });
     }
+  }
 
+  private prepareCreateData(): void {
+    this.twFacturaProveedorProducto.nIdFacturaProveedor = this.vwFacturaProductoBalance.nId;
+    this.twFacturaProveedorProducto.nCantidad = this.formGrp.get('cantidad')?.value;
+    this.twFacturaProveedorProducto.nPrecioUnitario = this.formGrp.get('precio')?.value;
+    this.twFacturaProveedorProducto.nIdMarca = this.tcProductoSeleccionado.nIdMarca;
+    this.twFacturaProveedorProducto.nEstatus = 1;
+    this.twFacturaProveedorProducto.nIdProducto = this.tcProductoSeleccionado.nId;
+    this.twFacturaProveedorProducto.nIdUsuario = this.tokenService.getIdUser();
+    this.twFacturaProveedorProducto.dFechaRegistro = this.fechaService.obtenerFechaActualMexicoCentro();
+  }
 
+  private prepareEditData(): void {
+    this.twFacturaProveedorProductoEdita.nCantidad = this.formGrp.get('cantidad')?.value;
+    this.twFacturaProveedorProductoEdita.nPrecioUnitario = this.formGrp.get('precio')?.value;
+    this.twFacturaProveedorProducto=this.twFacturaProveedorProductoEdita;
   }
 
   get noParte() {

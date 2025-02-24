@@ -1,22 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TcProducto } from 'src/app/productos/model/TcProducto';
 import { VwFacturaProductoBalance } from 'src/app/productos/model/VwFacturaProductoBalance';
-import { VwMetaProductoCompra } from 'src/app/productos/model/VwMetaProductoCompra';
 import { ComprasService } from 'src/app/shared/service/compras.service';
 import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
 import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
-import { CatalogoService } from '../../../shared/service/catalogo.service';
+import { CatalogoService } from 'src/app/shared/service/catalogo.service';
 import { TcMarca } from 'src/app/productos/model/TcMarca';
-import { disable } from 'colors';
 import { FormProductoFacturaComponent } from '../form-producto-factura/form-producto-factura.component';
-import { ProveedorService } from 'src/app/administracion/service/proveedor.service';
 import { ProductoService } from 'src/app/shared/service/producto.service';
 import { TwFacturaProveedorProducto } from 'src/app/shared/service/TwFacturaProveedorProducto';
 import { ModelContainerData2 } from 'src/app/shared/utils/model-container-data2';
-import { TwFacturasProveedor } from '../../../productos/model/TwFacturasProveedor';
 
 @Component({
   selector: 'app-form-registro-producto-factura',
@@ -25,22 +21,25 @@ import { TwFacturasProveedor } from '../../../productos/model/TwFacturasProveedo
 })
 export class FormRegistroProductoFacturaComponent implements OnInit {
 
-   modelContainer: ModelContainer;
-   formGrp: FormGroup;
-   vwFacturaProductoBalance:VwFacturaProductoBalance;
-   listaFacturaProducto:TwFacturaProveedorProducto[];
-   cols: any[];
-   tcProductoSeleccionado:TcProducto;
-   twFacturaProveedorProducto:TwFacturaProveedorProducto
-   
+  modelContainer: ModelContainer;
+  formGrp: FormGroup;
+  vwFacturaProductoBalance: VwFacturaProductoBalance;
+  listaFacturaProducto: TwFacturaProveedorProducto[] = [];
+  cols: any[];
+  tcProductoSeleccionado: TcProducto;
+  twFacturaProveedorProducto: TwFacturaProveedorProducto;
 
-  constructor(private comprasService: ComprasService, public ref: DynamicDialogRef, public productoService:ProductoService,
-      public config: DynamicDialogConfig, private _catalogoService:CatalogoService,    public dialogService: DialogService, ) { 
-      this.formGrp = new FormGroup({});
-      this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
-    this.vwFacturaProductoBalance=new VwFacturaProductoBalance() ;
-    this.listaFacturaProducto=[];
-
+  constructor(
+    private comprasService: ComprasService,
+    public ref: DynamicDialogRef,
+    public productoService: ProductoService,
+    public config: DynamicDialogConfig,
+    private catalogoService: CatalogoService,
+    public dialogService: DialogService
+  ) {
+    this.formGrp = new FormGroup({});
+    this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
+    this.vwFacturaProductoBalance = new VwFacturaProductoBalance();
     this.cols = [
       { field: 'tcProducto.sNoParte', header: 'No Parte' },
       { field: 'tcProducto.sProducto', header: 'Producto' },
@@ -49,83 +48,69 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
       { field: 'nCantidad', header: 'Cantidad' },
       { field: 'dFechaRegistro', header: 'Fecha Registro' },
       { field: 'tcUsuario.sNombreUsuario', header: 'Usuario Registra' }
-  ];
-    
-      }
+    ];
+  }
 
-  ngOnInit(): void {  
-      
-    let modelContainer: ModelContainer = this.config.data;
+  ngOnInit(): void {
+    const modelContainer: ModelContainer = this.config.data;
     this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData) ? new VwFacturaProductoBalance() : modelContainer.modelData as VwFacturaProductoBalance;
     this.getProductosFactura();
   }
 
-  onProductoSeleccionado(producto: TcProducto) {
-
-  this.tcProductoSeleccionado=producto;
-  this.onFormProducto();
-
-
+  onProductoSeleccionado(producto: TcProducto): void {
+    this.tcProductoSeleccionado = producto;
+    this.onFormProducto();
   }
- 
 
-  private buscarProductoExistente(productoSeleccionado:TcProducto): TwFacturaProveedorProducto | null {
-    const producto = this.listaFacturaProducto.find(producto => producto.tcProducto.nId === productoSeleccionado.nId);
-    return producto ? producto : null;
+  private buscarProductoExistente(productoSeleccionado: TcProducto): TwFacturaProveedorProducto | null {
+    return this.listaFacturaProducto.find(producto => producto.tcProducto.nId === productoSeleccionado.nId) || null;
   }
-  
-  /*Este metodo muestra el formulario de registro un producto en la factura */
-    onFormProducto(){
-      
-      if(this.buscarProductoExistente(this.tcProductoSeleccionado)){
-        console.log(this.buscarProductoExistente(this.tcProductoSeleccionado));
 
-      }
-      else{
-        console.log('no lo encontre')
+  onFormProducto(): void {
 
-      }
+    console.log('este existe en la lista',this.buscarProductoExistente(this.tcProductoSeleccionado));
+    const model = this.buscarProductoExistente(this.tcProductoSeleccionado)
+      ? new ModelContainerData2(ModeActionOnModel.EDITING,  this.twFacturaProveedorProducto, this.tcProductoSeleccionado)
+      : new ModelContainerData2(ModeActionOnModel.CREATING, this.vwFacturaProductoBalance, this.tcProductoSeleccionado);
 
+    const ref = this.dialogService.open(FormProductoFacturaComponent, {
+      data: model,
+      header: 'Formulario de registro producto-factura',
+      width: '70%',
+      height: '70%',
+      contentStyle: { 'max-height': '90%', 'overflow': 'auto' },
+      baseZIndex: 1000,
+      closable: true,
+      dismissableMask: true,
+      modal: true
+    });
 
-
-
-      const ref = this.dialogService.open(FormProductoFacturaComponent, {
-        data: new ModelContainerData2(ModeActionOnModel.CREATING, this.vwFacturaProductoBalance, this.tcProductoSeleccionado),
-        header: 'Formulario de registro producto-factura',
-         width: '70%',
-     height: '70%',
-     contentStyle: { 'max-height': '90%', 'overflow': 'auto' },
-     baseZIndex: 1000,
-     closable: true,
-     dismissableMask: true,
-     modal: true
-    
-    })
-    ref.onClose.subscribe(() =>{
+    ref.onClose.subscribe(() => {
       this.getProductosFactura();
-    })
+    });
+  }
 
+  getProductosFactura(): void {
+    this.productoService.getProductosFacturaId(this.vwFacturaProductoBalance.nId).subscribe(data => {
+      this.listaFacturaProducto = data;
+      console.log(this.listaFacturaProducto);
+    });
+  }
+
+  editarProducto(twFacturaProveedorProducto: TwFacturaProveedorProducto): void {
+
+
+
+    this.tcProductoSeleccionado=twFacturaProveedorProducto.tcProducto;
+    this.twFacturaProveedorProducto=twFacturaProveedorProducto;
+
+    if(this.tcProductoSeleccionado || this.twFacturaProveedorProducto ){
+       this.onFormProducto();
     }
-
-    getProductosFactura(): void {
-      this.productoService.getProductosFacturaId(this.vwFacturaProductoBalance.nId).subscribe(data => {
-        this.listaFacturaProducto = data;
-        console.log(this.listaFacturaProducto);
-      });
-    }
-
-    editarProducto(twFacturaProveedorProducto:TwFacturaProveedorProducto){
-
-    }
-    eliminarProducto(twFacturaProveedorProducto:TwFacturaProveedorProducto){
-
-    }
-
-
    
+  }
 
-
-    
-        
-
+  eliminarProducto(twFacturaProveedorProducto: TwFacturaProveedorProducto): void {
+    // Implementar lógica de eliminación
+  }
 }
