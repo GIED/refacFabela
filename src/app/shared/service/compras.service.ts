@@ -48,6 +48,11 @@ export class ComprasService {
     let url = environment.servicios.apiRefacFabela + locator.saveFacturaProducto;
     return this.http.post<TwFacturaProveedorProducto>(url,twFacturaProveedorProducto);
   }
+
+  daleteProductoFactura(nId: number){
+    let url= environment.servicios.apiRefacFabela + locator.deleteFacturaProducto+'nId='+nId;
+    return this.http.get<String>(url);
+  }
   
 
 

@@ -13,6 +13,7 @@ import { FormProductoFacturaComponent } from '../form-producto-factura/form-prod
 import { ProductoService } from 'src/app/shared/service/producto.service';
 import { TwFacturaProveedorProducto } from 'src/app/shared/service/TwFacturaProveedorProducto';
 import { ModelContainerData2 } from 'src/app/shared/utils/model-container-data2';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-form-registro-producto-factura',
@@ -34,8 +35,9 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     public ref: DynamicDialogRef,
     public productoService: ProductoService,
     public config: DynamicDialogConfig,
-    private catalogoService: CatalogoService,
-    public dialogService: DialogService
+    public dialogService: DialogService,
+    private confirmationService: ConfirmationService,
+     private messageService: MessageService
   ) {
     this.formGrp = new FormGroup({});
     this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
@@ -59,7 +61,21 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
 
   onProductoSeleccionado(producto: TcProducto): void {
     this.tcProductoSeleccionado = producto;
-    this.onFormProducto();
+    /*Consulta si el producto ya esta agregado */
+    if (this.buscarProductoExistente(producto)) {
+
+      this.twFacturaProveedorProducto = this.buscarProductoExistente(producto);
+      this.confirm();
+
+    }
+    else {
+
+      this.onFormProducto();
+
+    }
+
+
+
   }
 
   private buscarProductoExistente(productoSeleccionado: TcProducto): TwFacturaProveedorProducto | null {
@@ -68,9 +84,9 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
 
   onFormProducto(): void {
 
-    console.log('este existe en la lista',this.buscarProductoExistente(this.tcProductoSeleccionado));
+    console.log('este existe en la lista', this.buscarProductoExistente(this.tcProductoSeleccionado));
     const model = this.buscarProductoExistente(this.tcProductoSeleccionado)
-      ? new ModelContainerData2(ModeActionOnModel.EDITING,  this.twFacturaProveedorProducto, this.tcProductoSeleccionado)
+      ? new ModelContainerData2(ModeActionOnModel.EDITING, this.twFacturaProveedorProducto, this.tcProductoSeleccionado)
       : new ModelContainerData2(ModeActionOnModel.CREATING, this.vwFacturaProductoBalance, this.tcProductoSeleccionado);
 
     const ref = this.dialogService.open(FormProductoFacturaComponent, {
@@ -99,18 +115,50 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
 
   editarProducto(twFacturaProveedorProducto: TwFacturaProveedorProducto): void {
 
+    this.tcProductoSeleccionado = twFacturaProveedorProducto.tcProducto;
+    this.twFacturaProveedorProducto = twFacturaProveedorProducto;
 
-
-    this.tcProductoSeleccionado=twFacturaProveedorProducto.tcProducto;
-    this.twFacturaProveedorProducto=twFacturaProveedorProducto;
-
-    if(this.tcProductoSeleccionado || this.twFacturaProveedorProducto ){
-       this.onFormProducto();
+    if (this.tcProductoSeleccionado || this.twFacturaProveedorProducto) {
+      this.onFormProducto();
     }
-   
+
   }
 
-  eliminarProducto(twFacturaProveedorProducto: TwFacturaProveedorProducto): void {
-    // Implementar lógica de eliminación
+  
+
+
+  confirmDelete(twFacturaProveedorProducto: TwFacturaProveedorProducto) {
+    this.confirmationService.confirm({
+      message: '¿Deseas eliminar el producto?',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.comprasService.daleteProductoFactura(twFacturaProveedorProducto.nId).subscribe(data=>{
+          this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Eliminado con éxito', life: 3000 });
+          this.getProductosFactura();
+        })
+      },
+      reject: () => {
+
+      }
+    });
+  }
+
+  confirm() {
+    this.confirmationService.confirm({
+      message: '¿El producto ya se encuantra en la lista, deseas actualizarlo?',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.editarProducto(this.twFacturaProveedorProducto);
+      },
+      reject: () => {
+
+      }
+    });
   }
 }

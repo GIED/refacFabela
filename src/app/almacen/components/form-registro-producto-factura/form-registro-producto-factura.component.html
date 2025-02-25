@@ -83,7 +83,7 @@
                       <td class="text-center"><span class="p-column-title">Usuario Registra</span>{{ producto.tcUsuario.sNombreUsuario }}</td>   
                       <td class="text-center">
                         <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2" (click)="editarProducto(producto)"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="eliminarProducto(producto)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(producto)"></button>
                     </td>              
                   </tr>
               </ng-template>
@@ -104,3 +104,4 @@
     </div>
   </div>
   </div>
+  <p-confirmDialog></p-confirmDialog>

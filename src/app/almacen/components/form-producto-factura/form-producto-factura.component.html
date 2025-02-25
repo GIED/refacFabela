@@ -35,24 +35,20 @@
                     <div class="p-field p-grid">
                         <div class="p-col-12 p-md-12">
                             <label for="cantidad">Cantidad</label>
-                            <input id="cantidad" type="number" pInputText formControlName="cantidad"
-                                placeholder="Ingrese la cantidad" />
+                            <p-inputNumber id="cantidad" formControlName="cantidad" mode="decimal" minFractionDigits="0" maxFractionDigits="0" placeholder="Ingrese la cantidad"></p-inputNumber>
                             <div *ngIf="cantidad.invalid || (cantidad.dirty || cantidad.touched)">
                                 <small class="p-error" *ngIf="cantidad.errors?.required">Campo obligatorio</small>
                             </div>
-
                         </div>
                     </div>
-
+                    
                     <div class="p-field p-grid">
                         <div class="p-col-12 p-md-12">
-                            <label for="precio">precio</label>
-                            <input id="precio" type="text" pInputText formControlName="precio"
-                                placeholder="Ingrese el precio" />
+                            <label for="precio">Precio</label>
+                            <p-inputNumber id="precio" formControlName="precio" mode="currency" currency="MXN" locale="es-MX" placeholder="Ingrese el precio"></p-inputNumber>
                             <div *ngIf="precio.invalid || (precio.dirty || precio.touched)">
                                 <small class="p-error" *ngIf="precio.errors?.required">Campo obligatorio</small>
                             </div>
-
                         </div>
                     </div>
                     <div class="p-field p-grid">

@@ -13,6 +13,7 @@ import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
 import { TwFacturaProveedorProducto } from '../../../shared/service/TwFacturaProveedorProducto';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { FechaService } from 'src/app/shared/service/fecha.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-form-producto-factura',
@@ -37,7 +38,8 @@ export class FormProductoFacturaComponent implements OnInit {
     public dialogService: DialogService,
     private comprasService: ComprasService,
     private tokenService: TokenService,
-    private fechaService: FechaService
+    private fechaService: FechaService,
+    private messageService: MessageService
   ) {
     this.formGrp = new FormGroup({});
     this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
@@ -62,7 +64,7 @@ export class FormProductoFacturaComponent implements OnInit {
     if (this.modo === 'CREATE') {
       this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData1) ? new VwFacturaProductoBalance() : modelContainer.modelData1 as VwFacturaProductoBalance;
       this.tcProductoSeleccionado = ObjectUtils.isEmpty(modelContainer.modelData2) ? new TcProducto() : modelContainer.modelData2 as TcProducto;
-      console.log('Entre a crear',  this.vwFacturaProductoBalance, this.tcProductoSeleccionado);
+      
 
       if (this.vwFacturaProductoBalance && this.tcProductoSeleccionado) {
         this.createFormGroup();
@@ -73,7 +75,7 @@ export class FormProductoFacturaComponent implements OnInit {
       
       this.twFacturaProveedorProductoEdita = ObjectUtils.isEmpty(modelContainer.modelData1) ? new TwFacturaProveedorProducto() : modelContainer.modelData1 as TwFacturaProveedorProducto;
       this.tcProductoSeleccionado = ObjectUtils.isEmpty(modelContainer.modelData2) ? new TcProducto() : modelContainer.modelData2 as TcProducto;
-      console.log('Entre a Editar',  this.twFacturaProveedorProducto, this.tcProductoSeleccionado);
+     
       if (this.twFacturaProveedorProductoEdita && this.tcProductoSeleccionado) {
         this.editFormGroup();
       }
@@ -91,13 +93,13 @@ export class FormProductoFacturaComponent implements OnInit {
   }
 
   private editFormGroup(): void {
-
+    console.log(this.twFacturaProveedorProductoEdita);
  
     this.formGrp = new FormGroup({
       noParte: new FormControl({ value: this.twFacturaProveedorProductoEdita.tcProducto.sNoParte, disabled: true }, Validators.required),
       marca: new FormControl({ value: this.twFacturaProveedorProductoEdita.nIdMarca, disabled: true }, Validators.required),
-      cantidad: new FormControl({ value: this.twFacturaProveedorProductoEdita.nCantidad, disabled: true }, [Validators.required, Validators.min(1)]),
-      precio: new FormControl({ value: this.twFacturaProveedorProductoEdita.nPrecioUnitario, disabled: true }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
+      cantidad: new FormControl({ value: this.twFacturaProveedorProductoEdita.nCantidad, disabled: false }, [Validators.required, Validators.min(1)]),
+      precio: new FormControl({ value: this.twFacturaProveedorProductoEdita.nPrecioUnitario, disabled: false }, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
       moneda: new FormControl({ value: this.tcProductoSeleccionado.sMoneda, disabled: true }, Validators.required),
     });
   }
@@ -112,10 +114,16 @@ export class FormProductoFacturaComponent implements OnInit {
         this.prepareEditData();
       }
 
-      this.comprasService.saveProductoFactura(this.twFacturaProveedorProducto).subscribe(data => {
-        console.log('esto es lo que guarde', data);
-        this.ref.close();
-      });
+      this.comprasService.saveProductoFactura(this.twFacturaProveedorProducto).subscribe(
+        data => {
+          this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Guardado con éxito', life: 3000 });
+          this.ref.close();
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un error al guardar', life: 3000 });
+          this.ref.close();
+        }
+      );
     }
   }
 
@@ -130,7 +138,7 @@ export class FormProductoFacturaComponent implements OnInit {
     this.twFacturaProveedorProducto.dFechaRegistro = this.fechaService.obtenerFechaActualMexicoCentro();
   }
 
-  private prepareEditData(): void {
+  private prepareEditData(): void {    
     this.twFacturaProveedorProductoEdita.nCantidad = this.formGrp.get('cantidad')?.value;
     this.twFacturaProveedorProductoEdita.nPrecioUnitario = this.formGrp.get('precio')?.value;
     this.twFacturaProveedorProducto=this.twFacturaProveedorProductoEdita;

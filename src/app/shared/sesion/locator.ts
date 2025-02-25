@@ -223,6 +223,9 @@ static consultaVenCotProdAnoDto='/ventaCotizaProdAno?';
 static consultaCarritoPedido='/productosCarritoCompraUsuario?';
 static deleteCarritoPedidoProducto='/borrarProductoCarritoCompraUsuario?';
 
+static deleteFacturaProducto='/facturacionProveedor/deleteProductoFactura?';
+
+
 
 
 }
