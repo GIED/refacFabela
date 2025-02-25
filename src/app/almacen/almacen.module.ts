@@ -20,6 +20,7 @@ import { AjusteInventarioComponent } from './components/ajuste-inventario/ajuste
 import { RegistroProductoFacturaComponent } from './pages/registro-producto-factura/registro-producto-factura.component';
 import { FormRegistroProductoFacturaComponent } from './components/form-registro-producto-factura/form-registro-producto-factura.component';
 import { FormProductoFacturaComponent } from './components/form-producto-factura/form-producto-factura.component';
+import { FormIngresoProductoComponent } from './components/form-ingreso-producto/form-ingreso-producto.component';
 
 
 
@@ -35,7 +36,8 @@ import { FormProductoFacturaComponent } from './components/form-producto-factura
     AjusteInventarioComponent,
     RegistroProductoFacturaComponent,
     FormRegistroProductoFacturaComponent,
-    FormProductoFacturaComponent
+    FormProductoFacturaComponent,
+    FormIngresoProductoComponent
   ],
   imports: [
     AlmacenRoutingModule,

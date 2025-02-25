@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {  FormGroup } from '@angular/forms';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TcProducto } from 'src/app/productos/model/TcProducto';
 import { VwFacturaProductoBalance } from 'src/app/productos/model/VwFacturaProductoBalance';
@@ -7,13 +7,12 @@ import { ComprasService } from 'src/app/shared/service/compras.service';
 import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
 import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
-import { CatalogoService } from 'src/app/shared/service/catalogo.service';
-import { TcMarca } from 'src/app/productos/model/TcMarca';
 import { FormProductoFacturaComponent } from '../form-producto-factura/form-producto-factura.component';
 import { ProductoService } from 'src/app/shared/service/producto.service';
 import { TwFacturaProveedorProducto } from 'src/app/shared/service/TwFacturaProveedorProducto';
 import { ModelContainerData2 } from 'src/app/shared/utils/model-container-data2';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { FormIngresoProductoComponent } from '../form-ingreso-producto/form-ingreso-producto.component';
 
 @Component({
   selector: 'app-form-registro-producto-factura',
@@ -91,6 +90,27 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     const ref = this.dialogService.open(FormProductoFacturaComponent, {
       data: model,
       header: 'Formulario de registro producto-factura',
+      width: '70%',
+      height: '70%',
+      contentStyle: { 'max-height': '90%', 'overflow': 'auto' },
+      baseZIndex: 1000,
+      closable: true,
+      dismissableMask: true,
+      modal: true
+    });
+
+    ref.onClose.subscribe(() => {
+      this.getProductosFactura();
+    });
+  }
+
+
+  onFormProductoIngreso(twFacturaProveedorProducto: TwFacturaProveedorProducto) {
+     
+    const model =  new ModelContainer(ModeActionOnModel.CREATING, twFacturaProveedorProducto);
+    const ref = this.dialogService.open(FormIngresoProductoComponent, {
+      data: model,
+      header: 'Formulario de registro de ingreso de producto',
       width: '70%',
       height: '70%',
       contentStyle: { 'max-height': '90%', 'overflow': 'auto' },

@@ -1,0 +1,84 @@
+
+
+
+<div class="p-grid">
+    <div class="p-col-4">
+        <div class="p-grid p-dir-col">
+            <div class="p-col">
+                <div class="card" style="background-color: #EFEFEF;">
+                    <p-panel header="Datos de la Venta">
+                        <div>No. Parte: <strong>{{twFacturaProveedorProducto.tcProducto.sNoParte}}</strong></div>
+                        <div>Producto: <strong>{{twFacturaProveedorProducto.tcProducto.sProducto}}</strong></div>
+                        <div>Marca: <strong>{{twFacturaProveedorProducto.tcMarca.sMarca}}</strong></div>
+                        <div>Total Producto Factura: <strong>{{twFacturaProveedorProducto.nCantidad}}</strong></div>
+                        <div>Total Ingresado: <strong>0</strong></div>
+                        <div>Total por Ingresar: <strong>0</strong></div>
+                    </p-panel>
+                </div>
+            </div>
+            <div class="p-col">
+                <div class="card" style="background-color: #EFEFEF;">
+                    <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega"></app-modal-productos-bodega>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-col-8">
+        <div  class="card" style="background-color: #EFEFEF;">
+           
+            <form [formGroup]="formGrp" (ngSubmit)="onSubmit()" class="p-fluid p-pt-4">
+
+                <div class="p-field p-grid">
+                    <div class="p-col-6">
+                        <label for="cantidad">Cantidad</label>
+                        <p-inputNumber id="cantidad" formControlName="cantidad" mode="decimal" minFractionDigits="0" maxFractionDigits="0" placeholder="Ingrese la cantidad"></p-inputNumber>
+                        <div *ngIf="cantidad.invalid || (cantidad.dirty || cantidad.touched)">
+                            <small class="p-error" *ngIf="cantidad.errors?.required">Campo obligatorio</small>
+                        </div>
+                    </div>
+                    <div class="p-col-6">
+                        <label for="marca">Bodega</label>
+                        <p-dropdown id="bodega" [options]="listaBodegas" formControlName="bodega" optionLabel="sBodega" optionValue="nId" placeholder="Seleccione una bodega" [showClear]="true" (onChange)="validaInventarioBodega()"></p-dropdown>
+                        <div *ngIf="bodega.invalid || (bodega.dirty || bodega.touched)">
+                            <small class="p-error" *ngIf="bodega.errors?.required">Campo obligatorio</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-field p-grid">
+                    <div class="p-col-6">
+                        <label for="marca">Anaquel</label>
+                        <p-dropdown id="anaquel" [options]="listaAnaquel" formControlName="anaquel" optionLabel="sAnaquel" optionValue="nId" placeholder="Seleccione una Anaquel" [showClear]="true"></p-dropdown>
+                        <div *ngIf="anaquel.invalid || (anaquel.dirty || anaquel.touched)">
+                            <small class="p-error" *ngIf="anaquel.errors?.required">Campo obligatorio</small>
+                        </div>
+                    </div>
+                    <div class="p-col-6">
+                        <label for="marca">Nivel</label>
+                        <p-dropdown id="nivel" [options]="listaNivel" formControlName="nivel" optionLabel="sNivel" optionValue="nId" placeholder="Seleccione una nivel" [showClear]="true"></p-dropdown>
+                        <div *ngIf="nivel.invalid || (nivel.dirty || nivel.touched)">
+                            <small class="p-error" *ngIf="nivel.errors?.required">Campo obligatorio</small>
+                        </div>
+                    </div>
+                </div>
+          
+                <div class="p-field p-grid">
+                    <div class="p-col-12 p-d-flex p-jc-start">
+                        <span class="p-input-icon-left">
+                            <button pButton type="submit" label="Guardar" [disabled]="formGrp.invalid"></button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div  class="card" style="background-color: #EFEFEF;">
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
