@@ -84,7 +84,6 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
 
   onFormProducto(): void {
 
-    console.log('este existe en la lista', this.buscarProductoExistente(this.tcProductoSeleccionado));
     const model = this.buscarProductoExistente(this.tcProductoSeleccionado)
       ? new ModelContainerData2(ModeActionOnModel.EDITING, this.twFacturaProveedorProducto, this.tcProductoSeleccionado)
       : new ModelContainerData2(ModeActionOnModel.CREATING, this.vwFacturaProductoBalance, this.tcProductoSeleccionado);
@@ -109,7 +108,6 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
   getProductosFactura(): void {
     this.productoService.getProductosFacturaId(this.vwFacturaProductoBalance.nId).subscribe(data => {
       this.listaFacturaProducto = data;
-      console.log(this.listaFacturaProducto);
     });
   }
 

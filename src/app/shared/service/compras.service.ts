@@ -51,7 +51,7 @@ export class ComprasService {
 
   daleteProductoFactura(nId: number){
     let url= environment.servicios.apiRefacFabela + locator.deleteFacturaProducto+'nId='+nId;
-    return this.http.get<String>(url);
+    return this.http.get<boolean>(url);
   }
   
 

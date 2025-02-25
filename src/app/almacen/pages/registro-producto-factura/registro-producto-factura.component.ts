@@ -29,7 +29,6 @@ vwFacturaProductoBalance:VwFacturaProductoBalance;
 
     this.listaFacturaProveedor=data;
 
-    console.log(this.listaFacturaProveedor);
 
     })
   }

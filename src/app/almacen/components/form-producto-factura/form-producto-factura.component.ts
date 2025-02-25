@@ -93,7 +93,6 @@ export class FormProductoFacturaComponent implements OnInit {
   }
 
   private editFormGroup(): void {
-    console.log(this.twFacturaProveedorProductoEdita);
  
     this.formGrp = new FormGroup({
       noParte: new FormControl({ value: this.twFacturaProveedorProductoEdita.tcProducto.sNoParte, disabled: true }, Validators.required),
