@@ -76,6 +76,10 @@ static guardarProductoCarritoPedido= '/guardarProductoCarritoCompraUsuario';
 /*Factura Proveedor Producto */
 
 static saveFacturaProducto= '/facturacionProveedor/saveProductoFactura';
+static guardarFacturaProductoIngreso= '/facturacionProveedor/obtenerProductoFacturaIngreso';
+static getFacturaProductoIngreso= '/facturacionProveedor/obtenerProductoFacturaIngreso?';
+
+
 
 
 

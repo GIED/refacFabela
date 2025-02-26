@@ -11,8 +11,8 @@
                         <div>Producto: <strong>{{twFacturaProveedorProducto.tcProducto.sProducto}}</strong></div>
                         <div>Marca: <strong>{{twFacturaProveedorProducto.tcMarca.sMarca}}</strong></div>
                         <div>Total Producto Factura: <strong>{{twFacturaProveedorProducto.nCantidad}}</strong></div>
-                        <div>Total Ingresado: <strong>0</strong></div>
-                        <div>Total por Ingresar: <strong>0</strong></div>
+                        <div>Total Ingresado: <strong>{{totalIngresado}}</strong></div>
+                        <div>Total por Ingresar: <strong>{{totalPendiente}}</strong></div>
                     </p-panel>
                 </div>
             </div>
@@ -32,14 +32,14 @@
                 <div class="p-field p-grid">
                     <div class="p-col-6">
                         <label for="cantidad">Cantidad</label>
-                        <p-inputNumber id="cantidad" formControlName="cantidad" mode="decimal" minFractionDigits="0" maxFractionDigits="0" placeholder="Ingrese la cantidad"></p-inputNumber>
+                        <p-inputNumber id="cantidad" formControlName="cantidad" [max]="totalPendiente" mode="decimal" minFractionDigits="0" maxFractionDigits="0" placeholder="Ingrese la cantidad"></p-inputNumber>
                         <div *ngIf="cantidad.invalid || (cantidad.dirty || cantidad.touched)">
                             <small class="p-error" *ngIf="cantidad.errors?.required">Campo obligatorio</small>
                         </div>
                     </div>
                     <div class="p-col-6">
                         <label for="marca">Bodega</label>
-                        <p-dropdown id="bodega" [options]="listaBodegas" formControlName="bodega" optionLabel="sBodega" optionValue="nId" placeholder="Seleccione una bodega" [showClear]="true" (onChange)="validaInventarioBodega()"></p-dropdown>
+                        <p-dropdown id="bodega" [options]="listaBodegas" [filter]="true" formControlName="bodega" optionLabel="sBodega" optionValue="nId" placeholder="Seleccione una bodega" [showClear]="true" (onChange)="validaInventarioBodega()"></p-dropdown>
                         <div *ngIf="bodega.invalid || (bodega.dirty || bodega.touched)">
                             <small class="p-error" *ngIf="bodega.errors?.required">Campo obligatorio</small>
                         </div>
@@ -49,14 +49,14 @@
                 <div class="p-field p-grid">
                     <div class="p-col-6">
                         <label for="marca">Anaquel</label>
-                        <p-dropdown id="anaquel" [options]="listaAnaquel" formControlName="anaquel" optionLabel="sAnaquel" optionValue="nId" placeholder="Seleccione una Anaquel" [showClear]="true"></p-dropdown>
+                        <p-dropdown id="anaquel" [options]="listaAnaquel" [filter]="true" formControlName="anaquel" optionLabel="sAnaquel" optionValue="nId" placeholder="Seleccione una Anaquel" [showClear]="true"></p-dropdown>
                         <div *ngIf="anaquel.invalid || (anaquel.dirty || anaquel.touched)">
                             <small class="p-error" *ngIf="anaquel.errors?.required">Campo obligatorio</small>
                         </div>
                     </div>
                     <div class="p-col-6">
                         <label for="marca">Nivel</label>
-                        <p-dropdown id="nivel" [options]="listaNivel" formControlName="nivel" optionLabel="sNivel" optionValue="nId" placeholder="Seleccione una nivel" [showClear]="true"></p-dropdown>
+                        <p-dropdown id="nivel" [options]="listaNivel" [filter]="true" formControlName="nivel" optionLabel="sNivel" optionValue="nId" placeholder="Seleccione una nivel" [showClear]="true"></p-dropdown>
                         <div *ngIf="nivel.invalid || (nivel.dirty || nivel.touched)">
                             <small class="p-error" *ngIf="nivel.errors?.required">Campo obligatorio</small>
                         </div>
@@ -72,7 +72,46 @@
                 </div>
             </form>
         </div>
+
+
         <div  class="card" style="background-color: #EFEFEF;">
+
+            <p-table
+            #dt
+            [value]="listaIngresoProductoFactura"
+            [rows]="4"            
+            [paginator]="true"           
+            [globalFilterFields]="[ 'nCantidad', 'sBodega', 'sAnaquel','sNivel', 'nCantidad', 'dFecha']"
+            [rowHover]="true"
+            dataKey="nId"
+            styleClass="p-datatable-customers"
+            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+            [showCurrentPageReport]="true"
+        > 
+ 
+        <ng-template pTemplate="header">
+          <tr>
+                    <th pSortableColumn="nCantidad" class="text-center">Cantidad <p-sortIcon field="nCantidad"></p-sortIcon></th>
+                    <th pSortableColumn="sBodega" class="text-center">Bodega <p-sortIcon field="sBodega"></p-sortIcon></th>
+                    <th pSortableColumn="sAnaquel" class="text-center">Anaquel <p-sortIcon field="sAnaquel"></p-sortIcon></th>
+                    <th pSortableColumn="sNivel" class="text-center">Nivel <p-sortIcon field="sNivel"></p-sortIcon></th>
+                    <th pSortableColumn="dFecha" class="text-center">Fecha Ingreso <p-sortIcon field="dFecha"></p-sortIcon></th> 
+                    <th pSortableColumn="sUsuario" class="text-center">Usuario <p-sortIcon field="sUsuario"></p-sortIcon></th>                                                 
+          </tr>
+        </ng-template>     
+      
+            <ng-template pTemplate="body" let-producto>
+                <tr>
+                    <td class="text-center"><span class="p-column-title">Cantidad</span>{{ producto.nCantidad }}</td>
+                    <td class="text-center"><span class="p-column-title">Bodega</span>{{ producto.tcBodega.sBodega }}</td>
+                     <td class="text-center"><span class="p-column-title">Anaquel</span>{{ producto.tcAnaquel.sAnaquel}}</td>
+                    <td class="text-center"><span class="p-column-title">Nivel</span>{{ producto.tcNivel.sNivel}}</td>
+                    <td class="text-center"><span class="p-column-title">Fecha Ingreso</span>{{ producto.nCantidad | date:'yyyy-MM-dd HH:mm:ss' }}</td> 
+                    <td class="text-center"><span class="p-column-title">Usuario</span>{{ producto.tcUsuario.sNombreUsuario}}</td>           
+                </tr>
+            </ng-template>
+          
+        </p-table>
             
         </div>
     </div>
