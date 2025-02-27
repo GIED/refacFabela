@@ -76,7 +76,7 @@ static guardarProductoCarritoPedido= '/guardarProductoCarritoCompraUsuario';
 /*Factura Proveedor Producto */
 
 static saveFacturaProducto= '/facturacionProveedor/saveProductoFactura';
-static guardarFacturaProductoIngreso= '/facturacionProveedor/obtenerProductoFacturaIngreso';
+static guardarFacturaProductoIngreso= '/facturacionProveedor/saveProductoFacturaIngreso';
 static getFacturaProductoIngreso= '/facturacionProveedor/obtenerProductoFacturaIngreso?';
 
 
@@ -86,6 +86,8 @@ static getFacturaProductoIngreso= '/facturacionProveedor/obtenerProductoFacturaI
 static guardarGasto= '/guardarGasto';
 static borrarGasto= '/borrarGasto';
 static guardarProductoGeneral= '/guardarProductoGeneral';
+static guardarProductoBodega= '/guardarProductoBodega';
+
 static calcularPrecioProducto= '/calcularNuevoPrecio';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerHistoriaIngresoProducto='/obtenerHistoriaIngresoProducto?';

@@ -14,6 +14,7 @@ import { ProductoDescuentoDto } from 'src/app/productos/model/ProductoDescuentoD
 import { TwVentaProductoCancela } from 'src/app/productos/model/TwVentaProductoCancela';
 import { TwAjusteInventario } from 'src/app/productos/model/TwAjusteInventario';
 import { TwFacturaProveedorProducto } from './TwFacturaProveedorProducto';
+import { TwProductoBodega } from '../../productos/model/TwProductoBodega';
 
 @Injectable({
   providedIn: 'root'
@@ -87,6 +88,11 @@ export class ProductoService {
   guardaProductoGeneral(producto: TcProducto){
     let url = environment.servicios.apiRefacFabela + locator.guardarProductoGeneral;
     return this.http.post<TcProducto>(url,producto);
+  }
+
+  guardaProductoBodega(twProductoBodega:TwProductoBodega){
+    let url = environment.servicios.apiRefacFabela + locator.guardarProductoBodega;
+    return this.http.post<TwProductoBodega>(url,twProductoBodega);
   }
 
   calcularPrecioProducto(productoDescuentoDto: ProductoDescuentoDto ){

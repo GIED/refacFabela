@@ -18,8 +18,12 @@ import { TwFacturaProveedorProducto } from 'src/app/shared/service/TwFacturaProv
 import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
 import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
+import { switchMap, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
-
+/**
+ * Componente para el formulario de ingreso de productos.
+ */
 @Component({
   selector: 'app-form-ingreso-producto',
   templateUrl: './form-ingreso-producto.component.html',
@@ -55,6 +59,9 @@ export class FormIngresoProductoComponent implements OnInit {
     this.formGrp = new FormGroup({});
   }
 
+  /**
+   * Inicializa el componente y carga los datos iniciales.
+   */
   ngOnInit(): void {
     const modelContainer: ModelContainer = this.config.data;
     this.twFacturaProveedorProducto = ObjectUtils.isEmpty(modelContainer.modelData) ? new TwFacturaProveedorProducto() : modelContainer.modelData as TwFacturaProveedorProducto;
@@ -63,39 +70,87 @@ export class FormIngresoProductoComponent implements OnInit {
       this.mostrarDistribucionBodegas(this.twFacturaProveedorProducto);
       this.createFormGroup();
       this.loadInitialData();
-      this.obtenerIngresosProductoFactura(this.twFacturaProveedorProducto.nId);
+      this.obtenerIngresosProductoFactura(this.twFacturaProveedorProducto.nId).subscribe();
     }
   }
 
+  /**
+   * Carga los datos iniciales necesarios para el formulario.
+   */
   private loadInitialData(): void {
     this.bodegasService.obtenerBodegas().subscribe(bodegas => this.listaBodegas = bodegas);
     this.anaquelService.obtenerAnanquel().subscribe(anaquel => this.listaAnaquel = anaquel);
     this.nivelService.obtenerNivel().subscribe(nivel => this.listaNivel = nivel);
   }
 
+  /**
+   * Muestra la distribución de productos en las bodegas.
+   * @param twFacturaProveedorProducto - Producto del proveedor.
+   */
   mostrarDistribucionBodegas(twFacturaProveedorProducto: TwFacturaProveedorProducto): void {
     this.bodegasService.obtenerProductoBodegas(twFacturaProveedorProducto.nIdProducto).subscribe(data => this.listaProductoBodega = data);
   }
 
+  /**
+   * Maneja el evento de envío del formulario.
+   */
   onSubmit(): void {
-    if (this.formGrp.valid) {
-      const productoBodega = this.buscarProductoBodega(this.formGrp.get('bodega')?.value);
-      this.twFacturaProveedorProductoIngreso = {
-        ...this.twFacturaProveedorProductoIngreso,
-        nCantidad: this.formGrp.get('cantidad')?.value,
-        dFechaIngreso: this.fechaService.obtenerFechaActualMexicoCentro(),
-        nIdUsuario: this.tokenService.getIdUser(),
-        nIdFacturaProveedorProducto: this.twFacturaProveedorProducto.nId,
-        nEstatus: 0,
-        nIdBodega: productoBodega?.nIdBodega || this.formGrp.get('bodega')?.value,
-        nIdAnaquel: productoBodega?.nIdAnaquel || this.formGrp.get('anaquel')?.value,
-        nIdNivel: productoBodega?.nIdNivel || this.formGrp.get('nivel')?.value
-      };
-
-      console.log('esto es lo que voy a guardar', this.twFacturaProveedorProductoIngreso);
+    if (!this.formGrp.valid) {
+      return;
     }
+  
+    const { bodega, cantidad, anaquel, nivel } = this.formGrp.controls;
+    const productoBodega = this.buscarProductoBodega(bodega.value);
+  
+    if (productoBodega) {
+      productoBodega.nCantidad += cantidad.value;
+      productoBodega.nIdBodega=bodega.value
+      if(productoBodega.nCantidad<1){          
+        productoBodega.nIdAnaquel=anaquel.value;
+        productoBodega.nIdNivel=nivel.value;
+       }
+      
+    }
+  
+    this.twFacturaProveedorProductoIngreso = {
+      ...this.twFacturaProveedorProductoIngreso,
+      nCantidad: cantidad.value,
+      dFechaIngreso: this.fechaService.obtenerFechaActualMexicoCentro(),
+      nIdUsuario: this.tokenService.getIdUser(),
+      nIdFacturaProveedorProducto: this.twFacturaProveedorProducto.nId,
+      nEstatus: 0,
+      nIdBodega: bodega.value ?? productoBodega?.nIdBodega,
+      nIdAnaquel: anaquel.value ?? productoBodega?.nIdAnaquel,
+      nIdNivel: nivel.value ?? productoBodega?.nIdNivel
+    };    
+  
+    this.productoService.guardaProductoBodega(productoBodega).pipe(
+      switchMap(prodbodega => {
+        this.mostrarDistribucionBodegas(this.twFacturaProveedorProducto);
+        return this.comprasService.saveProductoFacturaIngreso(this.twFacturaProveedorProductoIngreso);
+      }),
+      switchMap(ingreso => {
+        this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Guardado con éxito', life: 3000 });
+        this.twFacturaProveedorProductoIngreso = ingreso;
+        return this.obtenerIngresosProductoFactura(this.twFacturaProveedorProducto.nId);
+      })
+    ).subscribe({
+      next: () => {
+        this.formGrp.reset(); // Limpiar el formulario
+        this.twFacturaProveedorProductoIngreso = new TwFacturaProveedorProductoIngreso();
+        if (this.totalPendiente === 0) {
+          this.ref.close();
+        }
+      },
+      error: err => {
+        console.error('Error en el proceso de ingreso del producto:', err);
+      }
+    });
   }
 
+  /**
+   * Crea el grupo de controles del formulario.
+   */
   private createFormGroup(): void {
     this.formGrp = new FormGroup({
       cantidad: new FormControl(null, [Validators.required, Validators.min(1)]),
@@ -105,6 +160,9 @@ export class FormIngresoProductoComponent implements OnInit {
     });
   }
 
+  /**
+   * Valida el inventario de la bodega seleccionada.
+   */
   validaInventarioBodega(): void {
     const productoBodega = this.buscarProductoBodega(this.formGrp.get('bodega')?.value);
     if (productoBodega && productoBodega.nCantidad > 0) {
@@ -124,17 +182,35 @@ export class FormIngresoProductoComponent implements OnInit {
     }
   }
 
+  /**
+   * Busca un producto en la bodega seleccionada.
+   * @param bodegaSeleccionada - ID de la bodega seleccionada.
+   * @returns El producto encontrado o null si no se encuentra.
+   */
   private buscarProductoBodega(bodegaSeleccionada: number): TwProductoBodega | null {
     return this.listaProductoBodega.find(producto => producto.nIdBodega === bodegaSeleccionada) || null;
   }
 
-  private obtenerIngresosProductoFactura(nId: number): void {
-    this.comprasService.getProductoFacturaIngreso(nId).subscribe(ingreso => {
-      this.listaIngresoProductoFactura = ingreso;
-      this.calcularTotalesIngreso(ingreso);
-    });
+  /**
+   * Obtiene los ingresos de productos para la factura seleccionada.
+   * @param nId - ID de la factura.
+   * @returns Observable de la lista de ingresos de productos.
+   */
+  private obtenerIngresosProductoFactura(nId: number): Observable<TwFacturaProveedorProductoIngreso[]> {
+    console.log('entre a consultar las bodegas');
+    return this.comprasService.getProductoFacturaIngreso(nId).pipe(
+      tap(ingreso => {
+        this.listaIngresoProductoFactura = ingreso || []; // Asignar una lista vacía si ingreso es null o undefined
+        console.log('voy a ir consultar los totales');
+        this.calcularTotalesIngreso(this.listaIngresoProductoFactura);
+      })
+    );
   }
 
+  /**
+   * Calcula los totales de ingreso y pendiente de productos.
+   * @param listaProductoIngreso - Lista de ingresos de productos.
+   */
   calcularTotalesIngreso(listaProductoIngreso: TwFacturaProveedorProductoIngreso[]): void {
     this.totalIngresado = listaProductoIngreso.reduce((total, producto) => total + producto.nCantidad, 0);
     this.totalPendiente = this.twFacturaProveedorProducto.nCantidad - this.totalIngresado;
