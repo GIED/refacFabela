@@ -131,7 +131,7 @@ export class FormProductoFacturaComponent implements OnInit {
     this.twFacturaProveedorProducto.nCantidad = this.formGrp.get('cantidad')?.value;
     this.twFacturaProveedorProducto.nPrecioUnitario = this.formGrp.get('precio')?.value;
     this.twFacturaProveedorProducto.nIdMarca = this.tcProductoSeleccionado.nIdMarca;
-    this.twFacturaProveedorProducto.nEstatus = 1;
+    this.twFacturaProveedorProducto.nEstatus = 0;
     this.twFacturaProveedorProducto.nIdProducto = this.tcProductoSeleccionado.nId;
     this.twFacturaProveedorProducto.nIdUsuario = this.tokenService.getIdUser();
     this.twFacturaProveedorProducto.dFechaRegistro = this.fechaService.obtenerFechaActualMexicoCentro();

@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="p-col-8">
-        <div  class="card" style="background-color: #EFEFEF;">
+        <div  class="card" style="background-color: #EFEFEF;"  *ngIf="totalPendiente>0">
            
             <form [formGroup]="formGrp" (ngSubmit)="onSubmit()" class="p-fluid p-pt-4">
 

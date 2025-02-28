@@ -104,13 +104,10 @@ export class FormIngresoProductoComponent implements OnInit {
   
     if (productoBodega) {
       productoBodega.nCantidad += cantidad.value;
-      productoBodega.nIdBodega=bodega.value
-      if(productoBodega.nCantidad<1){          
-        productoBodega.nIdAnaquel=anaquel.value;
-        productoBodega.nIdNivel=nivel.value;
-       }
-      
     }
+
+   
+    
   
     this.twFacturaProveedorProductoIngreso = {
       ...this.twFacturaProveedorProductoIngreso,
@@ -122,7 +119,14 @@ export class FormIngresoProductoComponent implements OnInit {
       nIdBodega: bodega.value ?? productoBodega?.nIdBodega,
       nIdAnaquel: anaquel.value ?? productoBodega?.nIdAnaquel,
       nIdNivel: nivel.value ?? productoBodega?.nIdNivel
-    };    
+    };  
+    
+    productoBodega.nIdAnaquel=  this.twFacturaProveedorProductoIngreso.nIdAnaquel;
+    productoBodega.nIdBodega=this.twFacturaProveedorProductoIngreso.nIdBodega;
+    productoBodega.nIdNivel=this.twFacturaProveedorProductoIngreso.nIdNivel;
+     
+    console.log('Este es el objeto qie voy a guardar de producto bodega', productoBodega );
+
   
     this.productoService.guardaProductoBodega(productoBodega).pipe(
       switchMap(prodbodega => {
@@ -138,8 +142,17 @@ export class FormIngresoProductoComponent implements OnInit {
       next: () => {
         this.formGrp.reset(); // Limpiar el formulario
         this.twFacturaProveedorProductoIngreso = new TwFacturaProveedorProductoIngreso();
-        if (this.totalPendiente === 0) {
-          this.ref.close();
+        if (this.totalPendiente === 0) {        
+          this.twFacturaProveedorProducto.nEstatus=1;
+         this.comprasService.saveProductoFactura(this.twFacturaProveedorProducto).subscribe(prductoFactura=>{
+          this.twFacturaProveedorProducto=prductoFactura;  
+          this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Ingreso completado', life: 3000 });
+           this.ref.close();
+        })
+
+
+
+
         }
       },
       error: err => {

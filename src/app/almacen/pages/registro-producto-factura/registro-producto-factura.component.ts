@@ -24,15 +24,17 @@ vwFacturaProductoBalance:VwFacturaProductoBalance;
   }
 
   ngOnInit(): void {
-
-    this.proveedorService.getFacturasEstatusAlmacenEstatus(0).subscribe(data=>{
-
-    this.listaFacturaProveedor=data;
-
-
-    })
+    this.consultaFacturaEstatusAlmacen();
+    
   }
 
+
+  consultaFacturaEstatusAlmacen(){
+    this.proveedorService.getFacturasEstatusAlmacenEstatus(0).subscribe(data=>{
+      this.listaFacturaProveedor=data;  
+      });
+
+  }
 
   mostarRegistroProductoFactura(vwFacturaProductoBalance:VwFacturaProductoBalance){
 
@@ -51,8 +53,11 @@ const ref = this.dialogService.open(FormRegistroProductoFacturaComponent, {
  
  })
  ref.onClose.subscribe(() =>{
-   ////console.log('data que se recibe al cerrar',data);
-   //this.obtenerBodegas(data.nIdProducto);
+  
+
+  this.consultaFacturaEstatusAlmacen();
+   
+   
  })
 
   }
