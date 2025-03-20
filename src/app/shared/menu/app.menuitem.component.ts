@@ -11,28 +11,28 @@ import { AppMainComponent } from '../../app.main.component';
     selector: '[app-menuitem]',
     /* tslint:enable:component-selector */
     template: `
-          <ng-container >
-              <a [attr.href]="item.url" (click)="itemClick($event)" *ngIf="(!item.routerLink || item.items) && item.visible !== false"
-                 (mouseenter)="onMouseEnter()" (keydown.enter)="itemClick($event)"
-                [attr.target]="item.target" [attr.tabindex]="0" [ngClass]="item.class">
-                  <span class="menuitem-text">{{item.label}}</span>
-                  <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
-                  <i [ngClass]="item.icon" class="layout-menuitem-icon" ></i>
-              </a>
-              <a (click)="itemClick($event)" (mouseenter)="onMouseEnter()" *ngIf="(item.routerLink && !item.items) && item.visible !== false"
-                  [routerLink]="item.routerLink" routerLinkActive="active-menuitem-routerlink" [ngClass]="item.class"
-                  [routerLinkActiveOptions]="{exact: true}" [attr.target]="item.target" [attr.tabindex]="0" >
-                  <span class="menuitem-text">{{item.label}}</span>
-                  <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items"></i>
-                  <i [ngClass]="item.icon" class="layout-menuitem-icon" ></i>
-              </a>
-              <ul *ngIf="(item.items && active) && item.visible !== false" [@children]="(appMain.isHorizontal() && root) ? (active ? 'visible' : 'hidden') :
-              (active ? 'visibleAnimated' : 'hiddenAnimated')" >
-                  <ng-template ngFor let-child let-i="index" [ngForOf]="item.items" >
-                      <li app-menuitem [item]="child" [index]="i" [parentKey]="key" [class]="child.badgeClass"></li>
-                  </ng-template>
-              </ul>
-          </ng-container>
+          <ng-container>
+    <a [attr.href]="item.url" (click)="itemClick($event)" *ngIf="(!item.routerLink || item.items) && item.visible !== false"
+       (mouseenter)="onMouseEnter()" (keydown.enter)="itemClick($event)"
+       [attr.target]="item.target" [attr.tabindex]="0" [ngClass]="item.class" style="text-decoration: none; ">
+        <span class="menuitem-text">{{item.label}}</span>
+        <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items" ></i>
+        <i [ngClass]="item.icon" class="layout-menuitem-icon" ></i>
+    </a>
+    <a (click)="itemClick($event)" (mouseenter)="onMouseEnter()" *ngIf="(item.routerLink && !item.items) && item.visible !== false"
+       [routerLink]="item.routerLink" routerLinkActive="active-menuitem-routerlink" [ngClass]="item.class"
+       [routerLinkActiveOptions]="{exact: true}" [attr.target]="item.target" [attr.tabindex]="0" style="text-decoration: none; ">
+        <span class="menuitem-text">{{item.label}}</span>
+        <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="item.items" ></i>
+        <i [ngClass]="item.icon" class="layout-menuitem-icon" ></i>
+    </a>
+    <ul *ngIf="(item.items && active) && item.visible !== false" [@children]="(appMain.isHorizontal() && root) ? (active ? 'visible' : 'hidden') :
+    (active ? 'visibleAnimated' : 'hiddenAnimated')" style="background: #333333; ">
+        <ng-template ngFor let-child let-i="index" [ngForOf]="item.items" >
+            <li app-menuitem [item]="child" [index]="i" [parentKey]="key" [class]="child.badgeClass" style="color:white;"></li>
+        </ng-template>
+    </ul>
+</ng-container>
       `,
     host: {
         '[class.active-menuitem]': 'active'

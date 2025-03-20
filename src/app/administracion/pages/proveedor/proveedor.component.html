@@ -9,64 +9,69 @@
             </p-toolbar>
 
             <p-table #dt [value]="listaProveedores" [rows]="10" [paginator]="true"
-                [globalFilterFields]="['sRfc','sRazonSocial','sTelefono']" [(selection)]="selectedProducts"
-                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
-                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-                [showCurrentPageReport]="true">
-                <ng-template pTemplate="caption">
-                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                        <h5 class="p-m-0">Administración de Proveedores</h5>
-                        <span class="p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                                placeholder="Buscar proveedor" />
-                        </span>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th style="width: 3rem">
-                        </th>
-                        <th pSortableColumn="name">RFC </th>
-
-                        <th pSortableColumn="price">Razón social
-                            <p-sortIcon field="price"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="category">Dirección
-                            <p-sortIcon field="category"></p-sortIcon>
-                        </th>                      
-                        <th pSortableColumn="inventoryStatus">Telénono
-                            <p-sortIcon field="inventoryStatus"></p-sortIcon>
-                        </th>
-                        <th></th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-proveedor>
-                    <tr>
-                        <td>
-                        </td>
-                        <td><span class="p-column-title">RFC</span> {{proveedor.sRfc}}
-                        </td>
-                        <td><span class="p-column-title">Razón social</span> {{proveedor.sRazonSocial}}
-                        </td>
-                        <td><span class="p-column-title">Dirección</span> {{proveedor.sDireccion}}
-                        </td>                      
-                        <td><span class="p-column-title">Telénono</span> {{proveedor.sTelefono}}
-                        </td>
-                        <td>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
-                                (click)="editar(proveedor)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                                (click)="eliminar(proveedor)"></button>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="summary">
-                    <div class="p-d-flex p-ai-center p-jc-between">
-                        En Total hay {{listaProveedores ? listaProveedores.length : 0 }} Proveedores.
-                    </div>
-                </ng-template>
-            </p-table>
+            [globalFilterFields]="['sRfc','sRazonSocial','sTelefono', 'Direccion', 'tipo']" [(selection)]="selectedProducts"
+            [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+            [showCurrentPageReport]="true">
+            <ng-template pTemplate="caption">
+                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                    <h5 class="p-m-0">Administración de Proveedores</h5>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Buscar proveedor" />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem" class="p-text-center">
+                    </th>
+                    <th pSortableColumn="sRfc" class="p-text-center">RFC
+                        <p-sortIcon field="sRfc"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="sRazonSocial" class="p-text-center">Razón social
+                        <p-sortIcon field="sRazonSocial"></p-sortIcon>
+                    <th pSortableColumn="Direccion" class="p-text-center">Dirección
+                        <p-sortIcon field="Direccion"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="telefono" class="p-text-center">Teléfono
+                        <p-sortIcon field="telefono"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="tipo" class="p-text-center">Tipo Proveedor
+                        <p-sortIcon field="tipo"></p-sortIcon>
+                    </th>
+                    <th class="p-text-center">Acción</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-proveedor>
+                <tr>
+                    <td class="p-text-center">
+                    </td>
+                    <td class="p-text-center"><span class="p-column-title">RFC</span> {{proveedor.sRfc}}
+                    </td>
+                    <td class="p-text-center"><span class="p-column-title">Razón social</span> {{proveedor.sRazonSocial}}
+                    </td>
+                    <td class="p-text-center"><span class="p-column-title">Dirección</span> {{proveedor.sDireccion}}
+                    </td>
+                    <td class="p-text-center"><span class="p-column-title">Teléfono</span> {{proveedor.sTelefono}}
+                    </td>
+                    <td class="p-text-center"><span class="p-column-title">Tipo Proveedor</span> {{proveedor.tcTipoProveedor.sDescripcion}}
+                    </td>
+                    <td class="p-text-center">
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-mr-2"
+                            (click)="editar(proveedor)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                            (click)="eliminar(proveedor)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="p-d-flex p-ai-center p-jc-between">
+                    En Total hay {{listaProveedores ? listaProveedores.length : 0 }} Proveedores.
+                </div>
+            </ng-template>
+        </p-table>
         </div>
 
 
@@ -97,7 +102,13 @@
                         <label for="name">Teléfono</label>
                         <input type="tel" pInputText formControlName="sTelefono" [class.is-invalid]="validaTelefono" />
                         <small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>
-                    </div>                  
+                    </div>  
+                    <div class="p-field">
+                        <label for="tipo">Tipo Proveedor</label>
+                        <p-dropdown [options]="listaTipoProveedor" formControlName="nIdTipoProveedor" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaTipoProveedor" placeholder="Seleccione un Tipo Proveedor"
+                            [showClear]="true"></p-dropdown>
+                        <small class="p-error" *ngIf="validaTipoProveedor">*Tipo Proveedor requerido.</small>
+                    </div>                
                 </form>
                 <hr>
               

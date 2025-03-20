@@ -18,6 +18,7 @@ import { TcGasto } from 'src/app/productos/model/TcGasto';
 import { TcCp } from 'src/app/productos/model/TcCp';
 import { TcMoneda } from 'src/app/productos/model/TcMoneda';
 import { TcCuentaBancaria } from 'src/app/productos/model/TcCuentaBancaria';
+import { TcTipoProveedor } from 'src/app/administracion/interfaces/TcTipoProveedor';
 
 @Injectable({
   providedIn: 'root'
@@ -122,6 +123,11 @@ export class CatalogoService {
   getCuentasBanciariasRazon(nIdRazonSocial:number){
     let url= environment.servicios.apiRefacFabela + locator.consultaCuentasBancariasRazon +'nIdRazonSocial='+nIdRazonSocial;
     return this.http.get<TcCuentaBancaria[]>(url);
+  }
+
+  getTipoProveedor(){
+    let url= environment.servicios.apiRefacFabela + locator.getTipoProveedor ;
+    return this.http.get<TcTipoProveedor[]>(url);
   }
 
 

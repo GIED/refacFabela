@@ -1,3 +1,5 @@
+import { TcTipoProveedor } from "./TcTipoProveedor";
+
 export interface Proveedores {
  
     nId?: number;
@@ -7,4 +9,6 @@ export interface Proveedores {
     sRazonSocial?: string;
     sRfc?: string;
     sTelefono?: string;
+    nIdTipoProveedor?:number;
+    tcTipoProveedor?:TcTipoProveedor;
 }

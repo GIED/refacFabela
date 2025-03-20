@@ -6,6 +6,8 @@ import { Clientes } from '../../interfaces/clientes';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProveedorService } from '../../service/proveedor.service';
 import { Proveedores } from '../../interfaces/proveedores';
+import { CatalogoService } from '../../../shared/service/catalogo.service';
+import { TcTipoProveedor } from '../../interfaces/TcTipoProveedor';
 
 @Component({
   selector: 'app-proveedor',
@@ -39,27 +41,40 @@ export class ProveedorComponent implements OnInit {
   credito: boolean;
   proveedor: Proveedores;
   formulario: FormGroup;
+  listaTipoProveedor:TcTipoProveedor[]=[];
 
 
   constructor(private messageService: MessageService,
-    private confirmationService: ConfirmationService, private proveedorService: ProveedorService, private fb: FormBuilder,) {
-    this.crearFormulario();
+    private confirmationService: ConfirmationService, private proveedorService: ProveedorService, private fb: FormBuilder, private _catalogoService:CatalogoService) {
   }
 
   ngOnInit() {
-    this.obtenerProveedores();
+    
+
+    this._catalogoService.getTipoProveedor().subscribe(data=>{
+
+      this.listaTipoProveedor=data;
+      this.obtenerProveedores();
+ 
+        this.formulario = this.fb.group({
+          sRfc: ['', [Validators.required, Validators.minLength(13), Validators.maxLength(14)]],
+          sRazonSocial: ['', [Validators.required]],
+          sDireccion: ['', [Validators.required]],
+          sTelefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+          nId: ['', []],
+          nIdTipoProveedor: ['', [Validators.required]],
+        })
+      
+
+    })
+
+    
   }
 
   // Crear formulario con sus validaciones de clientes
-  crearFormulario() {
-    this.formulario = this.fb.group({
-      sRfc: ['', [Validators.required, Validators.minLength(13), Validators.maxLength(14)]],
-      sRazonSocial: ['', [Validators.required]],
-      sDireccion: ['', [Validators.required]],
-      sTelefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-      nId: ['', []]
-    })
-  }
+ 
+
+  
 
   // Validación de campos Guardar Cliente
   get validaRfc() {
@@ -73,6 +88,9 @@ export class ProveedorComponent implements OnInit {
   }
   get validaTelefono() {
     return this.formulario.get('sTelefono').invalid && this.formulario.get('sTelefono').touched;
+  }
+  get validaTipoProveedor() {
+    return this.formulario.get('nIdTipoProveedor').invalid && this.formulario.get('nIdTipoProveedor').touched;
   }
   // Carga de clientes inicial(Todos)
   obtenerProveedores() {
@@ -98,6 +116,8 @@ export class ProveedorComponent implements OnInit {
     this.fproveedor.sDireccion.setValue("");
     this.fproveedor.sRazonSocial.setValue("");
     this.fproveedor.sRfc.setValue("");
+    this.fproveedor.nIdTipoProveedor.setValue("");
+
   }
 
   //edita los daros del cliente
@@ -108,6 +128,8 @@ export class ProveedorComponent implements OnInit {
     this.fproveedor.sDireccion.setValue(proveedor.sDireccion);
     this.fproveedor.sRazonSocial.setValue(proveedor.sRazonSocial);
     this.fproveedor.sRfc.setValue(proveedor.sRfc);
+    this.fproveedor.nIdTipoProveedor.setValue(proveedor.nIdTipoProveedor);
+
   }
 
   get fproveedor() {

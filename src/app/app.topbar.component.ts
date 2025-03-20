@@ -5,7 +5,7 @@ import { TokenService } from './shared/service/token.service';
 @Component({
     selector: 'app-topbar',
     template: `
-        <div class="layout-topbar" style="background: linear-gradient(100deg, #78866B 20%, #EDE6DB 110%)" >
+        <div class="layout-topbar" style="background: #333333;" >
 			<div class="layout-topbar-wrapper">
                 <div class="layout-topbar-left">
 					<div class="layout-topbar-logo-wrapper">
@@ -30,23 +30,23 @@ import { TokenService } from './shared/service/token.service';
                 <div class="layout-topbar-right fadeInDown">
 					<ul class="layout-topbar-actions">
 						<li>
-							<div style="background: white; color: linear-gradient(100deg, #78866B 20%, #EDE6DB 110%); height:23px; border-radius:20px; width:220px; text-align:center;"><strong><p style="color:linear-gradient(100deg, #78866B 20%, #EDE6DB 110%);">Bienvenida(o): {{nombreUsuario}} </p></strong></div>
+							<div style="background: white;  min-height: 30px; padding: 8px; box-shadow: 2px 2px 5px white; border-radius: 5px;"><strong><p>Bienvenida(o): {{nombreUsuario}} </p></strong></div>
 						</li>
 						
 						<li #profile class="topbar-item profile-item" [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === profile}">
 							<a href="#" (click)="appMain.onTopbarItemClick($event,profile)">
-							<i class="topbar-icon pi pi-user"></i>
+							<i class="topbar-icon pi pi-user" style="color:white; text-decoration: none;"></i>
 							</a>
 							<ul class="profile-item-submenu fadeInDown">
 								
 								<li >
-									<button class="p-button p-block" (click)="onLogOut()">cerrar sesión</button>
+									<button class="p-button p-block " style="color:white;" (click)="onLogOut()">cerrar sesión</button>
 								</li>
 							</ul>
 						</li>
 						<li>
 							<a href="#" class="layout-rightpanel-button" (click)="appMain.onRightPanelButtonClick($event)">
-								<i class="pi pi-arrow-left"></i>
+								<i class="pi pi-arrow-left" style="color: white;"></i>
 							</a>
 						</li>
                     </ul>
