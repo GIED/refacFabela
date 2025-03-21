@@ -27,7 +27,7 @@ import { AppMainComponent } from '../../app.main.component';
         <i [ngClass]="item.icon" class="layout-menuitem-icon" ></i>
     </a>
     <ul *ngIf="(item.items && active) && item.visible !== false" [@children]="(appMain.isHorizontal() && root) ? (active ? 'visible' : 'hidden') :
-    (active ? 'visibleAnimated' : 'hiddenAnimated')" style="background: #333333; ">
+    (active ? 'visibleAnimated' : 'hiddenAnimated')" >
         <ng-template ngFor let-child let-i="index" [ngForOf]="item.items" >
             <li app-menuitem [item]="child" [index]="i" [parentKey]="key" [class]="child.badgeClass" style="color:white;"></li>
         </ng-template>
