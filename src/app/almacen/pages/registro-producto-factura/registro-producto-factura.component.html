@@ -7,7 +7,7 @@
         [rows]="10"
         [paginator]="true"
         [exportFilename]="'Facturas por ingresar'"
-        [globalFilterFields]="['nId','tcProveedor.sRfc', 'tcProveedor.sRazonSocial','tcMoneda.sMoneda','sFolioFactura','dFechaInicioFactura','nTotalNoParte','nTotalProductos','nEstatusIngresoAlmacen']"
+        [globalFilterFields]="['tcProveedor.sRfc', 'tcProveedor.sRazonSocial','tcMoneda.sMoneda','sFolioFactura','dFechaInicioFactura','nTotalNoParte','nTotalProductos','nEstatusIngresoAlmacen']"
         [rowHover]="true"
         dataKey="id"
         styleClass="p-datatable-customers"
@@ -30,7 +30,6 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="nId" class="text-center">Id Factura<p-sortIcon field="nId"></p-sortIcon></th>
             <th pSortableColumn="sFolioFactura" class="text-center">Folio Factura<p-sortIcon field="sFolioFactura"></p-sortIcon></th>
             <th pSortableColumn="tcProveedor.sRfc" class="text-center">RFC<p-sortIcon field="tcProveedor.sRfc"></p-sortIcon></th>
             <th pSortableColumn="tcProveedor.sRazonSocial" class="text-center">Razón social<p-sortIcon field="tcProveedor.sRazonSocial"></p-sortIcon></th>
@@ -44,7 +43,6 @@
         </ng-template>
         <ng-template pTemplate="body" let-factura>
           <tr> 
-            <td class="text-center"><span class="p-column-title">Id Factura</span>{{ factura.nId }}</td>
             <td class="text-center"><span class="p-column-title">Folio Factura</span>{{ factura.sFolioFactura }}</td>
             <td class="text-center"><span class="p-column-title">RFC</span>{{ factura.tcProveedor.sRfc }}</td>
             <td class="p-test-center text-center"><span class="p-column-title">Razón social</span>{{ factura.tcProveedor.sRazonSocial }}</td>
