@@ -1,5 +1,12 @@
 <div class="p-grid">
   <div class="p-col-12">
+
+    <div class="card fondo" *ngIf="entidad=='registro'">
+      <div class="p-col-12 text-center"><h3>Registro de productos de la factura</h3></div>
+    </div>
+    <div class="card fondo" *ngIf="entidad=='ingreso'">
+      <div class="p-col-12 text-center"><h3>Ingreso de productos de la factura</h3></div>
+    </div>
     <div class="card">
       <p-table
         #dt
@@ -14,20 +21,18 @@
         currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
         [showCurrentPageReport]="true"
       >
-        <ng-template pTemplate="caption">
-          <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-            <h5 class="p-m-0">Buscar Factura</h5>
-            <span class="p-input-icon-left">
-              <i class="pi pi-search"></i>
-              <input
-                pInputText
-                type="text"
-                (input)="dt.filterGlobal($event.target.value, 'contains')"
-                placeholder="Buscar Factura"
-              />
-            </span>
-          </div>
-        </ng-template>
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-end table-header">
+          <span class="p-input-icon-right">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              (input)="dt.filterGlobal($event.target.value, 'contains')"
+            />
+          </span>
+        </div>
+      </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="sFolioFactura" class="text-center">Folio Factura<p-sortIcon field="sFolioFactura"></p-sortIcon></th>
@@ -51,12 +56,12 @@
             <td class="text-center"><span class="p-column-title">Total de No Parte</span>{{ factura.nTotalNoParte}}</td> 
             <td class="text-center"><span class="p-column-title">otal de Producto</span>{{ factura.nTotalProductos}}</td>        
             <td class="text-center"><span class="p-column-title">Estatus Ingreso Almacén</span>{{ factura.nEstatusIngresoAlmacen ? 'PRODUCINGRESADO' : 'PENDIENTE' }}</td>
-           <td class="text-center"> <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info p-mr-2" (click)="mostarRegistroProductoFactura(factura)"></button></td>
+           <td class="text-center"> <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-button-outlined p-mr-2" (click)="mostarRegistroProductoFactura(factura)"></button></td>
           </tr>
         </ng-template>
         <ng-template pTemplate="summary">
           <span class="p-input-icon-left">
-            <i class="pi pi-search"></i>
+           
             <button
               *ngIf="listaFacturaProveedor.length > 0"
               type="button"
@@ -64,11 +69,12 @@
               pRipple
               icon="pi pi-file-excel"
               label="Exportar consulta"
-              class="p-button-help p-mb-2"
+              class="p-button-help  p-button-outlined p-mb-2"
               (click)="dt.exportCSV()"
             ></button>
           </span>
         </ng-template>
+        
       </p-table>
     </div>
   </div>

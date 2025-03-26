@@ -6,6 +6,8 @@ import { VwFacturaProductoBalance } from 'src/app/productos/model/VwFacturaProdu
 import { FormRegistroProductoFacturaComponent } from '../../components/form-registro-producto-factura/form-registro-producto-factura.component';
 import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
+import { ActivatedRoute } from '@angular/router';
+import { ModelContainerData2 } from 'src/app/shared/utils/model-container-data2';
 
 
 @Component({
@@ -17,20 +19,39 @@ export class RegistroProductoFacturaComponent implements OnInit {
 
 listaFacturaProveedor:VwFacturaProductoBalance[];
 vwFacturaProductoBalance:VwFacturaProductoBalance;
-
-  constructor(private proveedorService:ProveedorService,   public dialogService: DialogService, ) { 
+entidad:string
+  constructor(private proveedorService:ProveedorService,   public dialogService: DialogService, private _route: ActivatedRoute ) { 
     this.listaFacturaProveedor=[];
     this.vwFacturaProductoBalance=new VwFacturaProductoBalance();
   }
 
   ngOnInit(): void {
-    this.consultaFacturaEstatusAlmacen();
+
+    /* Se optiene el parametro de la acción*/
+    this._route.paramMap.subscribe(params => {
+      const entidadRuta = params.get('catalogo')!;
+      this.entidad=entidadRuta;
+
+      /*Consulta la lista según el tipo de acción */
+      if(this.entidad=='registro'){
+        this.consultaFacturaEstatusAlmacen(0);
+      }
+      if(this.entidad=='ingreso'){
+        this.consultaFacturaEstatusAlmacen(1);
+      }
+     
+    });
+
+
+
+
+   
     
   }
 
 
-  consultaFacturaEstatusAlmacen(){
-    this.proveedorService.getFacturasEstatusAlmacenEstatus(0).subscribe(data=>{
+  consultaFacturaEstatusAlmacen(nEstatus:number){
+    this.proveedorService.getFacturasEstatusAlmacenEstatus(nEstatus).subscribe(data=>{
       this.listaFacturaProveedor=data;  
       });
 
@@ -41,10 +62,10 @@ vwFacturaProductoBalance:VwFacturaProductoBalance;
   
 
 const ref = this.dialogService.open(FormRegistroProductoFacturaComponent, {
-     data: new ModelContainer(ModeActionOnModel.EDITING,  vwFacturaProductoBalance),
-     header: 'Registro de Productos para la factura',
+     data: new ModelContainerData2(ModeActionOnModel.EDITING,  vwFacturaProductoBalance, this.entidad ),
+     header: 'Registro de Productos de la factura',
       width: '90%',
-  height: '90%',
+  height: 'auto',
   contentStyle: { 'max-height': '90%', 'overflow': 'auto' },
   baseZIndex: 1000,
   closable: true,
@@ -55,7 +76,12 @@ const ref = this.dialogService.open(FormRegistroProductoFacturaComponent, {
  ref.onClose.subscribe(() =>{
   
 
-  this.consultaFacturaEstatusAlmacen();
+  if(this.entidad=='registro'){
+    this.consultaFacturaEstatusAlmacen(0);
+  }
+  if(this.entidad=='ingreso'){
+    this.consultaFacturaEstatusAlmacen(1);
+  }
    
    
  })

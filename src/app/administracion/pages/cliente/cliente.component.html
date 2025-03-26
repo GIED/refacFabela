@@ -11,7 +11,7 @@
 
             </p-toolbar>
             <p-table #dt [value]="listaClientes" [rows]="10" [paginator]="true"
-                [globalFilterFields]="['sRfc','sRazonSocial','tcCp.sCp','tcRegimenFiscal.sDescripcion','n_limiteCredito']" [(selection)]="selectedProducts"
+                [globalFilterFields]="['sRfc','sRazonSocial','tcCp.sCp','tcRegimenFiscal.sDescripcion','n_limiteCredito']" 
                 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
                 currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
                 [showCurrentPageReport]="true">

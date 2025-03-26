@@ -33,9 +33,11 @@ const routes: Routes = [
         component: StockMinimoComponent,
       },
       {
-        path: "factura-producto",
+        path: "factura-producto/:catalogo",
         component: RegistroProductoFacturaComponent,
       },
+
+    
     ],
   },
 ];

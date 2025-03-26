@@ -13,6 +13,8 @@ import { TwFacturaProveedorProducto } from 'src/app/shared/service/TwFacturaProv
 import { ModelContainerData2 } from 'src/app/shared/utils/model-container-data2';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormIngresoProductoComponent } from '../form-ingreso-producto/form-ingreso-producto.component';
+import { ProveedorService } from '../../../administracion/service/proveedor.service';
+import { TwFacturasProveedor } from '../../../productos/model/TwFacturasProveedor';
 
 @Component({
   selector: 'app-form-registro-producto-factura',
@@ -21,13 +23,15 @@ import { FormIngresoProductoComponent } from '../form-ingreso-producto/form-ingr
 })
 export class FormRegistroProductoFacturaComponent implements OnInit {
 
-  modelContainer: ModelContainer;
+  modelContainer: ModelContainerData2;
   formGrp: FormGroup;
   vwFacturaProductoBalance: VwFacturaProductoBalance;
   listaFacturaProducto: TwFacturaProveedorProducto[] = [];
   cols: any[];
   tcProductoSeleccionado: TcProducto;
   twFacturaProveedorProducto: TwFacturaProveedorProducto;
+  twFacturasProveedor:TwFacturasProveedor=new TwFacturasProveedor();
+  entidad:string;
 
   constructor(
     private comprasService: ComprasService,
@@ -36,11 +40,13 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     public config: DynamicDialogConfig,
     public dialogService: DialogService,
     private confirmationService: ConfirmationService,
-     private messageService: MessageService
+     private messageService: MessageService,
+     private proveedorService:ProveedorService
   ) {
     this.formGrp = new FormGroup({});
-    this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
+    this.modelContainer = new ModelContainerData2(ModeActionOnModel.WATCHING);
     this.vwFacturaProductoBalance = new VwFacturaProductoBalance();
+    
     this.cols = [
       { field: 'tcProducto.sNoParte', header: 'No Parte' },
       { field: 'tcProducto.sProducto', header: 'Producto' },
@@ -53,8 +59,11 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const modelContainer: ModelContainer = this.config.data;
-    this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData) ? new VwFacturaProductoBalance() : modelContainer.modelData as VwFacturaProductoBalance;
+    const modelContainer: ModelContainerData2 = this.config.data;
+    this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData1) ? new VwFacturaProductoBalance() : modelContainer.modelData1 as VwFacturaProductoBalance;
+    this.entidad = ObjectUtils.isEmpty(modelContainer.modelData2) ? '' : modelContainer.modelData2 as string;
+    console.log( this.entidad );
+
     this.getProductosFactura();
   }
 
@@ -140,6 +149,43 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
       this.onFormProducto();
     }
 
+  }
+
+ 
+
+
+  confirmCierreRegistro() {
+    this.confirmationService.confirm({
+      message: '¿Deseas cerrar el registro de productos de la factura?, una ves cerrado no podrás ingresar más productos a la factura',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+
+        this.proveedorService.getFacturaProveedor(this.vwFacturaProductoBalance.nId).subscribe(data=>{
+     
+          this.twFacturasProveedor=data;
+    
+          if( this.twFacturasProveedor){
+            this.twFacturasProveedor.nEstatusIngresoAlmacen=1;
+            this.proveedorService.guardaFacturaProveedor(this.twFacturasProveedor).subscribe(data2=>{
+              this.twFacturasProveedor=data2;
+              console.log("Se cerro el registro de la factura");
+              this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Se cerro el registro de facturas del producto', life: 3000 });
+              this.ref.close();
+            })
+    
+          }
+    
+    
+        })
+     
+      },
+      reject: () => {
+
+      }
+    });
   }
 
   

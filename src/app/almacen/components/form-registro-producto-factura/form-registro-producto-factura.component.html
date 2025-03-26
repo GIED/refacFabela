@@ -25,7 +25,7 @@
 
     <div class="p-col-12 p-md-12">
       <div class="card" style="background-color: #EFEFEF;">
-        <div class="card">
+       
           <p-table
               #dt
               [value]="listaFacturaProducto"
@@ -42,7 +42,7 @@
           > 
           <ng-template pTemplate="caption">
             <div class="p-d-flex p-flex-column p-flex-md-row p-jc-between table-header">
-                <div class="p-col-12 p-md-6">
+                <div class="p-col-12 p-md-6" *ngIf="vwFacturaProductoBalance.nEstatusIngresoAlmacen==0 && entidad=='registro'">
                     <app-input-busqueda (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>
                 </div>
                 <div class="p-col-12 p-md-6 p-d-flex p-jc-end p-ai-center">
@@ -68,7 +68,7 @@
                       <th pSortableColumn="nCantidad" class="text-center">Cantidad <p-sortIcon field="nCantidad"></p-sortIcon></th>                                       
                       <th pSortableColumn="dFechaRegistro" class="text-center">Fecha Registro <p-sortIcon field="dFechaRegistro"></p-sortIcon></th>                     
                      <th pSortableColumn="tcUsuario.sNombreUsuario" class="text-center">Usuario Registra <p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon></th> 
-                     <th></th>   
+                     <th class="text-center">Acción</th>   
             </tr>
           </ng-template>     
         
@@ -82,10 +82,10 @@
                        <td class="text-center"><span class="p-column-title">Fecha Registro</span>{{ producto.dFechaRegistro | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                       <td class="text-center"><span class="p-column-title">Usuario Registra</span>{{ producto.tcUsuario.sNombreUsuario }}</td>   
                       <td class="text-center">
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2" (click)="editarProducto(producto)" *ngIf="producto.nEstatus===0"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(producto)"  *ngIf="producto.nEstatus===0"></button>
-                        <button pButton pRipple icon="pi pi-calendar-plus" class="p-button-rounded p-button-info" (click)="onFormProductoIngreso(producto)" *ngIf="producto.nEstatus===0"></button>
-                        <button pButton pRipple icon="pi pi-check-circle" class="p-button-rounded p-button-success" (click)="onFormProductoIngreso(producto)" *ngIf="producto.nEstatus===1"></button>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined p-mr-2" (click)="editarProducto(producto)" *ngIf="producto.nEstatus===0 && entidad=='registro'"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined" (click)="confirmDelete(producto)"  *ngIf="producto.nEstatus===0 && entidad=='registro'"></button>
+                        <button pButton pRipple icon="pi pi-calendar-plus" class="p-button-rounded p-button-info p-button-outlined" (click)="onFormProductoIngreso(producto)" *ngIf="producto.nEstatus===0 && entidad=='ingreso'"></button>
+                        <button pButton pRipple icon="pi pi-check-circle" class="p-button-rounded p-button-success p-button-outlined" (click)="onFormProductoIngreso(producto)" *ngIf="producto.nEstatus===1"></button>
 
 
                     </td>              
@@ -94,17 +94,26 @@
             
           </p-table>
           <div *ngIf="listaFacturaProducto.length>0">
-            <p-toolbar styleClass="p-mb-4">
-                <ng-template pTemplate="right">
-                    <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
-                        class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+            <p-toolbar styleClass="p-mb-4"> 
+                <ng-template pTemplate="right" *ngIf="vwFacturaProductoBalance.nEstatusIngresoAlmacen==0 && entidad=='registro'">
+                        <button type="button" pButton pRipple icon="pi pi-pi-save" label="Cerrar registro de productos"
+                            class="p-button-success p-mb-2" (click)="confirmCierreRegistro()"></button>
+                            
+                </ng-template>
+                <ng-template pTemplate="left">
+                    <button type="button" pButton pRipple icon="pi pi-file-excel " label="Exportar consulta"
+                        class="p-button-help  p-button-outlined p-mb-2" (click)="dt.exportCSV()"></button>
                         
                 </ng-template>
+
+                   
+               
             </p-toolbar>
         </div>
+
          
        
-      </div>
+     
     </div>
   </div>
   </div>

@@ -114,10 +114,13 @@ export class AppMenuComponent implements OnInit {
                         label: 'Inventario', icon: 'pi pi-fw pi-book', routerLink: ['../almacen/inventario'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
                     {
-                        label: 'Enterega de mercancia', icon: 'pi pi-fwpi-amazon', routerLink: ['../almacen/entrega-de-mercancia'], visible:this.realRol==='admin'  || this.realRol==='almacen'
+                        label: 'Enterega de mercancia', icon: 'pi pi-fw pi-amazon', routerLink: ['../almacen/entrega-de-mercancia'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
                     {
-                        label: 'Factura-productos', icon: 'pi pi-fwpi-amazon', routerLink: ['../almacen/factura-producto'], visible:this.realRol==='admin'  || this.realRol==='almacen'
+                        label: 'Factura-productos', icon: 'pi pi-fw pi-user-plus', routerLink: ['../almacen/factura-producto/registro'], visible:this.realRol==='admin'  || this.realRol==='almacen'
+                    },
+                    {
+                        label: 'Ingreso Producto', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/factura-producto/ingreso'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
                   /*  {
                         label: 'Stock mínimo', icon: 'pi pi-fw pi-spinner', routerLink: ['../almacen/stock-minimo']

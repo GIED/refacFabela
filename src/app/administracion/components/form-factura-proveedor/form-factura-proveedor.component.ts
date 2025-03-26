@@ -162,6 +162,7 @@ saveFactura(){
    this.twFacturasProveedor.nIdUsuario=this.tokenService.getIdUser();
    this.twFacturasProveedor.sNota=this.formulario.get('s_nota').value;
    this.twFacturasProveedor.nIdRazonSocial=this.formulario.get('n_id_razon_social').value;
+   this.twFacturasProveedor.nEstatusIngresoAlmacen=0;
 
    if(this.formulario.get('n_especial').value==false){
     this.twFacturasProveedor.nEspecial=false;
