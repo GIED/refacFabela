@@ -80,18 +80,18 @@
                     </td>
                          
                       <td>
-                        <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+                        <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-button-outlined p-mr-2"
                             (click)="detalleVentaProductos(venta)"></button>
-                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
                             (click)="generarVentaPdf(venta)"></button>
-                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help"
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help p-button-outlined"
                             (click)="abrir(venta)"></button>
                     </td>
                 </tr>
             </ng-template>
         </p-table>
 
-        <p-dialog [(visible)]="mostrarProductos" header="Productos de la Venta" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
+        <p-dialog [(visible)]="mostrarProductos" header="Productos de la Venta" [style]="{width: '900px'}" [closable]="true" styleClass="p-fluid">
                                 
                         <p-table #dt [value]="listaProductosVenta" responsiveLayout="scroll" [rows]="10"
                                 [paginator]="true"
@@ -150,7 +150,7 @@
                                          
                                         </td>  
                                       
-                                        <td><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger p-mr-2"
+                                        <td><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined p-mr-2"
                                             (click)="abrirAjustePrecio(venta)"></button>   </td>
                                                                        
                                                                             
@@ -158,7 +158,7 @@
                                 </ng-template>
                              </p-table>
                             <ng-template pTemplate="footer">
-                                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
+                                <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="hideDialogAlter()"></button>
                             </ng-template>
         </p-dialog>
         <p-toolbar styleClass="p-mb-4">

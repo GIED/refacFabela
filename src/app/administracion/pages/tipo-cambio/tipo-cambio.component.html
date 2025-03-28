@@ -1,7 +1,10 @@
-<div class="p-grid p-fluid">
-    <div class="p-col-12 p-md-12">
-        <div class="card">
-            <h5>Favor de registrar el tipo de cambio</h5>
+
+<div class="card fondo">
+    <div class="p-col-12 text-center fondo"><h3>Tipo de cambio</h3></div>
+  </div>
+<div class="p-grid p-fluid">  
+    <div class="p-col-6 p-md-6">
+        <div class="card">           
             <form [formGroup]="formulario">
                 <input type="text" pInputText formControlName="nId" hidden />
                 <input type="text" pInputText formControlName="sClave" hidden />
@@ -14,7 +17,7 @@
                 </div>
                 <p></p>
                 <div class="p-button-label ng-star-inserted p-col-3">
-                    <button pButton type="button" (click)="guardarTipoCambio()" label="Guardar"></button>
+                    <button pButton type="button" class="p-button-success" (click)="guardarTipoCambio()" label="Guardar"></button>
                 </div>
             </form>
         </div>

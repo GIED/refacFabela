@@ -1,82 +1,85 @@
- 
-        
-                <form [formGroup]="formulario">
-                    <input type="text" pInputText formControlName="nId" hidden />
-                    <input type="text" pInputText formControlName="sClave" hidden />
+<form [formGroup]="formulario">
+    <input type="text" pInputText formControlName="nId" hidden />
+    <input type="text" pInputText formControlName="sClave" hidden />
 
-                    <div class="p-field">
-                        <label for="name">RFC</label>
-                        <input type="text" pInputText formControlName="sRfc" [class.is-invalid]="validaRfc" (focusout)="consultaRfc()" oninput="this.value = this.value.toUpperCase()"  />
-                        <small *ngIf="validaRfc" class="p-error">Rfc invalido favor de verificar.</small>
-                    </div>
-
-                    <div class="p-field">
-                        <label for="name">Razón Social</label>
-                        <input type="text" pInputText formControlName="sRazonSocial" [class.is-invalid]="validaRS" oninput="this.value = this.value.toUpperCase()" />
-                        <small *ngIf="validaRS" class="p-error">Razón social invalido, favor de verificar.</small>
-
-                    </div>
-                    <div class="p-field">
-                        <label for="marca">Regimen Fiscal</label>
-                        <p-dropdown [options]="listaRegimenFiscal" formControlName="nIdRegimenFiscal" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaRegimenfiscal" placeholder="Seleccione un Regimen Fiscal"
-                            [showClear]="true"></p-dropdown>
-                        <small class="p-error" *ngIf="validaRegimenfiscal">*Regimen Fiscal requerido.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="name">Dirección</label>
-                        <input type="text" pInputText formControlName="sDireccion"
-                            [class.is-invalid]="validaDireccion" oninput="this.value = this.value.toUpperCase()" />
-                        <small *ngIf="validaDireccion" class="p-error">Dirección invalida, favor de verificar.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="name">Código postal</label>
-                        <input type="text" pInputText formControlName="nCp" [class.is-invalid]="validaCp" maxlength="5" minlength="4"  (blur)="consultaCp()"/>
-                        <small *ngIf="validaCp" class="p-error">Cp invalido ó no existe, favor de verificar.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="name">Teléfono</label>
-                        <input type="tel" pInputText formControlName="sTelefono" [class.is-invalid]="validaTelefono" />
-                        <small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>
-                    </div>
-                    <div class="p-field">
-                        <label for="name">Correo</label>
-                        <input type="email" pInputText formControlName="sCorreo" [class.is-invalid]="validaCorreo" />
-                        <small *ngIf="validaCorreo" class="p-error">Dirección invalida, favor de verificar.</small>
-                    </div>
-
-                    <div class="p-field">
-                        <label for="marca">Razón social</label>
-                        <p-dropdown [options]="listaDatosFactura" formControlName="nIdDatoFactura" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaDatoFactura" placeholder="Seleccione una Razón social"
-                            [showClear]="true"></p-dropdown>
-                        <small class="p-error" *ngIf="validaDatoFactura">*Razón social requerida.</small>
-                    </div>
-
-                    <div class="p-field">                        
-                        <p-checkbox formControlName="nDatosValidados" label="Datos Validados" [binary]="true" inputId="binary" [class.is-invalid]="validaValidados"></p-checkbox>
-                        <small *ngIf="validaValidados" class="p-error">Datos invalido</small>
-                    </div>
-
-
-
-                    
-                </form>
-                <div class="p-grid p-jc-end">
-                    <div class="p-col-8">
-                        <div class="box"></div>
-                    </div>
-                    <div class="p-col-2">
-                        <div class="box">
-                            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                        </div>
-                    </div>
-                    <div class="p-col-2" *ngIf="banGuardar">
-                        <div class="box">
-                            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardar()"></button>
-                        </div>
-                    </div>
-                </div>
-              
-                <hr>            
-   
-       
-    
+    <div class="p-grid">
+        <div class="p-col-6">
+            <div class="p-field">
+                <label for="name">RFC</label>
+                <input type="text" pInputText formControlName="sRfc" [class.is-invalid]="validaRfc" (focusout)="consultaRfc()" oninput="this.value = this.value.toUpperCase()" />
+                <small *ngIf="validaRfc" class="p-error">Rfc invalido favor de verificar.</small>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <div class="p-field">
+                <label for="name">Razón Social</label>
+                <input type="text" pInputText formControlName="sRazonSocial" [class.is-invalid]="validaRS" oninput="this.value = this.value.toUpperCase()" />
+                <small *ngIf="validaRS" class="p-error">Razón social invalido, favor de verificar.</small>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <div class="p-field">
+                <label for="marca">Regimen Fiscal</label>
+                <p-dropdown [options]="listaRegimenFiscal" formControlName="nIdRegimenFiscal" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaRegimenfiscal" placeholder="Seleccione un Regimen Fiscal" [showClear]="true"></p-dropdown>
+                <small class="p-error" *ngIf="validaRegimenfiscal">*Regimen Fiscal requerido.</small>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <div class="p-field">
+                <label for="name">Dirección</label>
+                <input type="text" pInputText formControlName="sDireccion" [class.is-invalid]="validaDireccion" oninput="this.value = this.value.toUpperCase()" />
+                <small *ngIf="validaDireccion" class="p-error">Dirección invalida, favor de verificar.</small>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <div class="p-field">
+                <label for="name">Código postal</label>
+                <input type="text" pInputText formControlName="nCp" [class.is-invalid]="validaCp" maxlength="5" minlength="4" (blur)="consultaCp()" />
+                <small *ngIf="validaCp" class="p-error">Cp invalido ó no existe, favor de verificar.</small>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <div class="p-field">
+                <label for="name">Teléfono</label>
+                <input type="tel" pInputText formControlName="sTelefono" [class.is-invalid]="validaTelefono" />
+                <small *ngIf="validaTelefono" class="p-error">Teléfomno invalidlo, favor de verificar.</small>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <div class="p-field">
+                <label for="name">Correo</label>
+                <input type="email" pInputText formControlName="sCorreo" [class.is-invalid]="validaCorreo" />
+                <small *ngIf="validaCorreo" class="p-error">Dirección invalida, favor de verificar.</small>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <div class="p-field">
+                <label for="marca">Razón social</label>
+                <p-dropdown [options]="listaDatosFactura" formControlName="nIdDatoFactura" optionLabel="sRazonSocial" optionValue="nId" [class.is-invalid]="validaDatoFactura" placeholder="Seleccione una Razón social" [showClear]="true"></p-dropdown>
+                <small class="p-error" *ngIf="validaDatoFactura">*Razón social requerida.</small>
+            </div>
+        </div>
+        <div class="p-col-6">
+            <div class="p-field">
+                <p-checkbox formControlName="nDatosValidados" label="Datos Validados" [binary]="true" inputId="binary" [class.is-invalid]="validaValidados"></p-checkbox>
+                <small *ngIf="validaValidados" class="p-error">Datos invalido</small>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="p-grid p-jc-end">
+    <div class="p-col-8">
+        <div class="box"></div>
+    </div>
+    <div class="p-col-2">
+        <div class="box">
+            <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger" (click)="hideDialog()"></button>
+        </div>
+    </div>
+    <div class="p-col-2" *ngIf="banGuardar">
+        <div class="box">
+            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardar()"></button>
+        </div>
+    </div>
+</div>
+<hr>

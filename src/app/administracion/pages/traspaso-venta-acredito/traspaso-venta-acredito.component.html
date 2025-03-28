@@ -1,18 +1,22 @@
 <div class="p-grid p-fluid">
     <!--Campos de filtro-->
-    <div class="p-col-12 ">
+
+    <div class="p-col-6">
+        <div class="p-col-12 p-text-center"><h3>Cambio venta a crédito</h3></div>
+    </div>
+
+
+
+    <div class="p-col-6">
         <div class="card">
-         
-               
             <br>
-                <div class="p-field p-col-12 p-md-12">
-                        <label for="dateformat" class="p-field p-col-12 p-md-12">Buscar venta </label>
-                        <input [(ngModel)]="buscar"  pInputText >
-                </div>
-                                
-                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
-                    <button pButton pRipple type="button" label="Consultar" class="p-button-success" (click)="consultar()"></button>
-                </div>             
+            <div class="p-field p-col-12 p-md-12">
+                <label for="dateformat" class="p-field p-col-12 p-md-12">Buscar venta</label>
+                <input [(ngModel)]="buscar" pInputText>
+            </div>
+            <div>
+                <button pButton pRipple label="Buscar" icon="pi pi-check" class="p-button-success" (click)="consultar()"></button>
+            </div>
         </div>
     </div>
 </div>
@@ -114,4 +118,4 @@
     </div>
 </div>
 </div>
-<p-confirmDialog [style]="{width: '600px'}"></p-confirmDialog>  
+<p-confirmDialog [style]="{width: '60%'}"></p-confirmDialog>  

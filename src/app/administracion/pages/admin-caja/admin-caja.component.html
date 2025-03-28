@@ -74,11 +74,12 @@
                         </td>
                         <td *ngIf="caja.nEstatus==0"><span class="p-column-title">Status</span> CERRADA
                         </td>
-                        <td>
-                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
-                                (click)="generarBalance(caja)"></button>
-                                <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info"
+                        <td> 
+                              <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-button-outlined"
                                 (click)="consultarDetalleVentas(caja.nId)"></button>
+                            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
+                                (click)="generarBalance(caja)"></button>
+                             
                         </td>
 
 
@@ -214,7 +215,7 @@
                         class="p-button-help p-mb-2" (click)="dt2.exportCSV()"></button>
                 </ng-template>
                 <ng-template pTemplate="footer">
-                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
+                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="hideDialogAlter()"></button>
                 </ng-template>
 </p-dialog>
 

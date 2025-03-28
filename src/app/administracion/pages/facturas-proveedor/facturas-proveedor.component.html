@@ -28,7 +28,7 @@
                               <div class="box"><strong> Valor cambio BM </strong></div>
                             </div>
                             <div class="p-col-4">
-                              <div class="box"><p-tag  severity="info"><strong>$ {{datoCambio.dato}} PESOS/DOLAR </strong></p-tag></div>
+                              <div class="box"><strong>$ {{datoCambio.dato}} PESOS/DOLAR </strong></div>
                             </div>
                           </div>
                        
@@ -51,7 +51,7 @@
                               <div class="box"> $ {{totalAbonosPeso | number }} PESOS</div>
                             </div>
                             <div class="p-col-4">
-                              <div class="box"><p-tag  severity="success"> $ {{saldoPendientePagoPeso | number }} PESOS</p-tag></div>
+                              <div class="box"> $ {{saldoPendientePagoPeso | number }} PESOS</div>
                             </div>
                           </div>
 
@@ -63,7 +63,7 @@
                               <div class="box"> $ {{totalAbonosUsd | number}} USD</div>
                             </div>
                             <div class="p-col-4">
-                              <div class="box"><p-tag  severity="success"> $ {{saldoPendientePagoUsd | number}} USD</p-tag> <p-tag severity="warning"> $ {{saldoPendientePagoUsd * datoCambio.dato | number}} PESOS</p-tag></div>
+                              <div class="box"> $ {{saldoPendientePagoUsd | number}} USD $ {{saldoPendientePagoUsd * datoCambio.dato | number}} PESOS</div>
                             </div>
                           </div>
 
@@ -185,7 +185,7 @@
 						  </div>
 						</td>
 						<td class="text-center">
-							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-button-outlined p-mr-2"
 								(click)="consultarDetalleFacturaMonedas(cliente)"></button> 
 						
 						</td>

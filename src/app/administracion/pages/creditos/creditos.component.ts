@@ -177,8 +177,8 @@ export class CreditosComponent implements OnInit {
             {
                 data: [this.totalesCreditos.nSaldoTotalGeneral, this.totalesCreditos.nAbonos],
                 backgroundColor: [
-                    'red',
-                    'green',
+                    '#70B5C8',
+                    '#96B97A',
                    
                 ]
             }]

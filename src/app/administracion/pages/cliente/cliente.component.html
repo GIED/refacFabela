@@ -96,11 +96,11 @@
                         <td *ngIf="cliente.nDatosValidados==false" style="color: red;">Datos no validados</td>
                        
                         <td>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-mr-2"
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined p-mr-2"
                                 (click)="editar(cliente)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined"
                                 (click)="eliminar(cliente)"></button>
-                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-info p-button-help"
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-info p-button-help p-button-outlined"
                                 (click)="lineaCredito(cliente)"></button>
                         </td>
                     </tr>
@@ -131,7 +131,7 @@
             </ng-template>
         </p-dialog>
 
-        <p-dialog [(visible)]="clienteDialog" [style]="{width: '600px'}" header="Datos del cliente" [modal]="true"
+        <p-dialog [(visible)]="clienteDialog" [style]="{width: '80%'}" header="Datos del cliente" [modal]="true"
             styleClass="p-fluid">
             <ng-template pTemplate="content">
         <app-form-cliente (cerrar)="hideDialog($event)" [objCliente]="objCliente" >   </app-form-cliente>
