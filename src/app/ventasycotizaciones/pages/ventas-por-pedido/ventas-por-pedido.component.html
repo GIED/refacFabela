@@ -1,17 +1,18 @@
 <div class="p-grid p-fluid">
-    <div class="p-col-12 p-text-center">
-        <h2>Ventas Por Pedido</h2>
-        <hr />
+    <div class="p-col-12 p-text-center fondo">
+        <h3>Ventas por pedido</h3>
     </div>
     <div class="p-col-12 p-xl-12 p-md-12">
         <form [formGroup]="formGrp" autocomplete="off">
             <div class="card">
                 <div class="p-grid">
-
                     <div class="p-col-12">
                         <h5>Favor de Elegir un cliente</h5>
-                        <input type="text" pInputText name="cliente" formControlName="clienteCtrl" (input)="inputCliente()" />
-                        <p-listbox *ngIf="mostrarSugerenciasCliente" [options]="listaCliente" formControlName="clienteSeleccionadoCtrl" optionLabel="sRazonSocial" (onClick)="valorSeleccionadoCliente()">
+                        <input type="text" pInputText name="cliente" formControlName="clienteCtrl"
+                            (input)="inputCliente()" />
+                        <p-listbox *ngIf="mostrarSugerenciasCliente" [options]="listaCliente"
+                            formControlName="clienteSeleccionadoCtrl" optionLabel="sRazonSocial"
+                            (onClick)="valorSeleccionadoCliente()">
                             <ng-template let-cliente pTemplate="item">
                                 <div>
                                     <div>{{cliente.sRfc}}-{{cliente.sRazonSocial}}</div>
@@ -23,78 +24,67 @@
                         <p-accordionTab header="Datos del credito del cliente">
                             <div class="p-col-12">
                                 <ng-template [ngIf]="mostrarDetalleCliente">
-                                    <app-detalle-cliente [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>
+                                    <app-detalle-cliente
+                                        [saldoGeneralCliente]="saldoGeneralCliente"></app-detalle-cliente>
                                 </ng-template>
                             </div>
                         </p-accordionTab>
                     </p-accordion>
-
-
-
-
                 </div>
-
-
-                <br>
                 <div class="p-grid" *ngIf="muestraProductos">
                     <div class="p-col-12 p-lg-12 p-md-12 ">
                         <div class="p-grid p-dir-col">
                             <div class="p-col-12 ">
-                                <p-table [value]="productosFiltrados" [rows]="10" responsiveLayout="scroll" currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
+                                <p-table [value]="productosFiltrados" [rows]="10" responsiveLayout="scroll"
+                                    currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos"
+                                    [showCurrentPageReport]="true">
                                     <ng-template pTemplate="caption">
 
                                         <div class="p-grid p-ai-start vertical-container">
-                                            <div class="p-col-6">
+                                            <div class="p-col-8">
                                                 <label for="name">Producto</label>
-                                                <input type="text" pInputText name="producto" formControlName="productoCtrl" (input)="inputProducto()" />
-                                                <p-listbox *ngIf="mostrarSugerenciasProducto" [options]="listaProductoSugerencia" formControlName="productoSelecionadoCtrl" optionLabel="sNoParte" (onClick)="valorSeleccionadoProducto()" [listStyle]="{'max-height':'200px'}">
-                                                    <ng-template let-producto pTemplate="item">
-                                                        <div>
-                                                            <div><strong>{{producto.sNoParte}}</strong> / <strong style="color: brown;">{{producto.sMarca}} </strong>  / <strong style="color:blue;"> {{producto.sProducto}} </strong>/ {{producto.sDescripcion}}</div>
-                                                        </div>
-                                                    </ng-template>
-                                                </p-listbox>
+                                                <input type="text" pInputText name="producto"
+                                                    formControlName="productoCtrl" (input)="inputProducto()" />
+                                                <div style="position: relative;">
+                                                    <p-listbox *ngIf="mostrarSugerenciasProducto"
+                                                        [options]="listaProductoSugerencia"
+                                                        formControlName="productoSelecionadoCtrl" optionLabel="sNoParte"
+                                                        (onClick)="valorSeleccionadoProducto()"
+                                                        [listStyle]="{'max-height':'200px', 'width': '100%', 'position': 'absolute', 'top': '100%', 'z-index': '1000', 'background-color': 'white', 'box-shadow': '0px 4px 8px rgba(0, 0, 0, 0.1)'}">
+                                                        <ng-template let-producto pTemplate="item">
+                                                            <div
+                                                                style="border-bottom: 1px solid #ddd; padding: 8px; background-color: #EFEFEF;">
+                                                                <div><strong>{{producto.sNoParte}}</strong> / <strong
+                                                                        style="color: #92B673;">{{producto.sMarca}}
+                                                                    </strong>
+                                                                    / <strong style="color:#6AB2C6;">
+                                                                        {{producto.sProducto}}</strong>/
+                                                                    <strong style="color:#A879A0;">
+                                                                        {{producto.sDescripcion}}</strong>
+                                                                </div>
+                                                            </div>
+                                                        </ng-template>
+                                                    </p-listbox>
+                                                </div>
                                             </div>
-
-                                            <p-toolbar styleClass="p-mb-4">
-                                                <ng-template pTemplate="left">
-                                                    <button pButton pRipple label="Agregar Editar Producto" icon="pi pi-plus"
-                                                        class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
-                                                </ng-template>
-                                            </p-toolbar>
+                                            <div class="p-col-4">
+                                                <button pButton pRipple label="Agregar Editar Producto" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"  (click)="openNew()"></button>
+                                            </div>
                                         </div>
-
-
-
-
                                         <p-toast></p-toast>
                                     </ng-template>
-                                    <ng-template pTemplate="header">
+
+
+                                    <ng-template pTemplate="header" ngIf="banProductoSeleccionado">
                                         <tr>
-
-                                            <th pSortableColumn="noParte">No.Parte
-                                            </th>
-                                            <th pSortableColumn="descripcion">Producto
-
-                                            </th>
-                                            <th pSortableColumn="descripcion">Descripción
-
-                                            </th>
-                                            <th pSortableColumn="precio">Precio
-
-                                            </th>
-                                            <th pSortableColumn="categoria">Categoria
-
-                                            </th>
-                                            <th pSortableColumn="stock">stock
-
-                                            </th>
-                                            <th pSortableColumn="cantidad">Cantidad
-
-                                            </th>
-                                            <th pSortableColumn="cantidad">Proveedor
-
-                                            </th>
+                                            <th pSortableColumn="noParte">No.Parte </th>
+                                            <th pSortableColumn="descripcion">Producto</th>
+                                            <th pSortableColumn="descripcion">Descripción</th>
+                                            <th pSortableColumn="precio">Precio</th>
+                                            <th pSortableColumn="categoria">Categoria</th>
+                                            <th pSortableColumn="stock">stock</th>
+                                            <th pSortableColumn="cantidad">Cantidad</th>
+                                            <th pSortableColumn="cantidad">Proveedor</th>
                                         </tr>
                                     </ng-template>
                                     <ng-template pTemplate="body" let-producto>
@@ -106,27 +96,33 @@
                                             <td>{{producto.tcProducto.nPrecioConIva | number:'1.1-3' }}</td>
                                             <td>{{producto.tcProducto.sMarca}}</td>
                                             <td (click)="ubicacionProducto(producto)">{{producto.nCantidadTotal}}</td>
-                                            <td>
-                                                <p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100">
-                                                </p-inputNumber>
-                                            </td>
-                                           
-                                                <td>
-                                                    <p-dropdown [options]="listaProveedores" formControlName="nIdProveedorCtrl"
-                                                        optionLabel="sRazonSocial" optionValue="nId" [class.is-invalid]="validanIdProveedorCtrl"
-                                                        placeholder="Seleccine un Proveedor" [showClear]="true"></p-dropdown>
-                                                    <small class="p-error" *ngIf="validanIdProveedorCtrl">*Registrar Proveedor.</small>
-                                                </td>
+                                            <td><p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100"></p-inputNumber> </td>
 
-                                                <td>
-                                                    <button *ngIf="producto.nCantidadTotal===0; else mensaje;" pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-mr-2" (click)="agregarProduct(producto)"></button>
-                                                   </td>  
-                                               <td>
+                                            <td>
+                                                <p-dropdown [options]="listaProveedores"
+                                                    formControlName="nIdProveedorCtrl" optionLabel="sRazonSocial"
+                                                    optionValue="nId" [class.is-invalid]="validanIdProveedorCtrl"
+                                                    [filter]="true"
+                                                    
+                                                    placeholder="Seleccine un Proveedor"
+                                                    [showClear]="true"></p-dropdown>
+                                                <small class="p-error" *ngIf="validanIdProveedorCtrl">*Registrar
+                                                    Proveedor.</small>
+                                            </td>
+
+                                            <td>
+                                                <button *ngIf="producto.nCantidadTotal===0; else mensaje;" pButton
+                                                    pRipple icon="pi pi-plus"
+                                                    class="p-button-rounded p-button-success p-mr-2 p-button-outlined"
+                                                    (click)="agregarProduct(producto)"></button>
+                                            </td>
+                                            <td>
                                                 <ng-template #mensaje>
-                                                    <p style="color: red;">El producto seleccionado cuenta con Stock. No puede generar un pedido sobre este producto. </p>
+                                                    <p style="color: red;">El producto seleccionado cuenta con Stock. No
+                                                        puede generar un pedido sobre este producto. </p>
                                                 </ng-template>
-                                                </td> 
-                                           
+                                            </td>
+
 
                                         </tr>
                                     </ng-template>
@@ -135,11 +131,12 @@
                         </div>
                     </div>
 
-                    <div class="p-col-12 p-lg-12 p-md-12 ">
+                    <div class="p-col-12 p-lg-12 p-md-12 fondo-content2">
                         <div class="p-col-12 p-mt-3">
                             <span class="p-input-icon-left">
-							<h5 class="p-text-center" >Carrito de compras <i class="pi pi-shopping-cart"></i></h5>
-						</span>
+                                <h5 class="p-text-center" style="color: white ;">Carrito de compras <i
+                                        class="pi pi-shopping-cart"></i></h5>
+                            </span>
                         </div>
                         <div class="p-grid p-dir-col p-nogutter">
                             <div class="p-col-12 ">
@@ -162,6 +159,7 @@
                                             </th>
                                             <th pSortableColumn="cantidad">Cantidad</th>
                                             <th pSortableColumn="cantidad">Total</th>
+                                            <th>Acción</th>
 
                                         </tr>
                                     </ng-template>
@@ -175,25 +173,37 @@
                                             <td>
                                                 {{productoVenta.nCantidad}}
                                             </td>
-                                            <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad | number:'1.1-3'}}</td>
+                                            <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad |
+                                                number:'1.1-3'}}</td>
                                             <td>
-                                                <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(productoVenta)" class="p-button-rounded p-button-danger p-mr-2"></button>
+                                                <button pButton pRipple icon="pi pi-trash"
+                                                    (click)="quitarProducto(productoVenta)"
+                                                    class="p-button-rounded p-button-danger p-mr-2 p-button-outlined"></button>
                                             </td>
                                         </tr>
                                     </ng-template>
 
                                     <ng-template pTemplate="footer">
                                         <tr>
-                                            <td colspan="6">
-                                                <div class="p-d-flex p-jc-end">
-                                                    <strong>Cantidad Total: </strong> {{total |currency: '$'}}
-                                                </div>
+
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <div class="p-col-12 text-center  "
+                                                    style="background: #92B673; border-radius: 5px;"> <strong>Total:
+                                                    </strong> ${{total | number:'1.1-3'}}</div>
                                             </td>
+
                                         </tr>
                                     </ng-template>
                                     <ng-template pTemplate="summary">
                                         <div class="p-grid p-mt-2" *ngIf="listaProductos.length>0">
-                                            <button pButton class="p-button-primary" (click)="muestraFormVentaPedido()" [disabled]="formGrp.invalid" label="Generar venta por pedido"></button>
+                                            <button pButton class="p-button-primary" (click)="muestraFormVentaPedido()"
+                                                [disabled]="formGrp.invalid" label="Generar venta por pedido"></button>
                                         </div>
                                     </ng-template>
 
@@ -207,26 +217,34 @@
             </div>
         </form>
     </div>
-    <p-dialog [(visible)]="mostrarAlternativos" header="Productos Alternativos" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
+    <p-dialog [(visible)]="mostrarAlternativos" header="Productos Alternativos" [style]="{width: '900px'}"
+        [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
-            <app-productos-alternativos-venta [nIdProducto]="nIdProducto" (producto)="agregarProduct($event)"></app-productos-alternativos-venta>
+            <app-productos-alternativos-venta [nIdProducto]="nIdProducto"
+                (producto)="agregarProduct($event)"></app-productos-alternativos-venta>
         </ng-template>
         <ng-template pTemplate="footer">
-            <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
+            <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text"
+                (click)="hideDialogAlter()"></button>
         </ng-template>
     </p-dialog>
-    <p-dialog [(visible)]="muestraProductosBodega" header="Productos Alternativos" [style]="{width: '900px'}" [closable]="false" styleClass="p-fluid">
+    <p-dialog [(visible)]="muestraProductosBodega" header="Productos Alternativos" [style]="{width: '900px'}"
+        [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
-            <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal" [traspaso]=traspaso>
+            <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal"
+                [traspaso]=traspaso>
             </app-modal-productos-bodega>
         </ng-template>
         <ng-template pTemplate="footer">
-            <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogBodega()"></button>
+            <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text"
+                (click)="hideDialogBodega()"></button>
         </ng-template>
     </p-dialog>
-    <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta por pedido" [style]="{width: '700px'}" [closable]="false" styleClass="p-fluid">
+    <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta por pedido" [style]="{width: '700px'}"
+        [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
-            <app-form-venta-pedido [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente" [total]="total" (emitirVenta)="generarVenta($event)" (cancelar)="cancelar()"></app-form-venta-pedido>
+            <app-form-venta-pedido [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente"
+                [total]="total" (emitirVenta)="generarVenta($event)" (cancelar)="cancelar()"></app-form-venta-pedido>
         </ng-template>
         <ng-template pTemplate="footer">
 
@@ -234,11 +252,11 @@
     </p-dialog>
 
     <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
-    styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
-            (guardarProducto)="saveProduct($event)"></app-modal-producto>
-    </ng-template>
-</p-dialog>
+        styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
+                (guardarProducto)="saveProduct($event)"></app-modal-producto>
+        </ng-template>
+    </p-dialog>
 
 </div>

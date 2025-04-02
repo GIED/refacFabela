@@ -1,9 +1,14 @@
 <div class="p-grid p-fluid">
     <!--Campos de filtro-->
-    <div class="p-col-12 ">
+    <div class="p-col-6 ">
+        <div class="p-col-12 p-text-center fondo">
+            <h3>Consulta Ventas</h3>
+        </div>
+        
+    </div>
+    <div class="p-col-6 ">
         <div class="card">       
                
-            <br>
                 <div class="p-field p-col-12 p-md-12">
                         <label for="dateformat" class="p-field p-col-12 p-md-12">Buscar venta </label>
                         <input [(ngModel)]="buscar"  pInputText >
@@ -14,6 +19,7 @@
                 </div>             
         </div>
     </div>
+  
 </div>
 <div class="p-grid">    
     <div class="p-col-12">
@@ -31,8 +37,7 @@
 
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                            placeholder="Buscar Venta" />
+                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" (click)="consultar()" placeholder="Buscar Venta" />
                     </span>
                     <span class="p-input-icon-right">
                         <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
@@ -108,15 +113,15 @@
                     </td>
                          
                       <td>
-                        <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+                        <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2 p-button-outlined"
                             (click)="detalleVentaProductos(venta)"></button>
-                        <button *ngIf="venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                        <button *ngIf="venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
                             (click)="generarVentaPedidoPdf(venta)"></button>
-                            <button *ngIf="venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                            <button *ngIf="venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
                             (click)="generarVentaPdf(venta)"></button>
-                            <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green"
+                            <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green p-button-outlined"
                             (click)="generarsSaldoFacorPdf(venta)"></button>
-                            <button *ngIf="mostrarAjustes" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-purple" style="background: purple;"
+                            <button *ngIf="mostrarAjustes" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined" 
                             (click)="editar(venta)"></button>                       
                     </td>
                 </tr>

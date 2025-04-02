@@ -82,6 +82,7 @@ export class VentasComponent implements OnInit {
   productoDescuentoDto:ProductoDescuentoDto;
   regreso:boolean;
   mostrarCotizacionesVigentes:boolean;
+  banAlternativos:boolean=false;
 
   constructor(
     private clienteService:ClienteService,
@@ -331,6 +332,7 @@ buscaProducto(){
 
 limpiarlistas(){
   this.productosAlternativos=[];
+  this.banAlternativos=false;
   
 }
 
@@ -536,6 +538,13 @@ obtenerProductosAlternativos(nId:number ) {
        productosAlter;
       //console.log("Alternativos");
       //console.log(productosAlter);
+      if(productosAlter){
+       this.banAlternativos=true;
+
+      }
+      else{
+        this.banAlternativos=false;
+      }
 
        for (let index = 0; index < productosAlter.length; index++) {
           
@@ -566,19 +575,13 @@ obtenerProductosAlternativos(nId:number ) {
 
 
 agregarProduct(producto: TvStockProducto) {
-  // console.log(producto);
-  if (producto.nCantidad == 0 || producto.nCantidad == null) {
-    //console.log("cantidad recibida: ",this.nCantidadCtrl.value)
+  // console.log(producto); 
     producto.nCantidad=this.nCantidadCtrl.value;
-    this.listaProductoBodega=[];
-    this.productosFiltrados=[];
-    this.nIdProducto=null;
-    this.limpiarlistas();
-  }
+ 
   
   
   //verifica que se agrege una cantidad
-  if (producto.nCantidad === 0) {
+  if (producto.nCantidad === 0 || producto.nCantidad === undefined) {
     ////console.log("entro a if");
     
     this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar una cantidad', life: 3000});
@@ -651,6 +654,10 @@ agregarProduct(producto: TvStockProducto) {
   this.nCantidadCtrl.setValue(0);
   this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Producto Agregado Correctamente', life: 3000});
   this.muestraProductosBodega=false;
+  this.listaProductoBodega=[];
+  this.productosFiltrados=[];
+  this.nIdProducto=null;
+  this.limpiarlistas();
 
 //}
 }

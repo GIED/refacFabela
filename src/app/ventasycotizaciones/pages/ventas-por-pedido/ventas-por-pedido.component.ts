@@ -66,6 +66,8 @@ export class VentasPorPedidoComponent implements OnInit {
   total: number = 0;
   nIdProducto:number;
   stockTotal: number = 0;
+  banProductoSeleccionado:boolean=false;
+  
 
   listaProveedores:Proveedores[];
 
@@ -169,6 +171,7 @@ valorSeleccionadoCliente(){
   this.clienteService.obtenerSaldoGeneralCliente(this.clienteSeleccionado.nId).subscribe(saldoCliente=>{
     
     this.mostrarSugerenciasCliente=false;
+    this.banProductoSeleccionado=true;
 
     if (saldoCliente != null) {
       this.saldoGeneralCliente=saldoCliente;
@@ -310,6 +313,7 @@ agregarProduct(producto: TvStockProducto) {
   this.nCantidadCtrl.setValue(0);
   this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Producto Agregado Correctamente', life: 3000});
   this.muestraProductosBodega=false;
+  this.banProductoSeleccionado=false;
 
 //}
 }
