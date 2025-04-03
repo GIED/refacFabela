@@ -1,19 +1,26 @@
 <div class="p-grid p-fluid">
     <!--Campos de filtro-->
-    <div class="p-col-12 ">
-        <div class="card">           
+    <div class="p-col-6 ">
+        <div class="p-col-12 p-text-center fondo">
+            <h3>Cancela venta</h3>
+        </div>
+        
+    </div>
+  
+    <div class="p-col-6 ">
+        <div class="card">       
                
-            <br>
-                <div class="p-field p-col-12 p-md-12">
-                        <label for="dateformat" class="p-field p-col-12 p-md-12">Buscar venta </label>
-                        <input [(ngModel)]="buscar"  pInputText >
-                </div>
-                                
-                <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
-                    <button pButton pRipple type="button" label="Consultar" class="p-button-success" (click)="consultar()"></button>
-                </div>             
+            <div class="p-field p-col-12 p-md-12">
+                <label for="dateformat" class="p-field p-col-12 p-md-12">Buscar venta </label>
+                <input [(ngModel)]="buscar"  pInputText >
+        </div>
+                                  
+        <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
+            <button pButton pRipple type="button" label="Consultar" class="p-button-success" (click)="consultar()"></button>
+        </div>                       
         </div>
     </div>
+    
 </div>
 
 <div class="p-grid">
@@ -117,13 +124,13 @@
                     </td>
                          
                       <td>
-                        <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA'" pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
+                        <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA'" pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2 p-button-outlined"
                             (click)="detalleVentaProductos(venta)"></button>
-                        <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                        <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
                             (click)="generarVentaPdf(venta)"></button>
-                            <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                            <button *ngIf="venta.tcEstatusVenta.sDescripcion!='VENTA CANCELADA' && venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
                             (click)="generarVentaPedidoPdf(venta)"></button>
-                            <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green"
+                            <button *ngIf="venta.nSaldo==true" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-green p-button-outlined"
                             (click)="generarsSaldoFacorPdf(venta)"></button>
                     </td>
                 </tr>
@@ -183,7 +190,7 @@
                         </td>
                        
                         <td *ngIf="venta.nEstatus==1">                            
-                         <button *ngIf="borrar" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2" (click)="cancelaVenta(venta)"></button>                          
+                         <button *ngIf="borrar" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2 p-button-outlined" (click)="cancelaVenta(venta)"></button>                          
                         </td>    
                         <td *ngIf="venta.nEstatus==0">                            
                              Partida cancelada                   
