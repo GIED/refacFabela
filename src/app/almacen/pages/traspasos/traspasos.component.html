@@ -28,9 +28,9 @@
                 <td>{{bodega.tcNivel.sNivel}}</td>
                 <td>{{bodega.nCantidad}}</td>
                 <td>
-                    <button pButton pRipple icon="pi pi-home" class="p-button-rounded p-button-success p-mr-2" (click)="modalProductoBodega(bodega)" pTooltip="Movimiento Interno"></button>
-                    <button pButton pRipple icon="pi pi-send" class="p-button-rounded p-button-success p-mr-2" (click)="modalProductoBodegaExterno(bodega)" pTooltip="Movimiento Externo"></button>
-                    <button *ngIf="mostrarAjustes" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger p-mr-2" (click)="modalProductoAjuste(bodega)" pTooltip="Ajuste de inventario"></button>
+                    <button pButton pRipple icon="pi pi-home" class="p-button-rounded p-button-success p-mr-2 p-button-outlined" (click)="modalProductoBodega(bodega)" pTooltip="Movimiento Interno"></button>
+                    <button pButton pRipple icon="pi pi-send" class="p-button-rounded p-button-success p-mr-2 p-button-outlined" (click)="modalProductoBodegaExterno(bodega)" pTooltip="Movimiento Externo"></button>
+                    <button *ngIf="mostrarAjustes" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger p-mr-2 p-button-outlined" (click)="modalProductoAjuste(bodega)" pTooltip="Ajuste de inventario"></button>
 
                 </td>
 

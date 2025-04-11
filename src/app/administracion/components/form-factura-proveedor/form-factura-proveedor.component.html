@@ -1,7 +1,7 @@
 <form [formGroup]="formulario" autocomplete="off">
  
     
-    <div class="p-grid">       
+    <div class="p-grid">    
           
           <div class="p-field p-col-6">
             <label for="s_folio_factura">Folio Factura</label>
@@ -11,7 +11,7 @@
 
           <div class="p-field p-col-6">
             <label for="marca">Proveedor</label>
-            <p-dropdown [options]="listaProvedores" formControlName="n_id_proveedor" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaNIdProveedor" placeholder="Seleccine un proveedor"
+            <p-dropdown [options]="listaProvedores" [filter]="true" formControlName="n_id_proveedor" optionLabel="sRazonSocial" optionValue="nId"  [class.is-invalid]="validaNIdProveedor" placeholder="Seleccine un proveedor"
                 [showClear]="true"></p-dropdown>
                 <small class="p-error" *ngIf="validaNIdProveedor">*ID Proveedor es requerido.</small>
             </div>    
@@ -83,12 +83,4 @@
 
 
 
-<!--   <pre>
-  estado del formulario: {{formulario.valid}}
-  <br>
-  status: {{formulario.status}}
-</pre>
-    <pre>
-  {{formulario.value | json}}
-</pre>
--->
+

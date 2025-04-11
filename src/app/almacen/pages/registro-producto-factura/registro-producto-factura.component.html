@@ -55,7 +55,7 @@
             <td class="text-center"><span class="p-column-title">Fecha Inicio</span>{{ factura.dFechaInicioFactura | date }}</td> 
             <td class="text-center"><span class="p-column-title">Total de No Parte</span>{{ factura.nTotalNoParte}}</td> 
             <td class="text-center"><span class="p-column-title">otal de Producto</span>{{ factura.nTotalProductos}}</td>        
-            <td class="text-center"><span class="p-column-title">Estatus Ingreso Almacén</span>{{ factura.nEstatusIngresoAlmacen ? 'PRODUCINGRESADO' : 'PENDIENTE' }}</td>
+            <td class="text-center"><span class="p-column-title">Estatus Ingreso Almacén</span>{{ factura.nEstatusIngresoAlmacen ? 'PRODUCTO INGRESADO' : 'PENDIENTE' }}</td>
            <td class="text-center"> <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-success p-button-outlined p-mr-2" (click)="mostarRegistroProductoFactura(factura)"></button></td>
           </tr>
         </ng-template>
@@ -69,11 +69,15 @@
               pRipple
               icon="pi pi-file-excel"
               label="Exportar consulta"
-              class="p-button-help  p-button-outlined p-mb-2"
+              class="p-button-help   p-mb-2"
               (click)="dt.exportCSV()"
             ></button>
           </span>
+          
         </ng-template>
+       
+
+        
         
       </p-table>
     </div>

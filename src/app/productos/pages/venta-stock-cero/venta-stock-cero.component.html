@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div _ngcontent-iho-c213="" class="p-col-12 p-mb-12 p-lg-12 p-mb-lg-0">
-                    <button pButton pRipple type="button" label="Consultar" class="p-button-success" (click)="consultar()"></button>
+                    <button pButton pRipple type="button" label="Consultar" class="p-button-success " (click)="consultar()"></button>
                 </div>
 
 
@@ -111,7 +111,7 @@ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros
         </td>
         <td class="p-text-center">
            
-            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+            <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
                 (click)="generarVentaPdf(venta.twVenta.nId)"></button>
         </td>
        

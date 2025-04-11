@@ -65,11 +65,11 @@
                         <td>
                             <tr>
                                 <td *ngIf="venta.tcCliente.nDatosValidados==true && venta.idFactura==0 ">
-                                    <button pButton pRipple icon="pi pi-file-o" pTooltip="Generar Factura" class="p-button-rounded p-button-warning" (click)="openDialog(venta)"></button>
+                                    <button pButton pRipple icon="pi pi-file-o" pTooltip="Generar Factura" class="p-button-rounded p-button-warning p-button-outlined" (click)="openDialog(venta)"></button>
                                 </td>
 
                                 <td *ngIf="venta.tcCliente.nDatosValidados==true && venta.idFactura==0 ">
-                                    <button pButton pRipple icon="pi pi-paperclip" pTooltip="Cargar Factura" class="p-button-rounded p-button-ssucces" (click)="mostrarformularioFactura(venta.nId)"></button>
+                                    <button pButton pRipple icon="pi pi-paperclip" pTooltip="Cargar Factura" class="p-button-rounded p-button-success p-button-outlined" (click)="mostrarformularioFactura(venta.nId)"></button>
                                 </td>
 
 
@@ -79,11 +79,11 @@
                                 </td>
 
                                 <td *ngIf="venta.idFactura!=0">
-                                    <button pButton pRipple icon="pi pi-file-pdf" pTooltip="Descargar Factura" class="p-button-rounded p-button-danger p-mr-2" (click)="descargarFactura(venta.nId)"></button>
+                                    <button pButton pRipple icon="pi pi-file-pdf" pTooltip="Descargar Factura" class="p-button-rounded p-button-danger p-mr-2 p-button-outlined" (click)="descargarFactura(venta.nId)"></button>
                                 </td>
 
                                 <td *ngIf="venta.idFactura!=0">
-                                    <button pButton pRipple icon="pi pi-book" pTooltip="Descargar xml" class="p-button-rounded p-button-info p-mr-2" (click)="descargarXML(venta.nId)"></button>
+                                    <button pButton pRipple icon="pi pi-book" pTooltip="Descargar xml" class="p-button-rounded p-button-info p-mr-2 p-button-outlined" (click)="descargarXML(venta.nId)"></button>
                                 </td>
                             </tr>
                         </td>
@@ -178,8 +178,8 @@
         
     </ng-template>
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-text" (click)="generarFactura()"></button>
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-success" (click)="generarFactura()"></button>
       <!--  <button pButton pRipple label="Complemento" icon="pi pi-check" class="p-button-text" (click)="generarComplemento()"></button>-->
     </ng-template>
 </p-dialog>

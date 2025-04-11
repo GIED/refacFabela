@@ -8,9 +8,9 @@
 
             <p-toolbar styleClass="p-mb-4">
                 <ng-template pTemplate="left">
-                    <button pButton pRipple label="Ver Balance de la caja" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="verBalance()"></button>
+                    <button pButton pRipple label="Ver Balance de la caja" icon="pi pi-plus" class="p-button-info p-mr-2 p-mb-2 p-button-outlined" (click)="verBalance()"></button>
 
-                    <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger" (click)="generarBalance()"></button>
+                    <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined" (click)="generarBalance()"></button>
                 </ng-template>
             </p-toolbar>
 
@@ -109,11 +109,11 @@
                         <td>
                             <!--<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-success p-mr-2"
                                 (click)="detalleVentaProductos(venta)"></button>-->
-                                <button *ngIf="venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                                <button *ngIf="venta.nIdTipoVenta===3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
                                 (click)="generarVentaPedidoPdf(venta)"></button>
-                                <button *ngIf="venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger"
+                                <button *ngIf="venta.nIdTipoVenta!==3" pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-outlined"
                                 (click)="generarVentaPdf(venta)"></button>
-                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help" (click)="abrir(venta.nId)"></button>
+                            <button pButton pRipple icon="pi pi-credit-card" class="p-button-rounded p-button-help p-button-outlined" (click)="abrir(venta.nId)"></button>
                         </td>
                     </tr>
                 </ng-template>
@@ -129,7 +129,7 @@
                     <app-balance-caja> </app-balance-caja>
                 </ng-template>
                 <ng-template pTemplate="footer">
-                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="cerrarBalance()"></button>
+                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="cerrarBalance()"></button>
                 </ng-template>
             </p-dialog>
 
@@ -139,7 +139,7 @@
                     </app-venta-productos-detalle>
                 </ng-template>
                 <ng-template pTemplate="footer">
-                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-text" (click)="hideDialogAlter()"></button>
+                    <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="hideDialogAlter()"></button>
                 </ng-template>
             </p-dialog>
             <p-toolbar styleClass="p-mb-4">
@@ -244,12 +244,12 @@
                     </div>
                     <div class="p-col-2">
                         <div class="box">
-                            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="cerrarModal()"></button>
+                            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-danger" (click)="cerrarModal()"></button>
                         </div>
                     </div>
                     <div class="p-col-2">
                         <div class="box">
-                            <button *ngIf="banGuardar" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarCobro()"></button>
+                            <button *ngIf="banGuardar" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardarCobro()"></button>
                         </div>
                     </div>
                 </div>

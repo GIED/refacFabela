@@ -95,21 +95,32 @@
           </p-table>
           <div *ngIf="listaFacturaProducto.length>0">
             <p-toolbar styleClass="p-mb-4"> 
-                <ng-template pTemplate="right" *ngIf="vwFacturaProductoBalance.nEstatusIngresoAlmacen==0 && entidad=='registro'">
-                        <button type="button" pButton pRipple icon="pi pi-pi-save" label="Cerrar registro de productos"
-                            class="p-button-success p-mb-2" (click)="confirmCierreRegistro()"></button>
-                            
-                </ng-template>
+              
                 <ng-template pTemplate="left">
                     <button type="button" pButton pRipple icon="pi pi-file-excel " label="Exportar consulta"
-                        class="p-button-help  p-button-outlined p-mb-2" (click)="dt.exportCSV()"></button>
+                        class="p-button-help   p-mb-2" (click)="dt.exportCSV()"></button>
                         
+                </ng-template> 
+                <ng-template pTemplate="right" *ngIf="banCerrarIngreso">
+                    <button type="button"  pButton pRipple icon="pi pi-save " label="Cerrar Ingreso Factura"
+                    class="p-button-success  p-mb-2" (click)="confirmCierreIngreso()"></button>
                 </ng-template>
+                <ng-template pTemplate="right" *ngIf="banCerrarRegistro">
+                    <button type="button" pButton pRipple icon="pi pi-pi-save" label="Cerrar registro de productos"
+                        class="p-button-success p-mb-2" (click)="confirmCierreRegistro()"></button>
+                        
+            </ng-template>
+                
 
                    
                
             </p-toolbar>
+          
+            
         </div>
+
+       
+
 
          
        

@@ -32,6 +32,9 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
   twFacturaProveedorProducto: TwFacturaProveedorProducto;
   twFacturasProveedor:TwFacturasProveedor=new TwFacturasProveedor();
   entidad:string;
+  banCerrarIngreso:boolean=false;
+  banCerrarRegistro:boolean=false;
+
 
   constructor(
     private comprasService: ComprasService,
@@ -63,8 +66,8 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     this.vwFacturaProductoBalance = ObjectUtils.isEmpty(modelContainer.modelData1) ? new VwFacturaProductoBalance() : modelContainer.modelData1 as VwFacturaProductoBalance;
     this.entidad = ObjectUtils.isEmpty(modelContainer.modelData2) ? '' : modelContainer.modelData2 as string;
     console.log( this.entidad );
-
-    this.getProductosFactura();
+    if(this.entidad){
+    this.getProductosFactura();}
   }
 
   onProductoSeleccionado(producto: TcProducto): void {
@@ -131,12 +134,41 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
 
     ref.onClose.subscribe(() => {
       this.getProductosFactura();
+      this.ref.close();
+
     });
   }
 
   getProductosFactura(): void {
     this.productoService.getProductosFacturaId(this.vwFacturaProductoBalance.nId).subscribe(data => {
       this.listaFacturaProducto = data;
+      let cerrados=0;
+      for (let index = 0; index < this.listaFacturaProducto.length; index++) {
+      
+        if( this.listaFacturaProducto[index].nEstatus===1){
+          cerrados+=1;
+        }
+      
+        
+      }
+
+     if(this.entidad==='ingreso'){      
+      if(this.listaFacturaProducto.length===cerrados){
+        this.banCerrarIngreso=true;
+        this.banCerrarRegistro=false;
+      }    
+      }
+
+      if(this.entidad==='registro'){      
+        if(this.listaFacturaProducto.length>0){
+          this.banCerrarIngreso=false;
+          this.banCerrarRegistro=true;
+        }       
+        }
+
+
+
+
     });
   }
 
@@ -173,6 +205,42 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
               this.twFacturasProveedor=data2;
               console.log("Se cerro el registro de la factura");
               this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Se cerro el registro de facturas del producto', life: 3000 });
+              this.ref.close();
+            })
+    
+          }
+    
+    
+        })
+     
+      },
+      reject: () => {
+
+      }
+    });
+  }
+
+
+  confirmCierreIngreso() {
+    this.confirmationService.confirm({
+      message: '¿Deseas cerrar el ingreso de productos de la factura?',
+      header: 'Confirmación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+
+        this.proveedorService.getFacturaProveedor(this.vwFacturaProductoBalance.nId).subscribe(data=>{
+     
+          this.twFacturasProveedor=data;
+          console.log( this.twFacturasProveedor);
+    
+          if( this.twFacturasProveedor){
+            this.twFacturasProveedor.nEstatusIngresoAlmacen=2;
+            this.proveedorService.guardaFacturaProveedor(this.twFacturasProveedor).subscribe(data2=>{
+              this.twFacturasProveedor=data2;
+              console.log("Se cerro el ingreso de la factura",  this.twFacturasProveedor);
+              this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Se cerro el ingreso de facturas del producto', life: 3000 });
               this.ref.close();
             })
     

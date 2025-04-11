@@ -51,7 +51,7 @@
                         <td>{{productoVenta.nCantidad}}</td>
                         <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad | currency:'$'}}</td>
                         <td>
-                            <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(productoVenta)" class="p-button-rounded p-button-danger p-mr-2"></button>
+                            <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(productoVenta)" class="p-button-rounded p-button-danger p-mr-2 p-button-outlined"></button>
                         </td>
                     </tr>
                 </ng-template>
@@ -72,6 +72,6 @@
 </form>
 
 <div class="p-formgroup-inline p-d-flex p-jc-end">
-    <p-button icon="pi pi-times" (click)="cotizacion()" label="Solo cotización" styleClass="p-button-text"></p-button>
-    <p-button icon="pi pi-check" (click)="generarVenta()" label="Generar Compra" styleClass="p-button-text"></p-button>
+    <p-button icon="pi pi-times" (click)="cotizacion()" label="Solo cotización" styleClass="p-button-warning"></p-button>
+    <p-button icon="pi pi-check" (click)="generarVenta()" label="Generar Compra" styleClass="p-button-success"></p-button>
 </div>
