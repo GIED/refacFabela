@@ -10,18 +10,18 @@ import { TokenService } from './shared/service/token.service';
                 <div class="layout-topbar-left">
 					<div class="layout-topbar-logo-wrapper">
 						<a href="#/inicio/inicio-general" class="layout-topbar-logo">
-							<img src="assets/layout/images/LOGO.png" alt="mirage-layout" />
-							<span class="app-name">Refacciones Fabela</span>
+							<img src="assets/layout/images/logo4.png" alt="mirage-layout" />
+							<span class="app-name" style="color: white;">Refacciones Fabela</span>
 						</a>
 					</div>
 
-					<a href="#" class="sidebar-menu-button" (click)="appMain.onMenuButtonClick($event)">
+					<a href="#" class="sidebar-menu-button" style="color: white;" (click)="appMain.onMenuButtonClick($event)">
 						<i class="pi pi-bars"></i>
 					</a>
 
 					
 
-					<a href="#" class="topbar-menu-mobile-button" (click)="appMain.onTopbarMobileMenuButtonClick($event)">
+					<a href="#" class="topbar-menu-mobile-button" style="color: white;" (click)="appMain.onTopbarMobileMenuButtonClick($event)">
 						<i class="pi pi-ellipsis-v"></i>
 					</a>
 
@@ -52,7 +52,7 @@ import { TokenService } from './shared/service/token.service';
                     </ul>
 
 					<ul class="profile-mobile-wrapper">
-						<li #mobileProfile class="topbar-item profile-item" [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === mobileProfile}">
+						<li #mobileProfile class="topbar-item profile-item" style="color: white;" [ngClass]="{'active-topmenuitem': appMain.activeTopbarItem === mobileProfile}">
 							<a href="#" (click)="appMain.onTopbarItemClick($event,mobileProfile)">
                           
 							</a>

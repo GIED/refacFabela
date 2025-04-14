@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
     template: `
         <div class="layout-footer p-d-flex p-jc-between p-ai-center p-p-3" style="background-color: #EFEFEF; color: #333;">
             <div class="logo-text p-d-flex p-ai-center">
-                <img src="assets/layout/images/LOGO.png" alt="Refacciones Fabela" style="height: 50px; margin-right: 10px;" />
+                <img src="assets/layout/images/logo4.png" alt="Refacciones Fabela" style="height: 50px; margin-right: 10px;" />
                 <div class="text">
                     <h1 class="p-m-0" style="font-size: 1.5rem;">Refacciones Fabela</h1>
                     <span style="font-size: 1rem;">Todo en maquinaria pesada</span>
