@@ -32,23 +32,23 @@
         <div class="p-field p-col-6">
             <label for="marca">Marca</label>
             <p-dropdown [options]="listaMarca" formControlName="nIdMarca" optionLabel="sMarca" optionValue="nId"  [class.is-invalid]="validanIdMarca" placeholder="Seleccine una marca"
-                [showClear]="true"  (onChange)="asignarMarca()" ></p-dropdown>
+                [showClear]="true" [filter]="true"  (onChange)="asignarMarca()" ></p-dropdown>
             <small class="p-error" *ngIf="validanIdMarca">*Categoria General requerida.</small>
         </div>
         <div class="p-field p-col-6">
             <label for="marca">Categoria General</label>
             <p-dropdown [options]="listaCategoriaGeneral" formControlName="nIdCategoriaGeneral" optionLabel="sCategoriaGeneral" optionValue="nId" (onChange)="obtenerCategoria()" [class.is-invalid]="validaCategoriaGeneral" placeholder="Seleccine una categoria general"
-                [showClear]="true"></p-dropdown>
+                [showClear]="true" [filter]="true"></p-dropdown>
             <small class="p-error" *ngIf="validaCategoriaGeneral">*Categoria General requerida.</small>
         </div>
         <div class="p-field p-col-6">
             <label for="marca">Categoria </label>
-            <p-dropdown [options]="listaCategoria" formControlName="nIdCategoria" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaCategoria" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
+            <p-dropdown [options]="listaCategoria" [filter]="true" formControlName="nIdCategoria" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaCategoria" placeholder="Seleccine una categoria " [showClear]="true"></p-dropdown>
             <small class="p-error" *ngIf="validaCategoria">*Categoria requerida.</small>
         </div>
         <div class="p-field p-col-6">
             <label for="price">clave SAT</label>
-            <p-dropdown [options]="listaClaveSat" formControlName="nIdclavesat" [class.is-invalid]="validaClaveSat" optionLabel="sDescripcion" optionValue="nId" placeholder="Seleccine una clave sat " [showClear]="true"></p-dropdown>
+            <p-dropdown [options]="listaClaveSat" [filter]="true" formControlName="nIdclavesat" [class.is-invalid]="validaClaveSat" optionLabel="sDescripcion" optionValue="nId" placeholder="Seleccine una clave sat " [showClear]="true"></p-dropdown>
             <small class="p-error" *ngIf="validaClaveSat">*Clave Sat requerida.</small>
         </div>
         <div class="p-field p-col-6">
@@ -63,7 +63,7 @@
         </div>
         <div class="p-field p-col-6">
             <label for="ganancia">Ganancia</label>
-            <p-dropdown [options]="listaGanancia" formControlName="nIdGanancia" optionLabel="nGanancia" (onChange)="calculaPrecioFinal()" optionValue="nId" [class.is-invalid]="validaGanancia" placeholder="Seleccine una Ganancia" [showClear]="true">
+            <p-dropdown [options]="listaGanancia" [filter]="true" formControlName="nIdGanancia" optionLabel="nGanancia" (onChange)="calculaPrecioFinal()" optionValue="nId" [class.is-invalid]="validaGanancia" placeholder="Seleccine una Ganancia" [showClear]="true">
                 <ng-template let-ganancia pTemplate="item">
                     {{ganancia.nGanancia | percent}}
                 </ng-template>
@@ -73,7 +73,7 @@
 
         <div class="p-field p-col-6">
             <label for="ganancia">Descuento</label>
-            <p-dropdown [options]="listaGanancia" formControlName="nIdDescuento" optionLabel="nId"  optionValue="nId" [class.is-invalid]="validaDescuento" placeholder="Seleccine un Descuento" >
+            <p-dropdown [options]="listaGanancia" [filter]="true" formControlName="nIdDescuento" optionLabel="nId"  optionValue="nId" [class.is-invalid]="validaDescuento" placeholder="Seleccine un Descuento" >
                 <ng-template let-ganancia2 pTemplate="item">
                     {{ganancia2.nId}}%
                 </ng-template>
@@ -84,7 +84,7 @@
         <div class="p-field p-col-12 p-text-center">
             <label for="price">Precio Final</label>
             <br>
-            <strong>{{precioFinal | currency}}</strong>
+            <strong><p-tag><h2 style="color:white;">{{precioFinal | currency}}</h2></p-tag></strong>
 
         </div>
     </div>
@@ -95,12 +95,12 @@
     </div>
     <div class="p-col-2">
         <div class="box">
-            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="cerrarModal()"></button>
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-danger" (click)="cerrarModal()"></button>
         </div>
     </div>
     <div class="p-col-2">
         <div class="box">
-            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="saveProduct()"></button>
         </div>
     </div>
 </div>

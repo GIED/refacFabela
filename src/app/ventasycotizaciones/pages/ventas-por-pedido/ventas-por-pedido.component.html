@@ -217,7 +217,7 @@
             </div>
         </form>
     </div>
-    <p-dialog [(visible)]="mostrarAlternativos" header="Productos Alternativos" [style]="{width: '900px'}"
+    <p-dialog [(visible)]="mostrarAlternativos" header="Productos Alternativos" [style]="{width: '80%'}"
         [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
             <app-productos-alternativos-venta [nIdProducto]="nIdProducto"
@@ -228,7 +228,7 @@
                 (click)="hideDialogAlter()"></button>
         </ng-template>
     </p-dialog>
-    <p-dialog [(visible)]="muestraProductosBodega" header="Productos Alternativos" [style]="{width: '900px'}"
+    <p-dialog [(visible)]="muestraProductosBodega" header="Productos Alternativos" [style]="{width: '80%'}"
         [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
             <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega" [stockTotal]="stockTotal"
@@ -240,7 +240,7 @@
                 (click)="hideDialogBodega()"></button>
         </ng-template>
     </p-dialog>
-    <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta por pedido" [style]="{width: '700px'}"
+    <p-dialog [(visible)]="mostrarOpcionesVenta" header="Generar venta por pedido" [style]="{width: '80%'}"
         [closable]="false" styleClass="p-fluid">
         <ng-template pTemplate="content">
             <app-form-venta-pedido [listaProductos]="listaProductos" [saldoGeneralCliente]="saldoGeneralCliente"
@@ -251,7 +251,7 @@
         </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+    <p-dialog [(visible)]="productDialog" [style]="{width: '80%'}" [header]="titulo" [closable]="false"
         styleClass="p-fluid">
         <ng-template pTemplate="content">
             <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
