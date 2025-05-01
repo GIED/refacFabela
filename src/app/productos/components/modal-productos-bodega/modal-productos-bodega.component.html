@@ -18,7 +18,7 @@
             <td class="p-text-center"><span class="p-column-title"><h6>Anaquel</h6></span><h6>{{bodega.tcAnaquel.sAnaquel}}</h6></td>
             <td class="p-text-center"><span class="p-column-title"><h6>Nivel</h6></span><h6>{{bodega.tcNivel.sNivel}}</h6></td>
             <td class="p-text-center"><span class="p-column-title"><h6>Stock</h6></span>
-                <div *ngIf="bodega.nCantidad==0" style="background: red; border-radius: 30px; color:white;"><h6 style="color:white;">{{bodega.nCantidad}}</h6></div>
+                <div *ngIf="bodega.nCantidad<=0" style="background: red; border-radius: 30px; color:white;"><h6 style="color:white;">{{bodega.nCantidad}}</h6></div>
                 <div *ngIf="bodega.nCantidad>0" style="background: green; border-radius: 30px; color:white;"><h6 style="color:white;">{{bodega.nCantidad}}</h6></div>
             </td>
             <td *ngIf="traspaso"><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editarProducto(bodega)"></button></td>
