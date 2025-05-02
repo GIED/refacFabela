@@ -118,6 +118,8 @@ static obtenerAnaqueles= '/catalogoAnaquel';
 static obtenerNivel= '/catalogoNivel';
 //api Pedidos
 static obtenerProductosPedido='/obtenerProductosPedido?';
+static obtenerProductosIdPedido='/obtenerProductosIdPedidos?';
+
 static obtenerPedidosEstatus='/obtenerPedidosEstatus?';
 static obtenerPedidos='/obtenerPedidos'
 static obtenerPedidosId='/obtenerPedidoId?'

@@ -20,6 +20,7 @@ import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { PedidosService } from '../../../shared/service/pedidos.service';
 
 /**
  * Componente para el formulario de ingreso de productos.
@@ -42,6 +43,8 @@ export class FormIngresoProductoComponent implements OnInit {
   totalPendiente = 0;
   twFacturaProveedorProductoIngreso = new TwFacturaProveedorProductoIngreso();
   totalBodegas:number=0;
+  totalRecibida:number=0;
+  ingresoPartida:number = 0;
 
   constructor(
     private comprasService: ComprasService,
@@ -55,7 +58,8 @@ export class FormIngresoProductoComponent implements OnInit {
     private anaquelService: AnaquelService,
     private nivelService: NivelService,
     private fechaService: FechaService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private pedidosService:PedidosService
   ) {
     this.formGrp = new FormGroup({});
   }
@@ -110,6 +114,38 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
   /**
    * Maneja el evento de envío del formulario.
    */
+
+  
+
+  calculaIngresoProducto(nIdProducto: number): Promise<number> {
+      return new Promise((resolve, reject) => {
+     
+
+        this.pedidosService.obtenerProductosIdPedido(nIdProducto).subscribe(
+          data => {
+            if (data.length === 0) {
+              resolve(0);
+            } else {
+              // Aquí puedes realizar las operaciones necesarias con 'data'
+              this.ingresoPartida = data.reduce((acc, producto) => acc + producto.nCantidadPedida, 0);
+              this.totalRecibida = data.reduce((acc, producto) => acc + producto.nCantidaRecibida, 0);
+
+              resolve(this.ingresoPartida-this.totalRecibida);
+            }
+          },
+          error => {
+            reject(error);
+          }
+        );
+      });
+    }
+    
+  
+
+
+
+
+
   onSubmit(): void {
     if (!this.formGrp.valid) {
       return;
@@ -136,12 +172,25 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
       nIdAnaquel: anaquel.value ?? productoBodega?.nIdAnaquel,
       nIdNivel: nivel.value ?? productoBodega?.nIdNivel
     };  
+
+    console.log( this.twFacturaProveedorProductoIngreso);
     
     productoBodega.nIdAnaquel=  this.twFacturaProveedorProductoIngreso.nIdAnaquel;
     productoBodega.nIdBodega=this.twFacturaProveedorProductoIngreso.nIdBodega;
     productoBodega.nIdNivel=this.twFacturaProveedorProductoIngreso.nIdNivel;
      
-    console.log('Este es el objeto qie voy a guardar de producto bodega', productoBodega );
+    
+
+      this.calculaIngresoProducto(this.twFacturaProveedorProducto.tcProducto.nId)
+        .then(ingreso => {
+          this.twFacturaProveedorProductoIngreso.nCantidad = this.twFacturaProveedorProductoIngreso.nCantidad-ingreso;
+          console.log(this.twFacturaProveedorProductoIngreso.nCantidad,' ES LA CANTIDAD DE PRIDUCTOS EN VEMTA POR PEDIDO PENDIENTES DE ENTREGA' );
+        })
+        .catch(error => {
+          console.error('Error al calcular el ingreso del producto:', error);
+        });
+
+    
 
   
     this.productoService.guardaProductoBodega(productoBodega).pipe(
