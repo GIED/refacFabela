@@ -41,6 +41,7 @@ export class FormIngresoProductoComponent implements OnInit {
   totalIngresado = 0;
   totalPendiente = 0;
   twFacturaProveedorProductoIngreso = new TwFacturaProveedorProductoIngreso();
+  totalBodegas:number=0;
 
   constructor(
     private comprasService: ComprasService,
@@ -87,8 +88,23 @@ export class FormIngresoProductoComponent implements OnInit {
    * Muestra la distribución de productos en las bodegas.
    * @param twFacturaProveedorProducto - Producto del proveedor.
    */
+
+calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){ 
+          for (const producto of listaProductoBodega) {
+                this.totalBodegas += producto.nCantidad;
+
+            }
+    console.log(this.totalBodegas, 'ESTE EL NUMERO TOTAL DE PRODUCTOS');
+    }
+
+
   mostrarDistribucionBodegas(twFacturaProveedorProducto: TwFacturaProveedorProducto): void {
-    this.bodegasService.obtenerProductoBodegas(twFacturaProveedorProducto.nIdProducto).subscribe(data => this.listaProductoBodega = data);
+    this.bodegasService.obtenerProductoBodegas(twFacturaProveedorProducto.nIdProducto).subscribe(data => {this.listaProductoBodega = data     
+      this.calcularTotalBodegas(this.listaProductoBodega);
+    }
+     
+
+    );
   }
 
   /**
