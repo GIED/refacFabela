@@ -21,6 +21,7 @@ import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { PedidosService } from '../../../shared/service/pedidos.service';
+import { TwPedidoProducto } from 'src/app/productos/model/TwPedidoProducto';
 
 /**
  * Componente para el formulario de ingreso de productos.
@@ -45,6 +46,7 @@ export class FormIngresoProductoComponent implements OnInit {
   totalBodegas:number=0;
   totalRecibida:number=0;
   ingresoPartida:number = 0;
+  listaProductoPedido:TwPedidoProducto[]=[];
 
   constructor(
     private comprasService: ComprasService,
@@ -76,6 +78,7 @@ export class FormIngresoProductoComponent implements OnInit {
       this.createFormGroup();
       this.loadInitialData();
       this.obtenerIngresosProductoFactura(this.twFacturaProveedorProducto.nId).subscribe();
+      this.productosPedido(this.twFacturaProveedorProducto.nIdProducto);
     }
   }
 
@@ -116,30 +119,16 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
    */
 
   
+  productosPedido(ndProducto:number){
+    this.pedidosService.obtenerProductosIdPedido(this.twFacturaProveedorProducto.nIdProducto).subscribe(data3=>{         
+      this.listaProductoPedido=data3;
+      console.log('El producto tiene venta(s) por pedido pendientes de entrega', this.listaProductoPedido);
+    });
 
-  calculaIngresoProducto(nIdProducto: number): Promise<number> {
-      return new Promise((resolve, reject) => {
-     
 
-        this.pedidosService.obtenerProductosIdPedido(nIdProducto).subscribe(
-          data => {
-            if (data.length === 0) {
-              resolve(0);
-            } else {
-              // Aquí puedes realizar las operaciones necesarias con 'data'
-              this.ingresoPartida = data.reduce((acc, producto) => acc + producto.nCantidadPedida, 0);
-              this.totalRecibida = data.reduce((acc, producto) => acc + producto.nCantidaRecibida, 0);
+  }
 
-              resolve(this.ingresoPartida-this.totalRecibida);
-            }
-          },
-          error => {
-            reject(error);
-          }
-        );
-      });
-    }
-    
+  
   
 
 
@@ -181,14 +170,7 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
      
     
 
-      this.calculaIngresoProducto(this.twFacturaProveedorProducto.tcProducto.nId)
-        .then(ingreso => {
-          this.twFacturaProveedorProductoIngreso.nCantidad = this.twFacturaProveedorProductoIngreso.nCantidad-ingreso;
-          console.log(this.twFacturaProveedorProductoIngreso.nCantidad,' ES LA CANTIDAD DE PRIDUCTOS EN VEMTA POR PEDIDO PENDIENTES DE ENTREGA' );
-        })
-        .catch(error => {
-          console.error('Error al calcular el ingreso del producto:', error);
-        });
+    
 
     
 
@@ -212,7 +194,13 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
          this.comprasService.saveProductoFactura(this.twFacturaProveedorProducto).subscribe(prductoFactura=>{
           this.twFacturaProveedorProducto=prductoFactura;  
           this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Ingreso completado', life: 3000 });
-           this.ref.close();
+         
+         // this.ref.close();
+
+    
+
+
+
         })
 
 

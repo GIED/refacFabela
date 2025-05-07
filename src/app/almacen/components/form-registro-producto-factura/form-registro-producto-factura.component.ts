@@ -102,8 +102,8 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     const ref = this.dialogService.open(FormProductoFacturaComponent, {
       data: model,
       header: 'Formulario de registro producto-factura',
-      width: '70%',
-      height: '70%',
+      width: '90%',
+      height: '80%',
       contentStyle: { 'max-height': '90%', 'overflow': 'auto' },
       baseZIndex: 1000,
       closable: true,
@@ -123,8 +123,8 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
     const ref = this.dialogService.open(FormIngresoProductoComponent, {
       data: model,
       header: 'Formulario de registro de ingreso de producto',
-      width: '70%',
-      height: '70%',
+      width: '90%',
+      height: '80%',
       contentStyle: { 'max-height': '90%', 'overflow': 'auto' },
       baseZIndex: 1000,
       closable: true,

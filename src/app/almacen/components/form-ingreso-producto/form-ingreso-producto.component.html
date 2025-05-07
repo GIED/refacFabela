@@ -22,6 +22,37 @@
 
                 </div>
             </div>
+            <div class="p-col">
+                <div class="card" style="background-color: #EFEFEF;">
+                    <p-panel header="Ventas por pedido">
+                <p-table [value]="listaProductoPedido" responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr>           
+                            <th><h6>Pedido</h6></th>
+                            <th class="p-text-center"><h6>Venta</h6></th>
+                            <th class="p-text-center"><h6>Pedidas</h6></th>
+                            <th class="p-text-center"><h6>Recibidas</h6></th>
+                            <th class="p-text-center"><h6>Pendientes</h6></th>
+
+
+
+                          
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-venta>
+                        <tr>
+                            <td><span class="p-column-title"><h6>Pedido</h6></span><h6>{{venta.nIdPedido}}</h6></td>
+                            <td class="p-text-center"><span class="p-column-title"><h6>Venta</h6></span><h6>{{venta.twPedido.nIdVenta}}</h6></td>
+                            <td class="p-text-center"><span class="p-column-title"><h6>Pedidos</h6></span><h6>{{venta.nCantidadPedida}}</h6></td>
+                            <td class="p-text-center"><span class="p-column-title"><h6>Pendientes</h6></span><h6>{{venta.nCantidaRecibida}}</h6></td>
+                            <td class="p-text-center"><span class="p-column-title"><h6>Pendientes</h6></span><h6>{{venta.nCantidadPedida-venta.nCantidaRecibida}}</h6></td>
+
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-panel>
+            </div>
+            </div>
         </div>
     </div>
     <div class="p-col-8">

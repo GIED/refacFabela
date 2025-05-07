@@ -2,6 +2,7 @@ import { Proveedores } from "src/app/administracion/interfaces/proveedores";
 import { TcUsuario } from "src/app/administracion/model/TcUsuario";
 import { TcProducto } from "./TcProducto";
 import { TcEstatusPedidoProducto } from "./TcEstatusPedidoProducto";
+import { TwPedido } from "./TwPedido";
 
 export class TwPedidoProducto{
     nId:number
@@ -20,6 +21,7 @@ export class TwPedidoProducto{
     tcProveedore:Proveedores;
     tcUsuario: TcUsuario; 
     nIdPedido:number; 
-    tcEstatusPedidoProducto: TcEstatusPedidoProducto
+    tcEstatusPedidoProducto: TcEstatusPedidoProducto;
+    twPedido:TwPedido;
 
 }
