@@ -47,6 +47,7 @@ export class FormIngresoProductoComponent implements OnInit {
   totalRecibida:number=0;
   ingresoPartida:number = 0;
   listaProductoPedido:TwPedidoProducto[]=[];
+  totalProductoPendiente:number=0;
 
   constructor(
     private comprasService: ComprasService,
@@ -119,14 +120,15 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
    */
 
   
-  productosPedido(ndProducto:number){
-    this.pedidosService.obtenerProductosIdPedido(this.twFacturaProveedorProducto.nIdProducto).subscribe(data3=>{         
-      this.listaProductoPedido=data3;
-      console.log('El producto tiene venta(s) por pedido pendientes de entrega', this.listaProductoPedido);
-    });
+  
+productosPedido(ndProducto: number) {
+  this.pedidosService.obtenerProductosIdPedido(this.twFacturaProveedorProducto.nIdProducto).subscribe(data3 => {
+  this.listaProductoPedido=data3;
+    this.totalProductoPendiente = data3.reduce((total, producto) => total + (producto.nCantidadPedida - producto.nCantidaRecibida), 0);
+console.log('este el numero total de pendietes por entregar',this.totalProductoPendiente);
+  });
+}
 
-
-  }
 
   
   
@@ -197,7 +199,18 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
          
          // this.ref.close();
 
-    
+        if(this.totalProductoPendiente>0){
+
+            this.comprasService.surtirVentasPedido(productoBodega.nIdProducto).subscribe(prod=>{
+              this.listaProductoBodega=prod;
+
+                this.ref.close();
+
+            })
+
+        }
+
+         this.ref.close();
 
 
 
@@ -212,6 +225,13 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
         console.error('Error en el proceso de ingreso del producto:', err);
       }
     });
+  }
+
+  descontarVentasPedido(){
+
+
+
+
   }
 
   /**

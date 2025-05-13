@@ -7,6 +7,7 @@ import { VenCotProdAnoDto } from 'src/app/productos/model/VenCotProdAnoDto';
 import { TwCarritoCompraPedido } from 'src/app/productos/model/TwCarritoCompraPedido';
 import { TwFacturaProveedorProducto } from './TwFacturaProveedorProducto';
 import { TwFacturaProveedorProductoIngreso } from 'src/app/productos/model/TwFacturaProveedorProductoIngreso ';
+import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,11 @@ export class ComprasService {
   getProductoFacturaIngreso(nId: number){
     let url= environment.servicios.apiRefacFabela + locator.getFacturaProductoIngreso+'nId='+nId;
     return this.http.get<TwFacturaProveedorProductoIngreso[]>(url);
+  }
+
+  surtirVentasPedido(nId: number){
+    let url= environment.servicios.apiRefacFabela + locator.surtirProductoBodega+'nIdProducto='+nId;
+    return this.http.get<TwProductoBodega[]>(url);
   }
   
   
