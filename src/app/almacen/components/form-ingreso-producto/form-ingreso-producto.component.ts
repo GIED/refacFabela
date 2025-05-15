@@ -18,7 +18,7 @@ import { TwFacturaProveedorProducto } from 'src/app/shared/service/TwFacturaProv
 import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
 import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
-import { switchMap, tap } from 'rxjs/operators';
+import { concatMap, switchMap, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { PedidosService } from '../../../shared/service/pedidos.service';
 import { TwPedidoProducto } from 'src/app/productos/model/TwPedidoProducto';
@@ -172,60 +172,76 @@ console.log('este el numero total de pendietes por entregar',this.totalProductoP
      
     
 
-    
 
-    
 
-  
     this.productoService.guardaProductoBodega(productoBodega).pipe(
-      switchMap(prodbodega => {
-        this.mostrarDistribucionBodegas(this.twFacturaProveedorProducto);
-        return this.comprasService.saveProductoFacturaIngreso(this.twFacturaProveedorProductoIngreso);
-      }),
-      switchMap(ingreso => {
-        this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Guardado con éxito', life: 3000 });
-        this.twFacturaProveedorProductoIngreso = ingreso;
-        return this.obtenerIngresosProductoFactura(this.twFacturaProveedorProducto.nId);
-      })
-    ).subscribe({
-      next: () => {
-        this.formGrp.reset(); // Limpiar el formulario
-        this.twFacturaProveedorProductoIngreso = new TwFacturaProveedorProductoIngreso();
-        if (this.totalPendiente === 0) {        
-          this.twFacturaProveedorProducto.nEstatus=1;
-         this.comprasService.saveProductoFactura(this.twFacturaProveedorProducto).subscribe(prductoFactura=>{
-          this.twFacturaProveedorProducto=prductoFactura;  
-          this.messageService.add({ severity: 'success', summary: 'Mensaje', detail: 'Ingreso completado', life: 3000 });
-         
-         // this.ref.close();
+  tap(() => this.mostrarDistribucionBodegas(this.twFacturaProveedorProducto)),
 
-        if(this.totalProductoPendiente>0){
+  concatMap(() =>
+    this.comprasService.saveProductoFacturaIngreso(this.twFacturaProveedorProductoIngreso)
+  ),
 
-            this.comprasService.surtirVentasPedido(productoBodega.nIdProducto).subscribe(prod=>{
+  tap(ingreso => {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Mensaje',
+      detail: 'Guardado con éxito',
+      life: 3000
+    });
+    this.twFacturaProveedorProductoIngreso = ingreso;
+  }),
+
+  concatMap(() =>
+    this.obtenerIngresosProductoFactura(this.twFacturaProveedorProducto.nId)
+  )
+).subscribe({
+  next: () => {
+    this.resetearFormulario();
+    this.verificarYGuardarFactura(productoBodega.nIdProducto);
+  },
+  error: err => {
+    console.error('Error en el proceso de ingreso del producto:', err);
+  }
+});
+    
+  }
+
+
+/*Limpiar el formulario */
+  private resetearFormulario(): void {
+  this.formGrp.reset();
+  this.twFacturaProveedorProductoIngreso = new TwFacturaProveedorProductoIngreso();
+}
+
+private verificarYGuardarFactura(idProducto:number): void {
+  if (this.totalPendiente === 0) {
+    this.twFacturaProveedorProducto.nEstatus = 1;
+    this.comprasService.saveProductoFactura(this.twFacturaProveedorProducto).subscribe(prductoFactura => {
+      this.twFacturaProveedorProducto = prductoFactura;
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Mensaje',
+        detail: 'Ingreso completado',
+        life: 3000
+      });
+
+      if (this.totalProductoPendiente > 0) {
+
+       this.comprasService.surtirVentasPedido(idProducto).subscribe(prod=>{
               this.listaProductoBodega=prod;
 
-                this.ref.close();
+               // this.ref.close();
 
             })
-
-        }
-
-         this.ref.close();
-
-
-
-        })
-
-
-
-
-        }
-      },
-      error: err => {
-        console.error('Error en el proceso de ingreso del producto:', err);
       }
     });
   }
+}
+
+
+
+ 
+
 
   descontarVentasPedido(){
 
