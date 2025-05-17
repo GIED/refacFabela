@@ -121,11 +121,34 @@ calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){
   
   
 productosPedido(ndProducto: number) {
-  this.pedidosService.obtenerProductosIdPedido(this.twFacturaProveedorProducto.nIdProducto).subscribe(data3 => {
+this.pedidosService.obtenerProductosIdPedido(this.twFacturaProveedorProducto.nIdProducto).subscribe(data3 => {
   this.listaProductoPedido=data3;
-    this.totalProductoPendiente = data3.reduce((total, producto) => total + (producto.nCantidadPedida - producto.nCantidaRecibida), 0);
+
+    if( this.listaProductoPedido.length>0){
+       this.confirmationService.confirm({
+            message: '¡Hay ventas por pedido pendientes de ingresar, favor de separalas!',
+            header: 'Confirmación',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: "Aceptar", acceptIcon: "pi pi-check", acceptButtonStyleClass: 'p-button-success p-button-sm p-button-raised',  
+             rejectVisible: false, 
+            blockScroll: true, // Evita que se pueda hacer scroll en el fondo 
+            dismissableMask: false, 
+
+
+            accept: () => {
+            // Acción a ejecutar si el usuario acepta
+            }
+            });
+
+
+    }
+
+
+
+
+ this.totalProductoPendiente = data3.reduce((total, producto) => total + (producto.nCantidadPedida - producto.nCantidaRecibida), 0);
 console.log('este el numero total de pendietes por entregar',this.totalProductoPendiente);
-  });
+ });
 }
 
 
@@ -239,6 +262,9 @@ private verificarYGuardarFactura(idProducto:number): void {
    }
 
 }
+
+
+
 
 
 
