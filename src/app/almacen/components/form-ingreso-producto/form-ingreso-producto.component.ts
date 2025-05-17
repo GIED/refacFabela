@@ -98,11 +98,10 @@ export class FormIngresoProductoComponent implements OnInit {
    */
 
 calcularTotalBodegas( listaProductoBodega:TwProductoBodega[]){ 
-          for (const producto of listaProductoBodega) {
-                this.totalBodegas += producto.nCantidad;
-
-            }
-    console.log(this.totalBodegas, 'ESTE EL NUMERO TOTAL DE PRODUCTOS');
+  for (const producto of listaProductoBodega) {
+  this.totalBodegas += producto.nCantidad;
+  }
+      console.log(this.totalBodegas, 'ESTE EL NUMERO TOTAL DE PRODUCTOS');
     }
 
 
@@ -225,17 +224,20 @@ private verificarYGuardarFactura(idProducto:number): void {
         life: 3000
       });
 
-      if (this.totalProductoPendiente > 0) {
-
-       this.comprasService.surtirVentasPedido(idProducto).subscribe(prod=>{
-              this.listaProductoBodega=prod;
-
-               // this.ref.close();
-
-            })
-      }
+     
     });
   }
+
+  if (this.totalProductoPendiente > 0) {
+
+    this.comprasService.surtirVentasPedido(idProducto).subscribe(prod=>{
+           this.listaProductoBodega=prod;
+
+             this.ref.close();
+
+         })
+   }
+
 }
 
 
