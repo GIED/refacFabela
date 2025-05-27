@@ -5,9 +5,9 @@
             <div class="p-grid">
         <div class="p-col-4 ">RFC: {{saldoGeneralCliente.tcCliente.sRfc}} </div>
         <div class="p-col-4 ">RAZÓN SOCIAL: {{saldoGeneralCliente.tcCliente.sRazonSocial}}</div>
-        <div class="p-col-4">LIMITE DE CREDITO: {{saldoGeneralCliente.nLimiteCredito|currency:'$'}}</div>
-        <div class="p-col-4">SALDO TOTAL: {{saldoGeneralCliente.nSaldoTotal|currency:'$'}}</div>
-        <div class="p-col-4">CREDITO DISPONIBLE: {{saldoGeneralCliente.nCreditoDisponible|currency:'$'}}</div> 
+        <div class="p-col-4">LIMITE DE CREDITO: {{saldoGeneralCliente.nLimiteCredito.toFixed(2)| currency:'MXN'}}</div>
+        <div class="p-col-4">SALDO TOTAL: {{saldoGeneralCliente.nSaldoTotal.toFixed(2)| currency:'MXN'}}</div>
+        <div class="p-col-4">CREDITO DISPONIBLE: {{saldoGeneralCliente.nCreditoDisponible.toFixed(2)| currency:'MXN'}}</div> 
             </div>
     </div>
    

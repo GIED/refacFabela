@@ -4,13 +4,14 @@ import { TcGanancia } from './TcGanancia';
 import { Usuarios } from '../../administracion/interfaces/usuarios';
 import { TcClavesat } from './TcClavesat';
 import { TcDescuento } from './TcDescuento';
+import Decimal from 'decimal.js';
 export class TcProducto{
 nId: number;
 dFecha: Date;
 nEstatus: number;
 nIdCategoriaGeneral:number;
 nIdCategoria:number;
-nPrecio: number;
+nPrecio: Decimal;
 sDescripcion: string; 
 sMarca: string;
 sMoneda: string;
@@ -24,12 +25,16 @@ tcCategoriaGeneral: TcCategoriaGeneral;
 tcGanancia: TcGanancia;
 tcUsuario: Usuarios;
 tcClavesat: TcClavesat;
-nPrecioPeso:number;
-nPrecioSinIva:number;
-nPrecioConIva:number;
+nPrecioPeso:Decimal;
+nPrecioSinIva:Decimal;
+nPrecioConIva:Decimal;
 sIdBar:string;
-nPrecioIva:number;
+nPrecioIva:Decimal;
 nIdDescuento:number;
 tcDescuento:TcDescuento;
 nIdMarca:number;
+
+
+ 
+
 }

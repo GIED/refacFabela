@@ -274,7 +274,7 @@
                                             <td><span class="p-column-title">Producto</span>
                                                 {{productoVenta.tcProducto.sProducto}}</td>
                                             <td><span class="p-column-title">Precio con Iva</span>
-                                                {{productoVenta.tcProducto.nPrecioConIva | number:'1.1-3'}}</td>
+                                                {{productoVenta.tcProducto.nPrecioConIva.toFixed(2)| currency:'MXN'}}</td>
                                             <td><span class="p-column-title">Cantidad</span>{{productoVenta.nCantidad}}
                                             </td>
                                             <td><span class="p-column-title">Precio
@@ -292,7 +292,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td> <div class="p-col-12 text-center  " style="background: #92B673; border-radius: 5px;"> <strong>Total: </strong> ${{total | number:'1.1-3'}}</div></td>
+                                            <td> <div class="p-col-12 text-center  " style="background: #92B673; border-radius: 5px;"> <strong>Total: </strong>{{total.toFixed(2)| currency:'MXN'}}</div></td>
                                            
 
                                            

@@ -59,7 +59,7 @@
                 <ng-template pTemplate="summary">
 
                     <div class="p-d-flex p-jc-end">
-                        <strong>Cantidad Total: </strong> {{total |currency: '$'}}
+                        <strong>Cantidad Total: </strong> {{total.toFixed(2)| currency:'MXN'}}
                     </div>
 
                 </ng-template>

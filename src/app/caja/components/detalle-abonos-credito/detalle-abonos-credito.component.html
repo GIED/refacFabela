@@ -24,7 +24,7 @@
          </td>
          <td><span class="p-column-title">Folio Venta</span> {{abono.twVenta.sFolioVenta}}
          </td>
-         <td><span class="p-column-title">Abono</span> {{abono.nAbono | number}}
+         <td><span class="p-column-title">Abono</span> {{abono.nAbono.toFixed(2)| currency:'MXN'}}
          </td>
          <td><span class="p-column-title">Fecha Abono</span> {{abono.dFecha | date }}
          </td>

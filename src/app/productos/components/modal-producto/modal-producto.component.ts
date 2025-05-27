@@ -13,6 +13,7 @@ import { ProductoService } from '../../../shared/service/producto.service';
 import { UsuarioService } from '../../../administracion/service/usuario.service';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { TcMarca } from '../../model/TcMarca';
+import Decimal from 'decimal.js';
 
 interface Moneda {
   name: string,
@@ -49,7 +50,7 @@ export class ModalProductoComponent implements OnInit {
   debuncer: Subject<string> = new Subject();
   mostrarSugerencias:boolean=false;
   ganancia:number;
-  precioFinal: number;
+  precioFinal: Decimal=new Decimal('0');
   listaMarca:TcMarca[];
   noparte:string;
   edithBand:boolean=false;

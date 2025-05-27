@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { disable } from 'colors';
+import Decimal from 'decimal.js';
 import { MessageService } from 'primeng/api';
 import { forkJoin, Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -232,8 +233,8 @@ export class FormActualizaVentaComponent implements OnInit {
             if(this.twVenta.nTipoPago==1){
 
                         /*Se obtiene el monto total de la venta*/
-                      let totalVenta=0;
-                      let saldoDisponible=0;
+                      let totalVenta= new Decimal('0');
+                     let  saldoDisponible=new Decimal('0');
                       totalVenta=resultadoServicio1.nTotalVenta;
 
                         if(resultadoServicio2!=null || resultadoServicio2!=undefined ){
@@ -242,7 +243,7 @@ export class FormActualizaVentaComponent implements OnInit {
             
                         }                     
             
-                        if((resultadoServicio2==null || resultadoServicio2==undefined) && this.twVenta.tcCliente.n_limiteCredito>0 ){
+                        if((resultadoServicio2==null || resultadoServicio2==undefined) && this.twVenta.tcCliente.n_limiteCredito.greaterThan(0) ){
             
                           saldoDisponible=this.twVenta.tcCliente.n_limiteCredito;
             

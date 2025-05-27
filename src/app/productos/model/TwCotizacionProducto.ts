@@ -1,3 +1,4 @@
+import Decimal from "decimal.js";
 import { TwCotizacion } from "./TcCotizacion";
 import { TcProducto } from "./TcProducto";
 
@@ -7,11 +8,11 @@ export class TwCotizacionProducto{
     nIdProducto?:number;
     nIdCotizacion?:number;   
     nCantidad?:number;
-    nIvaPartida?:number;
-    nPrecioPartida?:number;
-    nPrecioUnitario?:number;
-    nTotalPartida?:number;
-    nTotalUnitario?:number;
+    nIvaPartida?:Decimal;
+    nPrecioPartida?:Decimal;
+    nPrecioUnitario?:Decimal;
+    nTotalPartida?:Decimal;
+    nTotalUnitario?:Decimal;
     sCondicionEntrega?:string;
     nIdDescuento:number;
     tcProducto?:TcProducto

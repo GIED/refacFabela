@@ -8,6 +8,7 @@ import { MessageService } from 'primeng/api';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { DatosVenta } from '../../interfaces/DatosVenta';
 import { TokenService } from '../../../shared/service/token.service';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-form-venta',
@@ -18,7 +19,7 @@ export class FormVentaComponent implements OnInit {
 
   @Input() listaProductos:TvStockProducto[];
   @Input() saldoGeneralCliente:SaldoGeneralCliente;
-  @Input() total:number;
+  @Input() total:Decimal;
   @Output() emitirVenta: EventEmitter<DatosVenta> = new EventEmitter();
   @Output() soloCotizacion: EventEmitter<any> = new EventEmitter();
 
@@ -81,7 +82,7 @@ export class FormVentaComponent implements OnInit {
   }
 
   validaCredito(){
-    if (this.saldoGeneralCliente.nCreditoDisponible > 0 && this.saldoGeneralCliente.nCreditoDisponible >= this.total) {
+    if ( new Decimal(this.saldoGeneralCliente.nCreditoDisponible).greaterThan(0) &&  new Decimal(this.saldoGeneralCliente.nCreditoDisponible).greaterThanOrEqualTo(this.total)) {
       this.muestraCredito =  true;
     }else{
       this.muestraCredito =  false;
@@ -92,7 +93,7 @@ export class FormVentaComponent implements OnInit {
   quitarProducto(producto: TvStockProducto){
     //console.log(producto);
     
-    this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
+    this.total = this.total.minus(producto.tcProducto.nPrecioConIva.mul(new Decimal(producto.nCantidad)));
     this.listaValidada.splice(this.findIndexById(producto.nIdProducto, this.listaValidada),1);
     this.validaCredito();
   }

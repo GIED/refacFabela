@@ -5,6 +5,7 @@ import { DatosVenta } from '../../interfaces/DatosVenta';
 import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { ProductoService } from '../../../shared/service/producto.service';
 import { MessageService } from 'primeng/api';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-form-compra-internet',
@@ -16,7 +17,7 @@ export class FormCompraInternetComponent implements OnInit {
 
   @Input() listaProductos:TvStockProducto[];
   @Input() saldoGeneralCliente:SaldoGeneralCliente;
-  @Input() total:number;
+  @Input() total:Decimal;
   @Output() emitirVenta: EventEmitter<DatosVenta> = new EventEmitter();
   @Output() soloCotizacion: EventEmitter<any> = new EventEmitter();
 
@@ -77,7 +78,7 @@ export class FormCompraInternetComponent implements OnInit {
   }
 
   validaCredito(){
-    if (this.saldoGeneralCliente.nCreditoDisponible > 0 && this.saldoGeneralCliente.nCreditoDisponible >= this.total) {
+    if (new Decimal(this.saldoGeneralCliente.nCreditoDisponible).greaterThan(0) && this.saldoGeneralCliente.nCreditoDisponible >= this.total) {
       this.muestraCredito =  true;
     }else{
       this.muestraCredito =  false;
@@ -88,7 +89,7 @@ export class FormCompraInternetComponent implements OnInit {
   quitarProducto(producto: TvStockProducto){
     ////console.log(producto);
     
-    this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
+    this.total = this.total.minus(producto.tcProducto.nPrecioConIva.mul(new Decimal(producto.nCantidad))) ;
     this.listaValidada.splice(this.findIndexById(producto.nIdProducto, this.listaValidada),1);
     this.validaCredito();
   }

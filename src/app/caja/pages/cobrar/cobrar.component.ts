@@ -14,6 +14,7 @@ import { VwSaldoVentaFavorDisponible } from 'src/app/productos/model/VwSaldoVent
 import { TwSaldoUtilizado } from 'src/app/productos/model/TwSaldoUtilizado';
 import { UsuarioService } from '../../../administracion/service/usuario.service';
 import { TokenService } from 'src/app/shared/service/token.service';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-cobrar',
@@ -36,12 +37,12 @@ export class CobrarComponent implements OnInit {
   cols: any[];
   listaFormaPago: TcFormaPago[];
   noVenta: number;
-  totalVenta: number;
+  totalVenta: Decimal;
   mostrarBalance: boolean;
   listaCobrosParciales: TrVentaCobro[];
   total: number;
-  aCuenta:number;
-  restan:number;
+  aCuenta:Decimal;
+  restan:Decimal;
   displayListaVentas:boolean;
   displayListaAbonoVenta:boolean;
   cajaActiva:TwCaja;
@@ -52,7 +53,7 @@ export class CobrarComponent implements OnInit {
   state:boolean;
   error:boolean;
   descuento:boolean;
-  totalDescuento:number;
+  totalDescuento:Decimal;
   saldoUtilizado:TwSaldoUtilizado;
   ventaCobro:TrVentaCobro;
   twVenta:TwVenta;
@@ -67,9 +68,9 @@ export class CobrarComponent implements OnInit {
     this.error=false;
     this.saldoUtilizado=new TwSaldoUtilizado();
     this.ventaCobro=new TrVentaCobro();
-    this.totalVenta=0;
-    this.aCuenta=0;
-    this.restan=0;
+    this.totalVenta=new Decimal(0);
+    this.aCuenta=new Decimal(0);
+    this.restan=new Decimal(0);
     this.banGuardar=true;
   }
 
@@ -197,7 +198,7 @@ export class CobrarComponent implements OnInit {
   aplicarSaldoFavor(){
     
     // Se mapea el objeto de saldo utilizado para guardar el registro
-    if(this.saldoTotalFavor.nSaldoDisponible>=this.ventaSaldoFavor.nSaldoTotal){
+    if(this.saldoTotalFavor.nSaldoDisponible.greaterThanOrEqualTo(this.ventaSaldoFavor.nSaldoTotal)){
        this.saldoUtilizado.nSaldoUtilizado=this.ventaSaldoFavor.nSaldoTotal;
        this.saldoUtilizado.nSaldoTotal=this.ventaSaldoFavor.nSaldoTotal;
        this.ventaCobro.nMonto=this.ventaSaldoFavor.nSaldoTotal;
@@ -247,12 +248,12 @@ export class CobrarComponent implements OnInit {
 
   limpiar(){
     this.noVenta = 0
-    this.totalVenta = 0;     
-    this.restan = 0;
+    this.totalVenta = new Decimal(0);     
+    this.restan =new Decimal(0);   
     this.VentaDescuentoDto = new TvVentasDetalle();
-    this.totalDescuento=0;
+    this.totalDescuento=new Decimal(0);
     this.fProducto.monto.setValue(0);
-    this.aCuenta=0;
+    this.aCuenta=new Decimal(0);
    
 
 
@@ -277,13 +278,13 @@ export class CobrarComponent implements OnInit {
 
 
       for(let i in this.listaCobrosParciales ){
-        this.aCuenta+=this.listaCobrosParciales[i].nMonto;
+        this.aCuenta=this.aCuenta.plus(this.listaCobrosParciales[i].nMonto);
         
      }
   
      this.noVenta = this.ventaSaldoFavor.nId;
      this.totalVenta = this.ventaSaldoFavor.nTotalVenta;     
-     this.restan = this.ventaSaldoFavor.nTotalVenta-this.aCuenta-this.ventaSaldoFavor.descuento;
+     this.restan = this.ventaSaldoFavor.nTotalVenta.minus(this.aCuenta.minus(this.ventaSaldoFavor.descuento));
      this.VentaDescuentoDto = this.ventaSaldoFavor;
      this.totalDescuento=this.ventaSaldoFavor.descuento;
      this.fProducto.monto.setValue(this.restan.toFixed(2));
@@ -292,7 +293,7 @@ export class CobrarComponent implements OnInit {
 
       if(this.restan==this.ventaSaldoFavor.nTotalVenta){
 
-        this.fProducto.monto.setValue(this.restan/2);
+        this.fProducto.monto.setValue(this.restan.div(2));
       }        
      
     }
@@ -307,7 +308,7 @@ export class CobrarComponent implements OnInit {
 
      this.consultaVentas();
 
-      if(this.restan<=0.01){
+      if(this.restan.isZero()){
         this.ventasService.obtnerVentaId(this.ventaSaldoFavor.nId).subscribe(data=>{        
           this.twVenta=data;
           this.twVenta.nIdEstatusVenta=2; 
@@ -366,7 +367,7 @@ export class CobrarComponent implements OnInit {
         this.state = false;
 
       }
-      if(this.ventaSaldoFavor.descuento>0){
+      if(this.ventaSaldoFavor.descuento.greaterThan(0)){
         this.descuento=true;
 
       }
@@ -480,7 +481,7 @@ export class CobrarComponent implements OnInit {
     } 
     else {
 
-      if ((this.fProducto.monto.value - this.restan)>=0.01) {
+      if (this.fProducto.monto.value.minus(this.restan).isZero()) {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'El total a pagar no puede ser mayor al adeudo', life: 3000 });
       }
       else {

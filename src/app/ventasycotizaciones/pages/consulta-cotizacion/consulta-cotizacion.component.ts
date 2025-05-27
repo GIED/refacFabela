@@ -10,6 +10,7 @@ import { VentasService } from 'src/app/shared/service/ventas.service';
 import { MessageService } from 'primeng/api';
 import { TokenService } from '../../../shared/service/token.service';
 import { TwVenta } from '../../../productos/model/TwVenta';
+import Decimal from 'decimal.js';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class ConsultaCotizacionComponent implements OnInit {
   listaProductos: TvStockProducto[];
   saldoGeneralCliente:SaldoGeneralCliente;
   mostrarOpcionesVenta:boolean;
-  total:number;
+  total:Decimal;
   datosRegistraVenta:DatosVenta;
   cotizacionData: TwCotizacion;
   venta:TwVenta
@@ -41,7 +42,7 @@ constructor(private clienteService: ClienteService,private ventaService:VentasSe
     this.listaCotizaciones=[];
     this.saldoGeneralCliente = new SaldoGeneralCliente();
     this.mostrarOpcionesVenta = false;
-    this.total=0;
+    this.total=new Decimal('0');
     this.cotizacionData= new TwCotizacion();
     
   }
@@ -94,9 +95,9 @@ detalleCotizacion(twCotizacion: TwCotizacion){
       this.saldoGeneralCliente=results[0];
     }else{
       this.saldoGeneralCliente.nIdCliente=twCotizacion.tcCliente.nId;
-      this.saldoGeneralCliente.nCreditoDisponible=0;
+      this.saldoGeneralCliente.nCreditoDisponible=new Decimal('0');
       this.saldoGeneralCliente.nLimiteCredito=twCotizacion.tcCliente.n_limiteCredito;
-      this.saldoGeneralCliente.nSaldoTotal=0;
+      this.saldoGeneralCliente.nSaldoTotal=new Decimal('0');
       this.saldoGeneralCliente.tcCliente=twCotizacion.tcCliente;
     }
 
@@ -107,7 +108,7 @@ detalleCotizacion(twCotizacion: TwCotizacion){
 
     for (const producto of this.listaProductos) {
 
-      this.total += producto.tcProducto.nPrecioConIva*producto.nCantidad;
+      this.total = this.total.plus(producto.tcProducto.nPrecioConIva.mul(new Decimal(producto.nCantidad)));
     }
 
     this.mostrarOpcionesVenta=true;
@@ -119,7 +120,7 @@ detalleCotizacion(twCotizacion: TwCotizacion){
 
 soloCotizacion(){
   this.mostrarOpcionesVenta=false;
-  this.total=0;
+  this.total=new Decimal('0');
 }
 
 generarVenta(datosVenta: DatosVenta){

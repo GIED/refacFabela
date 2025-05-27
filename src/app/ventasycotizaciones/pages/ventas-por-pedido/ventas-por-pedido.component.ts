@@ -22,6 +22,7 @@ import { debounceTime } from 'rxjs/operators';
 import { TokenService } from '../../../shared/service/token.service';
 import { ProveedorService } from 'src/app/administracion/service/proveedor.service';
 import { Proveedores } from '../../../administracion/interfaces/proveedores';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-ventas-por-pedido',
@@ -63,7 +64,7 @@ export class VentasPorPedidoComponent implements OnInit {
 
   saldoGeneralCliente:SaldoGeneralCliente;
   
-  total: number = 0;
+  total: Decimal = new Decimal('0');
   nIdProducto:number;
   stockTotal: number = 0;
   banProductoSeleccionado:boolean=false;
@@ -177,9 +178,9 @@ valorSeleccionadoCliente(){
       this.saldoGeneralCliente=saldoCliente;
     }else{
       this.saldoGeneralCliente.nIdCliente=this.clienteSeleccionado.nId;
-      this.saldoGeneralCliente.nCreditoDisponible=0;
+      this.saldoGeneralCliente.nCreditoDisponible=new Decimal('0');
       this.saldoGeneralCliente.nLimiteCredito=this.clienteSeleccionado.n_limiteCredito;
-      this.saldoGeneralCliente.nSaldoTotal=0;
+      this.saldoGeneralCliente.nSaldoTotal=new Decimal('0');
       this.saldoGeneralCliente.tcCliente=this.clienteSeleccionado;
     }
     this.mostrarDetalleCliente=true;
@@ -304,7 +305,7 @@ agregarProduct(producto: TvStockProducto) {
   }
   //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
   ////console.log("total a: "+this.total);
-  this.total += producto.tcProducto.nPrecioConIva*this.nCantidadCtrl.value;
+  this.total =  this.total.plus( producto.tcProducto.nPrecioConIva.mul( new Decimal(this.nCantidadCtrl.value)));
   producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
   ////console.log("total d: "+this.total);
   
@@ -323,7 +324,7 @@ agregarProduct(producto: TvStockProducto) {
 quitarProducto(producto: TvStockProducto){
   ////console.log(producto);
   
-  this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
+  this.total = this.total.minus( producto.tcProducto.nPrecioConIva.mul(new Decimal(producto.nCantidad)));
   ////console.log("total: ",this.total);
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
@@ -390,7 +391,7 @@ cancelar(){
   this.productoSelecionadoCtrl.setValue('');
   this.nCantidadCtrl.setValue('');
   this.listaProductos=[];
-  this.total=0.00;
+  this.total=new Decimal('0');
   this.mostrarDetalleCliente=false;
   this.mostrarOpcionesVenta=false;
   this.muestraProductos = false;

@@ -5,6 +5,7 @@ import { ProductoService } from 'src/app/shared/service/producto.service';
 import { DatosVenta } from '../../interfaces/DatosVenta';
 import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { MessageService } from 'primeng/api';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-form-venta-pedido',
@@ -15,7 +16,7 @@ export class FormVentaPedidoComponent implements OnInit {
 
   @Input() listaProductos:TvStockProducto[];
   @Input() saldoGeneralCliente:SaldoGeneralCliente;
-  @Input() total:number;
+  @Input() total:Decimal;
   @Output() emitirVenta: EventEmitter<DatosVenta> = new EventEmitter();
   @Output() cancelar: EventEmitter<any> = new EventEmitter();
 
@@ -37,7 +38,7 @@ export class FormVentaPedidoComponent implements OnInit {
     
     this.listaValidada=this.listaProductos
     this._initFormGroupVentas();
-    this.nAnticipoCtrl.setValue(this.total/2);
+    this.nAnticipoCtrl.setValue(this.total.div(2));
 
    
   }
@@ -57,7 +58,7 @@ export class FormVentaPedidoComponent implements OnInit {
   quitarProducto(producto: TvStockProducto){
     //console.log(producto);
     
-    this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
+    this.total = this.total.minus( producto.tcProducto.nPrecioConIva.mul(new Decimal(producto.nCantidad)));
     this.listaValidada.splice(this.findIndexById(producto.nIdProducto, this.listaValidada),1);
   }
 
@@ -67,8 +68,8 @@ export class FormVentaPedidoComponent implements OnInit {
     
       //console.log("lista para guardar");
 
-      if (this.nAnticipoCtrl.value < this.total/2 || this.nAnticipoCtrl.value > this.total ) {
-        this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'El anticipo para generar el pedido debé ser almenos de: '+this.total/2+' y menor a:'+this.total, life: 3000});
+      if (this.nAnticipoCtrl.value < this.total.div(2) || this.nAnticipoCtrl.value > this.total ) {
+        this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'El anticipo para generar el pedido debé ser almenos de: '+this.total.div(2)+' y menor a:'+this.total, life: 3000});
       }
       else{
         this.datosVenta.anticipo = this.nAnticipoCtrl.value;

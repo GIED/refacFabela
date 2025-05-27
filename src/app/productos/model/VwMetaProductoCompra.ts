@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js';
 import { TwProductoBodega } from './TwProductoBodega';
 export class VwMetaProductoCompra {
     nId!: number;
@@ -10,12 +11,12 @@ export class VwMetaProductoCompra {
     sClavesat!: string;
     sIdBar!: string;
     nIdDescuento!: number;
-    nPrecio!: number; // BigDecimal en Java se mapea a number en TypeScript
+    nPrecio!: Decimal; // BigDecimal en Java se mapea a number en TypeScript
     sMoneda!: string;
     nGanancia!: number;
-    nPrecioUnitarioCalculado!: number;
-    nIvaUnitarioCalculado!: number;
-    nTotalUnitarioCalculado!: number;
+    nPrecioUnitarioCalculado!: Decimal;
+    nIvaUnitarioCalculado!: Decimal;
+    nTotalUnitarioCalculado!: Decimal;
     nCantidad!: number;
     nStockMinimoRequerido!: number;
     nStockMaximoRequerido!: number;

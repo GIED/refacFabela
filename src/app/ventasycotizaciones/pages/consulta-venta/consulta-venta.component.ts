@@ -56,7 +56,7 @@ export class ConsultaVentaComponent implements OnInit {
   ngOnInit(){
      this.ventasService.obtenerVentasTop().subscribe(data=>{
      this.listaVentasDetalleCliente=data; 
-     //console.log( this.listaVentasDetalleCliente);
+     console.log( this.listaVentasDetalleCliente);
 
     
      for (let index = 0; index <  this.listaVentasDetalleCliente.length; index++) {

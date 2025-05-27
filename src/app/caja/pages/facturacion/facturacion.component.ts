@@ -187,7 +187,7 @@ export class FacturacionComponent implements OnInit {
           this.nuevaFormaPago = this.ListaTrVentaCobro[index].tcFormapago.sDescripcion
 
            /*Si el  monto de pago en efectivo es mayor o igual a dos mil la factura sale por definir para hacer el complemento de pago*/
-          if (this.ListaTrVentaCobro[index].nMonto >= 2000 && this.ListaTrVentaCobro[index].tcFormapago.nId == 1) {
+          if (this.ListaTrVentaCobro[index].nMonto.greaterThanOrEqualTo(2000) && this.ListaTrVentaCobro[index].tcFormapago.nId == 1) {
             this.efectivoValida = true;
           }
           else {

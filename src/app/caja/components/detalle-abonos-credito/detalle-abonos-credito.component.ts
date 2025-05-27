@@ -13,6 +13,7 @@ import { TcUsuario } from '../../../administracion/model/TcUsuario';
 import { validators } from '../../../shared/validators/validators';
 import { forkJoin } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-detalle-abonos-credito',
@@ -34,7 +35,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
   twCaja: TwCaja;
   tcUsuario: TcUsuario;
   twAbono:TwAbono;
-  diferencia:number;
+  diferencia:Decimal=new Decimal('0');
 
   constructor(private fb: FormBuilder, private catalogo: CatalogoService, private ventasService: VentasService, private catalogoService: CatalogoService, private usuarioService: UsuarioService, private tokenService: TokenService,  private messageService: MessageService) {
 
@@ -135,9 +136,9 @@ export class DetalleAbonosCreditoComponent implements OnInit {
  
          if(this.twAbono.twVenta!==null && this.twAbono.tcFormapago!==null && this.twAbono.twCaja.nId!==null &&  this.twAbono.tcUsuario!==null){
 
-         this.diferencia= this.tvVentasDetalle.nSaldoTotal-this.twAbono.nAbono
+         this.diferencia= new Decimal(this.tvVentasDetalle.nSaldoTotal).minus(this.twAbono.nAbono)
          
-          if( this.diferencia<0.1){
+          if(this.diferencia.isZero()){
 
             this.twAbono.nAbono=this.tvVentasDetalle.nSaldoTotal;
 
@@ -149,7 +150,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
            this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El Abono se guardo', life: 3000 });
            this.listaAbonosVenta = [...this.listaAbonosVenta];
  
-           this.tvVentasDetalle.nSaldoTotal-=this.twAbono.nAbono;
+           this.tvVentasDetalle.nSaldoTotal= new Decimal(this.tvVentasDetalle.nSaldoTotal).minus(this.twAbono.nAbono);
          
  
            this.limpiaFormulario();

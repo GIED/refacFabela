@@ -1,11 +1,13 @@
+import Decimal from "decimal.js";
+
 export class CotizacionDto{
     nIdCliente: number;
     nIdUsuario:number;
     nIdProducto:number;
     nCantidad:number;
-    nPrecioUnitario:number;
-    nIvaUnitario:number;
-    nTotalUnitario:number;
+    nPrecioUnitario:Decimal;
+    nIvaUnitario:Decimal;
+    nTotalUnitario:Decimal;
     sFolio: string;
     nInDescuento:number;
 }

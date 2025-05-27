@@ -6,6 +6,7 @@ import { TwCotizacion } from 'src/app/productos/model/TcCotizacion';
 import { TvStockProducto } from 'src/app/productos/model/TvStockProducto';
 import { VentasCotizacionesService } from 'src/app/shared/service/ventas-cotizaciones.service';
 import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-detalle-cotizacion',
@@ -44,9 +45,9 @@ export class DetalleCotizacionComponent implements OnInit {
         _this.saldoGeneralCliente=saldoCliente;
       }else{
         this.saldoGeneralCliente.nIdCliente=twCotizacion.tcCliente.nId;
-        this.saldoGeneralCliente.nCreditoDisponible=0;
+        this.saldoGeneralCliente.nCreditoDisponible=new Decimal('0');
         this.saldoGeneralCliente.nLimiteCredito=twCotizacion.tcCliente.n_limiteCredito;
-        this.saldoGeneralCliente.nSaldoTotal=0;
+        this.saldoGeneralCliente.nSaldoTotal=new Decimal('0');
         this.saldoGeneralCliente.tcCliente=twCotizacion.tcCliente;
       }
       

@@ -93,7 +93,7 @@ export class TraspasoVentaACreditoComponent implements OnInit {
             this._clienteService.consultaClienteId(tvVentaDetalle.nIdCliente).subscribe(resp =>{
                 this.tcCliente = resp;
               //  console.log('cliente: ',this.tcCliente);
-                if (this.tcCliente.n_limiteCredito > 0) {
+                if (this.tcCliente.n_limiteCredito.greaterThan(0)) {
 
                   this._clienteService.obtenerSaldoGeneralCliente(tvVentaDetalle.nIdCliente).subscribe(resp =>{
 
@@ -101,7 +101,7 @@ export class TraspasoVentaACreditoComponent implements OnInit {
 
                 //    console.log('this.saldoGeneralCliente',this.saldoGeneralCliente);
 
-                    if (this.saldoGeneralCliente == null || (this.saldoGeneralCliente.nCreditoDisponible > tvVentaDetalle.nSaldoTotal)) {
+                    if (this.saldoGeneralCliente == null || (this.saldoGeneralCliente.nCreditoDisponible.greaterThan(tvVentaDetalle.nSaldoTotal))) {
 
                       this.ventasService.obtnerVentaId(tvVentaDetalle.nId).subscribe(resp =>{
                        

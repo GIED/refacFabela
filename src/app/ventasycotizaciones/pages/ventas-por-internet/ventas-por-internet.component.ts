@@ -17,6 +17,7 @@ import { TcCliente } from '../../../administracion/model/TcCliente';
 import { VentasService } from 'src/app/shared/service/ventas.service';
 import { TwPagoComprobanteInternet } from '../../model/TwPagoComprobanteInternet';
 import { VentasInternetService } from '../../../shared/service/ventas-internet.service';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-ventas-por-internet',
@@ -57,7 +58,7 @@ export class VentasPorInternetComponent implements OnInit {
 
   comprobante:TwPagoComprobanteInternet = new TwPagoComprobanteInternet(); 
   
-  total: number = 0;
+  total: Decimal = new Decimal(0);
   nIdProducto:number;
   stockTotal: number = 0;
 
@@ -112,7 +113,7 @@ export class VentasPorInternetComponent implements OnInit {
             this.saldoGeneralCliente.nIdCliente=this.cliente.nId;
             this.saldoGeneralCliente.nCreditoDisponible=this.cliente.n_limiteCredito;
             this.saldoGeneralCliente.nLimiteCredito=this.cliente.n_limiteCredito;
-            this.saldoGeneralCliente.nSaldoTotal=0;
+            this.saldoGeneralCliente.nSaldoTotal=new Decimal('0');
             this.saldoGeneralCliente.tcCliente=this.cliente;
           }  
           this.mostrarCredito=true;
@@ -215,7 +216,7 @@ export class VentasPorInternetComponent implements OnInit {
     }
     //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
   
-    this.total += producto.tcProducto.nPrecioConIva*this.nCantidadCtrl.value;
+    this.total = this.total.plus(producto.tcProducto.nPrecioConIva.mul(new Decimal(this.nCantidadCtrl.value)));
     producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
    
     
@@ -233,7 +234,7 @@ export class VentasPorInternetComponent implements OnInit {
   quitarProducto(producto: TvStockProducto){
     ////console.log(producto);
     
-    this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
+    this.total = this.total.minus( producto.tcProducto.nPrecioConIva.mul(new Decimal(producto.nCantidad)));
     ////console.log("total: ",this.total);
     //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
     this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
@@ -257,7 +258,7 @@ export class VentasPorInternetComponent implements OnInit {
       cotizacionDto.nIdProducto=producto.nIdProducto;
       cotizacionDto.nCantidad=producto.nCantidad;
       cotizacionDto.nPrecioUnitario=producto.tcProducto.nPrecioSinIva;
-      cotizacionDto.nIvaUnitario=producto.tcProducto.nPrecioConIva-producto.tcProducto.nPrecioSinIva;
+      cotizacionDto.nIvaUnitario=producto.tcProducto.nPrecioConIva.minus(producto.tcProducto.nPrecioSinIva);
       cotizacionDto.nTotalUnitario=producto.tcProducto.nPrecioConIva;
   
       productoCotizado.push(JSON.parse(JSON.stringify(cotizacionDto)));
@@ -323,7 +324,7 @@ soloCotizacion(){
   this.productoSelecionadoCtrl.setValue('');
   this.nCantidadCtrl.setValue('');
   this.listaProductos=[];
-  this.total=0.00;
+  this.total=new Decimal('0');
   this.muestraProductos = false;
 
 
@@ -335,7 +336,7 @@ limpiaFormulario(){
   this.productoSelecionadoCtrl.setValue('');
   this.nCantidadCtrl.setValue('');
   this.listaProductos=[];
-  this.total=0.00;
+  this.total=new Decimal('0');
   this.mostrarOpcionesVenta=false;
   this.muestraProductos = false;
 

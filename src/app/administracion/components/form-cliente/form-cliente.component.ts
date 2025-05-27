@@ -61,7 +61,7 @@ export class FormClienteComponent implements OnInit {
     this.obtenerCatalogoRazonSocial();
     /*Se determina si en una actualización o un registro nuevo de cliente*/
     
-    if (this.objCliente.nId == undefined) {
+    if (this.objCliente == undefined) {
       //console.log('Es un nuevo registro');
     }
     else {

@@ -161,7 +161,7 @@ abrir(tvVentasDetalle:TvVentasDetalle){
 
   this.VentaDescuentoDto=tvVentasDetalle;
 
-  if(tvVentasDetalle.descuento>0){
+  if(tvVentasDetalle.descuento.isZero){
     this.fProducto.descuento.setValue(tvVentasDetalle.descuento);
   }
   //console.log(tvVentasDetalle);
@@ -218,9 +218,9 @@ guardarDescuento() {
 
     //console.log(this.VentaDescuentoDto.descuento);
 
-    if(this.VentaDescuentoDto.nSaldoTotal>=this.VentaDescuentoDto.descuento){
+    if(this.VentaDescuentoDto.nSaldoTotal.greaterThanOrEqualTo(this.VentaDescuentoDto.descuento)){
 
-      if((this.VentaDescuentoDto.nSaldoTotal-this.VentaDescuentoDto.descuento)<0.02){
+      if(this.VentaDescuentoDto.nSaldoTotal.minus(this.VentaDescuentoDto.descuento).isZero()){
 
         this.VentaDescuentoDto.descuento=this.VentaDescuentoDto.nSaldoTotal;
 

@@ -20,6 +20,7 @@ import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { TwMaquinaCliente } from '../../../productos/model/TwMaquinaCliente';
 import { ProductoDescuentoDto } from '../../../productos/model/ProductoDescuentoDto';
+import Decimal from 'decimal.js';
 
 
 
@@ -71,11 +72,11 @@ export class VentasComponent implements OnInit {
   mostrarDistribucionBodega:boolean=false;;
   mostrarProductosCotizacionCliente=false;
   
-  total: number = 0;
+  total: Decimal = new Decimal(0);
   nIdProducto:number;
   stockTotal: number = 0;
 
-  incremento:number=0;
+  incremento:Decimal= new Decimal('0');
   objCliente:Clientes=undefined;
   nIdProductoConsulta:number;
   mostrarHistoriaStockProducto:boolean=false;
@@ -188,7 +189,7 @@ this.mostrarProductosCotizacionCliente=true;
     productoEnLista.tcProducto.nPrecioPeso=data[index].nPrecioUnitario;
     productoEnLista.nCantidad=data[index].nCantidad;    
     this.listaProductos.push(productoEnLista);
-    this.total =+data[index].nTotalPartida;
+    this.total =this.total.plus(data[index].nTotalPartida)   ;
    }
 
   
@@ -272,7 +273,7 @@ valorSeleccionadoCliente(){
       this.saldoGeneralCliente.nIdCliente=this.clienteSeleccionado.nId;
       this.saldoGeneralCliente.nCreditoDisponible=this.clienteSeleccionado.n_limiteCredito;
       this.saldoGeneralCliente.nLimiteCredito=this.clienteSeleccionado.n_limiteCredito;
-      this.saldoGeneralCliente.nSaldoTotal=0;
+      this.saldoGeneralCliente.nSaldoTotal=new Decimal('0');
       this.saldoGeneralCliente.tcCliente=this.clienteSeleccionado;
     }
     this.mostrarDetalleCliente=true;
@@ -373,7 +374,7 @@ sumarIncremento(tvStockProducto :TvStockProducto){
 
   let suma;
   
-  suma=productoStock.tcProducto.nPrecio+this.incremento;
+  suma=new Decimal(productoStock.tcProducto.nPrecio).plus(new Decimal(this.incremento));
   tvStockProducto.tcProducto.nPrecio=suma;
  
  this.calcularPrecio(tvStockProducto);
@@ -645,7 +646,7 @@ agregarProduct(producto: TvStockProducto) {
   }
   //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
  
-  this.total += producto.tcProducto.nPrecioConIva*this.nCantidadCtrl.value;
+  this.total = this.total.plus(  new Decimal (producto.tcProducto.nPrecioConIva).mul( new Decimal(this.nCantidadCtrl.value)));
   producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
  
   
@@ -667,7 +668,7 @@ agregarProduct(producto: TvStockProducto) {
 quitarProducto(producto: TvStockProducto){
  
   
-  this.total = this.total - producto.tcProducto.nPrecioConIva*producto.nCantidad;
+  this.total = this.total.minus(new Decimal( producto.tcProducto.nPrecioConIva).mul(new Decimal(producto.nCantidad)));
   //console.log("total: ",this.total);
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
@@ -757,7 +758,7 @@ soloCotizacion(){
   this.productoSelecionadoCtrl.setValue('');
   this.nCantidadCtrl.setValue('');
   this.listaProductos=[];
-  this.total=0.00;
+  this.total=new Decimal('0');
   this.mostrarDetalleCliente=false;
   this.mostrarOpcionesVenta=false;
   this.muestraProductos = false;
@@ -780,7 +781,7 @@ limpiaFormulario(){
   this.productoSelecionadoCtrl.setValue('');
   this.nCantidadCtrl.setValue('');
   this.listaProductos=[];
-  this.total=0.00;
+  this.total=new Decimal('0');
   this.mostrarDetalleCliente=false;
   this.mostrarOpcionesVenta=false;
   this.muestraProductos = false;
