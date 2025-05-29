@@ -8,6 +8,7 @@ import { validators } from 'src/app/shared/validators/validators';
 import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
 import { TwVentasProducto } from '../../../productos/model/TwVentasProducto';
 import { CalculaPrecioDto } from 'src/app/productos/model/CalculaPrecioDto';
+import Decimal from 'decimal.js';
 
 
 @Component({
@@ -218,9 +219,10 @@ guardarDescuento() {
 
     //console.log(this.VentaDescuentoDto.descuento);
 
-    if(this.VentaDescuentoDto.nSaldoTotal.greaterThanOrEqualTo(this.VentaDescuentoDto.descuento)){
+    if (new Decimal(this.VentaDescuentoDto.nSaldoTotal).greaterThanOrEqualTo(new Decimal(this.VentaDescuentoDto.descuento))) {
 
-      if(this.VentaDescuentoDto.nSaldoTotal.minus(this.VentaDescuentoDto.descuento).isZero()){
+
+      if(new Decimal(this.VentaDescuentoDto.nSaldoTotal).minus(new Decimal(this.VentaDescuentoDto.descuento)).isZero()){
 
         this.VentaDescuentoDto.descuento=this.VentaDescuentoDto.nSaldoTotal;
 

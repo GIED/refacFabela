@@ -100,34 +100,36 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
       let res1, res2, res3, res4;
 
-      if(this.formulario.get('abono').value <= this.tvVentasDetalle.nSaldoTotal){
-             res1 = this.ventasService.obtnerVentaId(this.tvVentasDetalle.nId)
+      if(new Decimal(this.formulario.get('abono').value).lessThanOrEqualTo(this.tvVentasDetalle.nSaldoTotal)){
+            
+        
+        /*Consulta la venta */
+        res1 = this.ventasService.obtnerVentaId(this.tvVentasDetalle.nId);     
 
-     
-
-         /*Llenado de forma pago*/
+         /*Consulta fomra de pago*/
        res2 = this.catalogoService.obtenerFormaPagoId(this.formulario.get('idFormaPago').value)
    
-         /*Llenado de objeto caja */
+        /*Consuta la caja activa*/
        res3 = this.catalogoService.obtenerCajaActiva()
         
 
-         /*Llenado de objeto user */
+         /*Consulta el objeto de usuario */
         
          if (this.tokenService.getIdUser() > 0) {
-         res4 = this.usuarioService.getUsuariosId(this.tokenService.getIdUser())
-        
+         res4 = this.usuarioService.getUsuariosId(this.tokenService.getIdUser())        
       }
+      
 
+      /*Continua si todos los servicios terminaron de consultar */
 
       forkJoin([res1,res2,res3, res4]).subscribe(data=>{
         let bandera:boolean;
  
-        this.twAbono.twVenta=data[0];
+         this.twAbono.twVenta=data[0];
          this.twAbono.tcFormapago=data[1];
          this.twAbono.twCaja=data[2];
          this.twAbono.tcUsuario=data[3];
-           this.twAbono.nAbono=this.formulario.get('abono').value;
+         this.twAbono.nAbono=this.formulario.get('abono').value;
          this.twAbono.nEstatus=1;
          this.twAbono.nIdVenta=this.tvVentasDetalle.nId;
          this.twAbono.nId=null;
@@ -136,16 +138,21 @@ export class DetalleAbonosCreditoComponent implements OnInit {
  
          if(this.twAbono.twVenta!==null && this.twAbono.tcFormapago!==null && this.twAbono.twCaja.nId!==null &&  this.twAbono.tcUsuario!==null){
 
-         this.diferencia= new Decimal(this.tvVentasDetalle.nSaldoTotal).minus(this.twAbono.nAbono)
+           this.diferencia= new Decimal(this.tvVentasDetalle.nSaldoTotal).minus(this.twAbono.nAbono)
          
           if(this.diferencia.isZero()){
 
             this.twAbono.nAbono=this.tvVentasDetalle.nSaldoTotal;
 
           }
-          this.abrirformulario=false;
+         
+
+
+
          this.ventasService.guardaAbono(this.twAbono).subscribe(data =>{
-         this.listaAbonosVenta.push(data);
+
+          /*Se agrega a la lista el objeto gurdado de abono*/
+          this.listaAbonosVenta.push(data);
           
            this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'El Abono se guardo', life: 3000 });
            this.listaAbonosVenta = [...this.listaAbonosVenta];
@@ -159,6 +166,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
 
            this.refrescarSaldosCliete.emit(true);    
+           this.abrirformulario=false;
      
          });
        

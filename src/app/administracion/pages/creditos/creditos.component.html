@@ -200,15 +200,15 @@
                     <tr *ngIf="venta.nSaldoTotal>0">
 						<td><span class="p-column-title">No. Venta</span> {{venta.nId}}
                         </td>
-                        <td><span class="p-column-title">Saldo Inicial</span> {{venta.nTotalVenta | number}}
+                        <td><span class="p-column-title">Saldo Inicial</span> {{venta.nTotalVenta.toFixed(2)| currency:'MXN'}}
                         </td>
-                        <td><span class="p-column-title">Total Abono</span> {{venta.nTotalAbono| number}}
+                        <td><span class="p-column-title">Total Abono</span> {{venta.nTotalAbono.toFixed(2)| currency:'MXN'}}
                         </td>
-						<td><span class="p-column-title">Descuento</span> {{venta.descuento| number}}
+						<td><span class="p-column-title">Descuento</span> {{venta.descuento.toFixed(2)| currency:'MXN'}}
                         </td>
-                        <td><span class="p-column-title">Saldo Final</span>{{venta.nSaldoTotal | number}}
+                        <td><span class="p-column-title">Saldo Final</span>{{venta.nSaldoTotal .toFixed(2)| currency:'MXN'}}
                         </td>
-						<td> <span class="p-colum-title">Avance</span>
+						<td> <span class="p-colum-title"></span>
 							<div class="p-col">
                                 <p-progressBar [value]="venta.nAvancePago" [showValue]="true" ></p-progressBar>
                             </div></td>
