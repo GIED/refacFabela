@@ -6,6 +6,7 @@ import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { VentaProductoDto } from '../../model/dto/VentaProductoDto';
 import { TokenService } from '../../../shared/service/token.service';
+import { PartResponse } from 'src/app/productos/model/PartResponse ';
 
 
 
@@ -37,6 +38,7 @@ export class ConsultaVentaComponent implements OnInit {
     IdUsuario:number;
   mostrarAjustes:boolean
   mostrarCancelados:boolean;
+  
 
   constructor(  private ventasService:VentasService,  private messageService: MessageService, private tokenService: TokenService   ) {
 

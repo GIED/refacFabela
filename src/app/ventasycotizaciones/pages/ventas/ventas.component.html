@@ -27,6 +27,10 @@
                         <button pButton pRipple type="button" icon="pi pi-search"
                             class="p-button-rounded p-button-info p-button-outlined"
                             (click)="abrirCotizaciones()"></button>
+                            <button pButton pRipple type="button" icon="pi pi-shopping-cart"
+                            class="p-button-rounded p-button-info p-button-outlined"
+                            (click)="mostrarFormularioPreciosUbicacionProveedor()"></button>
+
                     </div>
                     <p-dialog [(visible)]="clienteDialog" [style]="{width: '80%'}" header="Datos del cliente"
                         [modal]="true" styleClass="p-fluid">
@@ -386,6 +390,13 @@
         <ng-template pTemplate="footer">
 
         </ng-template>
+    </p-dialog>
+
+
+     <p-dialog [(visible)]="mostrarPrecioProveedor" header="Precios y Existencias del proveedor"   [style]="{ width: '90%', height: '90%' }"   [closable]="true" styleClass="p-fluid">
+         <ng-template pTemplate="content">
+                <app-form-consulta-costex > </app-form-consulta-costex>
+          </ng-template>
     </p-dialog>
 
 </div>

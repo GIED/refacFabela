@@ -1,0 +1,150 @@
+
+
+<form [formGroup]="form" (ngSubmit)="consultar()" class="p-fluid p-grid p-formgrid">
+  <!-- Columna 1 -->
+  <div class="p-field p-col-12 p-md-6">
+    <label for="numeroParte">Número de parte</label>
+    <input id="numeroParte" pInputText formControlName="numeroParte" placeholder="Ej. 8N8221" />
+    <small *ngIf="form.controls['numeroParte'].invalid && form.controls['numeroParte'].touched" class="p-error">
+      El número de parte es obligatorio.
+    </small>
+  </div>
+
+  <!-- Columna 2 -->
+  <div class="p-field p-col-12 p-md-6">
+    <label for="cantidad">Cantidad</label>
+    <input id="cantidad" type="number" pInputText formControlName="cantidad" />
+    <small *ngIf="form.controls['cantidad'].invalid && form.controls['cantidad'].touched" class="p-error">
+      La cantidad es obligatoria y debe ser numérica.
+    </small>
+  </div>
+
+  <!-- Botón (en fila completa) -->
+  <div class="p-col-12">
+    <button pButton type="submit" label="Consultar" [disabled]="form.invalid"></button>
+  </div>
+
+  <!-- Resultado -->
+  <div *ngIf="resultado" class="p-col-12">
+    <p-panel header="Resultado">
+      <pre>{{ resultado | json }}</pre>
+    </p-panel>
+
+    <div class="p-grid">
+  <!-- Columna izquierda: datos principales -->
+  <div class="p-col-12 p-md-6">
+    <h3>Información de la Parte</h3>
+
+    <div class="p-col-12 p-md-6" *ngIf="resultado">
+    <div class="p-field">
+      <label>Número de parte:</label>
+      <p>{{ resultado.strPartNumber }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Peso (lbs):</label>
+      <p>{{ resultado.intWeigthPnd }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Dimensiones:</label>
+      <ul class="p-ml-3">
+        <li><strong>Largo:</strong> {{ resultado.dblLengthIn }}</li>
+        <li><strong>Ancho:</strong> {{ resultado.dblWidthIn }}</li>
+        <li><strong>Alto:</strong> {{ resultado.dblHeightIn }}</li>
+      </ul>
+    </div>
+
+    <div class="p-field">
+      <label>Precio Lista:</label>
+      <p>{{ resultado.dblListPrice | currency: 'USD' }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Subcategoría:</label>
+      <p>{{ resultado.strSbCatDsc }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>HTSC:</label>
+      <p>{{ resultado.strHTSCCode }}</p>
+    </div>
+  </div>
+
+  <div class="p-col-12 p-md-6" *ngIf="resultado">
+    <div class="p-field">
+      <label>Descripción:</label>
+      <p>{{ resultado.strDescrip1 }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Peso (kg):</label>
+      <p>{{ resultado.dblWeigthKgs }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Volumen:</label>
+      <p>{{ resultado.dblVolumeIn3 }} in³</p>
+    </div>
+
+    <div class="p-field">
+      <label>Categoría:</label>
+      <p>{{ resultado.strCategoryDs }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Descripción menor:</label>
+      <p>{{ resultado.strMinorDsc }}</p>
+    </div>
+
+    <div class="p-field">
+      <label>Imagen:</label>
+      <img [src]="resultado.strFlgCtpPho" alt="Imagen de la parte" style="max-width: 100%; margin-top: 1rem;" />
+    </div>
+  </div>
+  </div>
+
+ 
+
+  <!-- Columna derecha: ubicaciones -->
+  <div class="p-col-12 p-md-6">
+    <h3>Ubicaciones</h3>
+    <p-table [value]="resultado.Locations" [paginator]="false" responsiveLayout="scroll" class="p-datatable-sm">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Almacén</th>
+          <th>Estado</th>
+          <th>ZIP</th>
+          <th>Stock</th>
+          <th>Precio Cliente</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-loc>
+        <tr>
+          <td>{{ loc.Locations }}</td>
+          <td>{{ loc.BranchState }}</td>
+          <td>{{ loc.BranchZip }}</td>
+          <td>{{ loc.NetQtyStock }}</td>
+          <td>{{ loc.CustPrice | currency: 'USD' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+     <div>{{resultado.Locations}}</div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="p-col-12">
+    <p-message severity="error" text="{{ error }}"></p-message>
+  </div>
+</form>

@@ -24,6 +24,7 @@ import { ProductosCanceladosComponent } from './components/productos-cancelados/
 import { ComprasProductoComponent } from './pages/compras-producto/compras-producto.component';
 import { FechaRangoComponent } from './components/fecha-rango/fecha-rango.component';
 import { CarritoPedidoComponent } from './components/carrito-pedido/carrito-pedido.component';
+import { FormConsultaCostexComponent } from './components/form-consulta-costex/form-consulta-costex.component';
 
 
 
@@ -51,6 +52,7 @@ import { CarritoPedidoComponent } from './components/carrito-pedido/carrito-pedi
     ComprasProductoComponent,
     FechaRangoComponent,
     CarritoPedidoComponent,
+    FormConsultaCostexComponent,
     
     
   ],
@@ -82,6 +84,7 @@ import { CarritoPedidoComponent } from './components/carrito-pedido/carrito-pedi
     AltaPedidosComponent,
     VentaStockCeroComponent,
     ComprasProductoComponent,
+   FormConsultaCostexComponent
 
   ]
 })

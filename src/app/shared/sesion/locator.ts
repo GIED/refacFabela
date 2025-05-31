@@ -117,6 +117,10 @@ static obtenerProductoBodega = '/obtenerProductoBodega?';
 //api Anaquel
 static obtenerAnaqueles= '/catalogoAnaquel';
 //api Nivel
+
+static obtenerProductoCostex='/consultarCostex?'
+
+
 static obtenerNivel= '/catalogoNivel';
 //api Pedidos
 static obtenerProductosPedido='/obtenerProductosPedido?';

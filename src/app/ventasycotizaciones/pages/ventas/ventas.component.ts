@@ -21,6 +21,9 @@ import { TokenService } from 'src/app/shared/service/token.service';
 import { TwMaquinaCliente } from '../../../productos/model/TwMaquinaCliente';
 import { ProductoDescuentoDto } from '../../../productos/model/ProductoDescuentoDto';
 import Decimal from 'decimal.js';
+import { PartService } from 'src/app/shared/service/part.service';
+import { CtpConstantes } from 'src/app/shared/utils/UserPart.enum';
+import { PartResponse } from 'src/app/productos/model/PartResponse ';
 
 
 
@@ -84,6 +87,9 @@ export class VentasComponent implements OnInit {
   regreso:boolean;
   mostrarCotizacionesVigentes:boolean;
   banAlternativos:boolean=false;
+  resultado: PartResponse
+    error?: string;
+    mostrarPrecioProveedor:boolean=false;
 
   constructor(
     private clienteService:ClienteService,
@@ -94,7 +100,8 @@ export class VentasComponent implements OnInit {
     private bodegasService: BodegasService,
     private tokenService: TokenService,
     private confirmationService: ConfirmationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private partService: PartService
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -111,7 +118,24 @@ export class VentasComponent implements OnInit {
     this.buscaCliente();
     this.buscaProducto();
     this._initFormGroup();
+this.consultaInventarioCostex('8N8222','1');
+
+  
     
+  }
+
+
+
+  consultaInventarioCostex(NoParte:string, nCantidad:string){
+
+      
+
+      this.partService.obtenerProductoCostex(NoParte,nCantidad).subscribe(data=>{
+        console.log(data);
+      })
+     
+
+
   }
 
   _initFormGroup(): void{ 
@@ -866,5 +890,15 @@ createFolio(): string {
   }
   return folio;
 } 
+
+
+mostrarFormularioPreciosUbicacionProveedor(){
+
+
+  this.mostrarPrecioProveedor=true;
+
+
+
+}
 
 }
