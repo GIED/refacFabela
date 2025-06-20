@@ -78,6 +78,7 @@ export class VentasComponent implements OnInit {
   total: Decimal = new Decimal(0);
   nIdProducto:number;
   stockTotal: number = 0;
+  banBusquedaCorizaciones:boolean=false;
 
   incremento:Decimal= new Decimal('0');
   objCliente:Clientes=undefined;
@@ -90,6 +91,9 @@ export class VentasComponent implements OnInit {
   resultado: PartResponse
     error?: string;
     mostrarPrecioProveedor:boolean=false;
+    rutaImagen:string=null;
+    rutaImagenDefault: string = 'assets/layout/images/default.png';
+
 
   constructor(
     private clienteService:ClienteService,
@@ -118,8 +122,7 @@ export class VentasComponent implements OnInit {
     this.buscaCliente();
     this.buscaProducto();
     this._initFormGroup();
-this.consultaInventarioCostex('8N8222','1');
-
+    this.banBusquedaCorizaciones=false;
   
     
   }
@@ -192,42 +195,36 @@ this.mostrarProductosCotizacionCliente=true;
     }
   }
 
-  cargarListaCompra(nIdCotizacion:number){
+  cargarListaCompra(nIdCotizacion: number): void {
+  this.mostrarCotizacionesVigentes = false;
 
-    this.mostrarCotizacionesVigentes=false;
+  this.ventasCotizacionService.obtenerCotizacionProducto(nIdCotizacion).subscribe(data => {
+    this.listaProductos = []; // limpia antes de cargar
 
+    for (let index = 0; index < data.length; index++) {
+      const item = data[index];
 
+      const productoEnLista = new TvStockProducto();
+      productoEnLista.nIdProducto = item.nIdProducto;
+      productoEnLista.tcProducto = item.tcProducto;
 
-  this.ventasCotizacionService.obtenerCotizacionProducto(nIdCotizacion).subscribe(data=>{
+      // Asegura conversión a Decimal
+      productoEnLista.tcProducto.nPrecioSinIva = new Decimal(item.nPrecioUnitario?.toString());
+      productoEnLista.tcProducto.nPrecio = new Decimal(item.nPrecioUnitario?.toString());
+      productoEnLista.tcProducto.nPrecioIva = new Decimal(item.nIvaPartida?.toString());
+      productoEnLista.tcProducto.nPrecioPeso = new Decimal(item.nPrecioUnitario?.toString());
+      productoEnLista.tcProducto.nPrecioConIva = new Decimal(item.nTotalUnitario?.toString());
 
+      productoEnLista.nCantidad = item.nCantidad;
+      productoEnLista.nTotalUnitario = new Decimal(item.nTotalUnitario?.toString());
+      productoEnLista.nTotalPartida = new Decimal(item.nTotalPartida?.toString());
 
-   for (let index = 0; index < data.length; index++) {
-    let productoEnLista:TvStockProducto=new TvStockProducto();
-    productoEnLista.nIdProducto=data[index].nIdProducto;
-    productoEnLista.tcProducto=data[index].tcProducto;
-    productoEnLista.tcProducto.nPrecioConIva=data[index].nTotalUnitario;
+      this.listaProductos.push(productoEnLista);
+    }
 
-    productoEnLista.tcProducto.nPrecioSinIva=data[index].nPrecioUnitario;
-    productoEnLista.tcProducto.nPrecio=data[index].nPrecioUnitario;
-    productoEnLista.tcProducto.nPrecioIva=data[index].nIvaPartida;
-    productoEnLista.tcProducto.nPrecioPeso=data[index].nPrecioUnitario;
-    productoEnLista.nCantidad=data[index].nCantidad;    
-    this.listaProductos.push(productoEnLista);
-    this.total =this.total.plus(data[index].nTotalPartida)   ;
-   }
-
-  
-
-    
-
-    
-
-
-  })
-
-
-  }
-
+    this.total = this.calculaTotalCarrito(); // ya retorna un Decimal truncado
+  });
+}
 
   
 
@@ -282,6 +279,7 @@ valorSeleccionadoCliente(){
   this.listaProductoBodega=[];
   this.productosAlternativos=[];
   this.listaProductos=[];
+  this.banBusquedaCorizaciones=true;
 
 
 
@@ -307,23 +305,16 @@ valorSeleccionadoCliente(){
 }
 
 obtenerMaquinasCliente(){
-
   this.mostrarMaquinasCliente=true;
-  
-
 }
-cerrarVentanas(valor:boolean){
-  
-  this.mostrarFormularioMaquinasCliente=valor;
- 
+cerrarVentanas(valor:boolean){  
+  this.mostrarFormularioMaquinasCliente=valor; 
 }
 
 abrirFormularioMaquinaCliente(){
-
   this.maquinaCliente.nIdCliente=this.clienteSeleccionado.nId; 
   this.mostrarFormularioMaquinasCliente=true;
-  
-}
+  }
 
 
 
@@ -361,30 +352,40 @@ limpiarlistas(){
   
 }
 
+imagenError(event: Event) {
+  const imgElement = event.target as HTMLImageElement;
+  imgElement.src = this.rutaImagenDefault;
+}
+
+//Busca información del producto seleccionado
 valorSeleccionadoProducto(){
-  this.limpiarlistas();
-  
+  this.limpiarlistas();  
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
+  this.nIdProducto=this.productoSeleccionado.nId;
+
+  this.rutaImagen='https://www.ctpsales.costex.com:11443/Webpics/220x220/'+ this.productoSeleccionado.sNoParte+'.jpg';
   
   
+  //consulta las ubicaciones de los productos
   this.ubicacionProducto(this.productoSeleccionado.nId);
-  this.nIdProducto=this.productoSeleccionado.nId;  
+  // obtiene los alternativos del producto   
   this.obtenerProductosAlternativos(this.productoSeleccionado.nId);
+
+  //consulta el total de productos en las bodegas
   this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
-    //console.log(productoStock);
+     
+    //Si el producto no tiene inventario lanza un mensaje de advertencia de que no tiene inventario
     if (productoStock.nCantidadTotal === 0) {
       this.messageService.add({severity: 'warn', summary: 'Sin existencias', detail: 'El producto seleccionado no cuenta con existencias.', life: 3000});
-    }else{
-
-    }   
-    //console.log("ESTE ES EL PRODUCTO QUE SE CONSULTARA SU PRECIO", productoStock);
+    }
+    
+  // Consulta el precio del producto
     this.calcularPrecio(productoStock);
-    //console.log("ESTE ES EL PRODUCTO DESPUES DE CONSULTAR SU PRECIO", productoStock);
-
-
+    //  Asigna el producto a lista de productos filtrados 
     this.productosFiltrados.push(productoStock); 
+    // Oculta las sugerencias de producto de la lista
     this.mostrarSugerenciasProducto=false;
-    this.productoCtrl.setValue('');
+    this.productoCtrl.reset();
     this.regreso=false;
   });
 }
@@ -563,7 +564,7 @@ obtenerProductosAlternativos(nId:number ) {
        productosAlter;
       //console.log("Alternativos");
       //console.log(productosAlter);
-      if(productosAlter){
+      if(productosAlter.length>0){
        this.banAlternativos=true;
 
       }
@@ -598,104 +599,130 @@ obtenerProductosAlternativos(nId:number ) {
 
 
 
-
 agregarProduct(producto: TvStockProducto) {
-  // console.log(producto); 
-    producto.nCantidad=this.nCantidadCtrl.value;
- 
-  
-  
-  //verifica que se agrege una cantidad
-  if (producto.nCantidad === 0 || producto.nCantidad === undefined) {
-    ////console.log("entro a if");
-    
-    this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar una cantidad', life: 3000});
+  const cantidadNumber = this.nCantidadCtrl.value;
 
-  }else{ 
-
-   // if (this.products[this.findIndexById(producto.id, this.products)].quantity < producto.cantidad) {
-
-      //this.messageService.add({severity: 'error', summary: 'Atención', detail: 'Stock insuficiente para realizar la venta', life: 3000});
-      //producto.cantidad=0;
-      //this.products[this.findIndexById(producto.id, this.products)]=producto;
-    //}else{ 
-
-  // si la lista ya tiene datos entra a if para validar que el producto no se repita 
-  if (this.listaProductos.length> 0) {
-
-  
-   let index = 0;
-   let posicion=0;
-   let productoEncontrado:TvStockProducto;
-   
-    for ( index ; index < this.listaProductos.length; index++) {
-         let productoEnLista:TvStockProducto=new TvStockProducto();
-            if(this.listaProductos[index].nIdProducto==producto.nIdProducto){
-              productoEnLista = this.listaProductos[index];
-              posicion=index;
-              productoEncontrado=productoEnLista;
-              
-            }     
-        
-       }
-
-       if(productoEncontrado!=null || productoEncontrado!=undefined){
-        let actualizaProductoEnLista: TvStockProducto = new TvStockProducto();    
-        actualizaProductoEnLista.nIdProducto = producto.nIdProducto;
-        actualizaProductoEnLista.nCantidadTotal = producto.nCantidadTotal;
-        actualizaProductoEnLista.nCantidad = productoEncontrado.nCantidad+producto.nCantidad;
-        actualizaProductoEnLista.tcProducto = producto.tcProducto;
-        actualizaProductoEnLista.nStatus = producto.nStatus;
-        actualizaProductoEnLista.nTipoPago = producto.nTipoPago;
-        actualizaProductoEnLista.nIdProveedor = producto.nIdProveedor;
-        this.listaProductos[posicion] = actualizaProductoEnLista;
-
-
-      }
-      else{
-       // console.log(producto);
-    this.listaProductos.push(producto);
-       }
-
-  
-
-    
-
+  if (!cantidadNumber || cantidadNumber <= 0) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Atención',
+      detail: 'Debe agregar una cantidad',
+      life: 3000
+    });
+    return;
   }
-  //si entra a else el producto no existe en la lista
-  else{
-    //console.log(producto);
-    this.listaProductos.push(producto);
-    
-  }
-  //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
- 
-  this.total = this.total.plus(  new Decimal (producto.tcProducto.nPrecioConIva).mul( new Decimal(this.nCantidadCtrl.value)));
-  producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
- 
-  
-  //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
-  this.productosFiltrados=[];
-  this.nCantidadCtrl.setValue(0);
-  this.messageService.add({severity: 'success', summary: 'Correcto', detail: 'Producto Agregado Correctamente', life: 3000});
-  this.muestraProductosBodega=false;
-  this.listaProductoBodega=[];
-  this.productosFiltrados=[];
-  this.nIdProducto=null;
-  this.limpiarlistas();
 
-//}
+  this.rutaImagen = '';
+  producto.nCantidad = cantidadNumber;
+
+  const index = this.listaProductos.findIndex(p => p.nIdProducto === producto.nIdProducto);
+
+  if (index >= 0) {
+    const productoExistente = this.listaProductos[index];
+    const productoActualizado = this.crearProductoActualizado(productoExistente, producto);
+    this.listaProductos[index] = productoActualizado;
+  } else {
+    const nuevoProducto = this.crearProductoActualizado(undefined, producto);
+    this.listaProductos.push(nuevoProducto);
+  }
+
+  // Convertir a Decimal con precisión desde string
+  const precioDecimal = new Decimal(producto.tcProducto.nPrecioSinIva.toString());
+  const cantidadDecimal = new Decimal(cantidadNumber.toString());
+
+  const { totalFinal } = this.calcularTotales(precioDecimal, cantidadDecimal);
+
+  // ✅ Sumar y truncar inmediatamente el total acumulado
+  this.total = this.calculaTotalCarrito();
+
+  console.log('Total acumulado truncado:', this.total.toFixed(2));
+
+  producto.nCantidadTotal -= cantidadNumber;
+
+  this.resetFormulario();
+
+  this.messageService.add({
+    severity: 'success',
+    summary: 'Correcto',
+    detail: 'Producto Agregado Correctamente',
+    life: 3000
+  });
 }
 
+// 🔁 Cálculo de totales con IVA y truncamiento
+private calcularTotales(precio: Decimal, cantidad: Decimal) {
+  const iva = new Decimal('0.16');
+
+  const subtotal = precio.mul(cantidad); // sin IVA
+  const montoIva = subtotal.mul(iva);    // IVA
+  const totalConIva = subtotal.plus(montoIva); // Total
+
+  return {
+    subtotalFinal: subtotal.toDecimalPlaces(2, Decimal.ROUND_DOWN),
+    ivaFinal: montoIva.toDecimalPlaces(2, Decimal.ROUND_DOWN),
+    totalFinal: totalConIva.toDecimalPlaces(2, Decimal.ROUND_DOWN),
+    precioUnitario: precio.plus(precio.mul(iva)).toDecimalPlaces(2, Decimal.ROUND_DOWN)
+  };
+}
+
+// 🧩 Fusiona cantidades y recalcula totales del producto
+private crearProductoActualizado(
+  productoExistente: TvStockProducto | undefined,
+  nuevoProducto: TvStockProducto
+): TvStockProducto {
+  const cantidadExistente = new Decimal((productoExistente?.nCantidad ?? 0).toString());
+  const cantidadNueva = new Decimal(nuevoProducto.nCantidad.toString());
+  const cantidadTotal = cantidadExistente.plus(cantidadNueva);
+
+  const precio = new Decimal(nuevoProducto.tcProducto.nPrecioSinIva.toString());
+  const { totalFinal, precioUnitario } = this.calcularTotales(precio, cantidadTotal);
+
+  console.log('Total partida:', totalFinal.toFixed(2), 'Precio unitario con IVA:', precioUnitario.toFixed(2));
+
+  return {
+    ...nuevoProducto,
+    nCantidad: cantidadTotal.toNumber(),
+    nTotalUnitario: precioUnitario,
+    nTotalPartida: totalFinal
+  };
+}
+
+// 🔄 Limpia formulario y estado visual
+private resetFormulario() {
+  this.productosFiltrados = [];
+  this.nCantidadCtrl.setValue(0);
+  this.muestraProductosBodega = false;
+  this.listaProductoBodega = [];
+  this.nIdProducto = null;
+  this.limpiarlistas();
+}
+modificarCantidad(producto: TvStockProducto, cambio: number): void {
+  const nuevaCantidad = new Decimal(producto.nCantidad).plus(cambio);
+
+  if (nuevaCantidad.lessThanOrEqualTo(0)) return;
+
+  producto.nCantidad = nuevaCantidad.toNumber();
+
+  const precio = new Decimal(producto.tcProducto.nPrecioSinIva.toString());
+  const { totalFinal, precioUnitario } = this.calcularTotales(precio, nuevaCantidad);
+
+  producto.nTotalUnitario = precioUnitario;
+  producto.nTotalPartida = totalFinal;
+
+  this.total = this.calculaTotalCarrito();
+}
+
+calculaTotalCarrito(): Decimal {
+  return this.listaProductos.reduce((acumulado, item) => {
+    return acumulado.plus(new Decimal(item.nTotalPartida.toString()));
+  }, new Decimal(0)).toDecimalPlaces(2, Decimal.ROUND_DOWN);
 }
 
 quitarProducto(producto: TvStockProducto){
- 
-  
-  this.total = this.total.minus(new Decimal( producto.tcProducto.nPrecioConIva).mul(new Decimal(producto.nCantidad)));
-  //console.log("total: ",this.total);
-  //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
+   
+  // quita los productos del carrito
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
+  this.total = this.calculaTotalCarrito();
 }
 
 guardarCotizacion(){

@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js';
 import { TcProducto } from './TcProducto';
 export class TvStockProducto{
     nIdProducto: number;
@@ -7,4 +8,6 @@ export class TvStockProducto{
     nStatus?:number;
     nTipoPago?:number;
     nIdProveedor?:number;
+    nTotalUnitario?:Decimal=new Decimal(0);
+    nTotalPartida?:Decimal=new Decimal(0);
 }

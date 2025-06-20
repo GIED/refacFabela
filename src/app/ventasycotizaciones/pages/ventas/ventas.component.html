@@ -7,7 +7,7 @@
         <form [formGroup]="formGrp" autocomplete="off">
             <div class="card">
                 <div class="p-grid">
-                    <div class="p-col-11">
+                    <div class="p-col-8">
                         <h6>Favor de Elegir un cliente </h6>
                         <input type="text" pInputText name="cliente" formControlName="clienteCtrl"
                             (input)="inputCliente()" />
@@ -21,16 +21,23 @@
                             </ng-template>
                         </p-listbox>
                     </div>
-                    <div class="p-col-1">
-                        <button pButton pRipple type="button" icon="pi pi-user"
-                            class="p-button-rounded p-button-info p-button-outlined" (click)="openNew()"></button>
-                        <button pButton pRipple type="button" icon="pi pi-search"
-                            class="p-button-rounded p-button-info p-button-outlined"
-                            (click)="abrirCotizaciones()"></button>
-                            <button pButton pRipple type="button" icon="pi pi-shopping-cart"
-                            class="p-button-rounded p-button-info p-button-outlined"
-                            (click)="mostrarFormularioPreciosUbicacionProveedor()"></button>
-
+                    <div class="p-col-4">
+                <div class="flex gap-2 p-mt-4">
+                    <!-- Botón: Nuevo Usuario -->
+                    <button pButton pRipple type="button" icon="pi pi-user-plus" label="Nuevo Cliente"
+                        class="p-button p-button-secondary" (click)="openNew()">
+                    </button>
+                
+                    <!-- Botón: Buscar Cotizaciones -->
+                    <button *ngIf="banBusquedaCorizaciones" pButton pRipple type="button" icon="pi pi-folder-open"
+                        label="Buscar Cotizaciones" class="p-button p-button-help" (click)="abrirCotizaciones()">
+                    </button>
+                
+                    <!-- Botón: Precios Proveedor -->
+                    <button pButton pRipple type="button" icon="pi pi-dollar" label="Precios Proveedor"
+                        class="p-button p-button-warning" (click)="mostrarFormularioPreciosUbicacionProveedor()">
+                    </button>
+                </div>
                     </div>
                     <p-dialog [(visible)]="clienteDialog" [style]="{width: '80%'}" header="Datos del cliente"
                         [modal]="true" styleClass="p-fluid">
@@ -67,8 +74,8 @@
 
                 <div class="p-grid " *ngIf="muestraProductos">
                     <!--Busqueda de producto-->
-                    <div class="p-col-12 p-lg-9 p-md-9">
-                        <div class="p-grid p-dir-col fondo-content">
+                    <div class="p-col-12 p-lg-8 p-md-8 fondo-content" >
+                        <div class="p-grid p-dir-col ">
                             <div class="p-col-12  ">
                                 <p-table [value]="productosFiltrados" [rows]="10" responsiveLayout="scroll"
                                     currentPageReportTemplate="mostrar {first} a {last} de {totalRecords} productos"
@@ -146,10 +153,17 @@
                         </div>
                     </div>
                     <!--Distribución del producto-->
-                    <div class="p-col-12 p-lg-3 p-md-3 fondo-content ">   
+
+                    <div class="p-col-12 p-lg-2 p-md-2 fondo-content" style="display: flex; justify-content: center; align-items: center;">
+                        <img *ngIf="rutaImagen" [src]="rutaImagen" alt="Imagen de la parte" (error)="imagenError($event)"
+                            style="width: 100%; max-width: 200px; height: auto; margin-top: 1rem; border-radius: 20px;" />
+                    </div>
+                    <div class="p-col-12 p-lg-2 p-md-2 fondo-content ">   
+                    <div class="p-mt-4">
                         <app-modal-productos-bodega [listaProductoBodega]="listaProductoBodega"
                             [stockTotal]="stockTotal" [traspaso]=traspaso>
                         </app-modal-productos-bodega>
+                     </div>
 
                     </div>
                     <!--Productos alternativos-->
@@ -240,72 +254,75 @@
                         </div>
                         <div class="p-grid p-dir-col p-nogutter">
                             <div class="p-col-12 ">
-                                <p-table #dt5 [value]="listaProductos" [rows]="2" [paginator]="true"
-                                    [globalFilterFields]="['noParte','descripcion','precio','cantidad', 'total']"
-                                    [rowHover]="true" responsiveLayout="scroll" dataKey="id"
-                                    [totalRecords]="listaProductos.length"
-                                    currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} productos"
-                                    [showCurrentPageReport]="true">
+                                <p-table #dt3 [value]="listaProductos" [rows]="2" [paginator]="true"
+                                    [globalFilterFields]="['tcProducto.sNoParte','tcProducto.sProducto','nTotalUnitario','nCantidad','nTotalPartida']" [rowHover]="true"
+                                    responsiveLayout="scroll" dataKey="id" [totalRecords]="listaProductos.length"
+                                    currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} productos" [showCurrentPageReport]="true">
+                                
                                     <ng-template pTemplate="caption">
                                         <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
                                             <span class="p-input-icon-left">
                                                 <i class="pi pi-search"></i>
-                                                <input pInputText type="text"
-                                                    (input)="dt5.filterGlobal($event.target.value, 'contains')"
+                                                <input pInputText type="text" (input)="dt3.filterGlobal($event.target.value, 'contains')"
                                                     placeholder="Buscar Producto" />
                                             </span>
                                         </div>
                                     </ng-template>
+                                
                                     <ng-template pTemplate="header">
                                         <tr>
-                                            <th pSortableColumn="noParte">No.Parte<p-sortIcon
-                                                    field="noParte"></p-sortIcon></th>
-                                            <th pSortableColumn="descripcion">Descripción<p-sortIcon
-                                                    field="descripcion"></p-sortIcon></th>
-                                            <th pSortableColumn="precio">Precio<p-sortIcon field="precio"></p-sortIcon>
-                                            </th>
-                                            <th pSortableColumn="cantidad">Cantidad<p-sortIcon
-                                                    field="cantidad"></p-sortIcon></th>
-                                            <th pSortableColumn="total">Total<p-sortIcon field="total"></p-sortIcon>
-                                            </th>
+                                            <th pSortableColumn="tcProducto.sNoParte">No. Parte <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon></th>
+                                            <th pSortableColumn="tcProducto.sProducto">Descripción <p-sortIcon field="tcProducto.sProducto"></p-sortIcon></th>
+                                            <th pSortableColumn="nTotalUnitario">Precio <p-sortIcon field="nTotalUnitario"></p-sortIcon></th>
+                                            <th pSortableColumn="nCantidad">Cantidad <p-sortIcon field="nCantidad"></p-sortIcon></th>
+                                            <th pSortableColumn="nTotalPartida">Total <p-sortIcon field="nTotalPartida"></p-sortIcon></th>
                                             <th>Acción</th>
                                         </tr>
                                     </ng-template>
+                                
                                     <ng-template pTemplate="body" let-productoVenta>
                                         <tr>
-                                            <td><span class="p-column-title">No. Parte</span>
-                                                {{productoVenta.tcProducto.sNoParte}}</td>
-                                            <td><span class="p-column-title">Producto</span>
-                                                {{productoVenta.tcProducto.sProducto}}</td>
-                                            <td><span class="p-column-title">Precio con Iva</span>
-                                                {{productoVenta.tcProducto.nPrecioConIva.toFixed(2)| currency:'MXN'}}</td>
-                                            <td><span class="p-column-title">Cantidad</span>{{productoVenta.nCantidad}}
+                                            <td><span class="p-column-title">No. Parte</span>{{ productoVenta.tcProducto.sNoParte }}</td>
+                                            <td><span class="p-column-title">Producto</span>{{ productoVenta.tcProducto.sProducto }}</td>
+                                            <td><span class="p-column-title">Total Unitario</span>${{ productoVenta.nTotalUnitario.toNumber() | number:'1.2-2' }}</td>
+                                
+                                            <td>
+                                                <div class="flex align-items-center gap-2">
+                                                    <button pButton icon="pi pi-minus" class="p-button-sm p-button-rounded p-button-danger"
+                                                        (click)="modificarCantidad(productoVenta, -1)"
+                                                        [disabled]="productoVenta.nCantidad <= 1"></button>
+                                
+                                                    <span>{{ productoVenta.nCantidad }}</span>
+                                
+                                                    <button pButton icon="pi pi-plus" class="p-button-sm p-button-rounded p-button-success"
+                                                        (click)="modificarCantidad(productoVenta, 1)"></button>
+                                                </div>
                                             </td>
-                                            <td><span class="p-column-title">Precio
-                                                    Partida</span>${{productoVenta.tcProducto.nPrecioConIva *
-                                                productoVenta.nCantidad | number:'1.1-3'}}</td>
-                                            <td><span class="p-column-title">Acción</span><button pButton pRipple
-                                                    icon="pi pi-trash" (click)="quitarProducto(productoVenta)"
-                                                    class="p-button-rounded p-button-danger p-mr-2 p-button-outlined"></button></td>
+                                
+                                            <td>${{ productoVenta.nTotalPartida.toNumber() | number:'1.2-2' }}</td>
+                                
+                                            <td>
+                                                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined"
+                                                    (click)="quitarProducto(productoVenta)"></button>
+                                            </td>
                                         </tr>
                                     </ng-template>
+                                
                                     <ng-template pTemplate="footer">
                                         <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td> <div class="p-col-12 text-center  " style="background: #92B673; border-radius: 5px;"> <strong>Total: </strong>{{total.toFixed(2)| currency:'MXN'}}</div></td>
-                                           
-
-                                           
+                                           <td colspan="5" class="p-text-right font-bold">Total:</td>
+                                            <td>
+                                                <div class="text-center p-2" style="background: #3A3F51; color:white;  border-radius: 5px;">
+                                                    ${{ total.toNumber() | number:'1.2-2' }}
+                                                </div>
+                                            </td>
                                         </tr>
                                     </ng-template>
+                                
                                     <ng-template pTemplate="summary">
                                         <div class="p-grid p-mt-2" *ngIf="listaProductos.length > 0">
-                                            <button pButton class="p-button-primary" (click)="guardarCotizacion()"
-                                                [disabled]="formGrp.invalid" label="Guardar cotización"></button>
+                                            <button pButton class="p-button-primary" [disabled]="formGrp.invalid" (click)="guardarCotizacion()"
+                                                label="Guardar cotización"></button>
                                         </div>
                                     </ng-template>
                                 </p-table>

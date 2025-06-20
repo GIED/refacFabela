@@ -6,8 +6,7 @@
     <ng-template pTemplate="header">
         <tr>           
             <th><h6>Bodega</h6></th>
-            <th class="p-text-center"><h6>Anaquel</h6></th>
-            <th class="p-text-center"><h6>Nivel</h6></th>
+            <th class="p-text-center"><h6>Ubicación</h6></th>           
             <th class="p-text-center"><h6>Stock</h6></th>
             <th *ngIf="traspaso"><h6>Acciones</h6></th>
         </tr>
@@ -15,8 +14,7 @@
     <ng-template pTemplate="body" let-bodega>
         <tr>
             <td><span class="p-column-title"><h6>Bodega</h6></span><h6>{{bodega.tcBodega.sBodega}}</h6></td>
-            <td class="p-text-center"><span class="p-column-title"><h6>Anaquel</h6></span><h6>{{bodega.tcAnaquel.sAnaquel}}</h6></td>
-            <td class="p-text-center"><span class="p-column-title"><h6>Nivel</h6></span><h6>{{bodega.tcNivel.sNivel}}</h6></td>
+            <td class="p-text-center"><span class="p-column-title"><h6>Ubicación</h6></span><h6>{{bodega.tcAnaquel.sAnaquel}}-{{bodega.tcNivel.sNivel}}</h6></td>           
             <td class="p-text-center"><span class="p-column-title"><h6>Stock</h6></span>
                 <div *ngIf="bodega.nCantidad<=0" style="background: red; border-radius: 30px; color:white;"><h6 style="color:white;">{{bodega.nCantidad}}</h6></div>
                 <div *ngIf="bodega.nCantidad>0" style="background: green; border-radius: 30px; color:white;"><h6 style="color:white;">{{bodega.nCantidad}}</h6></div>
