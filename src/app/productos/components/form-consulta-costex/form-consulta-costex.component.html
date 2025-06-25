@@ -1,7 +1,6 @@
-
-
-<form [formGroup]="form" (ngSubmit)="consultar()" class="p-fluid p-grid p-formgrid">
-  <!-- Columna 1 -->
+<!-- Formulario -->
+<form [formGroup]="form" (ngSubmit)="consultar()" class="p-fluid p-formgrid p-grid">
+  <!-- Número de parte -->
   <div class="p-field p-col-12 p-md-6">
     <label for="numeroParte">Número de parte</label>
     <input id="numeroParte" pInputText formControlName="numeroParte" placeholder="Ej. 8N8221" />
@@ -10,7 +9,7 @@
     </small>
   </div>
 
-  <!-- Columna 2 -->
+  <!-- Cantidad -->
   <div class="p-field p-col-12 p-md-6">
     <label for="cantidad">Cantidad</label>
     <input id="cantidad" type="number" pInputText formControlName="cantidad" />
@@ -19,132 +18,99 @@
     </small>
   </div>
 
-  <!-- Botón (en fila completa) -->
+  <!-- Botón -->
   <div class="p-col-12">
-    <button pButton type="submit" label="Consultar" [disabled]="form.invalid"></button>
+    <button pButton type="submit" label="Consultar" class="p-button-sm" [disabled]="form.invalid"></button>
+  </div>
+</form>
+
+<!-- Resultado del producto -->
+<div *ngIf="resultado" class="p-grid p-mt-4">
+  <!-- Tarjeta del producto -->
+  <div class="p-col-12 p-md-6">
+    <p-card styleClass="w-full shadow-6">
+      <ng-template pTemplate="header">
+        <div class="p-d-flex p-jc-between p-ai-center">
+        <div class="p-col-12 p-text-center " style="background: #5A6268; color:white;">No. Parte: {{ resultado.strPartNumber }}</div>
+        
+          <p-tag *ngIf="resultado.strFlgHazardM" severity="danger" value="Hazmat"></p-tag>
+        </div>
+      </ng-template>
+
+      <div class="p-grid">
+        <!-- Imagen -->
+        <div class="p-col-12 p-md-6">
+          <img [src]="resultado.strFlgCtpPho" alt="Imagen del producto" class="w-full border-round" />
+        </div>
+
+        <!-- Detalles -->
+        <div class="p-col-12 p-md-6">
+          <div class="text-lg font-semibold p-mb-2">{{ resultado.strDescrip1 }}</div>
+          <div class="text-sm text-secondary p-mb-2">
+            {{ resultado.strMajorDsc }} › {{ resultado.strCategoryDs }} › {{ resultado.strSbCatDsc }}
+          </div>
+
+          <div class="p-mb-2">
+            <strong>Peso:</strong> {{ resultado.dblWeigthKgs }} kg / {{ resultado.intWeigthPnd }} lbs
+          </div>
+          <div class="p-mb-2">
+            <strong>Dimensiones:</strong> {{ resultado.dblLengthIn }}" x {{ resultado.dblWidthIn }}" x
+            {{ resultado.dblHeightIn }}"
+          </div>
+          <div class="p-mb-2">
+            <strong>Volumen:</strong> {{ resultado.dblVolumeIn3 }} in³
+          </div>
+
+          <div class="p-mt-3 font-bold text-xl text-green-700">{{ formattedPrice }}</div>
+          <div class="text-sm text-muted">Stock total: {{ stockTotal }}</div>
+
+          <div class="p-mt-3 p-d-flex p-ai-center">
+            <button pButton label="Detalles" icon="pi pi-info-circle" class="p-button-sm p-button-primary p-mr-2" ></button>
+            <button pButton label="Wishlist" icon="pi pi-heart" class="p-button-sm p-button-secondary" ></button>
+          </div>
+        </div>
+      </div>
+    </p-card>
   </div>
 
-  <!-- Resultado -->
-  <div *ngIf="resultado" class="p-col-12">
-    <p-panel header="Resultado">
+  <!-- Tabla de ubicaciones -->
+  <div class="p-col-12 p-md-6" *ngIf="locationList.length > 0">
+
+    <div class="p-col-12 p-text-center " style="background: #5A6268; color:white;">Ubicaciones y constos</div>
+    <p-card>
+      <p-table [value]="locationList" [paginator]="false" responsiveLayout="scroll" class="p-datatable-sm">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Almacén</th>
+            <th>Estado</th>
+            <th>ZIP</th>
+            <th>Stock</th>
+            <th>Precio Cliente</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-loc>
+          <tr>
+            <td>{{ loc.BranchName.trim() }}</td>
+            <td>{{ loc.BranchState }}</td>
+            <td>{{ loc.BranchZip }}</td>
+            <td>{{ loc.NetQtyStock.trim() }}</td>
+            <td>{{ loc.CustPrice | currency: 'USD':'symbol':'1.2-2' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+
+  <!-- Debug opcional -->
+  <div class="p-col-12">
+    <p-panel header="Resultado (debug)">
       <pre>{{ resultado | json }}</pre>
     </p-panel>
-
-    <div class="p-grid">
-  <!-- Columna izquierda: datos principales -->
-  <div class="p-col-12 p-md-6">
-    <h3>Información de la Parte</h3>
-
-    <div class="p-col-12 p-md-6" *ngIf="resultado">
-    <div class="p-field">
-      <label>Número de parte:</label>
-      <p>{{ resultado.strPartNumber }}</p>
-    </div>
-
-    <div class="p-field">
-      <label>Peso (lbs):</label>
-      <p>{{ resultado.intWeigthPnd }}</p>
-    </div>
-
-    <div class="p-field">
-      <label>Dimensiones:</label>
-      <ul class="p-ml-3">
-        <li><strong>Largo:</strong> {{ resultado.dblLengthIn }}</li>
-        <li><strong>Ancho:</strong> {{ resultado.dblWidthIn }}</li>
-        <li><strong>Alto:</strong> {{ resultado.dblHeightIn }}</li>
-      </ul>
-    </div>
-
-    <div class="p-field">
-      <label>Precio Lista:</label>
-      <p>{{ resultado.dblListPrice | currency: 'USD' }}</p>
-    </div>
-
-    <div class="p-field">
-      <label>Subcategoría:</label>
-      <p>{{ resultado.strSbCatDsc }}</p>
-    </div>
-
-    <div class="p-field">
-      <label>HTSC:</label>
-      <p>{{ resultado.strHTSCCode }}</p>
-    </div>
-  </div>
-
-  <div class="p-col-12 p-md-6" *ngIf="resultado">
-    <div class="p-field">
-      <label>Descripción:</label>
-      <p>{{ resultado.strDescrip1 }}</p>
-    </div>
-
-    <div class="p-field">
-      <label>Peso (kg):</label>
-      <p>{{ resultado.dblWeigthKgs }}</p>
-    </div>
-
-    <div class="p-field">
-      <label>Volumen:</label>
-      <p>{{ resultado.dblVolumeIn3 }} in³</p>
-    </div>
-
-    <div class="p-field">
-      <label>Categoría:</label>
-      <p>{{ resultado.strCategoryDs }}</p>
-    </div>
-
-    <div class="p-field">
-      <label>Descripción menor:</label>
-      <p>{{ resultado.strMinorDsc }}</p>
-    </div>
-
-    <div class="p-field">
-      <label>Imagen:</label>
-      <img [src]="resultado.strFlgCtpPho" alt="Imagen de la parte" style="max-width: 100%; margin-top: 1rem;" />
-    </div>
-  </div>
-  </div>
-
- 
-
-  <!-- Columna derecha: ubicaciones -->
-  <div class="p-col-12 p-md-6">
-    <h3>Ubicaciones</h3>
-    <p-table [value]="resultado.Locations" [paginator]="false" responsiveLayout="scroll" class="p-datatable-sm">
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Almacén</th>
-          <th>Estado</th>
-          <th>ZIP</th>
-          <th>Stock</th>
-          <th>Precio Cliente</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-loc>
-        <tr>
-          <td>{{ loc.Locations }}</td>
-          <td>{{ loc.BranchState }}</td>
-          <td>{{ loc.BranchZip }}</td>
-          <td>{{ loc.NetQtyStock }}</td>
-          <td>{{ loc.CustPrice | currency: 'USD' }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-
-     <div>{{resultado.Locations}}</div>
   </div>
 </div>
 
-
-
-
-
-
-
-
-  </div>
-
-  <!-- Error -->
-  <div *ngIf="error" class="p-col-12">
-    <p-message severity="error" text="{{ error }}"></p-message>
-  </div>
-</form>
+<!-- Mensaje de error -->
+<div *ngIf="error" class="p-col-12 p-mt-3">
+  <p-message severity="error" text="{{ error }}"></p-message>
+</div>

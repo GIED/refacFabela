@@ -1,4 +1,4 @@
-import { Location } from "./PartLocation ";
+import {  LocationPart } from "./PartLocation ";
 
 export interface PartResponse {
  strPartNumber: string;
@@ -24,5 +24,5 @@ export interface PartResponse {
   codError: string;
   obsError: string;
   qteToken: string;
-  Locations: Record<string, Location>;
+  Locations: Record<string, LocationPart>;
 }

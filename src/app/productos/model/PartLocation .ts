@@ -1,4 +1,4 @@
-export interface Location {
+export interface LocationPart {
   LocCode: string;
   BranchName: string;
   BranchState: string;
