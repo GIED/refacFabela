@@ -1,6 +1,6 @@
 import { TcProducto } from './../../model/TcProducto';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { TcGanancia } from '../../model/TcGanancia';
 import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TcCategoriaGeneral } from '../../model/TcCategoriaGeneral';
@@ -23,8 +23,7 @@ interface Moneda {
 @Component({
   selector: 'app-modal-producto',
   templateUrl: './modal-producto.component.html',
-  styles: [
-  ]
+  styleUrls: ['./modal-producto.component.scss']
 })
 export class ModalProductoComponent implements OnInit {
 
@@ -73,8 +72,12 @@ export class ModalProductoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.formulario.get('nLargo')?.valueChanges.subscribe(() => this.calcularVolumen());
+    this.formulario.get('nAlto')?.valueChanges.subscribe(() => this.calcularVolumen());
+    this.formulario.get('nAncho')?.valueChanges.subscribe(() => this.calcularVolumen());
    
- this.buscaPorNoParte();
+     this.buscaPorNoParte();
     const  observable1 = this.catalogoService.obtenerCategoriaGeneral();
     const  observable2 = this.catalogoService.obtenerClaveSat();
     const  observable3 =this.catalogoService.obtenerGanancia();   
@@ -109,21 +112,60 @@ export class ModalProductoComponent implements OnInit {
         else{
         this.edithBand=false;
           }
-
-
-
       },
       error: error => {
         console.error('Error al ejecutar los observables', error);
       }
     });
 
-
-
-
-    
-  
   }
+
+   /*CREACION DEL FORMULARIO */
+    crearFormulario() {
+  
+    this.formulario = this.fb.group({
+        nId: ['',[]],
+        sNoParte: ['',[Validators.required]],
+        sProducto: ['',[Validators.required]],
+        sDescripcion: ['',[Validators.required]],
+        sMarca: ['', [Validators.required]],
+        nIdCategoria:['',[Validators.required]],
+        nIdCategoriaGeneral:['',[Validators.required]],
+        nPrecio:['',[Validators.required]],
+        sMoneda:['',[Validators.required]],
+        nIdGanancia: [null, [Validators.required, this.gananciaMayorACero()]],
+        nIdusuario:['',[]],
+        nEstatus:['',[]],
+        dFecha:['',[]],
+        nIdclavesat:['',[Validators.required]],
+        sIdBar:['',[]],
+        nIdDescuento:['0',[Validators.required]],
+        nIdMarca:['',[Validators.required]],
+        nPeso: [null, []],
+        nLargo: [null, []],
+        nAlto: [null, []],
+        nAncho: [null, []],
+        nVolumen: [null, []],
+        sRutaImagen: ['', []],
+        
+    })
+    this.formulario.get('nIdCategoria').disable();
+  }
+
+
+
+
+
+
+
+
+
+  private gananciaMayorACero(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const valor = Number(control.value);
+    return valor > 0 ? null : { gananciaInvalida: true };
+  };
+}
   obtenerMarcas(){
     this.catalogoService.obtenerMarcas().subscribe(data=> {
 
@@ -135,128 +177,48 @@ export class ModalProductoComponent implements OnInit {
 
   }
 
-  editarProducto(){   
-    this.catalogoService.obtenerMarcas().subscribe(data=> {
-      this.listaMarca=data;
-     // console.log(this.listaMarca);
-      if(this.producto.nIdMarca>0 ){
-    
-        for (let index = 0; index < this.listaMarca.length; index++) {
-          if(this.listaMarca[index].nId==this.producto.nIdMarca){
-    
-            this.fProducto.sMarca.setValue(this.listaMarca[index].sMarca);
-          }
-               
-        }
-        this.fProducto.sNoParte.setValue(this.producto.sNoParte);
-        this.fProducto.sProducto.setValue(this.producto.sProducto);
-        this.fProducto.sIdBar.setValue(this.producto.sIdBar);
-       this.fProducto.nIdMarca.setValue(this.producto.nIdMarca);
-       this.fProducto.sNoParte.enabled
-       this.fProducto.sMarca.enabled
+ editarProducto() {
+  this.catalogoService.obtenerMarcas().subscribe(data => {
+    this.listaMarca = data;
 
-    
-       }
-       else{
-        this.fProducto.sNoParte.setValue(this.producto.sNoParte);
-        this.fProducto.sProducto.setValue(this.producto.sProducto);
-        this.fProducto.sMarca.setValue(this.producto.sMarca);
-        this.fProducto.sIdBar.setValue(this.producto.sIdBar);
-       this.fProducto.nIdMarca.setValue(this.producto.nIdMarca);        
-        this.fProducto.sNoParte.enabled
-        this.fProducto.sMarca.enabled
+    // Asigna nombre de la marca si se encuentra
+    const marca = this.listaMarca.find(m => m.nId === this.producto.nIdMarca);
+    if (marca) {
+      this.fProducto.sMarca.setValue(marca.sMarca);
+    } else {
+      this.fProducto.sMarca.setValue(this.producto.sMarca);
+    }
 
-       }
-    })
-    
-    
+    // Asignación común de campos
+    this.fProducto.sNoParte.setValue(this.producto.sNoParte);
+    this.fProducto.sProducto.setValue(this.producto.sProducto);
+    this.fProducto.sIdBar.setValue(this.producto.sIdBar);
+    this.fProducto.nIdMarca.setValue(this.producto.nIdMarca);
+    this.fProducto.nPeso.setValue(this.producto.nPeso);
+    this.fProducto.nLargo.setValue(this.producto.nLargo);
+    this.fProducto.nAlto.setValue(this.producto.nAlto);
+    this.fProducto.nAncho.setValue(this.producto.nAncho);
+    this.fProducto.nVolumen.setValue(this.producto.nVolumen);
+    this.fProducto.sRutaImagen.setValue(this.producto.sRutaImagen);
 
-   
+    // Asegura que los campos estén habilitados si corresponde
+    this.fProducto.sNoParte.enabled;
+    this.fProducto.sMarca.enabled;
+  });
+}
+
+
+ asignarMarca(event: any): void {
+  const marcaSeleccionada = this.listaMarca.find(m => m.nId === event.value);
+  if (marcaSeleccionada) {
+    this.formulario.get('sMarca')?.setValue(marcaSeleccionada.sMarca);
+  } else {
+    this.formulario.get('sMarca')?.setValue('');
+  }
+}
 
  
-  }
-
-  asignarMarca(){
-
-    if(this.fProducto.nIdMarca.value>0 ){
-      
-      for (let index = 0; index < this.listaMarca.length; index++) {
-        if(this.listaMarca[index].nId==this.fProducto.nIdMarca.value){
-  
-          this.fProducto.sMarca.setValue(this.listaMarca[index].sMarca);
-        }
-             
-      }    
-    
-     }
-  
-   // console.log("Este el valor seleccionado",this.fProducto.nIdMarca.value);
-  
-  
-  }
-
-  get validaNoParte() {
-    return this.formulario.get('sNoParte').invalid && this.formulario.get('sNoParte').touched;
-  }
-  get validaProducto() {
-    return this.formulario.get('sProducto').invalid && this.formulario.get('sProducto').touched;
-  }
-  get validaMarca() {
-    return this.formulario.get('sMarca').invalid && this.formulario.get('sMarca').touched;
-  }
-  get validaCategoria() {
-    return this.formulario.get('nIdCategoria').invalid && this.formulario.get('nIdCategoria').touched;
-  }
-  get validaCategoriaGeneral() {
-    return this.formulario.get('nIdCategoriaGeneral').invalid && this.formulario.get('nIdCategoriaGeneral').touched;
-  }
-  get validaPrecio() {
-    return this.formulario.get('nPrecio').invalid && this.formulario.get('nPrecio').touched;
-  }
-  get validaMoneda() {
-    return this.formulario.get('sMoneda').invalid && this.formulario.get('sMoneda').touched;
-  }
-  get validaGanancia() {
-    return this.formulario.get('nIdGanancia').invalid && this.formulario.get('nIdGanancia').touched;
-  }
-  get validaClaveSat() {
-    return this.formulario.get('nIdclavesat').invalid && this.formulario.get('nIdclavesat').touched;
-  }
-  get validaBar() {
-    return this.formulario.get('sIdBar').invalid && this.formulario.get('sIdBar').touched;
-  }
-
-  get validaDescuento() {
-    return this.formulario.get('nIdDescuento').invalid && this.formulario.get('nIdDescuento').touched;
-  }
-  get validanIdMarca() {
-    return this.formulario.get('nIdMarca').invalid && this.formulario.get('nIdMarca').touched;
-  }
-
-  crearFormulario() {
-  
-    this.formulario = this.fb.group({
-        nId: ['',[]],
-        sNoParte: ['',[Validators.required]],
-        sProducto: ['',[Validators.required]],
-        sDescripcion: ['',[]],
-        sMarca: ['', [Validators.required]],
-        nIdCategoria:['',[Validators.required]],
-        nIdCategoriaGeneral:['',[Validators.required]],
-        nPrecio:['',[Validators.required]],
-        sMoneda:['',[Validators.required]],
-        nIdGanancia:['',[Validators.required]],
-        nIdusuario:['',[]],
-        nEstatus:['',[]],
-        dFecha:['',[]],
-        nIdclavesat:['',[Validators.required]],
-        sIdBar:['',[]],
-        nIdDescuento:['',[Validators.required]],
-        nIdMarca:['',[Validators.required]],
-        
-    })
-    this.formulario.get('nIdCategoria').disable();
-  }
+ 
 
   obtenerCategoriaGeneral(){
     //this.spinner2.show();
@@ -265,7 +227,13 @@ export class ModalProductoComponent implements OnInit {
       //this.spinner2.hide();
     })
   }
-
+  calcularVolumen(): void {
+  const largo = this.formulario.get('nLargo')?.value || 0;
+  const alto = this.formulario.get('nAlto')?.value || 0;
+  const ancho = this.formulario.get('nAncho')?.value || 0;
+  const volumen = largo * alto * ancho;
+  this.formulario.get('nVolumen')?.setValue(Number(volumen.toFixed(2)), { emitEvent: false });
+}
   obtenerCategoria(){
     //this.spinner2.show();
     if (this.fProducto.nIdCategoriaGeneral.value == null) {
@@ -301,7 +269,7 @@ export class ModalProductoComponent implements OnInit {
     this.productDialog=false;
     this.cerrar.emit(this.productDialog);
     this.fProducto.sNoParte.setValue("");
-    this.limpiaFormulario();
+   this.formulario.reset();
     
   }
 
@@ -419,6 +387,12 @@ limpiaFormulario() {
   this.fProducto.nIdclavesat.setValue("");
   this.fProducto.sIdBar.setValue("");
   this.fProducto.nIdDescuento.setValue("");
+  this.fProducto.nPeso.setValue("");
+  this.fProducto.nLargo.setValue("");
+  this.fProducto.nAlto.setValue("");
+  this.fProducto.nAncho.setValue("");
+  this.fProducto.nVolumen.setValue("");
+  this.fProducto.sRutaImagen.setValue("");
    
 }
 
@@ -477,11 +451,10 @@ valorSeleccionado(){
 valorSeleccionado(){
   //console.log(this.fProducto.sNoParte.value);
   this.noparte =this.fProducto.sNoParte.value;  
-  //console.log('antes',this.listaNoParte);
-   this.fProducto.sNoParte.disable();
+  //console.log('antes',this.listaNoParte);   
  
     if(this.tokenService.getIdUser()==19 || this.tokenService.getIdUser()==8  ){
-          
+          this.fProducto.sNoParte.disable();
     }
     else{
 
@@ -502,26 +475,64 @@ for (let index = 0; index < this.listaNoParte.length; index++) {
  
 }
 
+/*Se consulta el precio final */
 calculaPrecioFinal():void{
+
  if (this.fProducto.nPrecio.valid  && this.fProducto.sMoneda.valid &&this.fProducto.nIdGanancia.valid) {
-
-   let precio: number; 
-   let precioFinalSinIva: number;
-   let iva: number;
-
    this.productosService.simuladorPrecioProducto(this.tcProductoCalculo=this.formulario.value).subscribe(resp=>{
     this.tcProductoCalculo=resp;
     this.precioFinal=this.tcProductoCalculo.nPrecioConIva;
-    this.precioFinal.toFixed(2);
-
-   // console.log(this.tcProductoCalculo);
-
-   });
-     
+    this.precioFinal.toFixed(2); 
+   });     
  } 
 }
+
+
+/*validacion de campos del formulario */
   get fProducto(){
     return this.formulario.controls;
 }
+
+ get validaNoParte() {
+    return this.formulario.get('sNoParte').invalid && this.formulario.get('sNoParte').touched;
+  }
+  get validaProducto() {
+    return this.formulario.get('sProducto').invalid && this.formulario.get('sProducto').touched;
+  }
+  get validaDescripcion() {
+    return this.formulario.get('sDescripcion').invalid && this.formulario.get('sDescripcion').touched;
+  }
+  get validaMarca() {
+    return this.formulario.get('sMarca').invalid && this.formulario.get('sMarca').touched;
+  }
+  get validaCategoria() {
+    return this.formulario.get('nIdCategoria').invalid && this.formulario.get('nIdCategoria').touched;
+  }
+  get validaCategoriaGeneral() {
+    return this.formulario.get('nIdCategoriaGeneral').invalid && this.formulario.get('nIdCategoriaGeneral').touched;
+  }
+  get validaPrecio() {
+    return this.formulario.get('nPrecio').invalid && this.formulario.get('nPrecio').touched;
+  }
+  get validaMoneda() {
+    return this.formulario.get('sMoneda').invalid && this.formulario.get('sMoneda').touched;
+  }
+  get validaGanancia() {
+    return this.formulario.get('nIdGanancia').invalid && this.formulario.get('nIdGanancia').touched;
+  }
+  get validaClaveSat() {
+    return this.formulario.get('nIdclavesat').invalid && this.formulario.get('nIdclavesat').touched;
+  }
+  get validaBar() {
+    return this.formulario.get('sIdBar').invalid && this.formulario.get('sIdBar').touched;
+  }
+
+  get validaDescuento() {
+    return this.formulario.get('nIdDescuento').invalid && this.formulario.get('nIdDescuento').touched;
+  }
+  get validanIdMarca() {
+    return this.formulario.get('nIdMarca').invalid && this.formulario.get('nIdMarca').touched;
+  }
+
 
 }

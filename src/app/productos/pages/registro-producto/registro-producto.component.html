@@ -77,11 +77,10 @@
                 </ng-template>
             </p-table>
         </div>
-        <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
+        <p-dialog [(visible)]="productDialog" [style]="{width: '80%'}" [header]="titulo" [closable]="false"
             styleClass="p-fluid">
             <ng-template pTemplate="content">
-                <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
-                    (guardarProducto)="saveProduct($event)"></app-modal-producto>
+                <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
             </ng-template>
         </p-dialog>
 

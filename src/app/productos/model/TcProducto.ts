@@ -33,8 +33,11 @@ nPrecioIva:Decimal;
 nIdDescuento:number;
 tcDescuento:TcDescuento;
 nIdMarca:number;
-
-
- 
+nPeso:Decimal;	
+nLargo:Decimal;	
+nAlto:Decimal;	
+nAncho:Decimal;	
+nVolumen:Decimal;	
+sRutaImagen:String;
 
 }
