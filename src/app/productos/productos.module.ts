@@ -25,6 +25,7 @@ import { ComprasProductoComponent } from './pages/compras-producto/compras-produ
 import { FechaRangoComponent } from './components/fecha-rango/fecha-rango.component';
 import { CarritoPedidoComponent } from './components/carrito-pedido/carrito-pedido.component';
 import { FormConsultaCostexComponent } from './components/form-consulta-costex/form-consulta-costex.component';
+import { FormProductoComponent } from './components/form-producto/form-producto.component';
 
 
 
@@ -53,6 +54,7 @@ import { FormConsultaCostexComponent } from './components/form-consulta-costex/f
     FechaRangoComponent,
     CarritoPedidoComponent,
     FormConsultaCostexComponent,
+    FormProductoComponent,
     
     
   ],
@@ -62,7 +64,8 @@ import { FormConsultaCostexComponent } from './components/form-consulta-costex/f
     PrimeModule,
     ReactiveFormsModule, 
     FormsModule, 
-    NgxSpinnerModule,
+    NgxSpinnerModule
+    
   
   
   
@@ -84,7 +87,9 @@ import { FormConsultaCostexComponent } from './components/form-consulta-costex/f
     AltaPedidosComponent,
     VentaStockCeroComponent,
     ComprasProductoComponent,
-   FormConsultaCostexComponent
+   FormConsultaCostexComponent,
+    ModalProductoComponent,
+    FormProductoComponent
 
   ]
 })

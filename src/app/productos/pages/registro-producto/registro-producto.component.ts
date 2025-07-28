@@ -5,6 +5,10 @@ import { ProductoService } from '../../../shared/service/producto.service';
 import { TcHistoriaPrecioProducto } from '../../model/TcHistoriaPrecioProducto';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { TwProductoBodega } from '../../model/TwProductoBodega';
+import { DialogService } from 'primeng/dynamicdialog';
+import { FormProductoComponent } from '../../components/form-producto/form-producto.component';
+import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
+import { ModelContainer } from 'src/app/shared/utils/model-container';
 
 
 
@@ -41,6 +45,7 @@ export class RegistroProductoComponent implements OnInit {
         private bodegasService: BodegasService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
+         public dialogService: DialogService
     ) {
         
     }
@@ -63,6 +68,30 @@ export class RegistroProductoComponent implements OnInit {
 
 
     }
+
+
+ formProducto(producto: TcProducto): void {
+  const isNuevo = !producto || typeof producto.nId !== 'number' || producto.nId == null || producto.nId === 0;
+
+  const modo = isNuevo ? ModeActionOnModel.CREATING : ModeActionOnModel.EDITING;
+  console.log('Este el modo',modo);
+
+  const ref = this.dialogService.open(FormProductoComponent, {
+    data: new ModelContainer(modo, producto),
+    header: isNuevo ? 'Nuevo Producto' : 'Editar Producto',
+    width: '70%',
+    height: 'auto',
+    baseZIndex: 1000,
+    closable: true,
+    dismissableMask: true,
+    modal: true
+  });
+
+  ref.onClose.subscribe(() => {
+    // lógica post-cierre
+  });
+}
+
 
     obtenerProductos() {
         this.productosService.obtenerProductos().subscribe(productos => {
@@ -108,58 +137,7 @@ export class RegistroProductoComponent implements OnInit {
                 this.stockTotal += this.listaProductoBodega[key].nCantidad;
             }
         });
-
-        /*this.product = {...product};
-            this.detalleDialog = true;
-            this.lineData = {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                    {
-                        label: 'First Dataset',
-                        data: [65, 59, 80, 81, 56, 55, 40],
-                        fill: false,
-                        backgroundColor: 'rgb(255, 205, 86)',
-                        borderColor: 'rgb(255, 205, 86)',
-                        tension: .4
-                    },
-                    {
-                        label: 'Second Dataset',
-                        data: [28, 48, 40, 19, 86, 27, 90],
-                        fill: false,
-                        backgroundColor: 'rgb(75, 192, 192)',
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: .4
-                    }
-                ]
-            };
-        
-            this.lineOptions = {
-                plugins: {
-                    legend: {
-                        labels: {
-                            fontColor: '#A0A7B5'
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#A0A7B5'
-                        },
-                        grid: {
-                            color:  'rgba(160, 167, 181, .3)',
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: '#A0A7B5'
-                        },
-                        grid: {
-                            color:  'rgba(160, 167, 181, .3)',
-                        }
-                    },
-                }
-            };*/
+      
     }
 
 
