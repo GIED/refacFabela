@@ -37,6 +37,10 @@ export class FormProductoComponent implements OnInit {
  precioFinal: number = 0;
   tcProducto: TcProducto = new TcProducto();
   modo:string='';
+  rol:string='';
+  realRol:string='';
+  guardando: boolean = false;
+
 
   constructor(
     public ref: DynamicDialogRef,
@@ -53,12 +57,17 @@ export class FormProductoComponent implements OnInit {
 
   ngOnInit(): void {
   const modelContainer: ModelContainer = this.config.data;
-
-  this.producto = ObjectUtils.isEmpty(modelContainer.modelData)
-    ? new TcProducto()
-    : modelContainer.modelData as TcProducto;
-
+  
+  /*Asigna el valor a producto */
+  this.producto = ObjectUtils.isEmpty(modelContainer.modelData) ? new TcProducto(): modelContainer.modelData as TcProducto;
+ console.log('Este es el producto que llego',  this.producto);
+ 
+  /* obtiene el modo */
   this.modo = modelContainer.modeAction;
+  /* obtiene el rol principal */
+   const roles: string[] = this.tokenService.getRoles(); // o como los obtengas
+  this.realRol = this.calcularRolPrincipal(roles);
+  const isEdit = this.modo === ModeActionOnModel.EDITING;
 
   this.crearFormulario();
 
@@ -75,6 +84,7 @@ export class FormProductoComponent implements OnInit {
   const observable4 = this.catalogoService.obtenerMarcas();
   const observable5 = this.tokenService.getIdUser(); // no se usa, puedes removerlo
   const observable6 = this.catalogoService.obtenerMonedas();
+ 
 
   forkJoin([observable1, observable2, observable3, observable4, observable6]).subscribe({
     next: ([resultado1, resultado2, resultado3, resultado4, resultado6]) => {
@@ -94,7 +104,7 @@ export class FormProductoComponent implements OnInit {
       }
 
       // Si es un producto nuevo
-      if (!this.producto?.nId) {
+      if (!this.producto?.nId || !this.producto?.sIdBar ) {
         this.generarCodigoBarrasUnico();
       }
     },
@@ -103,6 +113,10 @@ export class FormProductoComponent implements OnInit {
     }
   });
 }
+
+
+
+
 
 
 
@@ -120,6 +134,28 @@ export class FormProductoComponent implements OnInit {
   });
 }
 
+private calcularRolPrincipal(roles: string[]): string {
+  const prioridadRoles: { [key: string]: string } = {
+    'ROLE_ADMIN': 'admin',
+    'ROLE_VENTA': 'ventas',
+    'ROLE_DISTRIBUIDOR': 'distribuidor',
+    'ROLE_ALMACEN': 'almacen',
+    'ROLE_CAJA': 'caja'
+  };
+
+   const jerarquia = ['ROLE_ADMIN', 'ROLE_VENTA', 'ROLE_DISTRIBUIDOR', 'ROLE_ALMACEN', 'ROLE_CAJA'];
+
+  for (const rol of jerarquia) {
+    if (roles.includes(rol)) {
+      return prioridadRoles[rol];
+    }
+  }
+
+  return 'desconocido'; // por si no hay roles válidos
+}
+
+
+/*ASIGNA LA MARCA AL CAMPO DE SMARCA */
 
   asignarMarca(event: any): void {
     const marcaSeleccionada = this.listaMarca.find(m => m.nId === event.value);
@@ -131,7 +167,7 @@ export class FormProductoComponent implements OnInit {
   }
 
 
-  saveProduct() {
+  guardarProducto(): void {
   if (this.formGrp.invalid) {
     Object.values(this.formGrp.controls).forEach(control => {
       if (control instanceof FormGroup) {
@@ -144,12 +180,50 @@ export class FormProductoComponent implements OnInit {
   }
 
   this.setManualProductoFromForm();
+  this.guardando = true;
+  this.productosService.obtenerProductoNoParte(this.tcProducto.sNoParte).subscribe(data => {
+    this.productosService.guardaProducto(this.tcProducto).subscribe({
+      next: (productoActualizado) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Producto guardado',
+          detail: 'Producto guardado correctamente',
+          life: 3000
+        });
 
-  console.log('Esto es lo que guardaré', this.tcProducto)
-
-  this.productosService.obtenerProductoNoParte(this.formGrp.get('sNoParte')?.value).subscribe(data => {
-    // Aquí va la lógica para guardar el producto
+        this.ref.close(productoActualizado); // ✅ Devuelve al padre
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al guardar el producto',
+          life: 3000
+        });
+        this.guardando = false; // 🔓 Reactiva en error
+      },
+      complete: () => {
+        this.guardando = false; // 🔓 Reactiva después de éxito
+      }
+    });
+  }, error => {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Advertencia',
+      detail: 'No se pudo validar el número de parte',
+      life: 3000
+    });
+    this.guardando = false;
   });
+}
+
+
+/*convierte a mayuscuelas */
+forzarMayusculas(campo: string): void {
+  const control = this.formGrp.get(campo);
+  if (control && control.value) {
+    control.setValue(control.value.toUpperCase(), { emitEvent: false });
+  }
 }
 
 
@@ -178,10 +252,11 @@ private setFormValuesFromProducto(): void {
     nVolumen: this.producto.nVolumen ?? null,
     sRutaImagen: this.producto.sRutaImagen ?? ''
   });
-
+ 
   // Opcionalmente deshabilitar campos si es edición
   this.formGrp.get('sNoParte')?.disable();
   this.formGrp.get('sMarca')?.disable();
+  
 }
 
 
@@ -211,53 +286,102 @@ private setFormValuesFromProducto(): void {
   this.tcProducto.nAncho = form.get('nAncho')?.value ?? 0;
   this.tcProducto.nVolumen = form.get('nVolumen')?.value ?? 0;
   this.tcProducto.sRutaImagen = form.get('sRutaImagen')?.value || null;
+
+  if (this.modo === ModeActionOnModel.EDITING && this.producto?.nId) {
+    this.tcProducto.nId = this.producto.nId;
+  }
   
   this.tcProducto.nEstatus = 1;
   this.tcProducto.nIdusuario = this.tokenService.getIdUser();
 }
 
- crearFormulario() {
+
+
+
+ crearFormulario(): void {
   const isEdit = this.modo === ModeActionOnModel.EDITING;
 
+  const camposDeshabilitados = this.obtenerCamposDeshabilitados(isEdit, this.realRol);
+  const camposObligatorios = this.obtenerCamposObligatorios(this.realRol);
+
+  const createControl = (nombre: string, valorInicial: any = '', validadores: any[] = []) => {
+    const deshabilitado = camposDeshabilitados.includes(nombre);
+    return new FormControl({ value: valorInicial, disabled: deshabilitado }, validadores);
+  };
+
   this.formGrp = new FormGroup({
-    sNoParte: new FormControl({ value: '', disabled: isEdit }, Validators.required),
-    sProducto: new FormControl('', Validators.required),
-    sDescripcion: new FormControl('', Validators.required),
-    sMarca: new FormControl({ value: '', disabled: isEdit }, Validators.required),
-    nIdCategoria: new FormControl({ value: '', disabled: true }, Validators.required),
-    nIdCategoriaGeneral: new FormControl(null, Validators.required),
-    nPrecio: new FormControl('', Validators.required),
-    sMoneda: new FormControl('', Validators.required),
-    nIdGanancia: new FormControl(null, [Validators.required]),
-    nIdclavesat: new FormControl(null, Validators.required),
-    sIdBar: new FormControl({ value: '', disabled: true }, [Validators.required]),
-    nIdDescuento: new FormControl(null, Validators.required),
-    nIdMarca: new FormControl({value:null , disabled: isEdit}, Validators.required),
-    nPeso: new FormControl(null, [Validators.min(0.01)]),
-    nLargo: new FormControl(null, [Validators.min(0.01)]),
-    nAlto: new FormControl(null, [Validators.min(0.01)]),
-    nAncho: new FormControl(null, [Validators.min(0.01)]),
-    nVolumen: new FormControl({ value: '', disabled: false }, [Validators.min(0.01)]),
-    sRutaImagen: new FormControl('', [])
+    sNoParte: createControl('sNoParte', '', camposObligatorios.includes('sNoParte') ? [Validators.required] : []),
+    sProducto: createControl('sProducto', '', [Validators.required]),
+    sDescripcion: createControl('sDescripcion', '', [Validators.required]),
+    sMarca: createControl('sMarca', '', camposObligatorios.includes('sMarca') ? [Validators.required] : []),
+    nIdCategoria: createControl('nIdCategoria', '', [Validators.required]),
+    nIdCategoriaGeneral: createControl('nIdCategoriaGeneral', null, [Validators.required]),
+    nPrecio: createControl('nPrecio', '', camposObligatorios.includes('nPrecio') ? [Validators.required] : []),
+    sMoneda: createControl('sMoneda', '', camposObligatorios.includes('sMoneda') ? [Validators.required] : []),
+    nIdGanancia: createControl('nIdGanancia', null, camposObligatorios.includes('nIdGanancia') ? [Validators.required] : []),
+    nIdclavesat: createControl('nIdclavesat', null, [Validators.required]),
+    sIdBar: createControl('sIdBar', '', [Validators.required]),
+    nIdDescuento: createControl('nIdDescuento', null, camposObligatorios.includes('nIdDescuento') ? [Validators.required] : []),
+    nIdMarca: createControl('nIdMarca', null, camposObligatorios.includes('nIdMarca') ? [Validators.required] : []),
+    nPeso: createControl('nPeso', null, camposObligatorios.includes('nPeso') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
+    nLargo: createControl('nLargo', null, camposObligatorios.includes('nLargo') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
+    nAlto: createControl('nAlto', null, camposObligatorios.includes('nAlto') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
+    nAncho: createControl('nAncho', null, camposObligatorios.includes('nAncho') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
+    nVolumen: createControl('nVolumen', '', camposObligatorios.includes('nVolumen') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
+    sRutaImagen: createControl('sRutaImagen', '', camposObligatorios.includes('sRutaImagen') ? [Validators.required] : [])
   });
 }
 
+/*OBTIENE LOS CAMPOS DESHABILITADOS */
+obtenerCamposDeshabilitados(isEdit: boolean, rol: string): string[] {
+  const comunesEdit = ['sNoParte', 'sMarca', 'nIdMarca'];
+  const soloAlmacen = ['nPrecio', 'nIdGanancia', 'sMoneda', 'nIdDescuento'];
+
+  let deshabilitados = isEdit ? [...comunesEdit] : [];
+
+  // Siempre deshabilitar categoría al inicio en modo creación (CREATING)
+  if (!isEdit) {
+    deshabilitados.push('nIdCategoria');
+  }  
+
+  if (rol === 'almacen') {
+    deshabilitados.push(...soloAlmacen);
+  }
+
+  return deshabilitados;
+}
+
+
+/*OBTIENE LOS CAMPOS OBLIGATORIOS DEL FORMULARIO */
+
+obtenerCamposObligatorios(rol: string): string[] {
+  const base = ['sNoParte', 'sProducto', 'sDescripcion', 'sMarca', 'nIdCategoria', 'nIdCategoriaGeneral', 'nIdclavesat', 'sIdBar', 'nIdMarca'];
+
+  switch (rol) {
+    case 'admin':
+      return [...base, 'nPrecio', 'sMoneda', 'nIdGanancia', 'nIdDescuento'];
+    case 'ventas':
+      return [...base, 'nPrecio', 'sMoneda', 'nIdGanancia', 'nIdDescuento'];
+    case 'almacen':
+      return [...base, 'nLargo', 'nAlto', 'nAncho', 'nVolumen', 'sRutaImagen'];
+    default:
+      return base;
+  }
+}
+
+
+
+/*CALCULA EL PRECIO FINAL DEL PRODUCTO */
 
  calculaPrecioFinal(): void {
-  console.log('entre a calcual el precvio del producto ');
+  
   const precioCtrl = this.formGrp.get('nPrecio');
   const monedaCtrl = this.formGrp.get('sMoneda');
-  const gananciaCtrl = this.formGrp.get('nIdGanancia');
-
-  console.log(this.formGrp.get('nPrecio').value);
-    console.log(this.formGrp.get('sMoneda').value);
-      console.log(this.formGrp.get('nIdGanancia').value);
-
-
+  const gananciaCtrl = this.formGrp.get('nIdGanancia');  
   if (precioCtrl?.valid && monedaCtrl?.valid && gananciaCtrl?.valid) {
-    console.log('entre a consultar el precio');
+   
     const productoCalculo: TcProducto = this.formGrp.getRawValue();
-    console.log(productoCalculo);
+    
     this.productosService.simuladorPrecioProducto(productoCalculo).subscribe({
       next: (resp: TcProducto) => {
         this.tcProducto = resp;
@@ -370,7 +494,7 @@ onFileSelected(event: Event): void {
       const base64 = reader.result as string;
       this.formGrp.get('sRutaImagen')?.setValue(base64);
       this.formGrp.get('sRutaImagen')?.markAsTouched(); // marca para validación visual
-      console.log(base64);
+      
     };
     reader.readAsDataURL(file);
   }

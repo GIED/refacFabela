@@ -87,8 +87,15 @@ export class RegistroProductoComponent implements OnInit {
     modal: true
   });
 
-  ref.onClose.subscribe(() => {
-    // lógica post-cierre
+   ref.onClose.subscribe((productoGuardado: TcProducto | undefined) => {
+    if (productoGuardado) {
+      // Aquí puedes actualizar tu lista, tabla, etc.
+      console.log('Producto recibido desde el diálogo:', productoGuardado);
+      // Ejemplo: recargar lista o actualizar tabla
+      this.informacionProducto(productoGuardado.nId); // o lo que apliques
+    } else {
+      console.log('El usuario cerró el formulario sin guardar.');
+    }
   });
 }
 

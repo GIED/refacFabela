@@ -4,19 +4,19 @@
     <!-- Fila 1: No. de parte y nombre del producto -->
     <div class="p-field p-col-12 p-md-6">
       <label>No. de parte <span style="color:red">*</span></label>
-      <input pInputText formControlName="sNoParte" />
+      <input pInputText formControlName="sNoParte" (input)="forzarMayusculas('sNoParte')" style="text-transform: uppercase;" />
       <small class="p-error" *ngIf="validaNoParte">*Número de Parte requerido.</small>
     </div>
     <div class="p-field p-col-12 p-md-6">
       <label>Nombre del producto <span style="color:red">*</span></label>
-      <input pInputText formControlName="sProducto" />
+      <input pInputText formControlName="sProducto" (input)="forzarMayusculas('sNoParte')"  style="text-transform: uppercase;" />
       <small class="p-error" *ngIf="validaProducto">*Nombre requerido.</small>
     </div>
 
     <!-- Fila 2: Descripción -->
     <div class="p-field p-col-12">
       <label>Descripción <span style="color:red">*</span></label>
-      <textarea pInputTextarea formControlName="sDescripcion" rows="2"></textarea>
+      <textarea pInputTextarea formControlName="sDescripcion" rows="2" (input)="forzarMayusculas('sNoParte')"  style="text-transform: uppercase;"></textarea>
       <small class="p-error" *ngIf="validaDescripcion">*Descripción requerida.</small>
     </div>
 
@@ -81,7 +81,8 @@
   
     <div class="p-field p-col-12 p-md-6">
   <label for="imagen">Imagen del producto (máx 1MB) <span style="color:red">*</span></label>
-  <input type="file" id="imagen" accept="image/*" (change)="onFileSelected($event)" />
+<input #inputImagen type="file" id="imagen" accept="image/*" (change)="onFileSelected($event)" />
+
   <small class="p-error" *ngIf="validaImagen">*Imagen requerida.</small>
 </div>
 
@@ -137,7 +138,7 @@
 
     <!-- Botón Guardar -->
     <div class="p-col-12 p-d-flex p-jc-end">
-      <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="saveProduct()" [disabled]="formGrp.invalid"></button>
+      <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardarProducto()" [disabled]="guardando || formGrp.invalid"></button>
     </div>
   </div>
 </form>
