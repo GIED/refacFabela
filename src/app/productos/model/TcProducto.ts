@@ -38,6 +38,6 @@ nLargo:Decimal;
 nAlto:Decimal;	
 nAncho:Decimal;	
 nVolumen:Decimal;	
-sRutaImagen:String;
+sRutaImagen:string;
 
 }

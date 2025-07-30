@@ -16,7 +16,9 @@ import { TcMarca } from '../../model/TcMarca';
 import Decimal from 'decimal.js';
 import { TcMoneda } from '../../model/TcMoneda';
 import { ProductoService } from 'src/app/shared/service/producto.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { PartService } from 'src/app/shared/service/part.service';
+import { PartResponse } from '../../model/PartResponse ';
 
 @Component({
   selector: 'app-form-producto',
@@ -40,6 +42,7 @@ export class FormProductoComponent implements OnInit {
   rol:string='';
   realRol:string='';
   guardando: boolean = false;
+  productoProveedor:PartResponse ;
 
 
   constructor(
@@ -49,6 +52,8 @@ export class FormProductoComponent implements OnInit {
     private catalogoService: CatalogoService,
     private productosService: ProductoService,
      private messageService: MessageService,
+     private partService:PartService,
+     private confirmationService: ConfirmationService
 
   ) {
    
@@ -252,12 +257,116 @@ private setFormValuesFromProducto(): void {
     nVolumen: this.producto.nVolumen ?? null,
     sRutaImagen: this.producto.sRutaImagen ?? ''
   });
+
+if (this.producto?.sRutaImagen) {
+  this.productosService.getImegenProducto(this.producto.sRutaImagen).subscribe({
+    next: (data) => {
+      console.log(data?.imagenBase64);
+      this.formGrp.patchValue({
+        sRutaImagen: data?.imagenBase64 || ''
+      });
+    },
+    error: (err) => {
+      console.error('❌ Error al obtener imagen desde el servicio', err);
+      this.formGrp.patchValue({
+        sRutaImagen: ''
+      });
+    }
+  });
+}
+
  
   // Opcionalmente deshabilitar campos si es edición
   this.formGrp.get('sNoParte')?.disable();
   this.formGrp.get('sMarca')?.disable();
   
 }
+
+consultarProductoProveedor() {
+  const numeroParte = this.formGrp.get('sNoParte')?.value;
+
+  if (!numeroParte) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Número de parte requerido',
+      detail: 'Por favor ingresa un número de parte válido.',
+      life: 3000
+    });
+    return;
+  }
+
+  this.partService.obtenerProductoCostex(numeroParte, '1').subscribe({
+    next: (part) => {
+      if (part) {
+        // Mostrar confirmación antes de cargar al formulario
+      const factorPulgadasACm = new Decimal(2.54);
+       const redondear = (valor: Decimal) => valor.toDecimalPlaces(2);
+
+        const largoCm = part.dblLengthIn ? redondear(new Decimal(part.dblLengthIn).mul(factorPulgadasACm)) : null;
+        const anchoCm = part.dblWidthIn ? redondear(new Decimal(part.dblWidthIn).mul(factorPulgadasACm)) : null;
+        const altoCm  = part.dblHeightIn ? redondear(new Decimal(part.dblHeightIn).mul(factorPulgadasACm)) : null;
+
+
+
+        this.confirmationService.confirm({
+          message: 'Se encontró información del proveedor. ¿Deseas cargar estos datos al formulario?',
+          header: 'Confirmar carga de datos',
+          icon: 'pi pi-exclamation-triangle',
+          acceptLabel: 'Sí',
+          rejectLabel: 'No',
+          accept: () => {
+            this.productoProveedor = part;
+
+            this.formGrp.patchValue({
+              sProducto: part.strDescrip1,
+              sDescripcion: part.strDescrip1,
+              nPeso: part.dblWeigthKgs,
+              nLargo: largoCm?.toNumber(),
+              nAncho: anchoCm?.toNumber(),
+              nAlto: altoCm?.toNumber(),             
+              // Agrega más campos si es necesario
+            });
+
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Datos cargados',
+              detail: 'Los datos del proveedor fueron aplicados al formulario.',
+              life: 3000
+            });
+          },
+          reject: () => {
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Carga cancelada',
+              detail: 'No se modificó el formulario.',
+              life: 3000
+            });
+          }
+        });
+      } else {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Producto no encontrado',
+          detail: `No se encontró información para la clave ${numeroParte}`,
+          life: 3000
+        });
+      }
+    },
+    error: (err) => {
+      console.error('❌ Error al consultar producto COSTEX:', err);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error de servicio',
+        detail: 'Ocurrió un error al obtener el producto.',
+        life: 3000
+      });
+    }
+  });
+}
+
+
+
+
 
 
 
@@ -289,6 +398,7 @@ private setFormValuesFromProducto(): void {
 
   if (this.modo === ModeActionOnModel.EDITING && this.producto?.nId) {
     this.tcProducto.nId = this.producto.nId;
+
   }
   
   this.tcProducto.nEstatus = 1;

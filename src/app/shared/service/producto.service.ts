@@ -1,6 +1,6 @@
 import { TcProducto } from './../../productos/model/TcProducto';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { locator } from '../sesion/locator';
 import { TcHistoriaPrecioProducto } from '../../productos/model/TcHistoriaPrecioProducto';
@@ -15,6 +15,8 @@ import { TwVentaProductoCancela } from 'src/app/productos/model/TwVentaProductoC
 import { TwAjusteInventario } from 'src/app/productos/model/TwAjusteInventario';
 import { TwFacturaProveedorProducto } from './TwFacturaProveedorProducto';
 import { TwProductoBodega } from '../../productos/model/TwProductoBodega';
+import { Observable } from 'rxjs';
+import { ImagenResponse } from 'src/app/productos/model/ImagenResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -133,6 +135,11 @@ export class ProductoService {
     let url = environment.servicios.apiRefacFabela + locator.getProductosFacturaId+'nIdFactura='+nId;
     return this.http.get<TwFacturaProveedorProducto[]>(url);
   }
+
+  getImegenProducto(ruta: string): Observable<ImagenResponse> {
+  const url = environment.servicios.apiRefacFabela + locator.getImegenProducto + 'ruta=' + ruta;
+  return this.http.get<ImagenResponse>(url);
+}
   
 
 

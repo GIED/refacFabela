@@ -100,6 +100,11 @@ static obtenerProductosCaneladosId='/obtenerProductosCancelaId?';
 /*Productos de la factura */
 static getProductosFacturaId='/facturacionProveedor/getProductoFacturaId?';
 
+/*imagen */
+static getImegenProducto='/obtenerImagenProducto?';
+
+
+
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';
 static obtenerTotalBodegasIdProducto='/obtenerTotalBodegasIdProducto?';
 static obtenerVentaStockFecha='/obtenerVentasStockFecha?';
