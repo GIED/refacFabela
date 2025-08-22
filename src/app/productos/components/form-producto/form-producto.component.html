@@ -4,19 +4,28 @@
     <!-- Fila 1: No. de parte y nombre del producto -->
     <div class="p-field p-col-12 p-md-6">
       <label>No. de parte <span style="color:red">*</span></label>
-      <input pInputText formControlName="sNoParte" (input)="forzarMayusculas('sNoParte')" (change)="consultarProductoProveedor()" style="text-transform: uppercase;" />
+      <input pInputText formControlName="sNoParte" (input)="forzarMayusculas('sNoParte')" style="text-transform: uppercase;" />
       <small class="p-error" *ngIf="validaNoParte">*Número de Parte requerido.</small>
     </div>
     <div class="p-field p-col-12 p-md-6">
+      <label>Marca catálogo <span style="color:red">*</span></label>
+      <p-dropdown [options]="listaMarca" formControlName="nIdMarca" optionLabel="sMarca" optionValue="nId"
+        (onChange)="verificarProducto()" filter="true" placeholder="Elige Marca"></p-dropdown>
+      <small class="p-error" *ngIf="validanIdMarca">*Marca requerida.</small>
+    </div>
+
+    <div class="p-field p-col-12 p-md-6">
       <label>Nombre del producto <span style="color:red">*</span></label>
-      <input pInputText formControlName="sProducto" (input)="forzarMayusculas('sNoParte')"  style="text-transform: uppercase;" />
+      <input pInputText formControlName="sProducto" (input)="forzarMayusculas('sNoParte')"
+        style="text-transform: uppercase;" />
       <small class="p-error" *ngIf="validaProducto">*Nombre requerido.</small>
     </div>
 
     <!-- Fila 2: Descripción -->
     <div class="p-field p-col-12">
       <label>Descripción <span style="color:red">*</span></label>
-      <textarea pInputTextarea formControlName="sDescripcion" rows="2" (input)="forzarMayusculas('sNoParte')"  style="text-transform: uppercase;"></textarea>
+      <textarea pInputTextarea formControlName="sDescripcion" rows="2" (input)="forzarMayusculas('sNoParte')"
+        style="text-transform: uppercase;"></textarea>
       <small class="p-error" *ngIf="validaDescripcion">*Descripción requerida.</small>
     </div>
 
@@ -27,33 +36,33 @@
     </div>
     <div class="p-field p-col-12 p-md-4">
       <label>Marca <span style="color:red">*</span></label>
-      <input pInputText formControlName="sMarca" readonly   />
+      <input pInputText formControlName="sMarca" readonly />
     </div>
 
     <!-- Fila 4: Marca catálogo y categoría general -->
-    <div class="p-field p-col-12 p-md-4">
-      <label>Marca catálogo <span style="color:red">*</span></label>
-      <p-dropdown [options]="listaMarca" formControlName="nIdMarca" optionLabel="sMarca" optionValue="nId" (onChange)="asignarMarca($event)" filter="true" placeholder="Elige Marca"></p-dropdown>
-      <small class="p-error" *ngIf="validanIdMarca">*Marca requerida.</small>
-    </div>
+
     <div class="p-field p-col-12 p-md-4">
       <label>Categoría general <span style="color:red">*</span></label>
-      <p-dropdown [options]="listaCategoriaGeneral" formControlName="nIdCategoriaGeneral" optionLabel="sCategoriaGeneral" optionValue="nId" filter="true" placeholder="Elige categoria general"></p-dropdown>
+      <p-dropdown [options]="listaCategoriaGeneral" formControlName="nIdCategoriaGeneral"
+        optionLabel="sCategoriaGeneral" optionValue="nId" filter="true"
+        placeholder="Elige categoria general"></p-dropdown>
       <small class="p-error" *ngIf="validaCategoriaGeneral">*Categoría general requerida.</small>
     </div>
 
     <!-- Fila 5: Categoría y Precio -->
     <div class="p-field p-col-12 p-md-4">
       <label>Categoría <span style="color:red">*</span></label>
-      <p-dropdown [options]="listaCategoria" formControlName="nIdCategoria" optionLabel="sDescripcion" optionValue="nId" filter="true" placeholder="Elige categoria"></p-dropdown>
+      <p-dropdown [options]="listaCategoria" formControlName="nIdCategoria" optionLabel="sDescripcion" optionValue="nId"
+        filter="true" placeholder="Elige categoria"></p-dropdown>
       <small class="p-error" *ngIf="validaCategoria">*Categoría requerida.</small>
     </div>
     <div class="p-field p-col-12 p-md-4">
       <label>Clave SAT <span style="color:red">*</span></label>
-      <p-dropdown [options]="listaClaveSat" formControlName="nIdclavesat" optionLabel="sDescripcion" optionValue="nId" filter="true" placeholder="Elige categoria SAT"></p-dropdown>
+      <p-dropdown [options]="listaClaveSat" formControlName="nIdclavesat" optionLabel="sDescripcion" optionValue="nId"
+        filter="true" placeholder="Elige categoria SAT"></p-dropdown>
       <small class="p-error" *ngIf="validaClaveSat">*Clave SAT requerida.</small>
     </div>
-    
+
 
     <!-- Fila 6: Peso, Largo, Alto, Ancho -->
     <div class="p-field p-col-12 p-md-3">
@@ -76,111 +85,102 @@
     <!-- Fila 7: Volumen y ruta imagen -->
     <div class="p-field p-col-12 p-md-3">
       <label>Volumen (cm³)</label>
-      <p-inputNumber formControlName="nVolumen" [minFractionDigits]="2" [maxFractionDigits]="2" ></p-inputNumber>
+      <p-inputNumber formControlName="nVolumen" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
     </div>
-   
+
 
 
     <!-- Fila 8: Moneda y Ganancia -->
-     <div class="p-field p-col-12 p-md-3">
+    <div class="p-field p-col-12 p-md-3">
       <label>Precio <span style="color:red">*</span></label>
-      <p-inputNumber formControlName="nPrecio" mode="currency" currency="USD" locale="en-US" ></p-inputNumber>
+      <p-inputNumber formControlName="nPrecio" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
       <small class="p-error" *ngIf="validaPrecio">*Precio requerido.</small>
     </div>
     <div class="p-field p-col-12 p-md-3">
       <label>Moneda <span style="color:red">*</span></label>
-      <p-dropdown [options]="listaMoneda" formControlName="sMoneda" optionLabel="sMoneda" optionValue="sMoneda" filter="true"  placeholder="Seleccione una moneda"> </p-dropdown>
+      <p-dropdown [options]="listaMoneda" formControlName="sMoneda" optionLabel="sMoneda" optionValue="sMoneda"
+        filter="true" placeholder="Seleccione una moneda"> </p-dropdown>
       <small class="p-error" *ngIf="validaMoneda">*Moneda requerida.</small>
     </div>
     <div class="p-field p-col-12 p-md-3">
       <label>Ganancia <span style="color:red">*</span></label>
-      <p-dropdown [options]="listaGanancia" formControlName="nIdGanancia" optionLabel="nGanancia" optionValue="nId" placeholder="Seleccione ganancia"  filter="true">
-         <ng-template let-gan pTemplate="item">
-                {{ gan.nGanancia | percent:'1.0-0' }}
-            </ng-template>
-             <ng-template let-gan pTemplate="selectedItem">
-      {{ gan?.nGanancia != null ? (gan.nGanancia | percent:'1.0-0') : 'Seleccione ganancia' }}
-    </ng-template>
+      <p-dropdown [options]="listaGanancia" formControlName="nIdGanancia" optionLabel="nGanancia" optionValue="nId"
+        placeholder="Seleccione ganancia" filter="true">
+        <ng-template let-gan pTemplate="item">
+          {{ gan.nGanancia | percent:'1.0-0' }}
+        </ng-template>
+        <ng-template let-gan pTemplate="selectedItem">
+          {{ gan?.nGanancia != null ? (gan.nGanancia | percent:'1.0-0') : 'Seleccione ganancia' }}
+        </ng-template>
       </p-dropdown>
       <small class="p-error" *ngIf="validaGanancia">*Ganancia requerida.</small>
     </div>
-  
+
     <!-- Fila 9: Descuento y clave SAT -->
     <div class="p-field p-col-12 p-md-3">
-        <label>Descuento <span style="color:red">*</span></label>
-        <p-dropdown [options]="listaGanancia" formControlName="nIdDescuento" optionLabel="nGanancia" optionValue="nId"
-            filter="true" [autoDisplayFirst]="false" placeholder="Seleccione descuento">
+      <label>Descuento <span style="color:red">*</span></label>
+      <p-dropdown [options]="listaGanancia" formControlName="nIdDescuento" optionLabel="nGanancia" optionValue="nId"
+        filter="true" [autoDisplayFirst]="false" placeholder="Seleccione descuento">
 
-            <ng-template let-gan pTemplate="item">
-                {{ gan.nGanancia | percent:'1.0-0' }}
-            </ng-template>
-             <ng-template let-gan pTemplate="selectedItem">
-      {{ gan?.nGanancia != null ? (gan.nGanancia | percent:'1.0-0') : 'Seleccione descuento' }}
-    </ng-template>
-            
+        <ng-template let-gan pTemplate="item">
+          {{ gan.nGanancia | percent:'1.0-0' }}
+        </ng-template>
+        <ng-template let-gan pTemplate="selectedItem">
+          {{ gan?.nGanancia != null ? (gan.nGanancia | percent:'1.0-0') : 'Seleccione descuento' }}
+        </ng-template>
 
-        </p-dropdown>
-        <small class="p-error" *ngIf="validaDescuento">*Descuento requerido.</small>
+
+      </p-dropdown>
+      <small class="p-error" *ngIf="validaDescuento">*Descuento requerido.</small>
     </div>
 
-      <div class="p-field p-col-12 p-md-9">
-  <label for="imagen">Imagen del producto (máx 1MB) <span style="color:red">*</span></label>
+    <div class="p-field p-col-12 p-md-9">
+      <label for="imagen">Imagen del producto (máx 1MB) <span style="color:red">*</span></label>
 
-  <div *ngIf="formGrp.get('sRutaImagen')?.value; else campoImagen" class="p-grid p-ai-center">
-    
-    <!-- 📷 Columna para mostrar la imagen -->
-    <div class="p-col-12 p-md-4">
-      <img [src]="formGrp.get('sRutaImagen')?.value"
-           alt="Vista previa"
-           width="120"
-           style="border: 1px solid #ccc; border-radius: 5px;" />
-    </div>
+      <div *ngIf="formGrp.get('sRutaImagen')?.value; else campoImagen" class="p-grid p-ai-center">
 
-    <!-- 🔘 Columna para botones -->
-    <div class="p-col-12 p-md-8">
-      <div class="p-d-flex p-flex-column p-ai-start">
-        <a [href]="formGrp.get('sRutaImagen')?.value"
-           download="imagen-producto.jpg"
-           target="_blank"
-           class="p-button p-button-secondary p-button-sm mb-2"
-           style="text-decoration: none; color: white;">
-          Descargar Imagen
-        </a>
+        <!-- 📷 Columna para mostrar la imagen -->
+        <div class="p-col-12 p-md-4">
+          <img [src]="formGrp.get('sRutaImagen')?.value" alt="Vista previa" width="120"
+            style="border: 1px solid #ccc; border-radius: 5px;" />
+        </div>
 
-        <button type="button"
-                class="p-button p-button-info p-button-sm"
-                (click)="inputImagen.click()">
-          Cambiar Imagen
-        </button>
+        <!-- 🔘 Columna para botones -->
+        <div class="p-col-12 p-md-8">
+          <div class="p-d-flex p-flex-column p-ai-start">
+            <a [href]="formGrp.get('sRutaImagen')?.value" download="imagen-producto.jpg" target="_blank"
+              class="p-button p-button-secondary p-button-sm mb-2" style="text-decoration: none; color: white;">
+              Descargar Imagen
+            </a>
 
-        <input #inputImagen
-               type="file"
-               accept="image/*"
-               (change)="onFileSelected($event)"
-               style="display: none;" />
+            <button type="button" class="p-button p-button-info p-button-sm" (click)="inputImagen.click()">
+              Cambiar Imagen
+            </button>
+
+            <input #inputImagen type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;" />
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- 🗂 Si no hay imagen, mostrar el input -->
-  <ng-template #campoImagen>
-    <input #inputImagen
-           type="file"
-           accept="image/*"
-           (change)="onFileSelected($event)" />
-    <small class="p-error" *ngIf="validaImagen">*Imagen requerida.</small>
-  </ng-template>
-</div>
+      <!-- 🗂 Si no hay imagen, mostrar el input -->
+      <ng-template #campoImagen>
+        <input #inputImagen type="file" accept="image/*" (change)="onFileSelected($event)" />
+        <small class="p-error" *ngIf="validaImagen">*Imagen requerida.</small>
+      </ng-template>
+    </div>
 
     <!-- Fila 10: Precio Final -->
     <div class="p-field p-col-12 p-text-center">
       <label>Precio Final</label><br />
-      <strong><p-tag><h2 style="color:white">  {{ precioFinal ? (precioFinal | number:'1.2-2') : '0.00' }}</h2></p-tag></strong>
+      <strong><p-tag>
+          <h2 style="color:white"> {{ precioFinal ? (precioFinal | number:'1.2-2') : '0.00' }}</h2>
+        </p-tag></strong>
     </div>
 
     <!-- Botón Guardar -->
     <div class="p-col-12 p-d-flex p-jc-end">
-      <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardarProducto()" [disabled]="guardando || formGrp.invalid"></button>
+      <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardarProducto()"
+        [disabled]="guardando || formGrp.invalid"></button>
     </div>
   </div>
 </form>

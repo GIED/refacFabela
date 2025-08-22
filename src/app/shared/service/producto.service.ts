@@ -17,6 +17,8 @@ import { TwFacturaProveedorProducto } from './TwFacturaProveedorProducto';
 import { TwProductoBodega } from '../../productos/model/TwProductoBodega';
 import { Observable } from 'rxjs';
 import { ImagenResponse } from 'src/app/productos/model/ImagenResponse';
+import { StringUtils } from '../utils/StringUtils';
+import { id } from 'date-fns/locale';
 
 @Injectable({
   providedIn: 'root'
@@ -140,7 +142,19 @@ export class ProductoService {
   const url = environment.servicios.apiRefacFabela + locator.getImegenProducto + 'ruta=' + ruta;
   return this.http.get<ImagenResponse>(url);
 }
+
+getProductoByNoParteAndIdMarca(noParte: string, idMarca: number) {
+  let params = new Map();
+  params.set("noParte", noParte);
+  params.set("nIdMarca", idMarca);
+  return this.http.get<TcProducto>(environment.servicios.apiRefacFabela.concat(Endpoint.getProductByNoParteAndIdMarca).concat(StringUtils.concatParams(params))
+  );
+}
   
 
 
+}
+
+const enum Endpoint{
+  getProductByNoParteAndIdMarca = '/getProductByNoParteAndIdMarca',
 }
