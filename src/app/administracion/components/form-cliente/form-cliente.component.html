@@ -20,7 +20,7 @@
         <div class="p-col-6">
             <div class="p-field">
                 <label for="marca">Regimen Fiscal</label>
-                <p-dropdown [options]="listaRegimenFiscal" formControlName="nIdRegimenFiscal" optionLabel="sDescripcion" optionValue="nId" [class.is-invalid]="validaRegimenfiscal" placeholder="Seleccione un Regimen Fiscal" [showClear]="true"></p-dropdown>
+                <p-dropdown [options]="listaRegimenFiscal" formControlName="nIdRegimenFiscal" optionLabel="sDescripcion" filter="true" optionValue="nId" [class.is-invalid]="validaRegimenfiscal" placeholder="Seleccione un Regimen Fiscal" [showClear]="true"></p-dropdown>
                 <small class="p-error" *ngIf="validaRegimenfiscal">*Regimen Fiscal requerido.</small>
             </div>
         </div>
