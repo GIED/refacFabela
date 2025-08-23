@@ -4,7 +4,7 @@ import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
 import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { TcProducto } from '../../model/TcProducto';
 import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { CatalogoService } from 'src/app/shared/service/catalogo.service';
 import { TcCategoriaGeneral } from '../../model/TcCategoriaGeneral';
@@ -19,6 +19,21 @@ import { ProductoService } from 'src/app/shared/service/producto.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PartService } from 'src/app/shared/service/part.service';
 import { PartResponse } from '../../model/PartResponse ';
+import { producto } from '../../interfaces/producto.interfaces';
+
+const minIfPresent = (min: number): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
+  const v = c.value;
+  if (v === null || v === '' || v === undefined) return null; // sin valor => OK
+  return (+v >= min) ? null : { min: { min, actual: +v } };
+};
+
+/** Para campos NO obligatorios: valida min SOLO si v > 0. 0 o vacío NO invalidan. */
+const minIfPositive = (min: number): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
+  const v = c.value;
+  if (v === null || v === '' || v === undefined) return null;
+  if (+v === 0) return null;
+  return (+v >= min) ? null : { min: { min, actual: +v } };
+};
 
 @Component({
   selector: 'app-form-producto',
@@ -44,6 +59,10 @@ export class FormProductoComponent implements OnInit {
   guardando: boolean = false;
   productoProveedor: PartResponse;
 
+  noParte: string;
+  nIdMarca: number;
+
+
 
   constructor(
     public ref: DynamicDialogRef,
@@ -58,6 +77,8 @@ export class FormProductoComponent implements OnInit {
   ) {
 
     this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
+    this.noParte = '';
+    this.nIdMarca = 0;
   }
 
   ngOnInit(): void {
@@ -129,7 +150,9 @@ export class FormProductoComponent implements OnInit {
 
     this.catalogoService.obtenerCategoria(idCategoriaGeneral).subscribe(categorias => {
       this.listaCategoria = categorias;
-      this.formGrp.get('nIdCategoria')?.enable();
+      const ctrl = this.formGrp.get('nIdCategoria');
+      ctrl?.enable();
+      ctrl?.updateValueAndValidity(); // 👈 importante
     });
   }
 
@@ -154,22 +177,35 @@ export class FormProductoComponent implements OnInit {
   }
 
   verificarProducto(): void {
-    const noParte = this.formGrp.get('sNoParte')?.value;
-    const nIdMarca = this.formGrp.get('nIdMarca')?.value;
+    this.noParte = this.formGrp.get('sNoParte')?.value;
+    this.nIdMarca = this.formGrp.get('nIdMarca')?.value;
 
-    this.productosService.getProductoByNoParteAndIdMarca(noParte, nIdMarca).subscribe({
+    this.productosService.getProductoByNoParteAndIdMarca(this.noParte, this.nIdMarca).subscribe({
       next: (producto) => {
         console.log('Producto encontrado:', producto);
         if (producto) {
 
           this.producto = producto;
-          this.asignarMarca();
           this.setFormValuesFromProducto();
+          this.formGrp.get('nIdMarca')?.setValue(this.nIdMarca);
+          setTimeout(() => {
+            this.asignarMarca();
+          }, 1000);
 
-          if(producto.nLargo == null && producto.nAncho == null && producto.nAlto == null) {
+          if (producto.nLargo == null && producto.nAncho == null && producto.nAlto == null) {
             this.consultarProductoProveedor();
           }
+        } else {
+          this.consultarProductoProveedor();
+          this.formGrp.get('nIdMarca')?.setValue(this.nIdMarca);
+          setTimeout(() => {
+            this.asignarMarca();
+          }, 1000);
+
         }
+
+
+
       },
       error: (error) => {
         console.error('Error al verificar producto', error);
@@ -181,12 +217,15 @@ export class FormProductoComponent implements OnInit {
   /*ASIGNA LA MARCA AL CAMPO DE SMARCA */
 
   asignarMarca(): void {
-    const marcaSeleccionada = this.listaMarca.find(m => m.nId === this.formGrp.get('nIdMarca')?.value );
+    console.log('Asignando marca para nIdMarca:', this.nIdMarca);
+    console.log('Lista de marcas disponible:', this.listaMarca);
+    const marcaSeleccionada = this.listaMarca.find(m => m.nId === this.nIdMarca);
+    console.log('Marca seleccionada:', marcaSeleccionada);
     if (marcaSeleccionada) {
       this.formGrp.get('sMarca')?.setValue(marcaSeleccionada.sMarca);
-    }
+    } else {
       this.formGrp.get('sMarca')?.setValue('');
-    
+    }
   }
 
 
@@ -204,39 +243,30 @@ export class FormProductoComponent implements OnInit {
 
     this.setManualProductoFromForm();
     this.guardando = true;
-    this.productosService.obtenerProductoNoParte(this.tcProducto.sNoParte).subscribe(data => {
-      this.productosService.guardaProducto(this.tcProducto).subscribe({
-        next: (productoActualizado) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Producto guardado',
-            detail: 'Producto guardado correctamente',
-            life: 3000
-          });
+    console.log('Producto a guardar:', this.tcProducto);
+    this.productosService.guardaProducto(this.tcProducto).subscribe({
+      next: (productoActualizado) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Producto guardado',
+          detail: 'Producto guardado correctamente',
+          life: 3000
+        });
 
-          this.ref.close(productoActualizado); // ✅ Devuelve al padre
-        },
-        error: (error) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Error al guardar el producto',
-            life: 3000
-          });
-          this.guardando = false; // 🔓 Reactiva en error
-        },
-        complete: () => {
-          this.guardando = false; // 🔓 Reactiva después de éxito
-        }
-      });
-    }, error => {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Advertencia',
-        detail: 'No se pudo validar el número de parte',
-        life: 3000
-      });
-      this.guardando = false;
+        this.ref.close(productoActualizado); // ✅ Devuelve al padre
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al guardar el producto',
+          life: 3000
+        });
+        this.guardando = false; // 🔓 Reactiva en error
+      },
+      complete: () => {
+        this.guardando = false; // 🔓 Reactiva después de éxito
+      }
     });
   }
 
@@ -277,24 +307,28 @@ export class FormProductoComponent implements OnInit {
     });
 
     if (this.producto?.sRutaImagen) {
+
       this.productosService.getImegenProducto(this.producto.sRutaImagen).subscribe({
         next: (data) => {
-          console.log(data?.imagenBase64);
-          this.formGrp.patchValue({
-            sRutaImagen: data?.imagenBase64 || ''
-          });
+          this.formGrp.patchValue({ sRutaImagen: data?.imagenBase64 || '' });
+          this.formGrp.get('sRutaImagen')?.updateValueAndValidity(); // 👈
         },
         error: (err) => {
-          console.error('❌ Error al obtener imagen desde el servicio', err);
-          this.formGrp.patchValue({
-            sRutaImagen: ''
-          });
+          this.formGrp.patchValue({ sRutaImagen: '' });
+          this.formGrp.get('sRutaImagen')?.updateValueAndValidity(); // 👈
         }
       });
+
     }
 
+    // ✅ Normaliza 0 → null si el campo es opcional para el rol
+    this.normalizaDimensionesParaRol();
 
-    // Opcionalmente deshabilitar campos si es edición
+    // 👇 Fuerza el cálculo del precio (en almacén los campos están deshabilitados)
+    this.calculaPrecioFinal(true);
+
+
+    //Opcionalmente deshabilitar campos si es edición
     this.formGrp.get('sNoParte')?.disable();
     this.formGrp.get('sMarca')?.disable();
 
@@ -335,15 +369,27 @@ export class FormProductoComponent implements OnInit {
             accept: () => {
               this.productoProveedor = part;
 
-              this.formGrp.patchValue({
-                sProducto: part.strDescrip1,
-                sDescripcion: part.strDescrip1,
-                nPeso: part.dblWeigthKgs,
-                nLargo: largoCm?.toNumber(),
-                nAncho: anchoCm?.toNumber(),
-                nAlto: altoCm?.toNumber(),
-                // Agrega más campos si es necesario
-              });
+              if (this.producto !== null) {
+                this.formGrp.patchValue({
+                  nPeso: part.dblWeigthKgs,
+                  nLargo: largoCm?.toNumber(),
+                  nAncho: anchoCm?.toNumber(),
+                  nAlto: altoCm?.toNumber(),
+                  // Agrega más campos si es necesario
+                });
+
+              } else {
+                this.formGrp.patchValue({
+                  sProducto: part.strDescrip1,
+                  sDescripcion: part.strDescrip1,
+                  nPeso: part.dblWeigthKgs,
+                  nLargo: largoCm?.toNumber(),
+                  nAncho: anchoCm?.toNumber(),
+                  nAlto: altoCm?.toNumber(),
+                  // Agrega más campos si es necesario
+                });
+              }
+
 
               this.messageService.add({
                 severity: 'success',
@@ -416,7 +462,10 @@ export class FormProductoComponent implements OnInit {
 
     if (this.modo === ModeActionOnModel.EDITING && this.producto?.nId) {
       this.tcProducto.nId = this.producto.nId;
-
+    }
+    //asigna el valor del id si el numero de parte ya existe
+    if (this.producto?.nId && this.modo === ModeActionOnModel.CREATING) {
+      this.tcProducto.nId = this.producto.nId;
     }
 
     this.tcProducto.nEstatus = 1;
@@ -451,11 +500,21 @@ export class FormProductoComponent implements OnInit {
       sIdBar: createControl('sIdBar', '', [Validators.required]),
       nIdDescuento: createControl('nIdDescuento', null, camposObligatorios.includes('nIdDescuento') ? [Validators.required] : []),
       nIdMarca: createControl('nIdMarca', null, camposObligatorios.includes('nIdMarca') ? [Validators.required] : []),
-      nPeso: createControl('nPeso', null, camposObligatorios.includes('nPeso') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
-      nLargo: createControl('nLargo', null, camposObligatorios.includes('nLargo') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
-      nAlto: createControl('nAlto', null, camposObligatorios.includes('nAlto') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
-      nAncho: createControl('nAncho', null, camposObligatorios.includes('nAncho') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
-      nVolumen: createControl('nVolumen', '', camposObligatorios.includes('nVolumen') ? [Validators.required, Validators.min(0.01)] : [Validators.min(0.01)]),
+      nPeso: createControl('nPeso', null,
+        camposObligatorios.includes('nPeso') ? [Validators.required, minIfPresent(0.01)] : [minIfPositive(0.01)]
+      ),
+      nLargo: createControl('nLargo', null,
+        camposObligatorios.includes('nLargo') ? [Validators.required, minIfPresent(0.01)] : [minIfPositive(0.01)]
+      ),
+      nAlto: createControl('nAlto', null,
+        camposObligatorios.includes('nAlto') ? [Validators.required, minIfPresent(0.01)] : [minIfPositive(0.01)]
+      ),
+      nAncho: createControl('nAncho', null,
+        camposObligatorios.includes('nAncho') ? [Validators.required, minIfPresent(0.01)] : [minIfPositive(0.01)]
+      ),
+      nVolumen: createControl('nVolumen', null,
+        camposObligatorios.includes('nVolumen') ? [Validators.required, minIfPresent(0.01)] : [minIfPositive(0.01)]
+      ),
       sRutaImagen: createControl('sRutaImagen', '', camposObligatorios.includes('sRutaImagen') ? [Validators.required] : [])
     });
   }
@@ -501,25 +560,28 @@ export class FormProductoComponent implements OnInit {
 
   /*CALCULA EL PRECIO FINAL DEL PRODUCTO */
 
-  calculaPrecioFinal(): void {
+  calculaPrecioFinal(force = false): void {
 
-    const precioCtrl = this.formGrp.get('nPrecio');
-    const monedaCtrl = this.formGrp.get('sMoneda');
-    const gananciaCtrl = this.formGrp.get('nIdGanancia');
-    if (precioCtrl?.valid && monedaCtrl?.valid && gananciaCtrl?.valid) {
+    // sincroniza tcProducto con el formulario actual
+    this.setManualProductoFromForm();
 
-      const productoCalculo: TcProducto = this.formGrp.getRawValue();
+    const precio = this.formGrp.get('nPrecio')?.value;
+    const moneda = this.formGrp.get('sMoneda')?.value;
+    const ganancia = this.formGrp.get('nIdGanancia')?.value;
 
-      this.productosService.simuladorPrecioProducto(productoCalculo).subscribe({
-        next: (resp: TcProducto) => {
-          this.tcProducto = resp;
-          this.precioFinal = new Decimal(resp.nPrecioConIva ?? 0).toDecimalPlaces(2).toNumber();
-        },
-        error: err => {
-          console.error('Error al calcular el precio final:', err);
-        }
-      });
+    // Si están deshabilitados (rol almacén), permite forzar el cálculo al cargar
+    if (!force && (precio == null || moneda == null || ganancia == null)) {
+      return;
     }
+
+    const productoCalculo: TcProducto = this.tcProducto;
+    this.productosService.simuladorPrecioProducto(productoCalculo).subscribe({
+      next: (resp: TcProducto) => {
+        this.tcProducto = resp;
+        this.precioFinal = new Decimal(resp.nPrecioConIva ?? 0).toDecimalPlaces(2).toNumber();
+      },
+      error: err => console.error('Error al calcular el precio final:', err)
+    });
   }
 
   /*DETECTA EL CAMBIO DE VALOR PARA CALCULO DE PRECIO DEL PRODUCTO */
@@ -627,6 +689,36 @@ export class FormProductoComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+
+  /** ¿Este control es opcional para el rol actual? */
+  private esOpcional(ctrlName: string): boolean {
+    return !this.obtenerCamposObligatorios(this.realRol).includes(ctrlName);
+  }
+
+  /** Si el control es opcional y trae 0, lo convierte a null (no dispara eventos) */
+  private zeroToNullIfOptional(ctrlName: string): void {
+    const c = this.formGrp.get(ctrlName);
+    if (!c) return;
+
+    if (this.esOpcional(ctrlName)) {
+      const v = c.value;
+      // contempla 0, "0", 0.00, "0.00"
+      const esCero = v === 0 || v === '0' || v === 0.0 || v === '0.00' || v === '0.0';
+      if (esCero) c.setValue(null, { emitEvent: false });
+    }
+  }
+
+  /** Aplica normalización a dimensiones/volumen y revalida */
+  private normalizaDimensionesParaRol(): void {
+    ['nPeso', 'nLargo', 'nAlto', 'nAncho', 'nVolumen']
+      .forEach(n => this.zeroToNullIfOptional(n));
+
+    this.formGrp.updateValueAndValidity({ emitEvent: false });
+  }
+
+
+
+
 
 
 
