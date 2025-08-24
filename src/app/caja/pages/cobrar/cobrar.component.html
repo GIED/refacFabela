@@ -3,21 +3,13 @@
         <p-toast></p-toast>
         <div class="card">
             <div class="p-text-center">
-                <h3>Control de Caja</h3>
+                <h3>Administración de Caja</h3>
             </div>
 
-            <p-toolbar styleClass="p-mb-4">
-                <ng-template pTemplate="left">
-                    <button pButton pRipple label="Ver Balance de la caja" icon="pi pi-plus"
-                        class="p-button-info p-mr-2 p-mb-2 p-button-outlined" (click)="verBalance()"></button>
-
-                    <button pButton pRipple icon="pi pi-file-pdf"
-                        class="p-button-rounded p-button-danger p-button-outlined" (click)="generarBalance()"></button>
-                </ng-template>
-            </p-toolbar>
+           
 
            <!--MUESTRA LA TABLA DE VENTAS POR COBRAR CON UN BALANCE -->
-            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10"
+            <p-table #dt [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="6"
                 [paginator]="true"
                 [globalFilterFields]="['nId','sFolioVenta','tcCliente.sRfc','tcCliente.sRazonSocial','nTotalVenta','dFechaVenta','sEstatus','nAvancePago','tcUsuario.sNombreusuario','tcEstatusVenta.sDescripcion']"
                 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
@@ -30,6 +22,11 @@
                             <i class="pi pi-search"></i>
                             <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
                                 placeholder="Buscar Venta" />
+                        </span>
+                        <span class="p-input-icon-right">
+                            <button pButton pRipple label="Descargar Balance" icon="pi pi-plus"
+                        class="p-button-info p-mr-2 p-mb-2 p-button-outlined" (click)="generarBalance()"></button>
+                            
                         </span>
                     </div>
                 </ng-template>
@@ -163,12 +160,7 @@
                         (click)="hideDialogAlter()"></button>
                 </ng-template>
             </p-dialog>
-            <p-toolbar styleClass="p-mb-4">
-                <ng-template pTemplate="right">
-                    <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
-                        class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
-                </ng-template>
-            </p-toolbar>
+          
 
             <!--formulario de cobro de caja-->
             <p-dialog [(visible)]="abrirformulario" [style]="{width: '900px'}" header="Cobro de Ventas" [modal]="true"

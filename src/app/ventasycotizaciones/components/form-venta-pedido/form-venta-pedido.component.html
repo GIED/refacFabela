@@ -31,15 +31,15 @@
 
                         <td>{{productoVenta.tcProducto.sNoParte}}</td>
                         <td>{{productoVenta.tcProducto.sProducto}}</td>
-                        <td>{{productoVenta.tcProducto.nPrecioConIva | currency:'$'}}</td>
+                        <td>{{productoVenta.tcProducto.nPrecioConIva }}</td>
                         <td>{{productoVenta.nCantidad}}</td>
-                        <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad | currency:'$'}}</td>
+                        <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad }}</td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="summary">
 
                     <div class="p-d-flex p-jc-end">
-                        <strong>Cantidad Total: </strong> {{total |currency: '$'}}
+                        <strong>Cantidad Total: </strong> {{total }}
                     </div>
 
                 </ng-template>

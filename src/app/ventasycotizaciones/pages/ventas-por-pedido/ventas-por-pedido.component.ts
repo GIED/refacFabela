@@ -23,6 +23,7 @@ import { TokenService } from '../../../shared/service/token.service';
 import { ProveedorService } from 'src/app/administracion/service/proveedor.service';
 import { Proveedores } from '../../../administracion/interfaces/proveedores';
 import Decimal from 'decimal.js';
+const toD = (v: any) => new Decimal(v ?? 0)
 
 @Component({
   selector: 'app-ventas-por-pedido',
@@ -305,8 +306,9 @@ agregarProduct(producto: TvStockProducto) {
   }
   //obtiene el total de cuenta, resta cantidad del stock general y regresa input a 0
   ////console.log("total a: "+this.total);
-  this.total =  this.total.plus( producto.tcProducto.nPrecioConIva.mul( new Decimal(this.nCantidadCtrl.value)));
-  producto.nCantidadTotal=producto.nCantidadTotal-this.nCantidadCtrl.value;
+ this.total = this.total.plus(
+  toD(producto.tcProducto.nPrecioConIva).mul(toD(this.nCantidadCtrl.value))
+);
   ////console.log("total d: "+this.total);
   
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
@@ -324,7 +326,9 @@ agregarProduct(producto: TvStockProducto) {
 quitarProducto(producto: TvStockProducto){
   ////console.log(producto);
   
-  this.total = this.total.minus( producto.tcProducto.nPrecioConIva.mul(new Decimal(producto.nCantidad)));
+  this.total = this.total.minus(
+  toD(producto.tcProducto.nPrecioConIva).mul(toD(producto.nCantidad))
+);
   ////console.log("total: ",this.total);
   //this.listaProductos[this.findIndexById(producto.nIdProducto, this.listaProductos)]=producto;
   this.listaProductos.splice(this.findIndexById(producto.nIdProducto, this.listaProductos),1);
