@@ -5,7 +5,8 @@ import { Usuarios } from '../../administracion/interfaces/usuarios';
 import { TcClavesat } from './TcClavesat';
 import { TcDescuento } from './TcDescuento';
 import Decimal from 'decimal.js';
-export class TcProducto{
+import { Model } from 'src/app/shared/utils/model';
+export class TcProducto implements Model{
 nId: number;
 dFecha: Date;
 nEstatus: number;

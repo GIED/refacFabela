@@ -93,9 +93,19 @@ export class FormProductoComponent implements OnInit {
     /* obtiene el rol principal */
     const roles: string[] = this.tokenService.getRoles(); // o como los obtengas
     this.realRol = this.calcularRolPrincipal(roles);
-    const isEdit = this.modo === ModeActionOnModel.EDITING;
-
+    
     this.crearFormulario();
+  
+    if (this.modo === ModeActionOnModel.CREATING && Object.keys(this.producto).length > 0) {
+      console.log('entro en creating', this.producto);
+      this.setFormValuesWebService();
+      // También habilitamos categoría si ya hay valor
+      if (this.producto.nIdCategoriaGeneral) {
+        this.obtenerCategoria(this.producto.nIdCategoriaGeneral);
+      }
+    }
+
+
 
     this.suscribirCambiosPrecio();
     this.suscribirCalculoVolumen();
@@ -119,6 +129,8 @@ export class FormProductoComponent implements OnInit {
         this.listaGanancia = resultado3;
         this.listaMarca = resultado4;
         this.listaMoneda = resultado6;
+
+
 
         // 👉 Ya que los catálogos están cargados, se puede llenar el formulario
         if (this.modo === ModeActionOnModel.EDITING) {
@@ -327,6 +339,35 @@ export class FormProductoComponent implements OnInit {
     // 👇 Fuerza el cálculo del precio (en almacén los campos están deshabilitados)
     this.calculaPrecioFinal(true);
 
+
+    //Opcionalmente deshabilitar campos si es edición
+    this.formGrp.get('sNoParte')?.disable();
+    this.formGrp.get('sMarca')?.disable();
+
+  }
+
+   private setFormValuesWebService(): void {
+    this.formGrp.patchValue({
+      sNoParte: this.producto.sNoParte ?? '',
+      sProducto: this.producto.sProducto ?? '',
+      sDescripcion:  '',
+      sMarca: this.producto.sMarca ?? '',
+      nIdCategoria:  null,
+      nIdCategoriaGeneral:  null,
+      nPrecio:  '',
+      sMoneda:  '',
+      nIdGanancia: null,
+      nIdclavesat:  null,
+      sIdBar: '',
+      nIdDescuento:  null,
+      nIdMarca: this.producto.nIdMarca ?? null,
+      nPeso: this.producto.nPeso ?? null,
+      nLargo: this.producto.nLargo ?? null,
+      nAlto: this.producto.nAlto ?? null,
+      nAncho: this.producto.nAncho ?? null,
+      nVolumen: this.producto.nVolumen ?? null,
+      sRutaImagen:  ''
+    });
 
     //Opcionalmente deshabilitar campos si es edición
     this.formGrp.get('sNoParte')?.disable();
