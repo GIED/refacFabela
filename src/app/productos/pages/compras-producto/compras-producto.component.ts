@@ -51,8 +51,8 @@ export class ComprasProductoComponent implements OnInit {
   producto: TcProducto;  
   productDialog: boolean;
   titulo: string;
-  listaTwCarritoCompraPedido: TwPedidoProducto[];
-  twPedidoProducto: TwPedidoProducto;
+  listaTwCarritoCompraPedido: TwCarritoCompraPedido[];
+  twCarritoCompraPedido: TwCarritoCompraPedido;
   pedidoDto: PedidoDto;
   twPedidoProductoDto: TwPedidoProducto;
   displayDialog: boolean = false;
@@ -63,7 +63,7 @@ export class ComprasProductoComponent implements OnInit {
   detalleDialog: boolean = false;
   banMustraVentasProducto:boolean=false;
   listaVentasProducto:TwVentasProducto[];
-  existingProduct:TwPedidoProducto;
+  existingProduct:TwCarritoCompraPedido;
   
   
 
@@ -89,17 +89,17 @@ export class ComprasProductoComponent implements OnInit {
     this.listaTwCarritoCompraPedido = [];
     this.pedidoDto = new PedidoDto();
     this.twPedidoProductoDto = new TwPedidoProducto();
-    this.twPedidoProducto= new TwPedidoProducto();
+    this.twCarritoCompraPedido= new TwCarritoCompraPedido();
     this.listaVentasProducto=[];
-    this.existingProduct=new TwPedidoProducto();
+    this.existingProduct=new TwCarritoCompraPedido();
    
     this.cols = [
       { field: 'tcProducto.sNoParte', header: 'No Parte' },
       { field: 'tcProducto.sProducto', header: 'Producto' },
       { field: 'tcProducto.sMarca', header: 'Marca' },
-      { field: 'dFechaPedido', header: 'Fecha Registro' },
-      { field: 'nCantidadPedida', header: 'Cantidad' },
-      { field: 'tcProveedore.sRazonSocial', header: 'Proveedor' }
+      { field: 'dFechaRegistro', header: 'Fecha Registro' },
+      { field: 'nCantidad', header: 'Cantidad' },
+      { field: 'tcProveedor.sRazonSocial', header: 'Proveedor' }
     ];
 
 
@@ -139,7 +139,7 @@ export class ComprasProductoComponent implements OnInit {
     );
   }
 
-  marcarProductosAgrgadosCarrito(listaVendidos: VwMetaProductoCompra[], listaCarrito: TwPedidoProducto[]) {
+  marcarProductosAgrgadosCarrito(listaVendidos: VwMetaProductoCompra[], listaCarrito: TwCarritoCompraPedido []) {
     listaVendidos.forEach(productoAgregado => {
       const productoEnCarrito = listaCarrito.find(productoCarrito => productoCarrito.nIdProducto === productoAgregado.nId);
       if (productoEnCarrito) {
@@ -159,11 +159,12 @@ export class ComprasProductoComponent implements OnInit {
       acceptLabel: 'Aceptar',
       rejectLabel: 'Cancelar',
       accept: () => {
-        this.guardarPedido();
+        //this.guardarPedido();
       }
     });
   }
 
+  /* 
  guardarPedido() {
   // Llenar el objeto para guardar el pedido en pedidos
   this.pedidoDto.nId = null;
@@ -179,7 +180,7 @@ export class ComprasProductoComponent implements OnInit {
     twPedidoProductoDto.nId=item.nId;
     twPedidoProductoDto.nIdProducto = item.nIdProducto;
     twPedidoProductoDto.nMotivoPedido = 1;
-    twPedidoProductoDto.nCantidadPedida = item.nCantidadPedida;
+    twPedidoProductoDto.nCantidadPedida = item.nCantidad;
     twPedidoProductoDto.nIdProveedor = item.nIdProveedor;
     twPedidoProductoDto.nEstatus = 2;
     twPedidoProductoDto.nIdUsuario = this.tokenService.getIdUser();
@@ -214,7 +215,7 @@ export class ComprasProductoComponent implements OnInit {
       this.consultarDetallePedido();
     });
   });
-}
+} */
 
   /*Genera una clave de pedido */
   generarClavePedido(): string {
@@ -458,19 +459,19 @@ export class ComprasProductoComponent implements OnInit {
     if (this.form.valid) {
       const formData = this.form.value;
       /*  SE LLENA EL OBJETO PARA EL GUARDADO DEL  */
-      this.twPedidoProducto.nIdUsuario = this.tokenService.getIdUser();
-      this.twPedidoProducto.nIdProducto = this.vwMetaProductoCompra.nId;
-      this.twPedidoProducto.nCantidadPedida = this.form.get('cantidad').value;
-      this.twPedidoProducto.nIdProveedor = this.proveedorSeleccionado.nId;
-      this.twPedidoProducto.dFechaPedido = new Date();
-      this.twPedidoProducto.nEstatus = 1;
+      this.twCarritoCompraPedido.nIdUsuario = this.tokenService.getIdUser();
+      this.twCarritoCompraPedido.nIdProducto = this.vwMetaProductoCompra.nId;
+      this.twCarritoCompraPedido.nCantidad = this.form.get('cantidad').value;
+      this.twCarritoCompraPedido.nIdProveedor = this.proveedorSeleccionado.nId;
+      this.twCarritoCompraPedido.dFechaRegistro = new Date();
+      this.twCarritoCompraPedido.nEstatus = 1;
       this.existingProduct = this.listaTwCarritoCompraPedido.find(product => product.nIdProducto === this.vwMetaProductoCompra.nId && product.nIdProveedor===this.proveedorSeleccionado.nId );
       if (this.existingProduct) {
-        this.existingProduct.nCantidadPedida += this.twPedidoProducto.nCantidadPedida;
-        this.twPedidoProducto = this.existingProduct;
+        this.existingProduct.nCantidad += this.twCarritoCompraPedido.nCantidad;
+        this.twCarritoCompraPedido = this.existingProduct;
        // console.log('ya existe el producrto, lo voy a actualizar');
       }
-      this.pedidosService.guardaPedidoProducto(this.twPedidoProducto).subscribe(data => {
+      this.pedidosService.guardaProductoCarrito(this.twCarritoCompraPedido).subscribe(data => {
       
         //console.log('Se guardo el producto', this.twPedidoProducto);
 
@@ -493,8 +494,8 @@ export class ComprasProductoComponent implements OnInit {
         this.totalVentas=0;
         this.totalCotizaciones=0;
         this.efectividad=0;
-        this.existingProduct=new TwPedidoProducto();
-        this.twPedidoProducto=new TwPedidoProducto();
+        this.existingProduct=new TwCarritoCompraPedido();
+        this.twCarritoCompraPedido=new TwCarritoCompraPedido();
         
       });
     }
@@ -502,7 +503,7 @@ export class ComprasProductoComponent implements OnInit {
 
 
   consultaCarritoCompraPedido(idUsuario: number) {    
-    return  this.pedidosService.obtenerProductosCarritoUsuario(idUsuario);
+    return  this.pedidosService.obtenerProductosComprasUsuario(idUsuario);
   }
 
   /*consulta de carrito */

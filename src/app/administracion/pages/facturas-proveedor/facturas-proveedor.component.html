@@ -11,26 +11,25 @@
                     <button pButton pRipple label="historial de facturas" icon="pi pi-search"
                         class="p-button-info p-mr-2 p-mb-2" (click)="abrirhistorial()"></button>
                 </ng-template>
-               
             </p-toolbar>
 
 			<div class="p-grid">
 				<div class="p-col-12 p-lg-8">	
 					<div class="card">						
-		
 						<div class="p-text-center"><h3 class="p-test-center">Saldos pendientes por moneda</h3></div>
 						<div class="p-d-flex p-justify-center"></div>
+
                         <div class="p-grid">
                             <div class="p-col-4">
-                              <div class="box"><strong>{{datoCambio.fecha}} </strong></div>
+                              <div class="box"><strong>{{ datoCambio?.fecha || '' }} </strong></div>
                             </div>
                             <div class="p-col-4">
                               <div class="box"><strong> Valor cambio BM </strong></div>
                             </div>
                             <div class="p-col-4">
-                              <div class="box"><strong>$ {{datoCambio.dato}} PESOS/DOLAR </strong></div>
+                              <div class="box"><strong>$ {{ (datoCambio?.dato || 0) }} PESOS/DOLAR </strong></div>
                             </div>
-                          </div>
+                        </div>
                        
                         <div class="p-grid m-2" style="background: gainsboro;">
                             <div class="p-col-4">
@@ -42,46 +41,45 @@
                             <div class="p-col-4">
                               <div class="box"><strong>Total Adeudo </strong></div>
                             </div>
-                          </div>
-                          <div class="p-grid">
-                            <div class="p-col-4">
-                              <div class="box"> $ {{totalFacturasPeso | number}} PESOS</div>
-                            </div>
-                            <div class="p-col-4">
-                              <div class="box"> $ {{totalAbonosPeso | number }} PESOS</div>
-                            </div>
-                            <div class="p-col-4">
-                              <div class="box"> $ {{saldoPendientePagoPeso | number }} PESOS</div>
-                            </div>
-                          </div>
+                        </div>
 
-                          <div class="p-grid">
+                        <div class="p-grid">
                             <div class="p-col-4">
-                              <div class="box"> $ {{totalFacturasUsd | number}} USD</div>
+                              <div class="box"> $ {{ totalFacturasPeso | number }} PESOS</div>
                             </div>
                             <div class="p-col-4">
-                              <div class="box"> $ {{totalAbonosUsd | number}} USD</div>
+                              <div class="box"> $ {{ totalAbonosPeso | number }} PESOS</div>
                             </div>
                             <div class="p-col-4">
-                              <div class="box"> $ {{saldoPendientePagoUsd | number}} USD $ {{saldoPendientePagoUsd * datoCambio.dato | number}} PESOS</div>
+                              <div class="box"> $ {{ saldoPendientePagoPeso | number }} PESOS</div>
                             </div>
-                          </div>
+                        </div>
 
-
+                        <div class="p-grid">
+                            <div class="p-col-4">
+                              <div class="box"> $ {{ totalFacturasUsd | number }} USD</div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"> $ {{ totalAbonosUsd | number }} USD</div>
+                            </div>
+                            <div class="p-col-4">
+                              <div class="box"> $ {{ saldoPendientePagoUsd | number }} USD $ {{ (saldoPendientePagoUsd * (datoCambio?.dato || 0)) | number }} PESOS</div>
+                            </div>
+                        </div>
 					</div>
 				</div>
-
 
                 <div class="p-col-12 p-lg-4">	
 					<div class="card">
 						<div class="p-text-center"><h3 >Totales</h3></div>
-					
-                        
-                            <div class="p-col-12">
-                              <div class="box p-text-center"><p-tag  severity="warning"> <strong><h4>$ {{(saldoPendientePagoUsd * datoCambio.dato) + saldoPendientePagoPeso | number}}  PESOS</h4></strong></p-tag></div>
-                            </div>                          
-                         
-                       
+                        <div class="p-col-12">
+                          <div class="box p-text-center">
+                            <p-tag severity="warning">
+                              <strong><h4>$ {{ ((saldoPendientePagoUsd * (datoCambio?.dato || 0)) + saldoPendientePagoPeso) | number }}  PESOS</h4></strong>
+                            </p-tag>
+                          </div>
+                        </div>                          
+
                         <div class="p-grid m-1" style="background: gainsboro;">
                             <div class="p-col-6">
                               <div class="box text-center"><strong>Vencido en pesos </strong></div>
@@ -89,25 +87,31 @@
                             <div class="p-col-6">
                               <div class="box text-center"><strong>Regulares en pesos </strong></div>
                             </div>
-                          
-                          </div>
-                          <div class="p-grid">
+                        </div>
+
+                        <div class="p-grid">
                             <div class="p-col-6">
-                                <div class="box text-center"><p-tag styleClass="p-mr-2" severity="danger"> $ {{totalVencidos | number }} PESOS</p-tag></div>
-                              </div>
-                            <div class="p-col-6">
-                              <div class="box text-center"><p-tag styleClass="p-mr-2" severity="success"> $ {{totalRegulares | number }} PESOS</p-tag></div>
+                                <div class="box text-center"><p-tag styleClass="p-mr-2" severity="danger"> $ {{ totalVencidos | number }} PESOS</p-tag></div>
                             </div>
-                          </div>            
+                            <div class="p-col-6">
+                              <div class="box text-center"><p-tag styleClass="p-mr-2" severity="success"> $ {{ totalRegulares | number }} PESOS</p-tag></div>
+                            </div>
+                        </div>            
 					</div>
-				
-			</div>	
+				</div>	
 			</div>
-			<p-table #dt [value]="listaBalalceProveedores"  [rows]="10" [paginator]="true" [columns]="cols" [exportFilename]="'balance_provedores'"
+
+			<p-table #dt
+                [value]="listaBalalceProveedores ?? []"
+                [rows]="10"
+                [paginator]="true"
+                [columns]="cols ?? []"
+                [exportFilename]="'balance_provedores'"
 				[globalFilterFields]="['tcProveedore.sRfc','tcProveedore.sRazonSocial','sMoneda','totalFacturas', 'totalAbonos','saldoPendientePago','totalPorPagar','totalVencidas']"
-				 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+				[rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
 				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
 				[showCurrentPageReport]="true">
+
 				<ng-template pTemplate="caption">
 					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
 						<h5 class="p-m-0">Listado de créditos</h5>
@@ -118,113 +122,97 @@
 						</span>
 					</div>
 				</ng-template>
+
 				<ng-template pTemplate="header">
 					<tr>
-					
 						<th pSortableColumn="tcProveedore.sRfc" class="text-center">RFC<p-sortIcon field="tcProveedore.sRfc"></p-sortIcon> </th>
-					
-						<th pSortableColumn="tcProveedore.sRazonSocial" class="text-center">Razón social <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon>
-						</th>						
-						<th pSortableColumn="sMoneda" class="text-center">Moneda <p-sortIcon field="sMoneda"></p-sortIcon>
-						</th>
-
-						<th pSortableColumn="totalFacturas" class="text-center">Total facturas <p-sortIcon field="totalFacturas"></p-sortIcon>
-						</th>
-						<th pSortableColumn="totalAbonos" class="text-center">Total Abonos<p-sortIcon field="totalAbonos"></p-sortIcon>
-						</th>
-						<th pSortableColumn="saldoPendientePago" class="text-center">Total por pagar <p-sortIcon field="saldoPendientePago"></p-sortIcon>
-						</th>
-						<th pSortableColumn="totalPorPagar" class="text-center">Facturas regulares <p-sortIcon field="totalPorPagar"></p-sortIcon>
-						</th>
-						<th pSortableColumn="totalVencidas" class="text-center">Facturas vencidas <p-sortIcon field="totalVencidas"></p-sortIcon>
-						</th>
-                        <th class="text-center" >Estatus
-						</th>	
+						<th pSortableColumn="tcProveedore.sRazonSocial" class="text-center">Razón social <p-sortIcon field="tcProveedore.sRazonSocial"></p-sortIcon></th>						
+						<th pSortableColumn="sMoneda" class="text-center">Moneda <p-sortIcon field="sMoneda"></p-sortIcon></th>
+						<th pSortableColumn="totalFacturas" class="text-center">Total facturas <p-sortIcon field="totalFacturas"></p-sortIcon></th>
+						<th pSortableColumn="totalAbonos" class="text-center">Total Abonos<p-sortIcon field="totalAbonos"></p-sortIcon></th>
+						<th pSortableColumn="saldoPendientePago" class="text-center">Total por pagar <p-sortIcon field="saldoPendientePago"></p-sortIcon></th>
+						<th pSortableColumn="totalPorPagar" class="text-center">Facturas regulares <p-sortIcon field="totalPorPagar"></p-sortIcon></th>
+						<th pSortableColumn="totalVencidas" class="text-center">Facturas vencidas <p-sortIcon field="totalVencidas"></p-sortIcon></th>
+                        <th class="text-center">Estatus</th>	
                         <th class="text-center">Acción</th>					
-											
 					</tr>
 				</ng-template>
+
 				<ng-template pTemplate="body" let-cliente>
 					<tr>
-					
-					
-					
 						<td class="text-center"><span class="p-column-title">RFC</span>
-							{{cliente.tcProveedore.sRfc}}
+							{{ cliente.tcProveedore.sRfc }}
 						</td>
-						<td class="p-test-center text-center"> <span class="p-column-title">Razón social</span>
-							{{cliente.tcProveedore.sRazonSocial}}
+						<td class="p-test-center text-center"><span class="p-column-title">Razón social</span>
+							{{ cliente.tcProveedore.sRazonSocial }}
 						</td>
-						<td class="p-test-center text-center"> <span class="p-column-title">Moneda</span>
-							{{cliente.sMoneda}}
+						<td class="p-test-center text-center"><span class="p-column-title">Moneda</span>
+							{{ cliente.sMoneda }}
 						</td>
 						<td class="text-center"><span class="p-column-title">Total Facturas</span>
-							{{cliente.totalFacturas | number}}
+							{{ cliente.totalFacturas | number }}
 						</td>
 						<td class="text-center"><span class="p-column-title">Total abonos</span>
-							{{cliente.totalAbonos | number}}
+							{{ cliente.totalAbonos | number }}
 						</td>
 						<td class="text-center"><span class="p-column-title">Saldo pendiente pago</span>
-							{{cliente.saldoPendientePago | number}}
+							{{ cliente.saldoPendientePago | number }}
 						</td>
                         <td class="text-center"><span class="p-column-title">Facturas regulares</span>
-							{{cliente.totalPorPagar | number}}
+							{{ cliente.totalPorPagar | number }}
 						</td>
                         <td class="text-center"><span class="p-column-title">facturas vencidas</span>
-							{{cliente.totalVencidas | number}}
+							{{ cliente.totalVencidas | number }}
 						</td>
 						
-						
-					
 						<td class="p-text-center"><span class="p-column-title">Estatus General</span>
-							<div *ngIf="cliente.totalVencidas>0">
-							<p-tag styleClass="p-mr-2" severity="danger">VENCIDO</p-tag>
-						  </div>
-						  <div *ngIf="cliente.totalVencidas==0">
-							<p-tag styleClass="p-mr-2" severity="success">REGULAR</p-tag>
-						  </div>
+							<div *ngIf="cliente.totalVencidas > 0">
+							    <p-tag styleClass="p-mr-2" severity="danger">VENCIDO</p-tag>
+						    </div>
+						    <div *ngIf="cliente.totalVencidas == 0">
+							    <p-tag styleClass="p-mr-2" severity="success">REGULAR</p-tag>
+						    </div>
 						</td>
+
 						<td class="text-center">
 							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-button-outlined p-mr-2"
 								(click)="consultarDetalleFacturaMonedas(cliente)"></button> 
-						
 						</td>
 					</tr>
 				</ng-template>
+
 				<ng-template pTemplate="summary">
-				
 					<span class="p-input-icon-left">
 						<i class="pi pi-search"></i>
-						<button *ngIf="listaBalalceProveedores.length > 0" type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
-							class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>       
+						<button *ngIf="(listaBalalceProveedores?.length ?? 0) > 0"
+						        type="button"
+						        pButton pRipple icon="pi pi-file-excel" label="Exportar consulta"
+						        class="p-button-help p-mb-2"
+						        (click)="dt.exportCSV()"></button>       
 					</span>
 				</ng-template>
 			</p-table>
-			
 		</div>
-		
-           
 	</div>
 </div>
 
 <p-dialog [(visible)]="mostrarFormulario" [style]="{width: '80%'}" [header]="titulo" [closable]="false"
 styleClass="p-fluid">
-<ng-template pTemplate="content">
-	<app-form-factura-proveedor (cerrar)="cerrarDialogo($event)" ></app-form-factura-proveedor>
-	
-</ng-template>
+  <ng-template pTemplate="content">
+    <app-form-factura-proveedor (cerrar)="cerrarDialogo($event)"></app-form-factura-proveedor>
+  </ng-template>
 </p-dialog>
 
 <p-dialog [(visible)]="detalleFacturasProveedor" [style]="{width: '80vw', height: '80vh'}"
  header="Facturas Activas" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">
-<ng-template pTemplate="content">
-<app-factura-moneda-proveedor (cerrar)="cerrarDialogo($event)" [vwFacturasBalanceProveedor]="vwFacturasBalanceProveedor" >   </app-factura-moneda-proveedor>
-</ng-template>
+  <ng-template pTemplate="content">
+    <app-factura-moneda-proveedor (cerrar)="cerrarDialogo($event)" [vwFacturasBalanceProveedor]="vwFacturasBalanceProveedor"></app-factura-moneda-proveedor>
+  </ng-template>
 </p-dialog>
 
 <p-dialog [(visible)]="mostrarHistorial" [style]="{width: '80vw', height: '80vh'}"
  header="Historal de Facturas del proveedor" [modal]="true" styleClass="p-fluid" [closable]="true"  [autoZIndex]="true" [maximizable]="true">
-<ng-template pTemplate="content">
-<app-historia-factura-proveedor (cerrar)="cerrarDialogo($event)"  >   </app-historia-factura-proveedor>
-</ng-template>
+  <ng-template pTemplate="content">
+    <app-historia-factura-proveedor (cerrar)="cerrarDialogo($event)"></app-historia-factura-proveedor>
+  </ng-template>
 </p-dialog>

@@ -32,9 +32,9 @@
       <td class="center-content" style="width: 10%"><span class="p-column-title">No parte</span>{{product.tcProducto.sNoParte}}</td>
       <td class="center-content" style="width: 10%"><span class="p-column-title">Producto</span>{{product.tcProducto.sProducto}}</td>
       <td class="center-content" style="width: 15%"><span  class="p-column-title">Marca</span>{{product.tcProducto.sMarca}}</td>
-      <td class="center-content" style="width: 15%"><span  class="p-column-title">Proveedor</span>{{product.tcProveedore.sRazonSocial}}</td>
-      <td class="center-content" style="width: 10%"><span class="p-column-title">Marca</span>{{product.dFechaPedido || date}}</td>
-      <td class="center-content" style="width: 10%"><span class="p-column-title">Moneda</span>{{product.nCantidadPedida}}</td>     
+      <td class="center-content" style="width: 15%"><span  class="p-column-title">Proveedor</span>{{product.tcProveedor.sRazonSocial}}</td>
+      <td class="center-content" style="width: 10%"><span class="p-column-title">Marca</span>{{product.dFechaRegistro || date}}</td>
+      <td class="center-content" style="width: 10%"><span class="p-column-title">Moneda</span>{{product.nCantidad}}</td>     
     
       <td class="center-content" style="width: 10%">
         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-mr-2"
@@ -51,3 +51,5 @@
          
   </ng-template>
 </p-toolbar>
+  <button [disabled]="listaTwCarritoCompraPedido.length === 0" class="p-md-12 p-m-4" pButton type="button" label="Limpiar el carrito" icon="pi pi-check"
+              (click)="limpiarCarritoUsuario()"></button>

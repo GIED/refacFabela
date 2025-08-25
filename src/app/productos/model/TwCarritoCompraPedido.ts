@@ -4,12 +4,10 @@ import { Usuarios } from 'src/app/administracion/interfaces/usuarios';
 import { Proveedores } from 'src/app/administracion/interfaces/proveedores';
 export class TwCarritoCompraPedido{
     nId: number;
-    nIdUsuario: number;
-    nIdPedido: number;
+    nIdUsuario: number;   
     nIdProducto: number;
     nCantidad: number;
-    dFechaRegistro: Date;
-    dFechaLlegada: Date;
+    dFechaRegistro: Date;   
     nEstatus: number;
     nIdProveedor:number;
     TcProducto:TcProducto;

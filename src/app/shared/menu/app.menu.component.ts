@@ -104,23 +104,25 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Almacen', icon: 'pi pi-fw pi-slack', visible:this.realRol==='admin' || this.realRol==='almacen' ,
                 items: [
-                    {
-                        label: 'Ingreso mercancia', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/ingreso-mercancia'], visible:this.realRol==='admin' || this.realRol==='almacen'
-                    },
+                   
                     {
                         label: 'Traspasos', icon: 'pi pi-fw pi-sort-alt', routerLink: ['../almacen/traspasos'], visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
                     {
                         label: 'Inventario', icon: 'pi pi-fw pi-book', routerLink: ['../almacen/inventario'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
-                    {
-                        label: 'Enterega de mercancia', icon: 'pi pi-fw pi-amazon', routerLink: ['../almacen/entrega-de-mercancia'], visible:this.realRol==='admin'  || this.realRol==='almacen'
-                    },
+                   
                     {
                         label: 'Factura-productos', icon: 'pi pi-fw pi-user-plus', routerLink: ['../almacen/factura-producto/registro'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
                     {
                         label: 'Ingreso Producto', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/factura-producto/ingreso'], visible:this.realRol==='admin'  || this.realRol==='almacen'
+                    },
+                     {
+                        label: 'Ingreso pedidos', icon: 'pi pi-fw pi-sort-amount-down-alt', routerLink: ['../almacen/ingreso-mercancia'], visible:this.realRol==='admin' || this.realRol==='almacen'
+                    },
+                     {
+                        label: 'Enterega de mercancia', icon: 'pi pi-fw pi-amazon', routerLink: ['../almacen/entrega-de-mercancia'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },
                   /*  {
                         label: 'Stock mínimo', icon: 'pi pi-fw pi-spinner', routerLink: ['../almacen/stock-minimo']
@@ -144,7 +146,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'Venta Stock', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/venta-stock-cero'], visible:this.realRol==='admin'
                     },*/
                     {
-                        label: 'Pedidos', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/compras-producto'], visible:this.realRol==='admin' || this.realRol==='almacen'
+                        label: 'Compras', icon: 'pi pi-fw pi-chart-line', routerLink: ['../productos/compras-producto'], visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
                    
                 ]

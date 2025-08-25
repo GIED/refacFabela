@@ -9,6 +9,7 @@ import { PedidoDto } from '../../productos/model/PedidoDto';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TwPedido } from 'src/app/productos/model/TwPedido';
+import { TwCarritoCompraPedido } from 'src/app/productos/model/TwCarritoCompraPedido';
 
 
 @Injectable({
@@ -36,6 +37,18 @@ export class PedidosService {
       let url = environment.servicios.apiRefacFabela + locator.borrarPedidoProductoId+'nId='+id;
       return this.http.get<boolean>(url);
     }
+
+    borrarPedidoCarritoId(id:number){
+      let url = environment.servicios.apiRefacFabela + locator.borrarPedidoCarritoId+'nId='+id;
+      return this.http.get<boolean>(url);
+    }
+
+    borrarProductosCarritoUsuario(idUsuario:number){
+      let url = environment.servicios.apiRefacFabela + locator.borrarTodosProductosCarrito+'nIdUsuario='+idUsuario;
+      return this.http.get<boolean>(url);
+    }
+
+
     obtenerPedidosDetalleEstatus(nEstatus:number){
         let url = environment.servicios.apiRefacFabela + locator.obtenerPedidosEstatus+"nEstatus="+nEstatus;
         return this.http.get<TvPedidoDetalle[]>(url);
@@ -48,6 +61,10 @@ export class PedidosService {
       obtenerProductosCarritoUsuario(idUsuario:number){
         let url = environment.servicios.apiRefacFabela + locator.obteneCarritoPedidoUsuario+"nIdUsuario="+idUsuario;
         return this.http.get<TwPedidoProducto[]>(url);
+      }
+      obtenerProductosComprasUsuario(idUsuario:number){
+        let url = environment.servicios.apiRefacFabela + locator.obteneCarritoComprasUsuario+"nIdUsuario="+idUsuario;
+        return this.http.get<TwCarritoCompraPedido[]>(url);
       }
       obtenerPedidosId(nIdPedido:number){
         let url = environment.servicios.apiRefacFabela + locator.obtenerPedidosId+"nIdPedido="+nIdPedido;
@@ -66,6 +83,12 @@ export class PedidosService {
         let url = environment.servicios.apiRefacFabela + locator.guardaPedidoProducto;
         return this.http.post<TwPedidoProducto>(url,twPedidoProducto);
       }
+
+       guardaProductoCarrito(twCarritoCompraPedido:TwCarritoCompraPedido){
+        let url = environment.servicios.apiRefacFabela + locator.guardaProductoCarrito;
+        return this.http.post<TwCarritoCompraPedido>(url,twCarritoCompraPedido);
+      }
+      
       guardaIngresoProductoPedido(twPedidoProducto:TwPedidoProducto){
         let url = environment.servicios.apiRefacFabela + locator.guardaIngresoProductoPedido;
         return this.http.post<any>(url,twPedidoProducto);
