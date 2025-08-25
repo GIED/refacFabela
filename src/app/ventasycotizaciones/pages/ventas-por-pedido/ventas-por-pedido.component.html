@@ -93,7 +93,7 @@
                                             <td (click)="muestraAlternativo(producto)">{{producto.tcProducto.sNoParte}}</td>
                                             <td>{{producto.tcProducto.sProducto}}</td>
                                             <td>{{producto.tcProducto.sDescripcion}}</td>
-                                            <td>{{producto.tcProducto.nPrecioConIva | number:'1.1-3' }}</td>
+                                            <td>{{producto.tcProducto.nPrecioConIva  }}</td>
                                             <td>{{producto.tcProducto.sMarca}}</td>
                                             <td (click)="ubicacionProducto(producto)">{{producto.nCantidadTotal}}</td>
                                             <td><p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100"></p-inputNumber> </td>
@@ -169,12 +169,11 @@
                                             <td>{{productoVenta.tcProducto.sNoParte}}</td>
                                             <td>{{productoVenta.tcProducto.sProducto}}</td>
                                             <td>{{productoVenta.tcProducto.sDescripcion}}</td>
-                                            <td>{{productoVenta.tcProducto.nPrecioConIva | number:'1.1-3'}}</td>
+                                            <td>{{productoVenta.tcProducto.nPrecioConIva }}</td>
                                             <td>
                                                 {{productoVenta.nCantidad}}
                                             </td>
-                                            <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad |
-                                                number:'1.1-3'}}</td>
+                                            <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad }}</td>
                                             <td>
                                                 <button pButton pRipple icon="pi pi-trash"
                                                     (click)="quitarProducto(productoVenta)"
@@ -195,7 +194,7 @@
                                             <td>
                                                 <div class="p-col-12 text-center  "
                                                     style="background: #92B673; border-radius: 5px;"> <strong>Total:
-                                                    </strong> ${{total | number:'1.1-3'}}</div>
+                                                    </strong> ${{total }}</div>
                                             </td>
 
                                         </tr>

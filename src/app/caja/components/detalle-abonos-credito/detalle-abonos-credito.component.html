@@ -53,7 +53,12 @@
         <div class="p-grid">
             <div class="p-field p-col-6">
                 <label for="name">Monto del abono</label>
-                <input type="text" pInputText name="abono" formControlName="abono"  [class.is-invalid]="validaAbono" />
+                <p-inputNumber 
+    formControlName="abono"
+    [minFractionDigits]="2"
+    [maxFractionDigits]="2"
+    [class.is-invalid]="validaAbono">
+</p-inputNumber>
                 <small class="p-error" *ngIf="validaAbono">*Se requiere un número.</small>
             </div>         
            
