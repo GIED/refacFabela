@@ -11,6 +11,12 @@ import { Clientes } from '../../interfaces/clientes';
 import { TcCp } from 'src/app/productos/model/TcCp';
 import { validators } from 'src/app/shared/validators/validators';
 import { DatosFacturaDto } from '../../../productos/model/DatosFacturaDto';
+import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
+import { ModelContainer } from 'src/app/shared/utils/model-container';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ClienteDireccionesComponent } from '../cliente-direcciones/cliente-direcciones.component';
+import { ClienteDireccionEnvio } from '../../model/ClienteDireccionEnvio';
+import { FormDireccionClienteComponent } from '../form-direccion-cliente/form-direccion-cliente.component';
 
 @Component({
   selector: 'app-form-cliente',
@@ -33,6 +39,9 @@ export class FormClienteComponent implements OnInit {
   cpExiste: boolean;
   banGuardar : boolean;
   listaDatosFactura: DatosFacturaDto[];
+  ref!: DynamicDialogRef;
+  clienteDireccionEnvio: ClienteDireccionEnvio;
+
   constructor(
     private catalogoService: CatalogoService,
     private productosService: ProductoService,
@@ -42,12 +51,14 @@ export class FormClienteComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private clienteService: ClienteService,
     private fb: FormBuilder,
+    private _dialogService: DialogService,
   ) {
     this.crearFormulario();
     this.listaRegimenFiscal = [];
     this.limpiarFormulario();
     this.cpExiste = false;
-    this.banGuardar = false;   
+    this.banGuardar = false; 
+    this.clienteDireccionEnvio = new ClienteDireccionEnvio();  
   }
 
   ngOnInit(): void {
@@ -278,6 +289,22 @@ export class FormClienteComponent implements OnInit {
     }
     this.listaClientes = [...this.listaClientes];
   }
+
+
+   openDialogDirecciones() {
+        
+        this.clienteDireccionEnvio.nIdCliente = 988;
+        const mode = this.clienteDireccionEnvio.nId !== null ? ModeActionOnModel.EDITING : ModeActionOnModel.CREATING;
+        const data = new ModelContainer(mode, this.clienteDireccionEnvio);
+    
+        this.ref = this._dialogService.open(FormDireccionClienteComponent, {
+          data: data,
+          header: 'Direcciones de envío',
+          width: '70%',
+          height: '70%',
+          
+        });   
+      }
 
 
   //busqueda por id del cliente y regresa el index

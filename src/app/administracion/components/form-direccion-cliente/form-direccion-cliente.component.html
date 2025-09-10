@@ -1,0 +1,156 @@
+<form [formGroup]="formGrp">
+
+    <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field col-12 col-md-4 p-m-1">
+            <span class="p-float-label">
+                <input id="receptor" type="text" pInputText formControlName="sReceptorCtrl" />
+                <label for="receptor">Receptor *</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sReceptorCtrl.invalid && (sReceptorCtrl.dirty || sReceptorCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sReceptorCtrl.errors?.required">Campo obligatorio</small>
+            </div>
+        </div>
+        <div class="p-field col-12 col-md-3 p-m-1">
+            <span class="p-float-label">
+                <input id="receptor" type="text" pInputText formControlName="sTelCtrl" />
+                <label for="receptor">Teléfono *</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sTelCtrl.invalid && (sTelCtrl.dirty || sTelCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sTelCtrl.errors?.required">Teléfono inválido, favor de verificar.</small>
+            </div>
+        </div>
+
+        <!-- Correo -->
+        <div class="p-field col-12 col-md-4 p-m-1">
+            <span class="p-float-label">
+                <input id="correo" type="email" pInputText formControlName="sCorreoCtrl" />
+                <label for="correo">Correo</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sCorreoCtrl.invalid && (sCorreoCtrl.dirty || sCorreoCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sCorreoCtrl.errors?.required">Correo inválido, favor de verificar.</small>
+            </div>
+        </div>
+
+        <!-- Calle -->
+        <div class="p-field col-12 col-md-8 p-m-1 ">
+            <span class="p-float-label">
+                <input id="calle" type="text" pInputText formControlName="sCalleCtrl" />
+                <label for="calle">Calle *</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sCalleCtrl.invalid && (sCalleCtrl.dirty || sCalleCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sCalleCtrl.errors?.required">Calle requerida.</small>
+            </div>
+        </div>
+
+        <!-- No. Ext -->
+        <div class="p-field col-12 col-md-2 p-m-1 p-mt-4">
+            <span class="p-float-label">
+                <input id="numext" type="text" pInputText formControlName="sNumExtCtrl" />
+                <label for="numext">No. Ext *</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sNumExtCtrl.invalid && (sNumExtCtrl.dirty || sNumExtCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sNumExtCtrl.errors?.required">No. Ext requerido.</small>
+            </div>
+        </div>
+
+        <!-- No. Int -->
+        <div class="p-field col-12 col-md-2 p-m-1 p-mt-4">
+            <span class="p-float-label">
+                <input id="numint" type="text" pInputText formControlName="sNumIntCtrl" />
+                <label for="numint">No. Int</label>
+            </span>
+        </div>
+
+        <!-- Colonia -->
+        <div class="p-field col-12 col-md-3 p-m-1">
+            <span class="p-float-label">
+                <input id="colonia" type="text" pInputText formControlName="sColoniaCtrl" />
+                <label for="colonia">Colonia</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sColoniaCtrl.invalid && (sColoniaCtrl.dirty || sColoniaCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sColoniaCtrl.errors?.required">Colonia requerida.</small>
+            </div>
+        </div>
+        <!-- Código Postal -->
+        <div class="p-field col-12 col-md-3 p-m-1">
+            <span class="p-float-label">
+                <input id="cp" type="text" pInputText formControlName="nCpCtrl" maxlength="5"minlength="5" />
+                <label for="cp">Código postal *</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="nCpCtrl.invalid && (nCpCtrl.dirty || nCpCtrl.touched)"
+                class="p-error">
+                <small *ngIf="nCpCtrl.errors?.required">Código postal requerido.</small>
+            </div>
+        </div>
+
+        <!-- Municipio -->
+       <div class="p-field col-12 col-md-3 p-m-1">
+            <span class="p-float-label">
+                <input id="mun" type="text" pInputText formControlName="sMunicipioCtrl" />
+                <label for="mun">Municipio *</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sMunicipioCtrl.invalid && (sMunicipioCtrl.dirty || sMunicipioCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sMunicipioCtrl.errors?.required">Municipio requerido.</small>
+            </div>
+        </div>
+
+        <!-- Estado -->
+        <div class="p-field col-12 col-md-3 p-m-1">
+            <span class="p-float-label">
+                <input id="edo" type="text" pInputText formControlName="sEstadoCtrl"
+                    [class.is-invalid]="sEstadoCtrl.invalid && (sEstadoCtrl.dirty || sEstadoCtrl.touched)" />
+                <label for="edo">Estado *</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sEstadoCtrl.invalid && (sEstadoCtrl.dirty || sEstadoCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sEstadoCtrl.errors?.required">Estado requerido.</small>
+            </div>
+        </div>
+
+        <!-- Referencias -->
+        <div class="p-field col-12 col-md-3 p-m-1">
+            <span class="p-float-label">
+                <textarea id="ref" pInputTextarea rows="2" formControlName="sReferenciasCtrl"></textarea>
+                <label for="ref">Referencias *</label>
+            </span>
+            <div id="idesc_invalidator" *ngIf="sReferenciasCtrl.invalid && (sReferenciasCtrl.dirty || sReferenciasCtrl.touched)"
+                class="p-error">
+                <small *ngIf="sReferenciasCtrl.errors?.required">Referencias requeridas.</small>
+            </div>
+        </div>
+
+        <!-- Predeterminada -->
+        <div class="p-field col-12 col-md-3 p-m-1">
+            <span class="p-field">
+                <p-checkbox formControlName="bPredeterminadaCtrl" [binary]="true" inputId="binary"></p-checkbox>
+            </span>
+        </div>
+
+    </div>
+</form>
+<div class="p-grid p-jc-end">
+    <div class="p-col-8">
+        <div class="box"></div>
+    </div>
+
+    <div class="p-col-2">
+        <div class="box">
+            <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger"
+                (click)="hideDialog()"></button>
+        </div>
+    </div>
+
+    <div class="p-col-2">
+        <div class="box">
+            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success"
+                [disabled]="formGrp.invalid || saving" (click)="guardar()"></button>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,8 @@
 import { TcCp } from 'src/app/productos/model/TcCp';
 import { TcRegimenFiscal } from '../../productos/model/TcRegimenFiscal';
 import Decimal from 'decimal.js';
-export interface Clientes {
+import { Model } from 'src/app/shared/utils/model';
+export class Clientes implements Model{
    
     nId?: number;
     d_fechaCredito?: Date;

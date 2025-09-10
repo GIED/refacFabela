@@ -22,13 +22,15 @@ import { FacturasProveedorComponent } from './pages/facturas-proveedor/facturas-
 import { FormFacturaProveedorComponent } from './components/form-factura-proveedor/form-factura-proveedor.component';
 import { FacturaMonedaProveedorComponent } from './components/factura-moneda-proveedor/factura-moneda-proveedor.component';
 import { HistoriaFacturaProveedorComponent } from './components/historia-factura-proveedor/historia-factura-proveedor.component';
+import { ClienteDireccionesComponent } from './components/cliente-direcciones/cliente-direcciones.component';
+import { FormDireccionClienteComponent } from './components/form-direccion-cliente/form-direccion-cliente.component';
 
 
 
 
 @NgModule({
     
-  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent, TraspasoVentaACreditoComponent, FormTraspasoVentaACreditoComponent, ProductosCanceladosComponent, ConsultaAjusteInventarioComponent, FacturasProveedorComponent, FormFacturaProveedorComponent, FacturaMonedaProveedorComponent, HistoriaFacturaProveedorComponent],
+  declarations: [ClienteComponent, UsuarioComponent, ProveedorComponent, CreditosComponent, TipoCambioComponent, ValidaComprobanteComponent, MuestraComprobantePagoComponent, AdminCajaComponent, FormClienteComponent, TraspasoVentaACreditoComponent, FormTraspasoVentaACreditoComponent, ProductosCanceladosComponent, ConsultaAjusteInventarioComponent, FacturasProveedorComponent, FormFacturaProveedorComponent, FacturaMonedaProveedorComponent, HistoriaFacturaProveedorComponent, ClienteDireccionesComponent, FormDireccionClienteComponent],
   imports: [
     AdministracionRoutingModule,   
     PrimeModule,
