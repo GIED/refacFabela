@@ -1,9 +1,9 @@
 <form [formGroup]="formGrp">
 
     <div class="p-fluid p-formgrid p-grid">
-        <div class="p-field col-12 col-md-4 p-m-1">
+        <div class="p-field p-col-12 p-md-6 p-p-1">
             <span class="p-float-label">
-                <input id="receptor" type="text" pInputText formControlName="sReceptorCtrl" />
+                <input id="receptor" type="text" pInputText formControlName="sReceptorCtrl" oninput="this.value = this.value.toUpperCase()"  />
                 <label for="receptor">Receptor *</label>
             </span>
             <div id="idesc_invalidator" *ngIf="sReceptorCtrl.invalid && (sReceptorCtrl.dirty || sReceptorCtrl.touched)"
@@ -11,9 +11,9 @@
                 <small *ngIf="sReceptorCtrl.errors?.required">Campo obligatorio</small>
             </div>
         </div>
-        <div class="p-field col-12 col-md-3 p-m-1">
+        <div class="p-field p-col-12 p-md-6 p-p-1 ">
             <span class="p-float-label">
-                <input id="receptor" type="text" pInputText formControlName="sTelCtrl" />
+                <input id="receptor" type="tel" pInputText formControlName="sTelCtrl" />
                 <label for="receptor">Teléfono *</label>
             </span>
             <div id="idesc_invalidator" *ngIf="sTelCtrl.invalid && (sTelCtrl.dirty || sTelCtrl.touched)"
@@ -23,9 +23,9 @@
         </div>
 
         <!-- Correo -->
-        <div class="p-field col-12 col-md-4 p-m-1">
+        <div class="p-field p-col-12 p-md-6 p-p-1 ">
             <span class="p-float-label">
-                <input id="correo" type="email" pInputText formControlName="sCorreoCtrl" />
+                <input id="correo" type="email" pInputText formControlName="sCorreoCtrl"  oninput="this.value = this.value.toLowerCase()"/>
                 <label for="correo">Correo</label>
             </span>
             <div id="idesc_invalidator" *ngIf="sCorreoCtrl.invalid && (sCorreoCtrl.dirty || sCorreoCtrl.touched)"
@@ -35,9 +35,9 @@
         </div>
 
         <!-- Calle -->
-        <div class="p-field col-12 col-md-8 p-m-1 ">
+        <div class="p-field p-col-12 p-md-6 p-p-1 ">
             <span class="p-float-label">
-                <input id="calle" type="text" pInputText formControlName="sCalleCtrl" />
+                <input id="calle" type="text" pInputText formControlName="sCalleCtrl" oninput="this.value = this.value.toUpperCase()"/>
                 <label for="calle">Calle *</label>
             </span>
             <div id="idesc_invalidator" *ngIf="sCalleCtrl.invalid && (sCalleCtrl.dirty || sCalleCtrl.touched)"
@@ -47,7 +47,7 @@
         </div>
 
         <!-- No. Ext -->
-        <div class="p-field col-12 col-md-2 p-m-1 p-mt-4">
+        <div class="p-field p-col-12 p-md-6 p-p-1 ">
             <span class="p-float-label">
                 <input id="numext" type="text" pInputText formControlName="sNumExtCtrl" />
                 <label for="numext">No. Ext *</label>
@@ -59,7 +59,7 @@
         </div>
 
         <!-- No. Int -->
-        <div class="p-field col-12 col-md-2 p-m-1 p-mt-4">
+        <div class="p-field p-col-12 p-md-6 p-p-1 ">
             <span class="p-float-label">
                 <input id="numint" type="text" pInputText formControlName="sNumIntCtrl" />
                 <label for="numint">No. Int</label>
@@ -67,9 +67,9 @@
         </div>
 
         <!-- Colonia -->
-        <div class="p-field col-12 col-md-3 p-m-1">
+        <div class="p-field p-col-12 p-md-6 p-p-1 ">
             <span class="p-float-label">
-                <input id="colonia" type="text" pInputText formControlName="sColoniaCtrl" />
+                <input id="colonia" type="text" pInputText formControlName="sColoniaCtrl" oninput="this.value = this.value.toUpperCase()" />
                 <label for="colonia">Colonia</label>
             </span>
             <div id="idesc_invalidator" *ngIf="sColoniaCtrl.invalid && (sColoniaCtrl.dirty || sColoniaCtrl.touched)"
@@ -78,7 +78,7 @@
             </div>
         </div>
         <!-- Código Postal -->
-        <div class="p-field col-12 col-md-3 p-m-1">
+        <div class="p-field p-col-12 p-md-6 p-p-1 ">
             <span class="p-float-label">
                 <input id="cp" type="text" pInputText formControlName="nCpCtrl" maxlength="5"minlength="5" />
                 <label for="cp">Código postal *</label>
@@ -90,9 +90,9 @@
         </div>
 
         <!-- Municipio -->
-       <div class="p-field col-12 col-md-3 p-m-1">
+       <div class="p-field p-col-12 p-md-6 p-p-1  ">
             <span class="p-float-label">
-                <input id="mun" type="text" pInputText formControlName="sMunicipioCtrl" />
+                <input id="mun" type="text" pInputText formControlName="sMunicipioCtrl" oninput="this.value = this.value.toUpperCase()"/>
                 <label for="mun">Municipio *</label>
             </span>
             <div id="idesc_invalidator" *ngIf="sMunicipioCtrl.invalid && (sMunicipioCtrl.dirty || sMunicipioCtrl.touched)"
@@ -102,10 +102,9 @@
         </div>
 
         <!-- Estado -->
-        <div class="p-field col-12 col-md-3 p-m-1">
+        <div class="p-field p-col-12 p-md-6 p-p-1 ">
             <span class="p-float-label">
-                <input id="edo" type="text" pInputText formControlName="sEstadoCtrl"
-                    [class.is-invalid]="sEstadoCtrl.invalid && (sEstadoCtrl.dirty || sEstadoCtrl.touched)" />
+                <input id="edo" type="text" pInputText formControlName="sEstadoCtrl" oninput="this.value = this.value.toUpperCase()" />
                 <label for="edo">Estado *</label>
             </span>
             <div id="idesc_invalidator" *ngIf="sEstadoCtrl.invalid && (sEstadoCtrl.dirty || sEstadoCtrl.touched)"
@@ -115,9 +114,9 @@
         </div>
 
         <!-- Referencias -->
-        <div class="p-field col-12 col-md-3 p-m-1">
+        <div class="p-field p-col-12 p-md-6 p-p-1  ">
             <span class="p-float-label">
-                <textarea id="ref" pInputTextarea rows="2" formControlName="sReferenciasCtrl"></textarea>
+                <textarea id="ref" pInputTextarea rows="2" formControlName="sReferenciasCtrl" oninput="this.value = this.value.toUpperCase()"></textarea>
                 <label for="ref">Referencias *</label>
             </span>
             <div id="idesc_invalidator" *ngIf="sReferenciasCtrl.invalid && (sReferenciasCtrl.dirty || sReferenciasCtrl.touched)"
@@ -127,30 +126,27 @@
         </div>
 
         <!-- Predeterminada -->
-        <div class="p-field col-12 col-md-3 p-m-1">
+        <div class="p-field p-col-12 p-md-6 p-p-1  ">
             <span class="p-field">
-                <p-checkbox formControlName="bPredeterminadaCtrl" [binary]="true" inputId="binary"></p-checkbox>
+                <p-checkbox formControlName="bPredeterminadaCtrl" label="Dirección predeterminada" [binary]="true" inputId="binary"></p-checkbox>
             </span>
         </div>
 
     </div>
 </form>
-<div class="p-grid p-jc-end">
-    <div class="p-col-8">
-        <div class="box"></div>
-    </div>
-
-    <div class="p-col-2">
-        <div class="box">
+<div class="p-d-flex p-jc-end">
+    
+        <div class="p-mr-2">
             <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger"
                 (click)="hideDialog()"></button>
         </div>
-    </div>
-
-    <div class="p-col-2">
-        <div class="box">
+        <div class="p-mr-2">
             <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success"
                 [disabled]="formGrp.invalid || saving" (click)="guardar()"></button>
         </div>
-    </div>
+       
+    
+        
+       
+    
 </div>

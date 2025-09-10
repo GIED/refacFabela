@@ -27,10 +27,9 @@ export class ClienteDireccionService {
   }
 
   // 📌 Obtener una dirección por ID (requiere clienteId y dirId)
-  obtenerPorId(clienteId: number, dirId: number) {
+  obtenerPorId(dirId: number) {
     const params = new Map();
-    params.set('clienteId', clienteId);
-    params.set('dirId', dirId);
+    params.set('id', dirId);
 
     return this._http.get<ClienteDireccionEnvio>(
       environment.servicios.apiRefacFabela
@@ -40,24 +39,19 @@ export class ClienteDireccionService {
   }
 
   // 📌 Guardar dirección (crear o actualizar según tenga nId)
-  guardar(clienteId: number, direccion: ClienteDireccionEnvio) {
-    const params = new Map();
-    params.set('clienteId', clienteId);
-
+  guardar( direccion: ClienteDireccionEnvio) {
+    
     const path = direccion?.nId ? Endpoint.editar : Endpoint.guardar;
 
     return this._http.post<ClienteDireccionEnvio>(
-      environment.servicios.apiRefacFabela
-        .concat(path)
-        .concat(StringUtils.concatParams(params)),
-      direccion
+      environment.servicios.apiRefacFabela.concat(path),direccion
     );
   }
 
   // 📌 Eliminar una dirección (POST + query params)
-  eliminar(clienteId: number, dirId: number) {
+  eliminar( dirId: number) {
     const params = new Map();
-    params.set('clienteId', clienteId);
+   
     params.set('dirId', dirId);
 
     return this._http.post<void>(
@@ -86,10 +80,10 @@ export class ClienteDireccionService {
 
 /* Endpoints reales del backend de direcciones (GET/POST con requestParam) */
 const enum Endpoint {
-  listar          = 'clientes/direcciones',            // GET ?clienteId=
-  obtenerById     = 'clientes/direcciones/obtener',    // GET ?clienteId=&dirId=
-  guardar         = 'clientes/direcciones/crear',      // POST ?clienteId=
-  editar          = 'clientes/direcciones/editar',     // POST ?clienteId=&dirId= (se envía nId en body también)
-  eliminar        = 'clientes/direcciones/eliminar',   // POST ?clienteId=&dirId=
-  predeterminada  = 'clientes/direcciones/predeterminada' // POST ?clienteId=&dirId=
+  listar          = '/clientes/direcciones',            // GET ?clienteId=
+  obtenerById     = '/clientes/direcciones/obtener',    // GET ?dirId=
+  guardar         = '/clientes/direcciones/crear',      // POST ?clienteDireccion (sin nId)
+  editar          = '/clientes/direcciones/editar',     // POST ?clienteDireccion (se envía nId en body también)
+  eliminar        = '/clientes/direcciones/eliminar',   // POST ?dirId=
+  predeterminada  = '/clientes/direcciones/predeterminada' // POST ?clienteId=&dirId=
 }

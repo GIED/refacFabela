@@ -1,1 +1,104 @@
-<p>cliente-direcciones works!</p>
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <p-toolbar styleClass="p-mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Agregar Nueva Dirección" icon="pi pi-plus"
+                        class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
+
+                </ng-template>
+
+
+            </p-toolbar>
+            <p-table #dt [value]="listaDirecciones " [rows]="10" [paginator]="true"
+                [globalFilterFields]="['sReceptor']" 
+                [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
+                [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+                        <h5 class="p-m-0">Administración de direcciones de envio</h5>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Buscar dirección" />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                        </th>
+                        <th pSortableColumn="sRfc">Receptor 
+                              <p-sortIcon field="sRfc"></p-sortIcon>    </th>
+                                         
+                        <th pSortableColumn="sTel">Teléfono<p-sortIcon field="sTel"></p-sortIcon></th>
+                        <th pSortableColumn="sCorreo">Correo</th>
+                        <th pSortableColumn="sDireccion">Dirección
+                          
+                        </th>
+                        <th pSortableColumn="sColonia">Colonia
+                          
+                        </th>
+                        <th pSortableColumn="sColonia">Codigo postal
+                          
+                        </th>
+                        <th pSortableColumn="sColonia">Municipio
+                          
+                        </th>
+                        <th pSortableColumn="sColonia">Estado
+                          
+                        </th>
+                        <th pSortableColumn="sColonia">Referencias
+                          
+                        </th>
+                        <th pSortableColumn="sColonia">Dirección predeterminada
+                          
+                        </th>
+                        
+                       
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-direccion>
+                    <tr>
+                        <td>
+                        </td>
+                        <td><span class="p-column-title">Receptor</span> {{direccion.sReceptor}}
+                        </td>
+                        <td><span class="p-column-title">Teléfono</span> {{direccion.sTel}}
+                        </td>
+                        <td><span class="p-column-title">Correo</span> {{direccion.sCorreo}}
+                        </td>
+                        <td><span class="p-column-title">Dirección</span> {{direccion.sCalle}} No. {{direccion.sNumero}}
+                        </td>
+                        <td><span class="p-column-title">Colonia</span> {{direccion.sColonia}}
+                        </td>
+                        <td><span class="p-column-title">CP</span> {{direccion.nCp}}
+                        </td>
+                        <td><span class="p-column-title">Municipio</span>  {{direccion.sMunicipio}}
+                        </td>
+                        <td><span class="p-column-title">estado</span> {{direccion.sEstado}}
+                        </td>
+                        <td><span class="p-column-title">Referencias</span>  {{direccion.sReferencias}}
+                        </td>
+                        <td><span class="p-column-title">Dirección predeterminada</span> {{direccion.bPredeterminada}} </td>
+                        <td>
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined p-mr-2"
+                                (click)="editar(cliente)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined"
+                                (click)="eliminar(cliente)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total hay {{listaDirecciones ? listaDirecciones.length : 0 }} Direciones.
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
+
+        
+    </div>
+</div>

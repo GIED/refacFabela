@@ -6,6 +6,7 @@ import { ModelContainer } from 'src/app/shared/utils/model-container';
 import { ClienteDireccionEnvio } from '../../model/ClienteDireccionEnvio';
 import { ObjectUtils } from 'src/app/shared/utils/object-ultis';
 import { Model } from 'src/app/shared/utils/model';
+import { ClienteDireccionService } from 'src/app/shared/service/cliente-direccion.service';
 
 @Component({
   selector: 'app-form-direccion-cliente',
@@ -19,7 +20,7 @@ export class FormDireccionClienteComponent implements OnInit {
   clienteDireccionEnvio: ClienteDireccionEnvio;
   saving = false;
 
-  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig) {
+  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig, private clienteDireccionService: ClienteDireccionService) {
     this.formGrp = new FormGroup({});
     this.modelContainer = new ModelContainer(ModeActionOnModel.WATCHING);
     this.clienteDireccionEnvio = new ClienteDireccionEnvio();
@@ -33,9 +34,10 @@ export class FormDireccionClienteComponent implements OnInit {
 
     this.modelContainer = this.config.data;
     this.clienteDireccionEnvio = ObjectUtils.isEmpty(this.modelContainer.modelData) ? new ClienteDireccionEnvio() : this.modelContainer.modelData as ClienteDireccionEnvio;
+    console.log('esto es lo que trae el modelo', this.clienteDireccionEnvio); 
     this.formGrp = new FormGroup({
       sReceptorCtrl: new FormControl(this.clienteDireccionEnvio?.sReceptor, [Validators.required]),
-      sTelCtrl: new FormControl(this.clienteDireccionEnvio?.sTel, [Validators.required]),
+      sTelCtrl: new FormControl(this.clienteDireccionEnvio?.sTel, [Validators.required, Validators.pattern(/^\d{10}$/)]),
       sCorreoCtrl: new FormControl(this.clienteDireccionEnvio?.sCorreo, [Validators.required, Validators.email]),
       sCalleCtrl: new FormControl(this.clienteDireccionEnvio?.sCalle, [Validators.required]),
       sNumExtCtrl: new FormControl(this.clienteDireccionEnvio?.sNumExt, [Validators.required]),
@@ -51,6 +53,7 @@ export class FormDireccionClienteComponent implements OnInit {
   }
 
   _castFormGrp(): Model {
+    this.clienteDireccionEnvio.nId= this.clienteDireccionEnvio?.nId;
     this.clienteDireccionEnvio.sReceptor = this.sReceptorCtrl.value;
     this.clienteDireccionEnvio.sTel = this.sTelCtrl.value;
     this.clienteDireccionEnvio.sCorreo = this.sCorreoCtrl.value;
@@ -73,6 +76,20 @@ export class FormDireccionClienteComponent implements OnInit {
     return;
   }
   this.saving = true;
+  console.log('esto es lo que se va a guardar ', this._castFormGrp() as ClienteDireccionEnvio);
+
+  // this.clienteDireccionService.guardar(this.clienteDireccionEnvio.nId, this._castFormGrp() as ClienteDireccionEnvio).subscribe({
+  //   next: (data) => {
+  //     this.ref.close(data);
+  //   },
+  //   error: (err) => {
+  //     console.error('Error al guardar la dirección:', err);
+  //     this.saving = false;
+  //   }
+  // });
+
+  
+  
   // ... tu lógica de guardado
   // al finalizar:
   // this.saving = false;

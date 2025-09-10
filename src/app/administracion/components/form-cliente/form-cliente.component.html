@@ -67,7 +67,7 @@
         </div>
     </div>
 </form>
-<div class="p-grid p-jc-end">
+<div class="p-d-flex p-jc-end">
     <div class="p-col-8">
         <div class="box"></div>
     </div>
@@ -81,9 +81,9 @@
             <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardar()"></button>
         </div>
     </div>
-    <div class="p-col-4" >
+    <div class="p-col-4" *ngIf="banBtnDireccion">
         <div class="box">
-            <button pButton pRipple label="Direcciones de envio" icon="pi pi-check" class="p-button-success" (click)="openDialogDirecciones()"></button>
+            <button pButton pRipple label="Direcciones de envio" icon="pi pi-check" class="p-button-success"  (click)="openDialogGetDirecciones()"></button>
         </div>
     </div>
 </div>

@@ -1,31 +1,29 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { CatalogoService } from 'src/app/shared/service/catalogo.service';
-import { ProductoService } from 'src/app/shared/service/producto.service';
-import { UsuarioService } from '../../service/usuario.service';
-import { TokenService } from 'src/app/shared/service/token.service';
-import { ClienteService } from '../../service/cliente.service';
-import { TcRegimenFiscal } from 'src/app/productos/model/TcRegimenFiscal';
-import { Clientes } from '../../interfaces/clientes';
-import { TcCp } from 'src/app/productos/model/TcCp';
-import { validators } from 'src/app/shared/validators/validators';
-import { DatosFacturaDto } from '../../../productos/model/DatosFacturaDto';
-import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
-import { ModelContainer } from 'src/app/shared/utils/model-container';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ClienteDireccionesComponent } from '../cliente-direcciones/cliente-direcciones.component';
-import { ClienteDireccionEnvio } from '../../model/ClienteDireccionEnvio';
-import { FormDireccionClienteComponent } from '../form-direccion-cliente/form-direccion-cliente.component';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ConfirmationService, MessageService } from "primeng/api";
+import { CatalogoService } from "src/app/shared/service/catalogo.service";
+import { ProductoService } from "src/app/shared/service/producto.service";
+import { UsuarioService } from "../../service/usuario.service";
+import { TokenService } from "src/app/shared/service/token.service";
+import { ClienteService } from "../../service/cliente.service";
+import { TcRegimenFiscal } from "src/app/productos/model/TcRegimenFiscal";
+import { Clientes } from "../../interfaces/clientes";
+import { TcCp } from "src/app/productos/model/TcCp";
+import { validators } from "src/app/shared/validators/validators";
+import { DatosFacturaDto } from "../../../productos/model/DatosFacturaDto";
+import { ModeActionOnModel } from "src/app/shared/utils/model-action-on-model";
+import { ModelContainer } from "src/app/shared/utils/model-container";
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { ClienteDireccionesComponent } from "../cliente-direcciones/cliente-direcciones.component";
+import { ClienteDireccionEnvio } from "../../model/ClienteDireccionEnvio";
+import { FormDireccionClienteComponent } from "../form-direccion-cliente/form-direccion-cliente.component";
 
 @Component({
-  selector: 'app-form-cliente',
-  templateUrl: './form-cliente.component.html',
-  styleUrls: ['./form-cliente.component.scss']
+  selector: "app-form-cliente",
+  templateUrl: "./form-cliente.component.html",
+  styleUrls: ["./form-cliente.component.scss"],
 })
 export class FormClienteComponent implements OnInit {
-
-
   @Output() cerrar: EventEmitter<boolean> = new EventEmitter();
   @Input() objCliente: Clientes;
   formulario: FormGroup;
@@ -37,28 +35,31 @@ export class FormClienteComponent implements OnInit {
   cliente: Clientes;
   tcCp: TcCp;
   cpExiste: boolean;
-  banGuardar : boolean;
+  banGuardar: boolean;
   listaDatosFactura: DatosFacturaDto[];
   ref!: DynamicDialogRef;
   clienteDireccionEnvio: ClienteDireccionEnvio;
+  banBtnDireccion: boolean;
 
   constructor(
     private catalogoService: CatalogoService,
-    private productosService: ProductoService,
+
     private messageService: MessageService,
-    private usuarioService: UsuarioService,
+
     private tokenService: TokenService,
-    private confirmationService: ConfirmationService,
+
     private clienteService: ClienteService,
     private fb: FormBuilder,
-    private _dialogService: DialogService,
+    private _dialogService: DialogService
   ) {
     this.crearFormulario();
     this.listaRegimenFiscal = [];
     this.limpiarFormulario();
     this.cpExiste = false;
-    this.banGuardar = false; 
-    this.clienteDireccionEnvio = new ClienteDireccionEnvio();  
+    this.banGuardar = false;
+    this.banBtnDireccion = false;
+    this.cliente = new Clientes();
+    this.clienteDireccionEnvio = new ClienteDireccionEnvio();
   }
 
   ngOnInit(): void {
@@ -71,60 +72,108 @@ export class FormClienteComponent implements OnInit {
     /*Se consulta el catalogo de Razon social */
     this.obtenerCatalogoRazonSocial();
     /*Se determina si en una actualización o un registro nuevo de cliente*/
-    
+
     if (this.objCliente == undefined) {
       //console.log('Es un nuevo registro');
-    }
-    else {
+    } else {
       //console.log('Voy a editar el archivo')
       this.editar();
+      this.banBtnDireccion = true;
     }
   }
   crearFormulario() {
     this.formulario = this.fb.group({
-      nId: ['', []],
-      sRfc: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(14)]],
-      sRazonSocial: ['', [Validators.required]],
-      sDireccion: ['', [Validators.required]],
-      sTelefono: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-      sCorreo: ['', [Validators.required, Validators.email]],
-      nCp: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(5), Validators.pattern('^[0-9]{5}')]],
-      sClave: ['', []],
-      nIdRegimenFiscal: ['', [Validators.required]],
-      nDatosValidados: ['', []],
-      nIdDatoFactura: ['', [Validators.required]],
-    })
-
+      nId: ["", []],
+      sRfc: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(12),
+          Validators.maxLength(14),
+        ],
+      ],
+      sRazonSocial: ["", [Validators.required]],
+      sDireccion: ["", [Validators.required]],
+      sTelefono: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(10),
+        ],
+      ],
+      sCorreo: ["", [Validators.required, Validators.email]],
+      nCp: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(5),
+          Validators.pattern("^[0-9]{5}"),
+        ],
+      ],
+      sClave: ["", []],
+      nIdRegimenFiscal: ["", [Validators.required]],
+      nDatosValidados: ["", []],
+      nIdDatoFactura: ["", [Validators.required]],
+    });
   }
   // Validación de campos Guardar Cliente
   get validaRfc() {
-    return this.formulario.get('sRfc').invalid && this.formulario.get('sRazonSocial').touched;
+    return (
+      this.formulario.get("sRfc").invalid &&
+      this.formulario.get("sRazonSocial").touched
+    );
   }
   get validaRS() {
-    return this.formulario.get('sRazonSocial').invalid && this.formulario.get('sRazonSocial').touched;
+    return (
+      this.formulario.get("sRazonSocial").invalid &&
+      this.formulario.get("sRazonSocial").touched
+    );
   }
   get validaDireccion() {
-    return this.formulario.get('sDireccion').invalid && this.formulario.get('sDireccion').touched;
+    return (
+      this.formulario.get("sDireccion").invalid &&
+      this.formulario.get("sDireccion").touched
+    );
   }
   get validaTelefono() {
-    return this.formulario.get('sTelefono').invalid && this.formulario.get('sTelefono').touched;
+    return (
+      this.formulario.get("sTelefono").invalid &&
+      this.formulario.get("sTelefono").touched
+    );
   }
   get validaCorreo() {
-    return this.formulario.get('sCorreo').invalid && this.formulario.get('sCorreo').touched;
+    return (
+      this.formulario.get("sCorreo").invalid &&
+      this.formulario.get("sCorreo").touched
+    );
   }
   get validaCp() {
-    return (this.formulario.get('nCp').invalid && this.formulario.get('nCp').touched) || this.cpExiste;
+    return (
+      (this.formulario.get("nCp").invalid &&
+        this.formulario.get("nCp").touched) ||
+      this.cpExiste
+    );
   }
   get validaRegimenfiscal() {
-    return this.formulario.get('nIdRegimenFiscal').invalid && this.formulario.get('nIdRegimenFiscal').touched;
+    return (
+      this.formulario.get("nIdRegimenFiscal").invalid &&
+      this.formulario.get("nIdRegimenFiscal").touched
+    );
   }
   get validaValidados() {
-    return this.formulario.get('nDatosValidados').invalid && this.formulario.get('nDatosValidados').touched;
+    return (
+      this.formulario.get("nDatosValidados").invalid &&
+      this.formulario.get("nDatosValidados").touched
+    );
   }
   get validaDatoFactura() {
-    return this.formulario.get('nIdDatoFactura').invalid && this.formulario.get('nIdDatoFactura').touched;
+    return (
+      this.formulario.get("nIdDatoFactura").invalid &&
+      this.formulario.get("nIdDatoFactura").touched
+    );
   }
-
 
   limpiarFormulario() {
     this.fclientes.nId.setValue("");
@@ -136,39 +185,40 @@ export class FormClienteComponent implements OnInit {
     this.fclientes.sClave.setValue("");
     this.fclientes.nCp.setValue("");
     this.fclientes.nIdRegimenFiscal.setValue("");
-    this.fclientes.nDatosValidados.setValue(false);   
+    this.fclientes.nDatosValidados.setValue(false);
     this.tcCp = null;
   }
 
   consultaCp() {
     this.tcCp = new TcCp();
-    this.catalogoService.obtenerCpLike(this.fclientes.nCp.value).subscribe(data => {
-      this.tcCp = data;
+    this.catalogoService
+      .obtenerCpLike(this.fclientes.nCp.value)
+      .subscribe((data) => {
+        this.tcCp = data;
 
-      if (this.tcCp != undefined || this.tcCp != null) {
-       // console.log('encontre los datos del cogigo postal')
-        this.cpExiste = false;
-        this.banGuardar=true;
-      }
-      else {
-       // console.log('No encontre los datos del codigo postal')
-        this.formulario.setErrors({ 'formularioInvalido': true });
-        this.cpExiste = true;
-        this.banGuardar=false;
-      }
-    })
+        if (this.tcCp != undefined || this.tcCp != null) {
+          // console.log('encontre los datos del cogigo postal')
+          this.cpExiste = false;
+          this.banGuardar = true;
+        } else {
+          // console.log('No encontre los datos del codigo postal')
+          this.formulario.setErrors({ formularioInvalido: true });
+          this.cpExiste = true;
+          this.banGuardar = false;
+        }
+      });
   }
 
   obtenerRegimenFiscal() {
-    this.clienteService.obtenerRegimenFiscal().subscribe(data => {
+    this.clienteService.obtenerRegimenFiscal().subscribe((data) => {
       this.listaRegimenFiscal = data;
-    })
+    });
   }
 
   obtenerCatalogoRazonSocial() {
-    this.clienteService.obtenerCatalogoRazonSocial().subscribe(data => {
+    this.clienteService.obtenerCatalogoRazonSocial().subscribe((data) => {
       this.listaDatosFactura = data;
-    })
+    });
   }
 
   editar() {
@@ -184,20 +234,20 @@ export class FormClienteComponent implements OnInit {
     this.fclientes.nDatosValidados.setValue(this.objCliente.nDatosValidados);
     // console.log(this.objCliente.nDatosValidados);
 
-
-    if (this.objCliente.tcRegimenFiscal !== null && this.objCliente.tcRegimenFiscal !== undefined) {
+    if (
+      this.objCliente.tcRegimenFiscal !== null &&
+      this.objCliente.tcRegimenFiscal !== undefined
+    ) {
       this.consultaCp();
-      this.fclientes.nIdRegimenFiscal.setValue(this.objCliente.tcRegimenFiscal.nId);
+      this.fclientes.nIdRegimenFiscal.setValue(
+        this.objCliente.tcRegimenFiscal.nId
+      );
       this.fclientes.nIdDatoFactura.setValue(this.objCliente.nIdDatoFactura);
-     
     }
-
-    
-
   }
 
   get fclientes() {
-    return this.formulario.controls
+    return this.formulario.controls;
   }
 
   hideDialog() {
@@ -209,102 +259,130 @@ export class FormClienteComponent implements OnInit {
   }
 
   guardar() {
-
     if (this.formulario.invalid || this.cpExiste) {
-      return Object.values(this.formulario.controls).forEach(control => {
+      return Object.values(this.formulario.controls).forEach((control) => {
         if (control instanceof FormGroup) {
           // tslint:disable-next-line: no-shadowed-variable
-          Object.values(control.controls).forEach(control => control.markAsTouched());
+          Object.values(control.controls).forEach((control) =>
+            control.markAsTouched()
+          );
         } else {
           control.markAsTouched();
         }
       });
-    }
-    else {
+    } else {
       this.cliente = this.formulario.value;
-
 
       if (this.cliente.nId) {
         this.cliente.nEstatus = 1;
         this.cliente.nDescuento = this.objCliente.nDescuento;
-        this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito        
+        this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito;
         this.cliente.nCp = this.tcCp.nId;
-       // esto es lo que voy a actualizar', this.cliente);
-       // console.log('esto es lo que voy a actualizar', this.fclientes);
+        // esto es lo que voy a actualizar', this.cliente);
+        // console.log('esto es lo que voy a actualizar', this.fclientes);
 
-        this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
-          this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
-          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
-        })
-
-
-      }
-      else {
+        this.clienteService
+          .guardaCliente(this.cliente)
+          .subscribe((respuesta) => {
+            this.listaClientes[this.findIndexById(respuesta.nId.toString())] =
+              respuesta;
+            this.messageService.add({
+              severity: "success",
+              summary: "Se realizó con éxito",
+              detail: "Cliente actualizado",
+              life: 10000,
+            });
+          });
+      } else {
         this.cliente.sClave = this.crearId();
         this.cliente.nEstatus = 1;
         this.cliente.nDescuento = 0;
-        this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito       
+        this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito;
         this.cliente.nCp = this.tcCp.nId;
-        this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
-          this.listaClientes.push(respuesta);
-          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente guardado', life: 10000 });
-        })
+        this.clienteService
+          .guardaCliente(this.cliente)
+          .subscribe((respuesta) => {
+            this.cliente = respuesta;
+            this.openDialogAddDirecciones();
+            this.listaClientes.push(respuesta);
+            this.messageService.add({
+              severity: "success",
+              summary: "Se realizó con éxito",
+              detail: "Cliente guardado",
+              life: 10000,
+            });
+          });
       }
 
       this.listaClientes = [...this.listaClientes];
       this.cerrar.emit(true);
       this.cliente = {};
-
     }
   }
-
 
   consultaRfc() {
-
     if (this.fclientes.sRfc.value.length >= 5) {
-      this.clienteService.consultaClienteRfc(this.fclientes.sRfc.value).subscribe(data => {
-        if (data !== null) {
-          //console.log('entre a asignar los valores para editar')
-          this.objCliente = data;
-          this.editar();
-        }
-        else {
-          this.objCliente = {};
-        }
-      })
+      this.clienteService
+        .consultaClienteRfc(this.fclientes.sRfc.value)
+        .subscribe((data) => {
+          if (data !== null) {
+            //console.log('entre a asignar los valores para editar')
+            this.objCliente = data;
+            this.editar();
+          } else {
+            this.objCliente = {};
+          }
+        });
     }
   }
 
-
   guardarLineaCredito() {
-
     if (this.cliente.nId) {
       this.cliente.nEstatus = 1;
       this.cliente.n_idUsuarioCredito = this.tokenService.getIdUser();
-      this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
-        this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
-        this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
+      this.clienteService.guardaCliente(this.cliente).subscribe((respuesta) => {
+        this.listaClientes[this.findIndexById(respuesta.nId.toString())] =
+          respuesta;
+        this.messageService.add({
+          severity: "success",
+          summary: "Se realizó con éxito",
+          detail: "Cliente actualizado",
+          life: 10000,
+        });
         this.credito = false;
-      })
+      });
     }
     this.listaClientes = [...this.listaClientes];
   }
 
+  openDialogAddDirecciones() {
+    this.clienteDireccionEnvio.nIdCliente = this.objCliente.nId;
+    const mode =
+      this.clienteDireccionEnvio.nId !== null
+        ? ModeActionOnModel.EDITING
+        : ModeActionOnModel.CREATING;
+    const data = new ModelContainer(mode, this.clienteDireccionEnvio);
 
-   openDialogDirecciones() {
-        
-        this.clienteDireccionEnvio.nIdCliente = 988;
-        const mode = this.clienteDireccionEnvio.nId !== null ? ModeActionOnModel.EDITING : ModeActionOnModel.CREATING;
-        const data = new ModelContainer(mode, this.clienteDireccionEnvio);
-    
-        this.ref = this._dialogService.open(FormDireccionClienteComponent, {
-          data: data,
-          header: 'Direcciones de envío',
-          width: '70%',
-          height: '70%',
-          
-        });   
-      }
+    this.ref = this._dialogService.open(FormDireccionClienteComponent, {
+      data: data,
+      header: "Direcciones de envío",
+      width: "70%",
+      height: "60%",
+    });
+  }
+
+  openDialogGetDirecciones() {
+    this.clienteDireccionEnvio.nIdCliente = this.objCliente.nId;
+    const mode =ModeActionOnModel.WATCHING;
+    const data = new ModelContainer(mode, this.clienteDireccionEnvio);
+
+    this.ref = this._dialogService.open(ClienteDireccionesComponent, {
+      data: data,
+      header: "Direcciones de envío",
+      width: "70%",
+      height: "60%",
+    });
+  }
 
 
   //busqueda por id del cliente y regresa el index
@@ -321,15 +399,12 @@ export class FormClienteComponent implements OnInit {
 
   //Crear una nueva clave de cliente
   crearId(): string {
-    let id = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let id = "";
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for (let i = 0; i < 5; i++) {
       id += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return id;
   }
-
-
-
-
 }
