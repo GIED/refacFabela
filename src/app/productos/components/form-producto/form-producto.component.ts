@@ -19,7 +19,7 @@ import { ProductoService } from 'src/app/shared/service/producto.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PartService } from 'src/app/shared/service/part.service';
 import { PartResponse } from '../../model/PartResponse ';
-import { producto } from '../../interfaces/producto.interfaces';
+
 
 const minIfPresent = (min: number): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
   const v = c.value;

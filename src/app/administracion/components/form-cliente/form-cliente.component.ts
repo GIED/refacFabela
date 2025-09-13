@@ -17,6 +17,8 @@ import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
 import { ClienteDireccionesComponent } from "../cliente-direcciones/cliente-direcciones.component";
 import { ClienteDireccionEnvio } from "../../model/ClienteDireccionEnvio";
 import { FormDireccionClienteComponent } from "../form-direccion-cliente/form-direccion-cliente.component";
+import { set } from "date-fns";
+import Decimal from "decimal.js";
 
 @Component({
   selector: "app-form-cliente",
@@ -259,66 +261,69 @@ export class FormClienteComponent implements OnInit {
   }
 
   guardar() {
-    if (this.formulario.invalid || this.cpExiste) {
-      return Object.values(this.formulario.controls).forEach((control) => {
-        if (control instanceof FormGroup) {
-          // tslint:disable-next-line: no-shadowed-variable
-          Object.values(control.controls).forEach((control) =>
-            control.markAsTouched()
-          );
-        } else {
-          control.markAsTouched();
-        }
-      });
-    } else {
-      this.cliente = this.formulario.value;
-
-      if (this.cliente.nId) {
-        this.cliente.nEstatus = 1;
-        this.cliente.nDescuento = this.objCliente.nDescuento;
-        this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito;
-        this.cliente.nCp = this.tcCp.nId;
-        // esto es lo que voy a actualizar', this.cliente);
-        // console.log('esto es lo que voy a actualizar', this.fclientes);
-
-        this.clienteService
-          .guardaCliente(this.cliente)
-          .subscribe((respuesta) => {
-            this.listaClientes[this.findIndexById(respuesta.nId.toString())] =
-              respuesta;
-            this.messageService.add({
-              severity: "success",
-              summary: "Se realizó con éxito",
-              detail: "Cliente actualizado",
-              life: 10000,
-            });
-          });
+  if (this.formulario.invalid || this.cpExiste) {
+    return Object.values(this.formulario.controls).forEach((control) => {
+      if (control instanceof FormGroup) {
+        Object.values(control.controls).forEach((c) => c.markAsTouched());
       } else {
-        this.cliente.sClave = this.crearId();
-        this.cliente.nEstatus = 1;
-        this.cliente.nDescuento = 0;
-        this.cliente.n_limiteCredito = this.objCliente.n_limiteCredito;
-        this.cliente.nCp = this.tcCp.nId;
-        this.clienteService
-          .guardaCliente(this.cliente)
-          .subscribe((respuesta) => {
-            this.cliente = respuesta;
-            this.openDialogAddDirecciones();
-            this.listaClientes.push(respuesta);
-            this.messageService.add({
-              severity: "success",
-              summary: "Se realizó con éxito",
-              detail: "Cliente guardado",
-              life: 10000,
-            });
-          });
+        control.markAsTouched();
       }
+    });
+  }
 
+  this.cliente = this.formulario.value;
+  this.cliente.nEstatus = 1;
+  this.cliente.nDescuento = this.objCliente?.nDescuento ?? 0;
+  this.cliente.n_limiteCredito = this.objCliente?.n_limiteCredito ?? new Decimal(0);
+  this.cliente.nCp = this.tcCp?.nId;                 // asegúrate de tener tcCp
+  if (!this.cliente.sClave) this.cliente.sClave = this.crearId();
+
+  if (this.cliente.nId) {
+    // ------- ACTUALIZACIÓN -------
+    this.clienteService.guardaCliente(this.cliente).subscribe((respuesta) => {
+      this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
+      this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Cliente actualizado', life: 10000 });
       this.listaClientes = [...this.listaClientes];
       this.cerrar.emit(true);
-      this.cliente = {};
-    }
+    });
+  } else {
+    // ------- CREACIÓN -------
+    this.clienteService.guardaCliente(this.cliente).subscribe((clienteGuardado) => {
+      if (!clienteGuardado || !clienteGuardado.nId) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Sin ID',
+          detail: 'No se pudo obtener el ID del cliente guardado.',
+          life: 7000
+        });
+        return;
+      }
+
+      // Mantén tu lista sincronizada
+      this.listaClientes.push(clienteGuardado);
+      this.listaClientes = [...this.listaClientes];
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Se realizó con éxito',
+        detail: 'Cliente guardado',
+        life: 10000
+      });
+
+      // 2) Ahora sí, abre el modal de direcciones con un cliente válido
+      this.openDialogAddDirecciones(clienteGuardado);
+
+      // 3) (Opcional) Cerrar este formulario después de abrir el modal de direcciones
+      // this.cerrar.emit(true);
+      //    Si prefieres cerrar hasta que cierren el modal de direcciones:
+      this.ref?.onClose?.subscribe(() => this.cerrar.emit(true));
+
+      // 4) Limpia de forma segura (evita asignar {} a objetos tipados)
+      this.formulario.reset();
+      this.cliente = new Clientes();
+    });
   }
+}
 
   consultaRfc() {
     if (this.fclientes.sRfc.value.length >= 5) {
@@ -355,8 +360,9 @@ export class FormClienteComponent implements OnInit {
     this.listaClientes = [...this.listaClientes];
   }
 
-  openDialogAddDirecciones() {
-    this.clienteDireccionEnvio.nIdCliente = this.objCliente.nId;
+  openDialogAddDirecciones(cliente : Clientes) {
+    console.log('cliente para openAdd',cliente);
+    this.clienteDireccionEnvio.nIdCliente = cliente.nId;
     const mode =
       this.clienteDireccionEnvio.nId !== null
         ? ModeActionOnModel.EDITING
@@ -379,7 +385,7 @@ export class FormClienteComponent implements OnInit {
     this.ref = this._dialogService.open(ClienteDireccionesComponent, {
       data: data,
       header: "Direcciones de envío",
-      width: "70%",
+      width: "90%",
       height: "60%",
     });
   }

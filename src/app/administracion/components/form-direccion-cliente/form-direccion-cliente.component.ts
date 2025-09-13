@@ -78,21 +78,16 @@ export class FormDireccionClienteComponent implements OnInit {
   this.saving = true;
   console.log('esto es lo que se va a guardar ', this._castFormGrp() as ClienteDireccionEnvio);
 
-  // this.clienteDireccionService.guardar(this.clienteDireccionEnvio.nId, this._castFormGrp() as ClienteDireccionEnvio).subscribe({
-  //   next: (data) => {
-  //     this.ref.close(data);
-  //   },
-  //   error: (err) => {
-  //     console.error('Error al guardar la dirección:', err);
-  //     this.saving = false;
-  //   }
-  // });
+  this.clienteDireccionService.guardar( this._castFormGrp() as ClienteDireccionEnvio).subscribe({
+    next: (data) => {
+      this.ref.close(data);
+    },
+    error: (err) => {
+      console.error('Error al guardar la dirección:', err);
+      this.saving = false;
+    }
+  });
 
-  
-  
-  // ... tu lógica de guardado
-  // al finalizar:
-  // this.saving = false;
 }
 
   hideDialog() {
