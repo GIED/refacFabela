@@ -24,6 +24,10 @@ import Decimal from 'decimal.js';
 import { PartService } from 'src/app/shared/service/part.service';
 import { CtpConstantes } from 'src/app/shared/utils/UserPart.enum';
 import { PartResponse } from 'src/app/productos/model/PartResponse ';
+import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
+import { DialogService } from 'primeng/dynamicdialog';
+import { FormProductoComponent } from 'src/app/productos/components/form-producto/form-producto.component';
+import { ModelContainer } from 'src/app/shared/utils/model-container';
 
 
 
@@ -105,7 +109,8 @@ export class VentasComponent implements OnInit {
     private tokenService: TokenService,
     private confirmationService: ConfirmationService,
     private fb: FormBuilder,
-    private partService: PartService
+    private partService: PartService,
+    public dialogService: DialogService,
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -245,6 +250,30 @@ this.mostrarProductosCotizacionCliente=true;
     this.objCliente=null; 
    
   }
+
+  formProducto(): void {
+      const ref = this.dialogService.open(FormProductoComponent, {
+        data: new ModelContainer(ModeActionOnModel.WATCHING, new TcProducto()),
+        header: 'Registro de Producto',
+        width: '70%',
+        height: 'auto',
+        baseZIndex: 1000,
+        closable: true,
+        dismissableMask: true,
+        modal: true
+      });
+  
+      ref.onClose.subscribe((productoGuardado: TcProducto | undefined) => {
+        if (productoGuardado) {
+          // Aquí puedes actualizar tu lista, tabla, etc.
+          console.log('Producto recibido desde el diálogo:', productoGuardado);
+          // Ejemplo: recargar lista o actualizar tabla
+          // this.informacionProducto(productoGuardado.nId); // o lo que apliques
+        } else {
+          console.log('El usuario cerró el formulario sin guardar.');
+        }
+      });
+    }
 
   mostrarditribucionBodegas(nId:number){
     this.bodegasService.obtenerProductoBodegas(nId).subscribe(data=>{

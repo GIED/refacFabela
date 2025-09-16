@@ -100,8 +100,9 @@ abrirAjustePrecio( ventaProductoDto:VentaProductoDto){
 }
 
 cerrarDialogCancela(){
+  
   this.mostrarSimulador=false;
-  this.twVentasProducto=null;
+  this.twVentasProducto= new TwVentasProducto();
   
 
 

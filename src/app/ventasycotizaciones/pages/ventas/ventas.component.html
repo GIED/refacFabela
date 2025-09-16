@@ -24,7 +24,7 @@
                     <div class="p-col-4">
                 <div class="flex gap-2 p-mt-4">
                     <!-- Botón: Nuevo Usuario -->
-                    <button pButton pRipple type="button" icon="pi pi-user-plus" label="Nuevo Cliente"
+                    <button *ngIf="!banBusquedaCorizaciones" pButton pRipple type="button" icon="pi pi-user-plus" label="Nuevo Cliente"
                         class="p-button p-button-secondary" (click)="openNew()">
                     </button>
                 
@@ -33,8 +33,12 @@
                         label="Buscar Cotizaciones" class="p-button p-button-help" (click)="abrirCotizaciones()">
                     </button>
                 
+                    <!-- Botón: add Producto -->
+                    <button *ngIf="banBusquedaCorizaciones" pButton pRipple type="button" icon="pi pi-plus" label="Agregar Producto"
+                        class="p-button p-button-info" (click)="formProducto()">
+                    </button>
                     <!-- Botón: Precios Proveedor -->
-                    <button pButton pRipple type="button" icon="pi pi-dollar" label="Precios Proveedor"
+                    <button *ngIf="banBusquedaCorizaciones" pButton pRipple type="button" icon="pi pi-dollar" label="Precios Proveedor"
                         class="p-button p-button-warning" (click)="mostrarFormularioPreciosUbicacionProveedor()">
                     </button>
                 </div>

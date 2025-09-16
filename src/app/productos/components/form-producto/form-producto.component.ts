@@ -53,7 +53,7 @@ export class FormProductoComponent implements OnInit {
   listaMoneda: TcMoneda[] = [];
   precioFinal: number = 0;
   tcProducto: TcProducto = new TcProducto();
-  modo: string = '';
+  modo: ModeActionOnModel = ModeActionOnModel.CREATING;
   rol: string = '';
   realRol: string = '';
   guardando: boolean = false;
@@ -82,30 +82,17 @@ export class FormProductoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const modelContainer: ModelContainer = this.config.data;
-
-    /*Asigna el valor a producto */
-    this.producto = ObjectUtils.isEmpty(modelContainer.modelData) ? new TcProducto() : modelContainer.modelData as TcProducto;
+    const mc = this.config.data as ModelContainer;
+    this.producto = (mc?.modelData as TcProducto) ?? new TcProducto();
+    this.modo = mc?.modeAction ?? ModeActionOnModel.CREATING;
     console.log('Este es el producto que llego', this.producto);
 
-    /* obtiene el modo */
-    this.modo = modelContainer.modeAction;
+
     /* obtiene el rol principal */
     const roles: string[] = this.tokenService.getRoles(); // o como los obtengas
     this.realRol = this.calcularRolPrincipal(roles);
-    
+
     this.crearFormulario();
-  
-    if (this.modo === ModeActionOnModel.CREATING && Object.keys(this.producto).length > 0) {
-      console.log('entro en creating', this.producto);
-      this.setFormValuesWebService();
-      // También habilitamos categoría si ya hay valor
-      if (this.producto.nIdCategoriaGeneral) {
-        this.obtenerCategoria(this.producto.nIdCategoriaGeneral);
-      }
-    }
-
-
 
     this.suscribirCambiosPrecio();
     this.suscribirCalculoVolumen();
@@ -131,6 +118,14 @@ export class FormProductoComponent implements OnInit {
         this.listaMoneda = resultado6;
 
 
+         if (this.modo === ModeActionOnModel.CREATING && this.producto != null || this.producto !== undefined) {
+            console.log('entro en creating', this.producto);
+            this.setFormValuesWebService();
+            // También habilitamos categoría si ya hay valor
+            if (this.producto.nIdCategoriaGeneral) {
+                  this.obtenerCategoria(this.producto.nIdCategoriaGeneral);
+            }
+         }
 
         // 👉 Ya que los catálogos están cargados, se puede llenar el formulario
         if (this.modo === ModeActionOnModel.EDITING) {
@@ -347,6 +342,7 @@ export class FormProductoComponent implements OnInit {
   }
 
    private setFormValuesWebService(): void {
+    console.log('producto en values web service ',this.producto);
     this.formGrp.patchValue({
       sNoParte: this.producto.sNoParte ?? '',
       sProducto: this.producto.sProducto ?? '',
@@ -354,8 +350,8 @@ export class FormProductoComponent implements OnInit {
       sMarca: this.producto.sMarca ?? '',
       nIdCategoria:  null,
       nIdCategoriaGeneral:  null,
-      nPrecio:  '',
-      sMoneda:  '',
+      nPrecio:  this.producto.nPrecio ?? '',
+      sMoneda:  this.producto.sMoneda ?? '',
       nIdGanancia: null,
       nIdclavesat:  null,
       sIdBar: '',
@@ -370,9 +366,10 @@ export class FormProductoComponent implements OnInit {
     });
 
     //Opcionalmente deshabilitar campos si es edición
+    if(this.producto?.nId){
     this.formGrp.get('sNoParte')?.disable();
     this.formGrp.get('sMarca')?.disable();
-
+    }
   }
 
   consultarProductoProveedor() {
@@ -412,6 +409,8 @@ export class FormProductoComponent implements OnInit {
 
               if (this.producto !== null) {
                 this.formGrp.patchValue({
+                  sProducto: part.strDescrip1,
+                  sDescripcion: part.strDescrip1,
                   nPeso: part.dblWeigthKgs,
                   nLargo: largoCm?.toNumber(),
                   nAncho: anchoCm?.toNumber(),

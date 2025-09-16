@@ -5,7 +5,7 @@ export class TcCliente{
     d_fechaCredito?: Date;
     nEstatus?: number;
     n_idUsuarioCredito?: number;
-    n_limiteCredito?: Decimal;
+    n_limiteCredito?: Decimal = new Decimal(0);
     sCorreo?: string;
     sDireccion?: string;
     sRazonSocial?: string;

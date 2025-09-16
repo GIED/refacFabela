@@ -13,6 +13,7 @@ import { producto } from '../../interfaces/producto.interfaces';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { Model } from 'src/app/shared/utils/model';
 import Decimal from 'decimal.js';
+import { ProductoService } from 'src/app/shared/service/producto.service';
 
 @Component({
   selector: 'app-form-consulta-costex',
@@ -24,15 +25,18 @@ export class FormConsultaCostexComponent {
   error?: string;
   locationList: LocationPart[] = [];
   producto: TcProducto
+  productoForm: TcProducto
   largoCm: Decimal | null = null;
   anchoCm: Decimal | null = null;
   altoCm: Decimal | null = null;
   volumenCm: Decimal | null = null;
 
-  constructor(private fb: FormBuilder, private partService: PartService, private messageService: MessageService,
-    private confirmationService: ConfirmationService, public dialogService: DialogService, private _tokenService: TokenService) {
+  constructor(private fb: FormBuilder, private partService: PartService, public dialogService: DialogService, private _productosService: ProductoService,
+    private _tokenService: TokenService
+  ) {
 
     this.producto = new TcProducto();
+    this.productoForm = new TcProducto();
 
     this.form = this.fb.group({
       numeroParte: ['', Validators.required],
@@ -70,50 +74,62 @@ export class FormConsultaCostexComponent {
     }
   }
 
-  castToProducto(): Model {
-    const factorPulgadasACm = new Decimal(2.54);
-    const redondear = (valor: Decimal) => valor.toDecimalPlaces(2);
+  async castToProducto(): Promise<TcProducto> {
+  const nIdMarca = 53;
+  const numeroParte = this.numeroParte.value;
 
-    const largoCm = this.resultado.dblLengthIn ? redondear(new Decimal(this.resultado.dblLengthIn).mul(factorPulgadasACm)) : null;
-    const anchoCm = this.resultado.dblWidthIn ? redondear(new Decimal(this.resultado.dblWidthIn).mul(factorPulgadasACm)) : null;
-    const altoCm = this.resultado.dblHeightIn ? redondear(new Decimal(this.resultado.dblHeightIn).mul(factorPulgadasACm)) : null;
-    const volumenCm = largoCm && anchoCm && altoCm ? redondear(largoCm.mul(anchoCm).mul(altoCm)) : null;
+  // Espera la respuesta del servicio (RxJS 6)
+  const productoExistente = await this._productosService
+    .getProductoByNoParteAndIdMarca(numeroParte, nIdMarca)
+    .toPromise();
 
-    this.producto.sNoParte = this.numeroParte.value;
-    this.producto.sProducto = this.resultado.strDescrip1;
-    this.producto.sMarca = 'CTP';
-    this.producto.nIdMarca = 53;
-    this.producto.nIdusuario = this._tokenService.getIdUser();
-    this.producto.nPeso = this.resultado.dblWeigthKgs ? new Decimal(this.resultado.dblWeigthKgs) : new Decimal(0);
-    this.producto.nLargo = largoCm;
-    this.producto.nAlto = altoCm;
-    this.producto.nAncho = anchoCm;
-    this.producto.nVolumen = volumenCm;
-    // this.producto.nPrecioPeso= new Decimal(0);
-    // this.producto.nPrecio= new Decimal(0);
-    // this.producto.nPrecioSinIva=new Decimal(0);
-    // this.producto.nPrecioConIva=new Decimal(0);
-    // this.producto.nPrecioIva=new Decimal(0);
+  let p: TcProducto;
 
+  if (productoExistente) {
+    p = productoExistente;
 
-
-
-    return this.producto;
-
+    if (p.nLargo == null && p.nAncho == null && p.nAlto == null) {
+      p.nLargo = this.largoCm;
+      p.nAncho = this.anchoCm;
+      p.nAlto  = this.altoCm;
+      p.nVolumen = this.volumenCm;
+    }
+  } else {
+    p = new TcProducto();
+    p.sNoParte   = numeroParte;
+    p.sProducto  = this.resultado?.strDescrip1 ?? '';
+    p.sMarca     = 'CTP';
+    p.nIdMarca   = nIdMarca;
+    p.nIdusuario = this._tokenService.getIdUser();
+    p.nPeso      = this.resultado?.dblWeigthKgs ? new Decimal(this.resultado.dblWeigthKgs) : new Decimal(0);
+    p.nLargo     = this.largoCm;
+    p.nAlto      = this.altoCm;
+    p.nAncho     = this.anchoCm;
+    p.nVolumen   = this.volumenCm;
   }
 
+  this.producto = p;
+  return p;
+}
 
 
 
-  formProducto(): void {
 
-    const isNuevo = !this.producto || typeof this.producto.nId !== 'number' || this.producto.nId == null || this.producto.nId === 0;
+  async formProducto(loc: LocationPart): Promise<void> {
+  // Espera a que se termine de construir el producto
+  this.productoForm = await this.castToProducto();
+    this.productoForm.nPrecio = loc.CustPrice ? new Decimal(loc.CustPrice) : new Decimal(0);
+    this.productoForm.sMoneda = 'USD';
+
+    console.log('producto en form: ',this.productoForm);
+
+    const isNuevo = !this.productoForm || typeof this.productoForm.nId !== 'number' || this.productoForm.nId == null || this.productoForm.nId === 0;
 
     const modo = isNuevo ? ModeActionOnModel.CREATING : ModeActionOnModel.EDITING;
     console.log('Este el modo', modo);
 
     const ref = this.dialogService.open(FormProductoComponent, {
-      data: new ModelContainer(modo, this.castToProducto() as TcProducto),
+      data: new ModelContainer(modo, this.productoForm),
       header: isNuevo ? 'Nuevo Producto' : 'Editar Producto',
       width: '70%',
       height: 'auto',

@@ -94,7 +94,7 @@
             <td>{{ loc.NetQtyStock.trim() }}</td>
             <td>{{ loc.CustPrice | currency: 'USD':'symbol':'1.2-2' }}</td>
             <td>
-              <button pButton icon="pi pi-plus" (click)="formProducto()" class="p-button-sm p-button-warning rounded"></button>
+              <button pButton icon="pi pi-plus" (click)="formProducto(loc)" class="p-button-sm p-button-warning rounded"></button>
               
             </td>
           </tr>
@@ -108,8 +108,8 @@
     <p-panel header="Resultado (debug)">
       <pre>{{ resultado | json }}</pre>
     </p-panel>
-  </div> -->
-</div>
+  </div>
+</div> -->
 
 <!-- Mensaje de error -->
 <div *ngIf="error" class="p-col-12 p-mt-3">
