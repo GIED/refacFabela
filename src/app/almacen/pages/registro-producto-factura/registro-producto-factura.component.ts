@@ -16,12 +16,11 @@ import { ModelContainerData2 } from 'src/app/shared/utils/model-container-data2'
   styleUrls: ['./registro-producto-factura.component.scss']
 })
 export class RegistroProductoFacturaComponent implements OnInit {
-
-listaFacturaProveedor:VwFacturaProductoBalance[];
+listaFacturaProveedor: VwFacturaProductoBalance[] = [];
 vwFacturaProductoBalance:VwFacturaProductoBalance;
 entidad:string
   constructor(private proveedorService:ProveedorService,   public dialogService: DialogService, private _route: ActivatedRoute ) { 
-    this.listaFacturaProveedor=[];
+   
     this.vwFacturaProductoBalance=new VwFacturaProductoBalance();
   }
 
@@ -53,6 +52,7 @@ entidad:string
   consultaFacturaEstatusAlmacen(nEstatus:number){
     this.proveedorService.getFacturasEstatusAlmacenEstatus(nEstatus).subscribe(data=>{
       this.listaFacturaProveedor=data;  
+      console.log( this.listaFacturaProveedor);
       });
 
   }

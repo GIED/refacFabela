@@ -58,7 +58,7 @@ export class DetalleAbonosCreditoComponent implements OnInit {
 
     this.formulario = this.fb.group({
 
-      abono: ['', [Validators.required, Validators.pattern(validators.numero)]],
+      abono: ['', [Validators.required, Validators.pattern(/^(?!0\.00$)(\d+)(\.\d{1,2})?$/)]],
       idFormaPago: ['', [Validators.required]],
 
 
