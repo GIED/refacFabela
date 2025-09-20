@@ -23,6 +23,10 @@ import { TokenService } from '../../../shared/service/token.service';
 import { ProveedorService } from 'src/app/administracion/service/proveedor.service';
 import { Proveedores } from '../../../administracion/interfaces/proveedores';
 import Decimal from 'decimal.js';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ModelContainer } from 'src/app/shared/utils/model-container';
+import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
+import { FormProductoComponent } from 'src/app/productos/components/form-producto/form-producto.component';
 const toD = (v: any) => new Decimal(v ?? 0)
 
 @Component({
@@ -81,6 +85,7 @@ export class VentasPorPedidoComponent implements OnInit {
     private bodegasService: BodegasService,
     private tokenService: TokenService,
     private proveedorService: ProveedorService, 
+    public dialogService: DialogService,
     ) { 
       this.saldoGeneralCliente = new SaldoGeneralCliente();
       this.listaProductos=[];
@@ -441,11 +446,30 @@ saveProduct(producto: TcProducto) {
  
 }
 
-openNew() {
-  this.producto = null;
-  this.productDialog = true;
-  this.titulo = "Registro de Productos"
-}
+formProducto(): void {
+      const ref = this.dialogService.open(FormProductoComponent, {
+        data: new ModelContainer(ModeActionOnModel.WATCHING, new TcProducto()),
+        header: 'Registro de Producto',
+        width: '70%',
+        height: 'auto',
+        baseZIndex: 1000,
+        closable: true,
+        dismissableMask: true,
+        modal: true
+      });
+  
+      ref.onClose.subscribe((productoGuardado: TcProducto | undefined) => {
+        if (productoGuardado) {
+          // Aquí puedes actualizar tu lista, tabla, etc.
+          console.log('Producto recibido desde el diálogo:', productoGuardado);
+          // Ejemplo: recargar lista o actualizar tabla
+          // this.informacionProducto(productoGuardado.nId); // o lo que apliques
+        } else {
+          console.log('El usuario cerró el formulario sin guardar.');
+        }
+      });
+    }
+
 
 hideDialog(){
   this.productDialog = false;

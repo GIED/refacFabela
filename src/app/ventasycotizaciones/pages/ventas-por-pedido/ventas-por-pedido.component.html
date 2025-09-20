@@ -68,7 +68,10 @@
                                                 </div>
                                             </div>
                                             <div class="p-col-4">
-                                                <button pButton pRipple label="Agregar Editar Producto" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"  (click)="openNew()"></button>
+                                                <button  pButton pRipple type="button"
+                                                    icon="pi pi-plus" label="Agregar Producto"
+                                                    class="p-button p-button-info" (click)="formProducto()">
+                                                </button>
                                             </div>
                                         </div>
                                         <p-toast></p-toast>
@@ -90,21 +93,21 @@
                                     <ng-template pTemplate="body" let-producto>
                                         <tr>
 
-                                            <td (click)="muestraAlternativo(producto)">{{producto.tcProducto.sNoParte}}</td>
+                                            <td (click)="muestraAlternativo(producto)">{{producto.tcProducto.sNoParte}}
+                                            </td>
                                             <td>{{producto.tcProducto.sProducto}}</td>
                                             <td>{{producto.tcProducto.sDescripcion}}</td>
-                                            <td>{{producto.tcProducto.nPrecioConIva  }}</td>
+                                            <td>{{producto.tcProducto.nPrecioConIva }}</td>
                                             <td>{{producto.tcProducto.sMarca}}</td>
                                             <td (click)="ubicacionProducto(producto)">{{producto.nCantidadTotal}}</td>
-                                            <td><p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons" [min]="0" [max]="100"></p-inputNumber> </td>
+                                            <td><p-inputNumber formControlName="nCantidadCtrl" inputId="minmax-buttons"
+                                                    [min]="0" [max]="100"></p-inputNumber> </td>
 
                                             <td>
                                                 <p-dropdown [options]="listaProveedores"
                                                     formControlName="nIdProveedorCtrl" optionLabel="sRazonSocial"
                                                     optionValue="nId" [class.is-invalid]="validanIdProveedorCtrl"
-                                                    [filter]="true"
-                                                    
-                                                    placeholder="Seleccine un Proveedor"
+                                                    [filter]="true" placeholder="Seleccine un Proveedor"
                                                     [showClear]="true"></p-dropdown>
                                                 <small class="p-error" *ngIf="validanIdProveedorCtrl">*Registrar
                                                     Proveedor.</small>
@@ -173,7 +176,8 @@
                                             <td>
                                                 {{productoVenta.nCantidad}}
                                             </td>
-                                            <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad }}</td>
+                                            <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad }}
+                                            </td>
                                             <td>
                                                 <button pButton pRipple icon="pi pi-trash"
                                                     (click)="quitarProducto(productoVenta)"
