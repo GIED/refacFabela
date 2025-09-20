@@ -15,6 +15,20 @@ import { Model } from 'src/app/shared/utils/model';
 import Decimal from 'decimal.js';
 import { ProductoService } from 'src/app/shared/service/producto.service';
 
+const toNumber = (v: unknown): number | null => {
+  if (v === null || v === undefined) return null;
+  const cleaned = String(v).trim().replace(/[^0-9.\-]/g, '');
+  if (!cleaned || cleaned === '-' || cleaned === '.' || cleaned === '-.') return null;
+  const n = Number(cleaned);
+  return Number.isFinite(n) ? n : null;
+};
+
+// Convierte a Decimal de forma segura (devuelve 0 si no es válido)
+const toDecimal = (v: unknown): Decimal => {
+  const n = toNumber(v);
+  return n === null ? new Decimal(0) : new Decimal(n);
+};
+
 @Component({
   selector: 'app-form-consulta-costex',
   templateUrl: './form-consulta-costex.component.html'
@@ -50,29 +64,45 @@ export class FormConsultaCostexComponent {
 
   }
 
-  consultar() {
-    if (this.form.valid) {
-      const { numeroParte, cantidad } = this.form.value;
-      this.partService.obtenerProductoCostex(numeroParte, cantidad).subscribe({
-        next: (resp) => {
-          this.resultado = resp;
-          this.error = undefined;
-          this.locationList = Object.values(resp.Locations || {});
-          const factorPulgadasACm = new Decimal(2.54);
-          const redondear = (valor: Decimal) => valor.toDecimalPlaces(2);
+  // Quita todo excepto dígitos, punto y signo; convierte a number.
 
-          this.largoCm = this.resultado.dblLengthIn ? redondear(new Decimal(this.resultado.dblLengthIn).mul(factorPulgadasACm)) : null;
-          this.anchoCm = this.resultado.dblWidthIn ? redondear(new Decimal(this.resultado.dblWidthIn).mul(factorPulgadasACm)) : null;
-          this.altoCm = this.resultado.dblHeightIn ? redondear(new Decimal(this.resultado.dblHeightIn).mul(factorPulgadasACm)) : null;
-          this.volumenCm = this.largoCm && this.anchoCm && this.altoCm ? redondear(this.largoCm.mul(this.anchoCm).mul(this.altoCm)) : null;
-        },
-        error: (err) => {
-          this.resultado = undefined;
-          this.error = 'Error al consultar: ' + err.message;
-        }
-      });
-    }
+
+  consultar() {
+  if (this.form.valid) {
+    const { numeroParte, cantidad } = this.form.value;
+    this.partService.obtenerProductoCostex(numeroParte, cantidad).subscribe({
+      next: (resp) => {
+        this.resultado = resp;
+        console.log('resultado', this.resultado);
+        this.error = undefined;
+
+        // ⭐ Normaliza locations a tipos numéricos
+        this.locationList = Object.values(resp.Locations || {}).map((loc: any) => ({
+          ...loc,
+          CustPrice: toNumber(loc.CustPrice) ?? 0,
+          NetQtyStock: toNumber(loc.NetQtyStock) ?? 0,
+          BranchTaxPr: toNumber(loc.BranchTaxPr) ?? 0,
+        })) as unknown as LocationPart[];
+
+        // Conversión pulgadas → cm
+        const factorPulgadasACm = new Decimal(2.54);
+        const redondear = (valor: Decimal) => valor.toDecimalPlaces(2);
+
+        // Ojo: por si llegan strings, usa toDecimal para evitar NaN de Decimal
+        this.largoCm  = this.resultado.dblLengthIn ? redondear(toDecimal(this.resultado.dblLengthIn).mul(factorPulgadasACm)) : null;
+        this.anchoCm  = this.resultado.dblWidthIn  ? redondear(toDecimal(this.resultado.dblWidthIn).mul(factorPulgadasACm)) : null;
+        this.altoCm   = this.resultado.dblHeightIn ? redondear(toDecimal(this.resultado.dblHeightIn).mul(factorPulgadasACm)) : null;
+        this.volumenCm = this.largoCm && this.anchoCm && this.altoCm
+          ? redondear(this.largoCm.mul(this.anchoCm).mul(this.altoCm))
+          : null;
+      },
+      error: (err) => {
+        this.resultado = undefined;
+        this.error = 'Error al consultar: ' + err.message;
+      }
+    });
   }
+}
 
   async castToProducto(): Promise<TcProducto> {
   const nIdMarca = 53;
