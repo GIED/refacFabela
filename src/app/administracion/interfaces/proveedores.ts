@@ -1,6 +1,6 @@
 import { TcTipoProveedor } from "./TcTipoProveedor";
 
-export interface Proveedores {
+export class Proveedores {
  
     nId?: number;
     nEstatus?: number;

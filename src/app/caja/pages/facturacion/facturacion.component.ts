@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Product } from 'src/app/demo/domain/product';
-import { ProductService } from 'src/app/demo/service/productservice';
+import {  MessageService } from 'primeng/api';
 import { FacturaService } from '../../../shared/service/factura.service';
 import { TvVentasFactura } from '../../../productos/model/TvVentasFactura';
 import { TcUsoCfdi } from '../../../productos/model/TcUsoCfdi';
 import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TipoDoc } from 'src/app/shared/utils/TipoDoc.enum';
-import { SpinnerComponent } from '../../../shared/spinner/spinner.component';
 import { TcCliente } from '../../../administracion/model/TcCliente';
 import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TrVentaCobro } from '../../../productos/model/TrVentaCobro';
 import { SubirFacturaDto } from '../../../productos/model/SubirFacturaDto';
+import Decimal from 'decimal.js';
 
 @Component({
   selector: 'app-facturacion',
@@ -171,57 +169,50 @@ export class FacturacionComponent implements OnInit {
 
 
 
-  openDialog(tvVentasFactura:TvVentasFactura){
-    
-    /*Consultamos el múmero de pagos registrados para la venta */
-    this.ventasService.obtenerCobroParcial(tvVentasFactura.nId).subscribe(data=>{
-      this.ListaTrVentaCobro=data;
-      /*Si hay más de un pago para la venta se concatena en el string de la forma de pago la cadena del detlla de pago */
-      if (this.ListaTrVentaCobro.length > 1) {
-        for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
-          this.nuevaFormaPago += this.ListaTrVentaCobro[index].tcFormapago.sDescripcion + '/'
+  openDialog(tvVentasFactura: TvVentasFactura) {
+  this.ventasService.obtenerCobroParcial(tvVentasFactura.nId).subscribe(data => {
+    this.ListaTrVentaCobro = data;
+    this.nuevaFormaPago = '';
+
+    if (this.ListaTrVentaCobro.length > 1) {
+      for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
+        this.nuevaFormaPago += this.ListaTrVentaCobro[index].tcFormapago?.sDescripcion + '/';
+      }
+    } else {
+      for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
+        this.nuevaFormaPago = this.ListaTrVentaCobro[index].tcFormapago?.sDescripcion ?? '';
+
+        const monto = new Decimal(this.ListaTrVentaCobro[index].nMonto ?? 0); // ✅ conversión segura
+        if (monto.greaterThanOrEqualTo(2000) && this.ListaTrVentaCobro[index].tcFormapago?.nId === 1) {
+          this.efectivoValida = true;
+        } else {
+          this.efectivoValida = false;
         }
       }
-      else {
-        for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
-          this.nuevaFormaPago = this.ListaTrVentaCobro[index].tcFormapago.sDescripcion
+    }
 
-           /*Si el  monto de pago en efectivo es mayor o igual a dos mil la factura sale por definir para hacer el complemento de pago*/
-          if (this.ListaTrVentaCobro[index].nMonto.greaterThanOrEqualTo(2000) && this.ListaTrVentaCobro[index].tcFormapago.nId == 1) {
-            this.efectivoValida = true;
-          }
-          else {
-            this.efectivoValida = false;
-          }
-        }
-      }
+    if (tvVentasFactura.tcFormapago == null) {
+      tvVentasFactura.tcFormapago = new TcFormaPago();
+    }
 
-       /*Si  tcForma de pago es nulo se inicializa */
-      if(tvVentasFactura.tcFormapago==null){
-        tvVentasFactura.tcFormapago=new TcFormaPago();
-  
-      }
-     
-       /*Se castean los datos */
-      this.tvVentasFactura=tvVentasFactura;
-      this.formFactura=true;
-      this.idVenta=tvVentasFactura.nId;
-      this.totalVenta=tvVentasFactura.nTotalVenta;
-      
-       /*Si el tipo de pago es a crédito o el numero de formas de pago es mayor a 1 se realiza la factura por cobrar*/
-      if( this.tvVentasFactura.nTipoPago==1 || this.ListaTrVentaCobro.length>1 || this.efectivoValida ){ 
-        this.tvVentasFactura.formaPago=22;
-        this.tvVentasFactura.tcFormapago.nId=22;
-        this.tvVentasFactura.tcFormapago.sClave='99';
-        this.tvVentasFactura.tcFormapago.sDescripcion='Por definir';
-        this.tvVentasFactura.tcFormapago.nEstatus=1;
-  
-      }
+    this.tvVentasFactura = tvVentasFactura;
+    this.formFactura = true;
+    this.idVenta = tvVentasFactura.nId;
+    this.totalVenta = tvVentasFactura.nTotalVenta;
 
-    })
-    
-
-  }
+    if (
+      this.tvVentasFactura.nTipoPago === 1 ||
+      this.ListaTrVentaCobro.length > 1 ||
+      this.efectivoValida
+    ) {
+      this.tvVentasFactura.formaPago = 22;
+      this.tvVentasFactura.tcFormapago.nId = 22;
+      this.tvVentasFactura.tcFormapago.sClave = '99';
+      this.tvVentasFactura.tcFormapago.sDescripcion = 'Por definir';
+      this.tvVentasFactura.tcFormapago.nEstatus = 1;
+    }
+  });
+}
 
   openNew() { 
 

@@ -29,6 +29,8 @@ export class FormVentaComponent implements OnInit {
 
   formVentas:FormGroup;
   muestraCredito:boolean;
+
+   ensureDec = (v: any) => Decimal.isDecimal(v) ? v as Decimal : new Decimal(v ?? 0);
   
 
   constructor(private productoService:ProductoService, private messageService: MessageService, private tokenService:TokenService) {
@@ -93,7 +95,9 @@ export class FormVentaComponent implements OnInit {
   quitarProducto(producto: TvStockProducto){
     //console.log(producto);
     
-    this.total = this.total.minus(producto.tcProducto.nPrecioConIva.mul(new Decimal(producto.nCantidad)));
+    const precio = this.ensureDec(producto?.tcProducto?.nPrecioConIva);
+    const cantidad = this.ensureDec(producto?.nCantidad);
+    this.total = this.total.minus(precio.mul(cantidad));
     this.listaValidada.splice(this.findIndexById(producto.nIdProducto, this.listaValidada),1);
     this.validaCredito();
   }

@@ -36,10 +36,10 @@ export class ProveedorComponent implements OnInit {
 
   listaProveedores: Proveedores[] = [];
   proveedorDialog: boolean;
-  selectedProducts: Product[];
+  selectedProducts: Product[] = [];
   submitted: boolean;
   credito: boolean;
-  proveedor: Proveedores;
+  proveedor: Proveedores = new Proveedores();
   formulario: FormGroup;
   listaTipoProveedor:TcTipoProveedor[]=[];
 
@@ -100,7 +100,7 @@ export class ProveedorComponent implements OnInit {
   }
 
   openNew() {
-    this.proveedor = {};
+    this.proveedor = new Proveedores();
     this.submitted = false;
     this.proveedorDialog = true;
     this.limpiarFormulario();
@@ -110,14 +110,9 @@ export class ProveedorComponent implements OnInit {
     this.submitted = false;
     this.credito = true;
   }
-  limpiarFormulario() {
-    this.fproveedor.nId.setValue("");
-    this.fproveedor.sTelefono.setValue("");
-    this.fproveedor.sDireccion.setValue("");
-    this.fproveedor.sRazonSocial.setValue("");
-    this.fproveedor.sRfc.setValue("");
-    this.fproveedor.nIdTipoProveedor.setValue("");
-
+   limpiarFormulario() {
+    if (!this.formulario) return;
+    this.formulario.reset(); // ✅ más limpio que setValue uno por uno
   }
 
   //edita los daros del cliente
@@ -146,7 +141,7 @@ export class ProveedorComponent implements OnInit {
         proveedor.nEstatus = 0;
         this.proveedorService.guardaProveedores(proveedor).subscribe(respuesta => {
           this.listaProveedores = this.listaProveedores.filter(val => val.nId !== proveedor.nId);
-          this.proveedor = {};
+          this.proveedor = new Proveedores();
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Proveedor eliminado', life: 3000 });
         })
       }
@@ -161,41 +156,59 @@ export class ProveedorComponent implements OnInit {
 
   //Guardar nuevo cliente 
   guardar() {
-
-    if (this.formulario.invalid) {
-      return Object.values(this.formulario.controls).forEach(control => {
-        if (control instanceof FormGroup) {
-          // tslint:disable-next-line: no-shadowed-variable
-          Object.values(control.controls).forEach(control => control.markAsTouched());
-        } else {
-          control.markAsTouched();
-        }
-      });
-    }
-    else {
-      this.proveedor = this.formulario.value;
-      //console.log(this.proveedor);
-
-      if (this.proveedor.nId) {
-        this.proveedor.nEstatus = 1;
-        this.proveedorService.guardaProveedores(this.proveedor).subscribe(respuesta => {
-          this.listaProveedores[this.findIndexById(respuesta.nId.toString())] = respuesta;
-          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Proveedor actualizado', life: 10000 });
-        })
+  if (this.formulario.invalid) {
+    return Object.values(this.formulario.controls).forEach(control => {
+      if (control instanceof FormGroup) {
+        Object.values(control.controls).forEach(c => c.markAsTouched());
+      } else {
+        control.markAsTouched();
       }
-      else {
-        this.proveedor.nEstatus = 1;
-        this.proveedorService.guardaProveedores(this.proveedor).subscribe(respuesta => {
-          this.listaProveedores.push(respuesta);
-          this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Proveedor guardado', life: 10000 });
-        })
-
-      }
-      this.listaProveedores = [...this.listaProveedores];
-      this.proveedorDialog = false;
-      this.proveedor = {};
-    }
+    });
   }
+
+  this.proveedor = { ...this.formulario.value, nEstatus: 1 };
+
+  if (this.proveedor.nId) {
+    // Actualiza
+    this.proveedorService.guardaProveedores(this.proveedor).subscribe(respuesta => {
+       this.obtenerProveedores();
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Se realizó con éxito',
+        detail: 'Proveedor actualizado',
+        life: 10000
+      });
+    });
+  } else {
+    // Guarda nuevo
+    this.proveedorService.guardaProveedores(this.proveedor).subscribe(respuesta => {
+       this.obtenerProveedores();
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Se realizó con éxito',
+        detail: 'Proveedor guardado',
+        life: 10000
+      });
+    });
+  }
+
+  this.listaProveedores = [...this.listaProveedores];
+  this.proveedorDialog = false;
+
+  // ✅ Reinicia proveedor con objeto seguro
+  this.proveedor = {
+    nId: 0,
+    sRfc: '',
+    sRazonSocial: '',
+    sDireccion: '',
+    sTelefono: '',
+    nIdTipoProveedor: null,
+    nEstatus: 1,
+    tcTipoProveedor: null
+  };
+
+  this.formulario.reset();
+}
   //busqueda por id del cliente y regresa el index
   findIndexById(id: string): number {
     let index = -1;
