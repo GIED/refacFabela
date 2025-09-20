@@ -83,7 +83,7 @@ export class CobrarComponent implements OnInit {
     this.saldoTotalFavor = null;
     //console.log('voy a consultar si hay un saldo a favor:', this.saldoFavor);
 
-    if (this.saldoFavor != null || this.saldoFavor != undefined) {
+    if (this.saldoFavor !== null && this.saldoFavor !== undefined) {
       this.ventasService.obtenerSaldoVentaFavor(this.saldoFavor).subscribe(data => {
         this.saldoTotalFavor = data;
 
@@ -174,7 +174,7 @@ export class CobrarComponent implements OnInit {
   const saldoVenta  = toD(this.ventaSaldoFavor?.nSaldoTotal);
 
     // Se mapea el objeto de saldo utilizado para guardar el registro
-    if (saldoDisp.greaterThanOrEqualTo(saldoVenta)) {
+    if (saldoDisp.gte(saldoVenta)) {
       this.saldoUtilizado.nSaldoUtilizado = this.ventaSaldoFavor.nSaldoTotal;
       this.saldoUtilizado.nSaldoTotal = this.ventaSaldoFavor.nSaldoTotal;
       this.ventaCobro.nMonto = this.ventaSaldoFavor.nSaldoTotal;
@@ -223,102 +223,75 @@ export class CobrarComponent implements OnInit {
   }
 
   consultaPagosParciales(nIdVenta: number) {
+  this.limpiar();
+  this.banGuardar = false;
 
-    this.limpiar();
-    this.banGuardar = false;
+  this.ventasService.obtenerCobroParcial(this.ventaSaldoFavor.nId).subscribe(resp => {
+    this.listaCobrosParciales = resp;
 
-    this.ventasService.obtenerCobroParcial(this.ventaSaldoFavor.nId).subscribe(resp => {
-      this.listaCobrosParciales = resp;
+    this.displayListaAbonoVenta = !(this.listaCobrosParciales.length > 0);
 
+    // Suma de abonos previos
+    this.aCuenta = new Decimal(0);
+    for (let i in this.listaCobrosParciales) {
+      this.aCuenta = this.aCuenta.plus(this.listaCobrosParciales[i].nMonto);
+    }
 
-      if (this.listaCobrosParciales.length > 0) {
-        this.displayListaAbonoVenta = false;
-      } else {
-        this.displayListaAbonoVenta = true;
-      }
+    // Cálculo correcto de "restan"
+    const totalVenta = new Decimal(this.ventaSaldoFavor.nTotalVenta ?? 0);
+    const descuento  = new Decimal(this.ventaSaldoFavor.descuento ?? 0);
 
+    this.totalVenta = totalVenta;
+    this.totalDescuento = descuento;
+    this.restan = totalVenta.minus(descuento).minus(this.aCuenta);
 
-      for (let i in this.listaCobrosParciales) {
-        this.aCuenta = this.aCuenta.plus(this.listaCobrosParciales[i].nMonto);
+    this.VentaDescuentoDto = this.ventaSaldoFavor;
+    this.fProducto.monto.setValue(this.restan.toFixed(2));
 
-      }
+    // Si es tipo de venta 3 y no hay abonos previos, cobra solo la mitad
+    if (this.ventaSaldoFavor.nIdTipoVenta === 3 && this.aCuenta.isZero()) {
+      this.fProducto.monto.setValue(this.restan.div(2).toFixed(2));
+    }
 
-      this.noVenta = this.ventaSaldoFavor.nId;
-      this.totalVenta = this.ventaSaldoFavor.nTotalVenta;
-      this.restan = new Decimal(this.ventaSaldoFavor.nTotalVenta ?? 0)
-        .minus(
-          new Decimal(this.aCuenta ?? 0)
-            .minus(new Decimal(this.ventaSaldoFavor.descuento ?? 0))
-        );
-      this.VentaDescuentoDto = this.ventaSaldoFavor;
-      this.totalDescuento = this.ventaSaldoFavor.descuento;
-      this.fProducto.monto.setValue(this.restan.toFixed(2));
+    this.consultaVentas();
 
-      if (this.ventaSaldoFavor.nIdTipoVenta === 3) {
+    if (this.restan.isZero()) {
+      this.ventasService.obtnerVentaId(this.ventaSaldoFavor.nId).subscribe(data => {
+        this.twVenta = data;
+        this.twVenta.nIdEstatusVenta = 2;
+        this.abrirformulario = false;
 
-        if (this.restan == this.ventaSaldoFavor.nTotalVenta) {
+        this.twVenta.nIdFormaPago = this.listaCobrosParciales.length === 1
+          ? this.listaCobrosParciales[0].nIdFormaPago
+          : 20;
 
-          this.fProducto.monto.setValue(this.restan.div(2));
-        }
+        this.ventasService.guardarVentaCompleta(this.twVenta).subscribe(() => {
+          this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Se guardó el cobro', life: 3000 });
+          this.limpiaFormulario();
+          this.consultaVentas();
+          this.saldoTotalFavor = null;
+          this.saldoFavor = null;
+        });
+      });
+    }
 
-      }
-      
-      this.consultaVentas();
+    this.banGuardar = true;
+  });
+}
+abrir(nId: number) {
+  this.abrirformulario = true;
 
-      if (this.restan.isZero()) {
-        this.ventasService.obtnerVentaId(this.ventaSaldoFavor.nId).subscribe(data => {
-          this.twVenta = data;
-          this.twVenta.nIdEstatusVenta = 2;
-          this.abrirformulario = false;
+  this.ventasService.consultaVentaDetalleId(nId).subscribe(data => {
+    this.ventaSaldoFavor = data;
 
-          if (this.listaCobrosParciales.length == 1) {
-            this.twVenta.nIdFormaPago = this.listaCobrosParciales[0].nIdFormaPago;
-          }
-          if (this.listaCobrosParciales.length == 2) {
-            this.twVenta.nIdFormaPago = 20;
-          }
+    this.state = this.ventaSaldoFavor.nIdTipoVenta === 3;
 
-          this.ventasService.guardarVentaCompleta(this.twVenta).subscribe(data => {
-            this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Se guardo el cobro', life: 3000 });
+    const descuento = new Decimal(this.ventaSaldoFavor?.descuento ?? 0);
+    this.descuento = descuento.gt(0);
 
-            this.limpiaFormulario();
-            this.consultaVentas();
-            this.saldoTotalFavor = null;
-            this.saldoFavor = null;
-          })
-        })
-      }
-      this.banGuardar = true;
-    })
-  }
-  abrir(nId: number) {
-
-    this.abrirformulario = true;
-    this.ventasService.consultaVentaDetalleId(nId).subscribe(data => {
-      this.ventaSaldoFavor = data;
-      console.log(this.ventaSaldoFavor);
-
-
-      if (this.ventaSaldoFavor.nIdTipoVenta === 3) {
-        this.state = true;
-
-      }
-      else {
-        this.state = false;
-
-      }
-
-      console.log('pase aquí');
-
-      if (this.ventaSaldoFavor.descuento && this.ventaSaldoFavor.descuento.gt(0)) {
-        this.descuento = true;
-      } else {
-        this.descuento = false;
-      }
-      this.consultaPagosParciales(this.ventaSaldoFavor.nId);
-    })
-
-  }
+    this.consultaPagosParciales(this.ventaSaldoFavor.nId);
+  });
+}
 
   crearFormulario() {
 
@@ -361,17 +334,8 @@ export class CobrarComponent implements OnInit {
   cobrarVenta() {
 
     if (this.formulario.invalid) {
-      return Object.values(this.formulario.controls).forEach(control => {
-
-        if (control instanceof FormGroup) {
-          // tslint:disable-next-line: no-shadowed-variable
-
-          Object.values(control.controls).forEach(control => control.markAsTouched());
-        } else {
-          control.markAsTouched();
-        }
-
-      });
+       this.formulario.markAllAsTouched();
+  return;
 
     }
     else {
