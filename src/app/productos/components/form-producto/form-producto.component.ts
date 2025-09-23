@@ -212,7 +212,6 @@ export class FormProductoComponent implements OnInit {
         }
 
 
-
       },
       error: (error) => {
         console.error('Error al verificar producto', error);
@@ -250,6 +249,13 @@ export class FormProductoComponent implements OnInit {
 
     this.setManualProductoFromForm();
     this.guardando = true;
+
+    /*Esto es lo que estaba fallando porque perdia el dato o no estaba */
+    if(this.producto.nId){
+      this.tcProducto.nId=this.producto.nId;
+    }
+
+
     console.log('Producto a guardar:', this.tcProducto);
     this.productosService.guardaProducto(this.tcProducto).subscribe({
       next: (productoActualizado) => {
