@@ -204,7 +204,7 @@ this.mostrarProductosCotizacionCliente=true;
   this.mostrarCotizacionesVigentes = false;
 
   this.ventasCotizacionService.obtenerCotizacionProducto(nIdCotizacion).subscribe(data => {
-    this.listaProductos = []; // limpia antes de cargar
+  
 
     for (let index = 0; index < data.length; index++) {
       const item = data[index];

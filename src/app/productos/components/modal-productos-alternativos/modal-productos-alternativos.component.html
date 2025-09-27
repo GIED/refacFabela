@@ -1,46 +1,79 @@
-<div class="card">
-    <p-toolbar styleClass="p-mb-4">
-        <ng-template pTemplate="left">
-            <button pButton pRipple label="nuevo" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="registroAlternativos()"></button>
+<div class="card shadow-2 border-round-xl">
+  <!-- 🔎 Título de búsqueda -->
+  <div class="text-center mb-4">
+    <h3 class=" font-bold">🔎 Búsqueda de Producto Alternativo</h3>
+  </div>
 
-        </ng-template>
-    </p-toolbar>
+  <!-- 🔎 Componente de búsqueda -->
+  <div class="p-fluid mb-4">
+    <app-input-busqueda 
+      (consultarPorId)="informacionProducto($event)">
+    </app-input-busqueda>
+  </div>
 
-    <div class="p-text-center">
-        <h4>Producto:{{sNoParte}}-{{sProducto}}</h4>
-    </div>
+  <!-- 📋 Lista de alternativos -->
+  <div class="text-center mb-3" *ngIf="listaProductoAlternativo?.length > 0">
+    <h4 class="text-600">
+      Lista de productos alternativos para:
+      <span class="text-primary">{{ sNoParte }}</span> - 
+      <span class="text-900">{{ sProducto }}</span>
+    </h4>
+  </div>
 
-    <p-table [value]="listaProductoAlternativo" responsiveLayout="scroll" scrollHeight="400px" styleClass="p-datatable-sm">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Código Producto</th>
-                <th>No de parte</th>
-                <th>Nombre parte</th>
-                <th>Marca</th>
-                <th>Precio</th>
-                <th></th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-product>
-            <tr>
-                <td><span class="p-column-title">Código Producto</span>{{product.tcProductoAlternativo.nId}}</td>
-                <td><span class="p-column-title">No de parte</span>{{product.tcProductoAlternativo.sNoParte}}</td>
-                <td><span class="p-column-title">Nombre parte</span>{{product.tcProductoAlternativo.sProducto}}</td>
-                <td><span class="p-column-title">Marca</span>{{product.tcProductoAlternativo.sMarca}}</td>
-                <td><span class="p-column-title">Precio</span>{{product.tcProductoAlternativo.nPrecioConIva}}</td>
-                <td><span class="p-column-title">Acción</span><button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProductA(product)"></button></td>
+  <!-- 🗂 Tabla de productos -->
+  <p-table 
+  *ngIf="listaProductoAlternativo?.length > 0"
+    [value]="listaProductoAlternativo"
+    responsiveLayout="scroll"
+    scrollHeight="400px"
+    styleClass="p-datatable-sm p-datatable-striped ">
 
-            </tr>
-        </ng-template>
-    </p-table>
-
-</div>
-<div *ngIf="muestraConfirmDialogAlter">
-    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
-</div>
-
-<p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)" (guardarProducto)="saveProduct($event)"></app-modal-producto>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 120px">Código</th>
+        <th>No. Parte</th>
+        <th>Nombre</th>
+        <th>Marca</th>
+        <th class="text-right">Precio</th>
+        <th class="text-center">Acción</th>
+      </tr>
     </ng-template>
-</p-dialog>
+
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>{{ product.tcProductoAlternativo.nId }}</td>
+        <td>{{ product.tcProductoAlternativo.sNoParte }}</td>
+        <td>{{ product.tcProductoAlternativo.sProducto }}</td>
+        <td>
+          <p-tag 
+            severity="info" 
+            styleClass="px-3 py-1 font-semibold">
+            {{ product.tcProductoAlternativo.sMarca }}
+          </p-tag>
+        </td>
+        <td class="text-right">
+          {{ product.tcProductoAlternativo.nPrecioConIva | currency:'MXN':'symbol':'1.2-2' }}
+        </td>
+        <td class="text-center">
+          <button 
+            pButton 
+            pRipple 
+            icon="pi pi-trash" 
+            class="p-button-rounded p-button-danger p-button-sm" 
+            (click)="deleteProductA(product)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Confirmación -->
+<p-confirmDialog [style]="{width: '450px'}"
+
+ acceptLabel="Aceptar"
+  rejectLabel="Cancelar"
+  acceptButtonStyleClass="p-button-success"
+  rejectButtonStyleClass="p-button-danger">
+
+></p-confirmDialog>

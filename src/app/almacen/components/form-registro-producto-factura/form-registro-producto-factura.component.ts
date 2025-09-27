@@ -15,6 +15,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormIngresoProductoComponent } from '../form-ingreso-producto/form-ingreso-producto.component';
 import { ProveedorService } from '../../../administracion/service/proveedor.service';
 import { TwFacturasProveedor } from '../../../productos/model/TwFacturasProveedor';
+import { FormProductoComponent } from 'src/app/productos/components/form-producto/form-producto.component';
 
 @Component({
   selector: 'app-form-registro-producto-factura',
@@ -293,4 +294,38 @@ export class FormRegistroProductoFacturaComponent implements OnInit {
       }
     });
   }
+
+
+ formProducto(producto: TcProducto): void {
+  const isNuevo = !producto || typeof producto.nId !== 'number' || producto.nId == null || producto.nId === 0;
+
+  const modo = isNuevo ? ModeActionOnModel.CREATING : ModeActionOnModel.EDITING;
+  console.log('Este el modo',modo);
+
+  const ref = this.dialogService.open(FormProductoComponent, {
+    data: new ModelContainer(modo, producto),
+    header: isNuevo ? 'Nuevo Producto' : 'Editar Producto',
+    width: '70%',
+    height: 'auto',
+    baseZIndex: 1000,
+    closable: true,
+    dismissableMask: true,
+    modal: true
+  });
+
+   ref.onClose.subscribe((productoGuardado: TcProducto | undefined) => {
+    if (productoGuardado) {
+      // Aquí puedes actualizar tu lista, tabla, etc.
+      console.log('Producto recibido desde el diálogo:', productoGuardado);
+      // Ejemplo: recargar lista o actualizar tabla
+      //this.informacionProducto(productoGuardado.nId); // o lo que apliques
+    } else {
+      console.log('El usuario cerró el formulario sin guardar.');
+    }
+  });
+}
+
+
+
+
 }

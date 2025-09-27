@@ -12,6 +12,7 @@ export class TwProductoAlternativo {
     this.nId=nId;
     this.nEstatus=nEstatus;
     this.nIdProducto=nIdProducto;
+    this.nIdProductoAlternativo=nIdProductoAlternaivo;
     this.tcProductoAlternativo=tcProductoAlternativo;
   }
 

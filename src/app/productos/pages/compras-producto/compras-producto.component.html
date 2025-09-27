@@ -29,7 +29,7 @@
           </div>
           <div class="card card-sin-fondo">
             <button pButton pRipple label="Nuevo Producto" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
-              (click)="openNew()"></button>
+              (click)="formProducto(null)"></button>
           </div>
 
 
@@ -492,13 +492,7 @@
     </ng-template>
   </p-dialog>
 
-  <p-dialog [(visible)]="productDialog" [style]="{width: '700px'}" [header]="titulo" [closable]="false"
-    styleClass="p-fluid">
-    <ng-template pTemplate="content">
-      <app-modal-producto [producto]="producto" [titulo]="titulo" (cerrar)="hideDialog($event)"
-        (guardarProducto)="saveProduct($event)"></app-modal-producto>
-    </ng-template>
-  </p-dialog>
+
 
 
   <!--Este dialogo muestra los productos del pedido con su estatus-->

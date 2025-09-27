@@ -1,131 +1,192 @@
 <div class="p-grid">
-  <div class="p-col-12">
-    <div class="card p-p-2" style="background-color: #EFEFEF;">
-        <h5 class="p-text-center">Datos de la factura</h5>
-        <div class="p-grid">
-            <div class="p-col-4">
-                <h5>Proveedor</h5>
-                <p>{{vwFacturaProductoBalance.tcProveedor.sRfc}} - {{vwFacturaProductoBalance.tcProveedor.sRazonSocial}}</p>
-            </div>
-            <div class="p-col-4">
-                <h5>Folio</h5>
-                <p>{{vwFacturaProductoBalance.sFolioFactura}}</p>
-            </div>
-            <div class="p-col-4">
-                <h5>Moneda</h5>
-                <p>{{vwFacturaProductoBalance.tcMoneda.sMoneda}}</p>
-            </div>
-        </div>
-    </div>
-</div> 
-  
+   <div class="p-col-12">
+  <p-panel 
+    header="📑 Datos de la factura"
+    [toggleable]="true"
+    collapsed="true"
+    styleClass="shadow-1 border-round-sm bg-gray-100"
+  >
+    <div class="p-grid p-m-0">
+      <div class="p-col-12 p-md-4">
+        <small class="p-text-secondary">Proveedor:</small>
+        <span class="font-medium">
+          {{ vwFacturaProductoBalance.tcProveedor.sRfc }} -
+          {{ vwFacturaProductoBalance.tcProveedor.sRazonSocial }}
+        </span>
+      </div>
 
-  
+      <div class="p-col-12 p-md-4">
+        <small class="p-text-secondary">Folio:</small>
+        <span class="font-medium">{{ vwFacturaProductoBalance.sFolioFactura }}</span>
+      </div>
+
+      <div class="p-col-12 p-md-4">
+        <small class="p-text-secondary">Moneda:</small>
+        <span class="font-medium">{{ vwFacturaProductoBalance.tcMoneda.sMoneda }}</span>
+      </div>
+    </div>
+  </p-panel>
+</div>
+
     <!-- Segunda fila: dividida en dos columnas -->
 
+
     <div class="p-col-12 p-md-12">
-      <div class="card" style="background-color: #EFEFEF;">
-       
-          <p-table
-              #dt
-              [value]="listaFacturaProducto"
-              [rows]="8"
-              [columns]="cols"
-              [paginator]="true"
-              [exportFilename]="'Productos Factura'"
-              [globalFilterFields]="[ 'tcProducto.sNoParte', 'tcProducto.sProducto', 'tcMarca.sMarca','nPrecioUnitario', 'nCantidad', 'dFechaRegistro', 'tcUsuario.sNombreUsuario']"
-              [rowHover]="true"
-              dataKey="nId"
-              styleClass="p-datatable-customers"
-              currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-              [showCurrentPageReport]="true"
-          > 
-          <ng-template pTemplate="caption">
-            <div class="p-d-flex p-flex-column p-flex-md-row p-jc-between table-header">
-                <div class="p-col-12 p-md-6" *ngIf="vwFacturaProductoBalance.nEstatusIngresoAlmacen==0 && entidad=='registro'">
-                    <app-input-busqueda (productoSeleccionado)="onProductoSeleccionado($event)"></app-input-busqueda>
-                </div>
-                <div class="p-col-12 p-md-6 p-d-flex p-jc-end p-ai-center">
-                    <span class="p-input-icon-left p-fluid">
-                        <i class="pi pi-search"></i>
-                        <input
-                            pInputText
-                            type="text"
-                            (input)="dt.filterGlobal($event.target.value, 'contains')"
-                            placeholder="Buscar Producto"
-                            class="p-inputtext"
-                        />
-                    </span>
-                </div>
-            </div>
-        </ng-template>
-          <ng-template pTemplate="header">
-            <tr>
-                      <th pSortableColumn="tcProducto.sNoParte" class="text-center">No. Parte <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon></th>
-                      <th pSortableColumn="tcProducto.sProducto" class="text-center">Producto <p-sortIcon field="tcProducto.sProducto"></p-sortIcon></th>
-                      <th pSortableColumn="tcMarca.sMarca" class="text-center">Marca <p-sortIcon field="tcMarca.sMarca"></p-sortIcon></th>
-                      <th pSortableColumn="nPrecioUnitario" class="text-center">Precio Unitario <p-sortIcon field="nPrecioUnitario"></p-sortIcon></th>
-                      <th pSortableColumn="nCantidad" class="text-center">Cantidad <p-sortIcon field="nCantidad"></p-sortIcon></th>                                       
-                      <th pSortableColumn="dFechaRegistro" class="text-center">Fecha Registro <p-sortIcon field="dFechaRegistro"></p-sortIcon></th>                     
-                     <th pSortableColumn="tcUsuario.sNombreUsuario" class="text-center">Usuario Registra <p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon></th> 
-                     <th class="text-center">Acción</th>   
-            </tr>
-          </ng-template>     
-        
-              <ng-template pTemplate="body" let-producto>
-                  <tr>
-                      <td class="text-center"><span class="p-column-title">No. Parte</span>{{ producto.tcProducto.sNoParte }}</td>
-                      <td class="text-center"><span class="p-column-title">Producto</span>{{ producto.tcProducto.sProducto }}</td>
-                       <td class="text-center"><span class="p-column-title">Marca</span>{{ producto.tcMarca.sMarca}}</td>
-                      <td class="text-center"><span class="p-column-title">Precio Unitario</span>{{ producto.nPrecioUnitario | currency:'USD' }}</td>
-                      <td class="text-center"><span class="p-column-title">Cantidad</span>{{ producto.nCantidad }}</td>  
-                       <td class="text-center"><span class="p-column-title">Fecha Registro</span>{{ producto.dFechaRegistro | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                      <td class="text-center"><span class="p-column-title">Usuario Registra</span>{{ producto.tcUsuario.sNombreUsuario }}</td>   
-                      <td class="text-center">
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined p-mr-2" (click)="editarProducto(producto)" *ngIf="producto.nEstatus===0 && entidad=='registro'"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined" (click)="confirmDelete(producto)"  *ngIf="producto.nEstatus===0 && entidad=='registro'"></button>
-                        <button pButton pRipple icon="pi pi-calendar-plus" class="p-button-rounded p-button-info p-button-outlined" (click)="onFormProductoIngreso(producto)" *ngIf="producto.nEstatus===0 && entidad=='ingreso'"></button>
-                        <button pButton pRipple icon="pi pi-check-circle" class="p-button-rounded p-button-success p-button-outlined" (click)="onFormProductoIngreso(producto)" *ngIf="producto.nEstatus===1"></button>
+
+        <div 
+    class="p-col-12 p-md-12"
+    *ngIf="vwFacturaProductoBalance.nEstatusIngresoAlmacen==0 && entidad=='registro'"
+  >
+    <app-input-busqueda
+      class="p-fluid"
+      style="width: 100%"
+      (productoSeleccionado)="onProductoSeleccionado($event)">
+    </app-input-busqueda>
+  </div>
 
 
-                    </td>              
-                  </tr>
-              </ng-template>
-            
-          </p-table>
-          <div *ngIf="listaFacturaProducto.length>0">
-            <p-toolbar styleClass="p-mb-4"> 
-              
-                <ng-template pTemplate="left">
-                    <button type="button" pButton pRipple icon="pi pi-file-excel " label="Exportar consulta"
-                        class="p-button-help   p-mb-2" (click)="dt.exportCSV()"></button>
-                        
-                </ng-template> 
-                <ng-template pTemplate="right" *ngIf="banCerrarIngreso">
-                    <button type="button"  pButton pRipple icon="pi pi-save " label="Cerrar Ingreso Factura"
-                    class="p-button-success  p-mb-2" (click)="confirmCierreIngreso()"></button>
-                </ng-template>
-                <ng-template pTemplate="right" *ngIf="banCerrarRegistro">
-                    <button type="button" pButton pRipple icon="pi pi-pi-save" label="Cerrar registro de productos"
-                        class="p-button-success p-mb-2" (click)="confirmCierreRegistro()"></button>
-                        
-            </ng-template>
-                
 
-                   
-               
-            </p-toolbar>
+  <div class="card bg-gray-100">
+
+    <!-- 🔎 Tabla de productos -->
+    <p-table
+      #dt
+      [value]="listaFacturaProducto"
+      [rows]="8"
+      [paginator]="true"
+      [exportFilename]="'Productos Factura'"
+      [globalFilterFields]="[
+        'tcProducto.sNoParte',
+        'tcProducto.sProducto',
+        'tcMarca.sMarca',
+        'nPrecioUnitario',
+        'nCantidad',
+        'dFechaRegistro',
+        'tcUsuario.sNombreUsuario'
+      ]"
+      [rowHover]="true"
+      dataKey="nId"
+      styleClass="p-datatable-sm p-datatable-gridlines"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+      [showCurrentPageReport]="true"
+    >
+      <!-- 🔹 Encabezado -->
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex p-jc-between p-ai-center p-flex-wrap">
           
-            
+          <!-- 🔍 Busqueda -->
+          <div class="p-input-icon-left p-mb-2">
+            <i class="pi pi-search"></i>
+            <input
+              pInputText
+              type="text"
+              (input)="dt.filterGlobal($event.target.value, 'contains')"
+              placeholder="Buscar producto..."
+              class="p-inputtext p-py-2"
+            />
+          </div>
+
+          <!-- ➕ Botón flotante -->
+          <div *ngIf="vwFacturaProductoBalance.nEstatusIngresoAlmacen==0 && entidad=='registro'">
+            <button
+              pButton
+              pRipple
+              icon="pi pi-plus"
+              class="p-button-rounded p-button-success shadow-3"
+              (click)="formProducto(null)"
+              style="position: absolute; top: 1rem; right: 1.5rem; z-index: 1000;"
+              title="Agregar nuevo producto"
+            ></button>
+          </div>
         </div>
+      </ng-template>
 
-       
+      <!-- 🔹 Columnas -->
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="tcProducto.sNoParte" class="text-center">
+            No. Parte <p-sortIcon field="tcProducto.sNoParte"></p-sortIcon>
+          </th>
+          <th pSortableColumn="tcProducto.sProducto" class="text-center">
+            Producto <p-sortIcon field="tcProducto.sProducto"></p-sortIcon>
+          </th>
+          <th pSortableColumn="tcMarca.sMarca" class="text-center">
+            Marca <p-sortIcon field="tcMarca.sMarca"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nPrecioUnitario" class="text-center">
+            Precio Unitario <p-sortIcon field="nPrecioUnitario"></p-sortIcon>
+          </th>
+          <th pSortableColumn="nCantidad" class="text-center">
+            Cantidad <p-sortIcon field="nCantidad"></p-sortIcon>
+          </th>
+          <th pSortableColumn="dFechaRegistro" class="text-center">
+            Fecha Registro <p-sortIcon field="dFechaRegistro"></p-sortIcon>
+          </th>
+          <th pSortableColumn="tcUsuario.sNombreUsuario" class="text-center">
+            Usuario Registra <p-sortIcon field="tcUsuario.sNombreUsuario"></p-sortIcon>
+          </th>
+          <th class="text-center">Acción</th>
+        </tr>
+      </ng-template>
 
+      <!-- 🔹 Filas -->
+      <ng-template pTemplate="body" let-producto>
+        <tr>
+          <td class="text-center">{{ producto.tcProducto.sNoParte }}</td>
+          <td class="text-center">{{ producto.tcProducto.sProducto }}</td>
+          <td class="text-center">{{ producto.tcMarca.sMarca }}</td>
+          <td class="text-center">{{ producto.nPrecioUnitario | currency:'USD' }}</td>
+          <td class="text-center">{{ producto.nCantidad }}</td>
+          <td class="text-center">{{ producto.dFechaRegistro | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+          <td class="text-center">{{ producto.tcUsuario.sNombreUsuario }}</td>
+          <td class="text-center">
+            <button pButton pRipple icon="pi pi-pencil"
+              class="p-button-rounded p-button-warning p-button-outlined p-mr-2"
+              (click)="editarProducto(producto)"
+              *ngIf="producto.nEstatus===0 && entidad=='registro'">
+            </button>
+            <button pButton pRipple icon="pi pi-trash"
+              class="p-button-rounded p-button-danger p-button-outlined"
+              (click)="confirmDelete(producto)"
+              *ngIf="producto.nEstatus===0 && entidad=='registro'">
+            </button>
+            <button pButton pRipple icon="pi pi-calendar-plus"
+              class="p-button-rounded p-button-info p-button-outlined"
+              (click)="onFormProductoIngreso(producto)"
+              *ngIf="producto.nEstatus===0 && entidad=='ingreso'">
+            </button>
+            <button pButton pRipple icon="pi pi-check-circle"
+              class="p-button-rounded p-button-success p-button-outlined"
+              (click)="onFormProductoIngreso(producto)"
+              *ngIf="producto.nEstatus===1">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
 
-         
-       
-     
+    <!-- 🔹 Toolbar inferior -->
+    <div *ngIf="listaFacturaProducto.length>0">
+      <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+          <button type="button" pButton pRipple icon="pi pi-file-excel" label="Exportar"
+            class="p-button-help p-mb-2" (click)="dt.exportCSV()">
+          </button>
+        </ng-template>
+        <ng-template pTemplate="right" *ngIf="banCerrarIngreso">
+          <button type="button" pButton pRipple icon="pi pi-save" label="Cerrar Ingreso Factura"
+            class="p-button-success p-mb-2" (click)="confirmCierreIngreso()">
+          </button>
+        </ng-template>
+        <ng-template pTemplate="right" *ngIf="banCerrarRegistro">
+          <button type="button" pButton pRipple icon="pi pi-save" label="Cerrar Registro de Productos"
+            class="p-button-success p-mb-2" (click)="confirmCierreRegistro()">
+          </button>
+        </ng-template>
+      </p-toolbar>
     </div>
   </div>
-  </div>
-  <p-confirmDialog></p-confirmDialog>
+</div>
+
+</div>
+<p-confirmDialog></p-confirmDialog>

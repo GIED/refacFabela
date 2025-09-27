@@ -22,6 +22,10 @@ import { forkJoin, Observable } from 'rxjs';
 import { TvPedidoDetalle } from '../../model/TvPedidoDetalle';
 import { TwVentasProducto } from '../../model/TwVentasProducto';
 import { VentasService } from 'src/app/shared/service/ventas.service';
+import { ModeActionOnModel } from 'src/app/shared/utils/model-action-on-model';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ModelContainer } from 'src/app/shared/utils/model-container';
+import { FormProductoComponent } from '../../components/form-producto/form-producto.component';
 
 @Component({
   selector: 'app-compras-producto',
@@ -69,7 +73,7 @@ export class ComprasProductoComponent implements OnInit {
 
 
   constructor(private comprasService: ComprasService, private messageService: MessageService, private proveedorService: ProveedorService, private fb: FormBuilder, private productosService: ProductoService,
-    private tokenService: TokenService, private confirmationService: ConfirmationService, private pedidosService: PedidosService, private ventasService:VentasService
+    private tokenService: TokenService, private confirmationService: ConfirmationService, private pedidosService: PedidosService, private ventasService:VentasService,  public dialogService: DialogService
 
   ) {
     this.datosRecibidos = null;
@@ -631,6 +635,38 @@ generarVentaPdf(idVenta:number){
 
   });
 
+}
+
+
+
+
+ formProducto(producto: TcProducto): void {
+  const isNuevo = !producto || typeof producto.nId !== 'number' || producto.nId == null || producto.nId === 0;
+
+  const modo = isNuevo ? ModeActionOnModel.CREATING : ModeActionOnModel.EDITING;
+  console.log('Este el modo',modo);
+
+  const ref = this.dialogService.open(FormProductoComponent, {
+    data: new ModelContainer(modo, producto),
+    header: isNuevo ? 'Nuevo Producto' : 'Editar Producto',
+    width: '70%',
+    height: 'auto',
+    baseZIndex: 1000,
+    closable: true,
+    dismissableMask: true,
+    modal: true
+  });
+
+   ref.onClose.subscribe((productoGuardado: TcProducto | undefined) => {
+    if (productoGuardado) {
+      // Aquí puedes actualizar tu lista, tabla, etc.
+      console.log('Producto recibido desde el diálogo:', productoGuardado);
+      // Ejemplo: recargar lista o actualizar tabla
+      //this.informacionProducto(productoGuardado.nId); // o lo que apliques
+    } else {
+      console.log('El usuario cerró el formulario sin guardar.');
+    }
+  });
 }
 
 
