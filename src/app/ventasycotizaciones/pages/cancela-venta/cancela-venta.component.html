@@ -216,7 +216,27 @@
                 <div class="flex flex-column card-container green-container">
                     <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">{{producto}}</div>
                     <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Total Vendidos:{{totalVendidos}}</div>
-                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Total Cancelar:<p-inputNumber [(ngModel)]="totalCancelar" inputId="minmax" mode="decimal" [min]="1" [max]='totalVendidos'> </p-inputNumber> </div>
+                    <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">
+                        Total Cancelar:
+                        <p-inputNumber 
+                            [(ngModel)]="totalCancelar" 
+                            inputId="minmax" 
+                            mode="decimal" 
+                            [min]="1" 
+                            [max]="totalVendidos"
+                            [maxlength]="10"
+                            [showButtons]="true"
+                            buttonLayout="horizontal"
+                            decrementButtonClass="p-button-danger" 
+                            incrementButtonClass="p-button-success"
+                            [step]="1"
+                            placeholder="Ingrese cantidad"
+                            (onInput)="validarCantidadCancelar($event)">
+                        </p-inputNumber>
+                        <small *ngIf="totalCancelar && totalCancelar > totalVendidos" class="p-error p-ml-2">
+                            Máximo: {{totalVendidos}}
+                        </small>
+                    </div>
                     <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2">Motivo:<textarea [(ngModel)]="sMotivo" rows="5" cols="30"  pInputTextarea  required > </textarea> </div>
                     <div class="flex align-items-center justify-content-center h-4rem bg-green-500  text-black border-round m-2"><p-checkbox [(ngModel)]="penaliza" label="Cargo del 20%" [binary]="true" inputId="binary" ></p-checkbox> </div>
                 </div>

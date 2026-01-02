@@ -82,9 +82,9 @@ cancelados(venta: TvVentasDetalle){
 }
 
 cerrarDialogCancela(){
-
-this.mostrarCancela=false;
-
+  this.mostrarCancela = false;
+  // Limpiar el formulario al cerrar sin completar
+  this.limpiarFormularioCancelacion();
 }
 
 detalleVentaProductos(tvVentasDetalle:TvVentasDetalle){
@@ -138,51 +138,158 @@ consultar(){
 }
 
 cancelaVenta(ventaProductoDto:VentaProductoDto){
+  // Limpiar datos previos antes de abrir el diálogo
+  this.limpiarFormularioCancelacion();
   
-  this.ventaProductoDto=ventaProductoDto;
-  this.mostrarCancela=true;
-  this.producto=ventaProductoDto.sNoParte+'-'+ventaProductoDto.sProducto;
-  this.totalVendidos=ventaProductoDto.nCantidad;
-  this.VentaProductoCancelaDto.VentaProductoDto=ventaProductoDto;
-
- 
+  // Asignar nuevos datos
+  this.ventaProductoDto = ventaProductoDto;
+  this.mostrarCancela = true;
+  this.producto = ventaProductoDto.sNoParte + '-' + ventaProductoDto.sProducto;
+  this.totalVendidos = ventaProductoDto.nCantidad;
   
-  }
+  // Crear nuevo DTO con el producto seleccionado
+  this.VentaProductoCancelaDto = new VentaProductoCancelaDto();
+  this.VentaProductoCancelaDto.VentaProductoDto = ventaProductoDto;
+}
 
   concelarVentaProducto(){
-
-    if(this.totalCancelar!=undefined && this.totalCancelar!=null && this.sMotivo!=null && this.sMotivo!=undefined){
-
-     
-     this.VentaProductoCancelaDto.nCancela=this.totalCancelar;
-     this.VentaProductoCancelaDto.sMotivo=this.sMotivo;
-     this.VentaProductoCancelaDto.penaliza=this.penaliza;
-
-
-
-      this.ventasService.cancelarVentaProducto(this.VentaProductoCancelaDto).subscribe(data => {
-        this.mostrarProductos=false;
-        this.mostrarCancela=false;
-       
-        this.obtenerVentasCliente();  
-        this.totalCancelar=null;
-        this.VentaProductoCancelaDto.nCancela=null;
-        this.VentaProductoCancelaDto.sMotivo=null;
-        this.VentaProductoCancelaDto.penaliza=null;
-       
-        this.messageService.add({severity: 'success', summary: 'Se realizó con éxito', detail: 'Se cancelo el producto con éxito', life: 3000});
-         })
-
-    }
-    else{
-
-      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Debe registrar todos los campos requeridos', life: 3000});
+    // Validación 1: Cantidad a cancelar existe
+    if(this.totalCancelar == undefined || this.totalCancelar == null) {
+      this.messageService.add({
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'Debe ingresar la cantidad a cancelar', 
+        life: 3000
+      });
+      return;
     }
 
+    // Validación 2: Motivo existe y no está vacío
+    if(this.sMotivo == null || this.sMotivo == undefined || this.sMotivo.trim() === '') {
+      this.messageService.add({
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'Debe ingresar el motivo de cancelación', 
+        life: 3000
+      });
+      return;
+    }
+
+    // Validación 3: Cantidad positiva
+    if(this.totalCancelar <= 0) {
+      this.messageService.add({
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'La cantidad a cancelar debe ser mayor a 0', 
+        life: 3000
+      });
+      return;
+    }
+
+    // Validación 4: No cancelar más de lo vendido
+    if(this.totalCancelar > this.totalVendidos) {
+      this.messageService.add({
+        severity: 'error', 
+        summary: 'Cantidad Inválida', 
+        detail: `No puede cancelar ${this.totalCancelar} unidades. Solo se vendieron ${this.totalVendidos} unidades de este producto`, 
+        life: 4000
+      });
+      return;
+    }
+
+    // Asignar valores al DTO
+    this.VentaProductoCancelaDto.nCancela = this.totalCancelar;
+    this.VentaProductoCancelaDto.sMotivo = this.sMotivo.trim();
+    this.VentaProductoCancelaDto.penaliza = this.penaliza;
+
+    // Realizar la petición al servidor
+    this.ventasService.cancelarVentaProducto(this.VentaProductoCancelaDto).subscribe(
+      data => {
+        // Guardar la cantidad cancelada para el mensaje
+        const cantidadCancelada = this.totalCancelar;
+        const nombreProducto = this.producto;
+
+        // Cerrar diálogos
+        this.mostrarProductos = false;
+        this.mostrarCancela = false;
+       
+        // Limpiar formulario completamente
+        this.limpiarFormularioCancelacion();
+        
+        // Recargar datos
+        this.obtenerVentasCliente();
+        
+        // Mensaje de éxito con información específica
+        this.messageService.add({
+          severity: 'success', 
+          summary: 'Cancelación Exitosa', 
+          detail: `Se cancelaron ${cantidadCancelada} unidades del producto ${nombreProducto}`, 
+          life: 4000
+        });
+      },
+      error => {
+        // Manejo de errores del servidor
+        console.error('Error al cancelar venta:', error);
+        this.messageService.add({
+          severity: 'error', 
+          summary: 'Error en el Servidor', 
+          detail: 'No se pudo procesar la cancelación. Intente nuevamente', 
+          life: 3000
+        });
+      }
+    );
+  }
+
+  limpiarFormularioCancelacion() {
+    // Limpiar todas las variables del formulario
+    this.totalCancelar = null;
+    this.sMotivo = null;
+    this.penaliza = false;
+    this.totalVendidos = null;
+    this.producto = null;
+    this.ventaProductoDto = null;
+    
+    // Reinicializar completamente el DTO para evitar datos residuales
+    this.VentaProductoCancelaDto = new VentaProductoCancelaDto();
+  }
+
+  validarCantidadCancelar(event: any) {
+    // Validar que no exceda el máximo permitido
+    if (this.totalCancelar && this.totalVendidos) {
+      if (this.totalCancelar > this.totalVendidos) {
+        // Limitar automáticamente al máximo
+        setTimeout(() => {
+          this.totalCancelar = this.totalVendidos;
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Cantidad Ajustada',
+            detail: `La cantidad máxima a cancelar es ${this.totalVendidos} unidades`,
+            life: 3000
+          });
+        }, 100);
+      }
+      
+      // Validar que sea un número positivo
+      if (this.totalCancelar < 1) {
+        setTimeout(() => {
+          this.totalCancelar = 1;
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Cantidad Ajustada',
+            detail: 'La cantidad mínima es 1 unidad',
+            life: 3000
+          });
+        }, 100);
+      }
+    }
   }
 
 hideDialogAlter(){
-this.mostrarProductos=false;
+  this.mostrarProductos = false;
+  // Limpiar formulario de cancelación si estaba abierto
+  if(this.mostrarCancela) {
+    this.limpiarFormularioCancelacion();
+  }
 }
 
 
