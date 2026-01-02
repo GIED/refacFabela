@@ -19,6 +19,7 @@ import { Observable } from 'rxjs';
 import { ImagenResponse } from 'src/app/productos/model/ImagenResponse';
 import { StringUtils } from '../utils/StringUtils';
 import { id } from 'date-fns/locale';
+import { HistoriaIngresoProducto } from 'src/app/productos/model/HistoriaIngresoProducto';
 
 @Injectable({
   providedIn: 'root'
@@ -112,6 +113,11 @@ export class ProductoService {
   historiaIngresoProducto(nId: number){
     let url = environment.servicios.apiRefacFabela + locator.obtenerHistoriaIngresoProducto+'n_id='+nId;
     return this.http.get<TwHistoriaIngresoProducto[]>(url);
+  }
+
+   historiaIngresoDelProducto(nId: number){
+    let url = environment.servicios.apiRefacFabela + locator.obtenerHistoriaIngresoDelProducto+'n_id='+nId;
+    return this.http.get<HistoriaIngresoProducto[]>(url);
   }
 
   simuladorPrecioProducto(producto: TcProducto){

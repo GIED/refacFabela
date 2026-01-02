@@ -95,6 +95,9 @@ static guardarProductoBodega= '/guardarProductoBodega';
 static calcularPrecioProducto= '/calcularNuevoPrecio';
 static obtenerHistoriaPrecioProducto='/obtenerHistoriaPrecioProducto?';
 static obtenerHistoriaIngresoProducto='/obtenerHistoriaIngresoProducto?';
+
+static obtenerHistoriaIngresoDelProducto='/obtenerHistoriaIngresoDelProducto?';
+
 static obtenerHistorialStockProducto='/obtenerHistorialStockProducto?';
 static obtenerProductosCaneladosId='/obtenerProductosCancelaId?';
 /*Productos de la factura */

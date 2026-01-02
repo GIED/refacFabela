@@ -14,6 +14,7 @@ import { TvVentaProductoMes } from '../../model/TvVentaProductoMes';
 import { TwHistoriaIngresoProducto } from '../../model/TwHistoriaIngresoProducto';
 import { TwVentasProducto } from '../../model/TwVentasProducto';
 import { TvStockProducto } from '../../model/TvStockProducto';
+import { HistoriaIngresoProducto } from '../../model/HistoriaIngresoProducto';
 
 @Component({
   selector: 'app-historial-producto',
@@ -54,7 +55,7 @@ lineChartOptions:any;
 
   //objetos de ingreso de producto
 
-  listaIngresoProducto: TwHistoriaIngresoProducto[];
+  listaIngresoProducto: HistoriaIngresoProducto[];
 
   //lista de ventas del producto
 
@@ -160,7 +161,7 @@ informacionProducto(nId:number) {
     //Consulta de producto por bodegas
     let productoBodegas=  this.bodegasService.obtenerProductoBodegas(nId);
   // consulat de historia de ingreso del producto
-    let historiaIngreso=this.productosService.historiaIngresoProducto(nId)
+    let historiaIngreso=this.productosService.historiaIngresoDelProducto(nId)
   //Consulta de ventas del producto por mes
     let ventaMesProducto= this.ventasService.obtenerProductoVentaMesId(nId);
    // consulta de ventas del producto     
