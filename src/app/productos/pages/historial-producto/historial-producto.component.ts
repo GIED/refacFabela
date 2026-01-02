@@ -130,19 +130,32 @@ lineChartOptions:any;
   }
 
   limpiar(){
-    this.labelsHistoriaIngresoProducto=[];
-    this.dataHistoriaIngresoProducto=[];
-    this.laberProductoBodega=[];
-    this.dataProductoBodega=[];  
-    this.laberProductoVentaMes=[];      
-    this.dataProductoVentaMes=[];
-    this.productoDetalle=null;
-    this.listaProductoBodega=[];
-    this.listaProductosVentaMes=[];
-    this.listaIngresoProducto=[];
-    this.listaVentasProducto=[];
-  
-
+    // Limpiar arrays de labels y datos para gráficas
+    this.labelsHistoriaIngresoProducto = [];
+    this.dataHistoriaIngresoProducto = [];
+    this.laberProductoBodega = [];
+    this.dataProductoBodega = [];  
+    this.laberProductoVentaMes = [];      
+    this.dataProductoVentaMes = [];
+    
+    // Limpiar listas de datos
+    this.listaHistoriaPrecioProducto = [];
+    this.listaProductoBodega = [];
+    this.listaProductosVentaMes = [];
+    this.listaIngresoProducto = [];
+    this.listaVentasProducto = [];
+    
+    // Limpiar objetos de gráficas
+    this.historiaIngresoGraf = null;
+    this.productoBodegaGraf = null;
+    this.ventaProductoMesGraf = null;
+    
+    // Resetear producto detalle y stock
+    this.productoDetalle = new TvProductoDetalle();
+    this.stockTotal = 0;
+    
+    // Resetear banderas
+    this.cargaInicial = false;
   }
 
 //se obtine la hsitoria de ingreso del producto  
