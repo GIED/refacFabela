@@ -1,7 +1,9 @@
 <div class="card">
-    <div class="p-text-center">
-        <h3>Historia de precios del Producto</h3>
-    </div>
+    
+  <div class="card-header">
+                <i class="pi pi-chart-line"></i>
+                <h5>Detalle de Precios del Producto</h5>
+            </div>
 
     <p-table #dt [value]="listaHistoriaPrecioProducto" [rows]="5" [paginator]="true"
         [globalFilterFields]="['nPrecio','dFecha']" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"

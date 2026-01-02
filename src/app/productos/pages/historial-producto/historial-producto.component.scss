@@ -1,0 +1,405 @@
+// Variables de colores modernos
+$primary-color: #3B82F6;
+$success-color: #10B981;
+$warning-color: #F59E0B;
+$danger-color: #EF4444;
+$info-color: #06B6D4;
+$dark-color: #1F2937;
+$light-gray: #F3F4F6;
+$border-color: #E5E7EB;
+
+// Card de búsqueda
+.search-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        color: white;
+
+        i {
+            font-size: 1.5rem;
+        }
+
+        h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+    }
+}
+
+// Card de información
+.info-card {
+    border-radius: 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid $border-color;
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid $border-color;
+        color: $dark-color;
+
+        i {
+            font-size: 1.5rem;
+            color: $primary-color;
+        }
+
+        h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+    }
+}
+
+// Cards de estadísticas
+.stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border-left: 4px solid;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 100%;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .stat-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #6B7280;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: $dark-color;
+            word-break: break-word;
+        }
+    }
+
+    &.stat-primary {
+        border-left-color: $primary-color;
+        .stat-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    }
+
+    &.stat-success {
+        border-left-color: $success-color;
+        .stat-icon {
+            background: linear-gradient(135deg, #84fab0 0%, #10B981 100%);
+        }
+    }
+
+    &.stat-info {
+        border-left-color: $info-color;
+        .stat-icon {
+            background: linear-gradient(135deg, #a8edea 0%, #06B6D4 100%);
+        }
+    }
+
+    &.stat-warning {
+        border-left-color: $warning-color;
+        .stat-icon {
+            background: linear-gradient(135deg, #f093fb 0%, #F59E0B 100%);
+        }
+    }
+
+    &.stat-danger {
+        border-left-color: $danger-color;
+        .stat-icon {
+            background: linear-gradient(135deg, #fa709a 0%, #EF4444 100%);
+        }
+    }
+}
+
+// Cards de gráficas
+.chart-card {
+    border-radius: 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid $border-color;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        border-bottom: 2px solid $border-color;
+        background: $light-gray;
+        border-radius: 12px 12px 0 0;
+
+        i {
+            font-size: 1.5rem;
+            color: $primary-color;
+        }
+
+        h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: $dark-color;
+        }
+    }
+
+    .chart-container {
+    
+       
+     
+
+       
+    }
+
+    .chart-md {
+  height: 320px;   /* prueba 280, 300, 320, 350 */
+  width: 100%;
+}
+
+.chart-md ::ng-deep canvas {
+  height: 100% !important;
+  width: 100% !important;
+}
+}
+
+// Cards de tablas
+.table-card {
+    border-radius: 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid $border-color;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.25rem;
+        border-bottom: 2px solid $border-color;
+        background: $light-gray;
+        border-radius: 12px 12px 0 0;
+
+        i {
+            font-size: 1.5rem;
+            color: $primary-color;
+        }
+
+        h4 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: $dark-color;
+        }
+    }
+}
+
+// Badges y etiquetas
+.price-badge {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+.quantity-badge {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+.id-badge {
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+.folio-badge {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+.location-badge {
+    background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+// Estilos para tablas PrimeNG
+::ng-deep {
+    .p-datatable {
+        .p-datatable-header {
+            background: $light-gray;
+            border: 1px solid $border-color;
+            padding: 1rem;
+        }
+
+        .p-datatable-thead > tr > th {
+            background: $light-gray;
+            color: $dark-color;
+            font-weight: 600;
+            border-color: $border-color;
+            padding: 0.875rem;
+
+            i {
+                color: $primary-color;
+            }
+        }
+
+        .p-datatable-tbody > tr {
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: #F9FAFB !important;
+            }
+
+            > td {
+                padding: 0.875rem;
+                border-color: $border-color;
+            }
+        }
+
+        &.p-datatable-striped {
+            .p-datatable-tbody > tr:nth-child(even) {
+                background: #F9FAFB;
+            }
+        }
+    }
+
+    .p-paginator {
+        background: $light-gray;
+        border-color: $border-color;
+        padding: 0.75rem 1rem;
+
+        .p-paginator-current {
+            color: $dark-color;
+            font-weight: 500;
+        }
+    }
+
+    .p-inputtext {
+        border-radius: 6px;
+        border-color: $border-color;
+        transition: all 0.2s ease;
+
+        &:focus {
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    }
+
+    .p-inputtext-sm {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .stat-card {
+        margin-bottom: 1rem;
+
+        .stat-content .stat-value {
+            font-size: 0.875rem;
+        }
+    }
+
+    .chart-container {
+        min-height: 300px !important;
+        
+        &.pie-chart-container {
+            min-height: 350px !important;
+        }
+    }
+
+    .card-header {
+        h4 {
+            font-size: 1rem !important;
+        }
+
+        i {
+            font-size: 1.25rem !important;
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .chart-container {
+        min-height: 450px;
+
+        &.pie-chart-container {
+            min-height: 500px;
+        }
+    }
+}
+
+.pie-sm{
+  height: 220px;   /* prueba 180–260 */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* fuerza el canvas a respetar el contenedor */
+.pie-sm ::ng-deep canvas{
+  max-height: 220px !important;
+  max-width: 220px !important;  /* limita el diámetro del pie */
+}

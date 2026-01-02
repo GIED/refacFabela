@@ -56,10 +56,16 @@ lineChartOptions:any;
   //objetos de ingreso de producto
 
   listaIngresoProducto: HistoriaIngresoProducto[];
+  labelsIngresoProducto: string[];
+  dataIngresoProducto: number[];
+  ingresoProductoGraf: any;
 
   //lista de ventas del producto
 
   listaVentasProducto:TwVentasProducto[];
+  labelsVentasProducto: string[];
+  dataVentasProducto: number[];
+  ventasProductoGraf: any;
 
 
 
@@ -74,6 +80,10 @@ lineChartOptions:any;
         this.dataProductoVentaMes=[];
         this.dataHistoriaIngresoProducto=[];
         this.listaVentasProducto=[];
+        this.labelsVentasProducto=[];
+        this.dataVentasProducto=[];
+        this.labelsIngresoProducto=[];
+        this.dataIngresoProducto=[];
         this.productoDetalle=new TvProductoDetalle();   
       
      }
@@ -99,10 +109,13 @@ lineChartOptions:any;
   };
 
   this.lineOptions = {
+      maintainAspectRatio: true,
+      aspectRatio: 2,
+      responsive: true,
       plugins: {
           legend: {
               labels: {
-                  fontColor: '#A0A7B5'
+                  color: '#A0A7B5'
               }
           }
       },
@@ -144,11 +157,17 @@ lineChartOptions:any;
     this.listaProductosVentaMes = [];
     this.listaIngresoProducto = [];
     this.listaVentasProducto = [];
+    this.labelsVentasProducto = [];
+    this.dataVentasProducto = [];
+    this.labelsIngresoProducto = [];
+    this.dataIngresoProducto = [];
     
     // Limpiar objetos de gráficas
     this.historiaIngresoGraf = null;
     this.productoBodegaGraf = null;
     this.ventaProductoMesGraf = null;
+    this.ventasProductoGraf = null;
+    this.ingresoProductoGraf = null;
     
     // Resetear producto detalle y stock
     this.productoDetalle = new TvProductoDetalle();
@@ -218,36 +237,62 @@ informacionProducto(nId:number) {
         this.graficaHistoriaPrecioProducto(this.listaHistoriaPrecioProducto);
         this.graficaproductoBodegas(this.listaProductoBodega);
         this.graficaVentasMes(this.listaProductosVentaMes);
+        this.graficaVentasProducto(this.listaVentasProducto);
+        this.graficaIngresoProducto(this.listaIngresoProducto);
 
       })  
 
 }
 
-graficaHistoriaPrecioProducto(listaHistoriaPrecioProducto?:TcHistoriaPrecioProducto[]){ 
-   
-    for (let index = 0; index < listaHistoriaPrecioProducto.length; index++) {
-        let fecha=new Date(listaHistoriaPrecioProducto[index].dFecha);   
-   
-        this.labelsHistoriaIngresoProducto.push(fecha.getDate()+'/'+fecha.getMonth()+'/'+fecha.getFullYear());      
-        this.dataHistoriaIngresoProducto.push(listaHistoriaPrecioProducto[index].nPrecio);
-        
-    }
-    this.historiaIngresoGraf = {
-        labels: this.labelsHistoriaIngresoProducto,
-        datasets: [
-            
-            {
-                label: 'Historia de ingreso del producto',
-                data: this.dataHistoriaIngresoProducto,
-                fill: false,
-                backgroundColor: 'rgb(75, 192, 192)',
-                borderColor: 'rgb(75, 192, 192)',
-                tension: .4
-            }
-        ]
-    };
+graficaHistoriaPrecioProducto(listaHistoriaPrecioProducto?: TcHistoriaPrecioProducto[]): void {
 
+  // Limpia para que no se acumulen datos si vuelves a llamar el método
+  this.labelsHistoriaIngresoProducto = [];
+  this.dataHistoriaIngresoProducto = [];
 
+  if (!listaHistoriaPrecioProducto?.length) {
+    // Si quieres, deja la gráfica vacía
+    this.historiaIngresoGraf = { labels: [], datasets: [] };
+    return;
+  }
+
+  // (Opcional) Ordena por fecha ascendente para que la línea tenga sentido
+  const ordenada = [...listaHistoriaPrecioProducto].sort((a, b) => {
+    const fa = new Date(a.dFecha as any).getTime();
+    const fb = new Date(b.dFecha as any).getTime();
+    return fa - fb;
+  });
+
+  for (let i = 0; i < ordenada.length; i++) {
+    const item = ordenada[i];
+    const fecha = new Date(item.dFecha as any);
+
+    const dd = String(fecha.getDate()).padStart(2, '0');
+    const mm = String(fecha.getMonth() + 1).padStart(2, '0'); // +1 porque enero = 0
+    const yyyy = fecha.getFullYear();
+
+    this.labelsHistoriaIngresoProducto.push(`${dd}/${mm}/${yyyy}`);
+    this.dataHistoriaIngresoProducto.push(Number(item.nPrecio ?? 0));
+  }
+
+  this.historiaIngresoGraf = {
+    labels: this.labelsHistoriaIngresoProducto,
+    datasets: [
+      {
+        label: 'Historial de precio del producto',
+        data: this.dataHistoriaIngresoProducto,
+        fill: false,
+        backgroundColor: 'rgb(75, 192, 192)',
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.4,
+        borderWidth: 2,
+        pointRadius: 2,
+        pointHoverRadius: 4
+      }
+    ]
+  };
+
+ 
 }
 graficaproductoBodegas(listaProductoBodega?:TwProductoBodega[]){ 
    
@@ -283,12 +328,15 @@ graficaproductoBodegas(listaProductoBodega?:TwProductoBodega[]){
         ]
     };
     this.pieOptions = {
+        maintainAspectRatio: true,
+        aspectRatio: 1.5,
+        responsive: true,
         plugins: {
             legend: {
                 labels: {
-                    fontColor: '#A0A7B5'
+                    color: '#A0A7B5'
                 },
-                
+                position: 'bottom'
             }
         },
       
@@ -316,6 +364,106 @@ graficaVentasMes(listaProductosVentaMes?:TvVentaProductoMes[]){
                 backgroundColor: 'purple',
                 borderColor: 'purple',
                 tension: .4
+            }
+        ]
+    };
+}
+
+graficaVentasProducto(listaVentasProducto?: TwVentasProducto[]): void {
+    // Limpiar arrays previos
+    this.labelsVentasProducto = [];
+    this.dataVentasProducto = [];
+
+    if (!listaVentasProducto?.length) {
+        this.ventasProductoGraf = { labels: [], datasets: [] };
+        return;
+    }
+
+    // Ordenar por fecha de venta
+    const ordenada = [...listaVentasProducto].sort((a, b) => {
+        const fa = new Date(a.twVenta.dFechaVenta as any).getTime();
+        const fb = new Date(b.twVenta.dFechaVenta as any).getTime();
+        return fa - fb;
+    });
+
+    // Tomar las últimas 15 ventas para que la gráfica no se sature
+    const ventasRecientes = ordenada.slice(-15);
+
+    for (let i = 0; i < ventasRecientes.length; i++) {
+        const venta = ventasRecientes[i];
+        const fecha = new Date(venta.twVenta.dFechaVenta as any);
+        const fechaFormateada = `${fecha.getDate()}/${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+        
+        this.labelsVentasProducto.push(fechaFormateada);
+        this.dataVentasProducto.push(venta.nCantidad);
+    }
+
+    this.ventasProductoGraf = {
+        labels: this.labelsVentasProducto,
+        datasets: [
+            {
+                label: 'Cantidad Vendida',
+                data: this.dataVentasProducto,
+                fill: true,
+                backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                borderColor: '#EF4444',
+                tension: .4,
+                pointBackgroundColor: '#EF4444',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#EF4444',
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }
+        ]
+    };
+}
+
+graficaIngresoProducto(listaIngresoProducto?: HistoriaIngresoProducto[]): void {
+    // Limpiar arrays previos
+    this.labelsIngresoProducto = [];
+    this.dataIngresoProducto = [];
+
+    if (!listaIngresoProducto?.length) {
+        this.ingresoProductoGraf = { labels: [], datasets: [] };
+        return;
+    }
+
+    // Ordenar por fecha de ingreso
+    const ordenada = [...listaIngresoProducto].sort((a, b) => {
+        const fa = new Date(a.dFechaIngreso as any).getTime();
+        const fb = new Date(b.dFechaIngreso as any).getTime();
+        return fa - fb;
+    });
+
+    // Tomar los últimos 15 ingresos para que la gráfica no se sature
+    const ingresosRecientes = ordenada.slice(-15);
+
+    for (let i = 0; i < ingresosRecientes.length; i++) {
+        const ingreso = ingresosRecientes[i];
+        const fecha = new Date(ingreso.dFechaIngreso as any);
+        const fechaFormateada = `${fecha.getDate()}/${fecha.getMonth() + 1}/${fecha.getFullYear()}`;
+        
+        this.labelsIngresoProducto.push(fechaFormateada);
+        this.dataIngresoProducto.push(ingreso.nCantidad);
+    }
+
+    this.ingresoProductoGraf = {
+        labels: this.labelsIngresoProducto,
+        datasets: [
+            {
+                label: 'Cantidad Ingresada',
+                data: this.dataIngresoProducto,
+                fill: true,
+                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                borderColor: '#10B981',
+                tension: .4,
+                pointBackgroundColor: '#10B981',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#10B981',
+                pointRadius: 5,
+                pointHoverRadius: 7
             }
         ]
     };
