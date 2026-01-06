@@ -35,7 +35,7 @@ export class TraspasosComponent implements OnInit {
 
     this.IdUsuario=this.tokenService.getIdUser();
 
-    if(this.IdUsuario==19 || this.IdUsuario==23 || this.IdUsuario==29 || this.IdUsuario==8 || this.IdUsuario==27 || this.IdUsuario==26){
+    if(this.IdUsuario==19 || this.IdUsuario==23 || this.IdUsuario==29 || this.IdUsuario==8 || this.IdUsuario==27 || this.IdUsuario==26 || this.IdUsuario==34){
 
       this.mostrarAjustes=true;
 
