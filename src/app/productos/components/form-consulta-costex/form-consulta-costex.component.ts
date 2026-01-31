@@ -79,6 +79,7 @@ export class FormConsultaCostexComponent {
         // ⭐ Normaliza locations a tipos numéricos
         this.locationList = Object.values(resp.Locations || {}).map((loc: any) => ({
           ...loc,
+          BranchName: loc.BranchName ? String(loc.BranchName) : '',
           CustPrice: toNumber(loc.CustPrice) ?? 0,
           NetQtyStock: toNumber(loc.NetQtyStock) ?? 0,
           BranchTaxPr: toNumber(loc.BranchTaxPr) ?? 0,

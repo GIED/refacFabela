@@ -88,13 +88,13 @@
 
         <ng-template pTemplate="body" let-loc>
           <tr>
-            <td>{{ loc.BranchName.trim() }}</td>
+            <td>{{ loc.BranchName ? loc.BranchName.trim() : '' }}</td>
             <td>{{ loc.BranchState }}</td>
             <td>{{ loc.BranchZip }}</td>
             <td>{{ loc.NetQtyStock }}</td>
             <td>{{ loc.CustPrice | currency: 'USD':'symbol':'1.2-2' }}</td>
             <td>
-              <button pButton icon="pi pi-plus" (click)="formProducto(loc)" class="p-button-sm p-button-warning rounded"></button>
+              <button *ngIf="loc.CustPrice > 0" pButton icon="pi pi-plus" (click)="formProducto(loc)" class="p-button-sm p-button-warning rounded"></button>
               
             </td>
           </tr>
