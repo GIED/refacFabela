@@ -256,7 +256,20 @@ static deleteCarritoPedidoProducto='/borrarProductoCarritoCompraUsuario?';
 
 static deleteFacturaProducto='/facturacionProveedor/deleteProductoFactura?';
 
-
+// Inventario electrónico por ubicación
+static iniciarInventarioUbicacion = '/inventarios-ubicacion';
+static obtenerInventarioUbicacion = '/inventarios-ubicacion/'; // + id
+static listarInventariosUbicacion = '/inventarios-ubicacion';
+static obtenerInventarioAbiertoUsuario = '/inventarios-ubicacion/abierto-usuario';
+static sincronizarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/sync'
+static actualizarConteoInventario = '/inventarios-ubicacion/'; // + inventarioId + '/detalle/' + productoId
+static pausarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/pausar'
+static reanudarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/reanudar'
+static cerrarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/cerrar'
+static autorizarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/autorizar'
+static aplicarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/aplicar'
+static listarInventariosPendientesAutorizacion = '/inventarios-ubicacion/pendientes-autorizacion';
+static obtenerHistorialInventario = '/inventarios-ubicacion/'; // + id + '/historial'
 
 
 }

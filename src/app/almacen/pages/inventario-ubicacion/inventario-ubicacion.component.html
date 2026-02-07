@@ -1,0 +1,622 @@
+<p-toast></p-toast>
+
+<div class="p-grid">
+    <div class="p-col-12">
+
+        <!-- Estado Vacío y Botón de Inicio (Solo visible sin inventario) -->
+        <div *ngIf="!inventarioActual" class="p-mb-4">
+            <p-card styleClass="p-shadow-3 p-text-center">
+                <div class="p-p-5">
+                    <div class="p-d-flex p-jc-center p-mb-3">
+                        <div class="p-d-flex p-ai-center p-jc-center" style="background-color: #f0fdf4; width: 80px; height: 80px; border-radius: 50%;">
+                            <i class="pi pi-box" style="font-size: 3rem; color: #16a34a;"></i>
+                        </div>
+                    </div>
+                    <h2 class="p-text-bold p-mb-2" style="color: #212529;">Gestión de Inventario</h2>
+                    <p class="p-text-secondary p-mb-4" style="max-width: 500px; margin: 0 auto;">No hay ningún inventario activo en este momento. Para comenzar a realizar el conteo de productos, inicia un nuevo proceso.</p>
+                    <button pButton pRipple 
+                        label="Iniciar Nuevo Inventario" 
+                        icon="pi pi-plus" 
+                        class="p-button-success p-button-raised p-button-lg"
+                        (click)="abrirDialogoIniciar()">
+                    </button>
+                </div>
+            </p-card>
+        </div>
+
+        <!-- Panel de Inventario Actual -->
+        <div *ngIf="inventarioActual">
+            <p-card styleClass="p-shadow-3 p-mb-4">
+                <!-- Header del Panel -->
+                <ng-template pTemplate="header">
+                    <div class="p-d-flex p-ai-center p-jc-between p-p-3" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                        <div class="p-d-flex p-ai-center">
+                            <div class="p-mr-3 p-d-flex p-ai-center p-jc-center" style="background-color: var(--primary-color); width: 50px; height: 50px; border-radius: 50%; color: white;">
+                                <i class="pi pi-clipboard" style="font-size: 1.5rem"></i>
+                            </div>
+                            <div>
+                                <h2 class="p-m-0 p-text-bold text-normal" style="color: #212529;">Inventario #{{inventarioActual.nId}}</h2>
+                                <div class="p-d-flex p-ai-center p-mt-1">
+                                    <p-tag [value]="DESCRIPCION_ESTATUS[inventarioActual.nEstatus!]"
+                                        [severity]="getEstatusSeverity(inventarioActual.nEstatus!)"
+                                        [icon]="inventarioActual.nEstatus === EstatusInventario.ABIERTO ? 'pi pi-check-circle' : 
+                                                inventarioActual.nEstatus === EstatusInventario.PAUSADO ? 'pi pi-pause-circle' : 
+                                                inventarioActual.nEstatus === EstatusInventario.CERRADO ? 'pi pi-lock' : 'pi pi-info-circle'">
+                                    </p-tag>
+                                    <span class="p-ml-2 text-secondary" style="font-size: 0.9rem;">
+                                        <i class="pi pi-calendar p-mr-1"></i>
+                                        {{inventarioActual.dInicio | date:'dd/MM/yyyy HH:mm'}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-d-flex p-ai-center">
+                            <div class="p-text-right p-d-none p-d-md-block p-mr-3">
+                                <div class="text-secondary p-mb-1" style="font-size: 0.85rem;">Responsable</div>
+                                <div class="p-text-bold" style="color: #495057;">
+                                    <i class="pi pi-user p-mr-1 text-primary"></i>
+                                    {{inventarioActual.sNombreUsuarioResponsable || 'N/A'}}
+                                </div>
+                            </div>
+                            <button pButton type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text p-button-secondary" (click)="menu.toggle($event)"></button>
+                            <p-menu #menu [popup]="true" [model]="items" appendTo="body"></p-menu>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <!-- Información Principal en Grid -->
+                <div class="p-grid p-ai-stretch p-mt-2">
+                    <!-- Columna Izquierda: Ubicación -->
+                    <div class="p-col-12 p-lg-5 p-xl-4">
+                        <div class="p-p-3 h-100" style="background-color: #f8f9fa; border-radius: 8px; height: 100%;">
+                            <h4 class="p-m-0 p-mb-3 p-text-light text-secondary">
+                                <i class="pi pi-map-marker p-mr-2 text-primary"></i>Ubicación
+                            </h4>
+                            
+                            <div class="p-grid">
+                                <div class="p-col-12">
+                                    <div class="p-p-2 p-d-flex p-ai-center" style="background: white; border-radius: 6px; border-left: 4px solid var(--primary-color);">
+                                        <div class="p-mr-3">
+                                            <span class="p-d-block text-secondary" style="font-size: 0.8rem;">Bodega</span>
+                                            <span class="p-text-bold p-text-uppercase" style="font-size: 1.1rem; color: #212529;">{{inventarioActual.sBodega}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-col-6">
+                                    <div class="p-p-2 p-d-flex p-ai-center" style="background: white; border-radius: 6px; border-left: 4px solid #f59e0b;">
+                                        <div class="p-mr-3">
+                                            <span class="p-d-block text-secondary" style="font-size: 0.8rem;">Anaquel</span>
+                                            <span class="p-text-bold" style="font-size: 1.1rem; color: #212529;">{{inventarioActual.sAnaquel}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-col-6">
+                                    <div class="p-p-2 p-d-flex p-ai-center" style="background: white; border-radius: 6px; border-left: 4px solid #06b6d4;">
+                                        <div class="p-mr-3">
+                                            <span class="p-d-block text-secondary" style="font-size: 0.8rem;">Nivel</span>
+                                            <span class="p-text-bold" style="font-size: 1.1rem; color: #212529;">{{inventarioActual.sNivel}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Derecha: Estadísticas -->
+                    <div class="p-col-12 p-lg-7 p-xl-8">
+                        <div class="p-grid">
+                            <div class="p-col-6 p-md-3">
+                                <p-card styleClass="ui-card-shadow h-100 text-center-card">
+                                    <div class="p-text-center p-p-2">
+                                        <i class="pi pi-list text-primary" style="font-size: 2rem;"></i>
+                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{inventarioActual.totalLineas || 0}}</div>
+                                        <div class="text-secondary" style="font-size: 0.85rem;">Total</div>
+                                    </div>
+                                </p-card>
+                            </div>
+
+                            <div class="p-col-6 p-md-3">
+                                <p-card styleClass="ui-card-shadow h-100 text-center-card">
+                                    <div class="p-text-center p-p-2">
+                                        <i class="pi pi-clock" style="font-size: 2rem; color: #f59e0b;"></i>
+                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{inventarioActual.lineasPendientes || 0}}</div>
+                                        <div class="text-secondary" style="font-size: 0.85rem;">Pendientes</div>
+                                    </div>
+                                </p-card>
+                            </div>
+
+                            <div class="p-col-6 p-md-3">
+                                <p-card styleClass="ui-card-shadow h-100 text-center-card">
+                                    <div class="p-text-center p-p-2">
+                                        <i class="pi pi-check-circle" style="font-size: 2rem; color: #22c55e;"></i>
+                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{inventarioActual.lineasContadas || 0}}</div>
+                                        <div class="text-secondary" style="font-size: 0.85rem;">Contados</div>
+                                    </div>
+                                </p-card>
+                            </div>
+
+                            <div class="p-col-6 p-md-3">
+                                <p-card styleClass="ui-card-shadow h-100 text-center-card">
+                                    <div class="p-text-center p-p-2">
+                                        <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #ef4444;"></i>
+                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{inventarioActual.lineasRecontar || 0}}</div>
+                                        <div class="text-secondary" style="font-size: 0.85rem;">Recontar</div>
+                                    </div>
+                                </p-card>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer con Botones -->
+                <ng-template pTemplate="footer">
+                    <div class="p-d-flex p-jc-end p-p-2" style="border-top: 1px solid #dee2e6; background-color: #f8f9fa;">
+                        <button pButton pRipple
+                            type="button" 
+                            label="Sincronizar" 
+                            icon="pi pi-refresh"
+                            class="p-button-outlined p-button-secondary p-mr-2"
+                            (click)="sincronizarAutomatico()"
+                            [disabled]="inventarioActual.nEstatus !== EstatusInventario.ABIERTO && 
+                                       inventarioActual.nEstatus !== EstatusInventario.PAUSADO">
+                        </button>
+
+                        <button pButton pRipple
+                            type="button" 
+                            label="Pausar" 
+                            icon="pi pi-pause" 
+                            class="p-button-warning p-mr-2"
+                            (click)="pausarInventario()"
+                            *ngIf="inventarioActual.nEstatus === EstatusInventario.ABIERTO">
+                        </button>
+
+                        <button pButton pRipple
+                            type="button" 
+                            label="Reanudar" 
+                            icon="pi pi-play" 
+                            class="p-button-success p-mr-2"
+                            (click)="reanudarInventario()"
+                            *ngIf="inventarioActual.nEstatus === EstatusInventario.PAUSADO">
+                        </button>
+
+                        <button pButton pRipple
+                            type="button" 
+                            label="Cerrar Inventario" 
+                            icon="pi pi-check-circle"
+                            class="p-button-danger"
+                            (click)="cerrarInventario()"
+                            [disabled]="inventarioActual.lineasPendientes! > 0 || 
+                                       (inventarioActual.nEstatus !== EstatusInventario.ABIERTO && 
+                                        inventarioActual.nEstatus !== EstatusInventario.PAUSADO)">
+                        </button>
+                    </div>
+                </ng-template>
+            </p-card>
+        </div>
+
+        <!-- Tabla de productos - Mejorada -->
+        <div class="p-col-12" *ngIf="inventarioActual && inventarioActual.detalle">
+            <p-card styleClass="p-shadow-3">
+                <p-table [value]="inventarioActual.detalle" 
+                    [paginator]="true" 
+                    [rows]="10"
+                    [rowsPerPageOptions]="[10,25,50,100]" 
+                    [loading]="cargando" 
+                    responsiveLayout="scroll"
+                    [globalFilterFields]="['sNoParte','sNombreProducto','sMarca']" 
+                    styleClass="p-datatable-sm p-datatable-striped"
+                    [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+                    #dt>
+
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-between p-ai-center">
+                            <div class="p-mb-2 p-mb-md-0">
+                                <h5 class="p-m-0 p-text-bold" style="color: #212529;">Listado de Productos</h5>
+                                <span class="p-text-secondary" style="font-size: 0.85rem;">Gestión detallada de existencias</span>
+                            </div>
+                            <span class="p-input-icon-left" style="width: 100%; max-width: 300px;">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" 
+                                    (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
+                                    placeholder="Buscar productos..."
+                                    class="p-inputtext-sm" style="width: 100%;" />
+                            </span>
+                        </div>
+                    </ng-template>
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="sNoParte" style="min-width: 120px">
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-tag p-mr-2" style="color: var(--primary-color);"></i>
+                                    No. Parte
+                                    <p-sortIcon field="sNoParte"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pSortableColumn="sNombreProducto" style="min-width: 250px">
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-box p-mr-2" style="color: var(--primary-color);"></i>
+                                    Producto
+                                    <p-sortIcon field="sNombreProducto"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th style="min-width: 100px">
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-bookmark p-mr-2" style="color: var(--primary-color);"></i>
+                                    Marca
+                                </div>
+                            </th>
+                            <th pSortableColumn="nCantidadTeoricaIni" class="p-text-center" style="width: 100px">
+                                <div class="p-d-flex p-ai-center p-jc-center">
+                                    Ini.
+                                    <p-sortIcon field="nCantidadTeoricaIni"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pSortableColumn="nCantidadTeoricaRef" class="p-text-center" style="width: 100px">
+                                <div class="p-d-flex p-ai-center p-jc-center">
+                                    Ref.
+                                    <p-sortIcon field="nCantidadTeoricaRef"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pSortableColumn="nCantidadContada" class="p-text-center" style="width: 120px">
+                                <div class="p-d-flex p-ai-center p-jc-center">
+                                    Físico
+                                    <p-sortIcon field="nCantidadContada"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th class="p-text-center" style="width: 100px">
+                                <div class="p-d-flex p-ai-center p-jc-center">
+                                    Dif
+                                </div>
+                            </th>
+                            <th class="p-text-center" style="width: 100px">
+                                <div class="p-d-flex p-ai-center p-jc-center">
+                                    Estatus
+                                </div>
+                            </th>
+                            <th class="p-text-center" style="width: 80px">
+                                <i class="pi pi-cog"></i>
+                            </th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-detalle>
+                        <tr>
+                            <td>
+                                <span class="p-text-bold" style="color: #212529;">{{detalle.sNoParte}}</span>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500; color: #495057;">{{detalle.sNombreProducto}}</div>
+                            </td>
+                            <td>
+                                <p-tag [value]="detalle.sMarca" severity="info" styleClass="p-tag-rounded"></p-tag>
+                            </td>
+                            <td class="p-text-center">
+                                <span class="text-secondary" style="font-weight: 500;">{{detalle.nCantidadTeoricaIni}}</span>
+                            </td>
+                            <td class="p-text-center">
+                                <span class="text-secondary" style="font-weight: 500;">{{detalle.nCantidadTeoricaRef}}</span>
+                            </td>
+                            <td class="p-text-center">
+                                <div *ngIf="detalle.nCantidadContada !== null && detalle.nCantidadContada !== undefined"
+                                     class="p-text-bold"
+                                     style="font-size: 1.1rem;"
+                                     [ngStyle]="{'color': detalle.nCantidadContada >= 0 ? '#16a34a' : 'inherit'}">
+                                    {{detalle.nCantidadContada}}
+                                </div>
+                                <span *ngIf="detalle.nCantidadContada === null || detalle.nCantidadContada === undefined"
+                                    class="text-secondary" style="font-style: italic;">Pendiente</span>
+                            </td>
+                            <td class="p-text-center">
+                                <span *ngIf="detalle.nDiferencia !== null && detalle.nDiferencia !== undefined">
+                                    <span *ngIf="detalle.nDiferencia > 0" class="p-text-bold" style="color: #16a34a;">+{{detalle.nDiferencia}}</span>
+                                    <span *ngIf="detalle.nDiferencia < 0" class="p-text-bold" style="color: #dc2626;">{{detalle.nDiferencia}}</span>
+                                    <span *ngIf="detalle.nDiferencia === 0" class="text-secondary">-</span>
+                                </span>
+                            </td>
+                            <td class="p-text-center">
+                                <i *ngIf="detalle.nEstatusLinea === 1" class="pi pi-clock" style="color: #f59e0b;" pTooltip="Pendiente"></i>
+                                <i *ngIf="detalle.nEstatusLinea === 2" class="pi pi-check-circle" style="color: #16a34a;" pTooltip="Contado"></i>
+                                <i *ngIf="detalle.nEstatusLinea === 3" class="pi pi-exclamation-triangle" style="color: #dc2626;" pTooltip="Diferencia"></i>
+                            </td>
+                            <td class="p-text-center">
+                                <button pButton 
+                                    pRipple
+                                    type="button" 
+                                    icon="pi pi-pencil" 
+                                    class="p-button-rounded p-button-text p-button-secondary"
+                                    (click)="abrirDialogoCaptura(detalle)"
+                                    [disabled]="!esEditable"
+                                    pTooltip="Capturar"
+                                    tooltipPosition="left"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="9" class="p-text-center p-p-4">
+                                <div class="p-d-flex p-flex-column p-ai-center p-p-4">
+                                    <i class="pi pi-inbox p-text-secondary" style="font-size: 3rem;"></i>
+                                    <span class="p-mt-2 p-text-secondary" style="font-size: 1.2rem;">No hay productos en este inventario</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+        </div>
+    </div>
+</div>
+
+<!-- Diálogo para iniciar inventario -->
+<p-dialog [(visible)]="mostrarDialogoIniciar" 
+    [modal]="true" 
+    [style]="{width: '850px', height: '500px'}"
+    [contentStyle]="{'background-color': '#ffffff'}"
+    [draggable]="false" 
+    [resizable]="false"
+    [dismissableMask]="true"
+    styleClass="p-fluid">
+    
+    <ng-template pTemplate="header">
+        <div class="p-d-flex p-ai-center">
+            <div class="p-d-flex p-ai-center p-jc-center p-mr-3" 
+                 style="background-color: #dcfce7; width: 45px; height: 45px; border-radius: 50%;">
+                <i class="pi pi-plus-circle" style="color: #16a34a; font-size: 1.5rem;"></i>
+            </div>
+            <div>
+                <h5 class="p-m-0 p-text-bold" style="color: #212529;">Iniciar Nuevo Inventario</h5>
+                <p class="p-m-0 p-mt-1 p-text-secondary" style="font-size: 0.85rem;">Complete la información de ubicación</p>
+            </div>
+        </div>
+    </ng-template>
+
+    <div class="p-mt-3">
+        <div class="p-field p-mb-3">
+            <label for="bodega" class="p-text-bold p-mb-2 p-d-block" style="color: #212529;">
+                <i class="pi pi-warehouse p-mr-2 text-primary"></i>Bodega *
+            </label>
+            <p-dropdown inputId="bodega" 
+                [options]="bodegas" 
+                [(ngModel)]="formIniciar.nIdBodega" 
+                optionLabel="sBodega"
+                optionValue="nId" 
+                placeholder="Seleccione la bodega" 
+                [filter]="true" 
+                filterBy="sBodega"
+                [showClear]="true"
+                emptyMessage="No hay bodegas disponibles"
+                [style]="{'width':'100%'}">
+                <ng-template let-bodega pTemplate="item">
+                    <div class="p-d-flex p-ai-center">
+                        <i class="pi pi-warehouse p-mr-2 text-primary"></i>
+                        <span>{{bodega.sBodega}}</span>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+
+        <div class="p-grid">
+            <div class="p-col-6">
+                <div class="p-field">
+                    <label for="anaquel" class="p-text-bold p-mb-2 p-d-block" style="color: #212529;">
+                        <i class="pi pi-building p-mr-2" style="color: #f59e0b;"></i>Anaquel *
+                    </label>
+                    <p-dropdown inputId="anaquel" 
+                        [options]="anaqueles" 
+                        [(ngModel)]="formIniciar.nIdAnaquel"
+                        optionLabel="sAnaquel" 
+                        optionValue="nId" 
+                        placeholder="Seleccione" 
+                        [filter]="true"
+                        filterBy="sAnaquel"
+                        [showClear]="true"
+                        emptyMessage="No hay anaqueles"
+                        [style]="{'width':'100%'}">
+                        <ng-template let-anaquel pTemplate="item">
+                            <div class="p-d-flex p-ai-center">
+                                <i class="pi pi-building p-mr-2" style="color: #f59e0b;"></i>
+                                <span>{{anaquel.sAnaquel}}</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="p-col-6">
+                <div class="p-field">
+                    <label for="nivel" class="p-text-bold p-mb-2 p-d-block" style="color: #212529;">
+                        <i class="pi pi-bars p-mr-2" style="color: #06b6d4;"></i>Nivel *
+                    </label>
+                    <p-dropdown inputId="nivel" 
+                        [options]="niveles" 
+                        [(ngModel)]="formIniciar.nIdNivel" 
+                        optionLabel="sNivel"
+                        optionValue="nId" 
+                        placeholder="Seleccione" 
+                        [filter]="true" 
+                        filterBy="sNivel"
+                        [showClear]="true"
+                        emptyMessage="No hay niveles"
+                        [style]="{'width':'100%'}">
+                        <ng-template let-nivel pTemplate="item">
+                            <div class="p-d-flex p-ai-center">
+                                <i class="pi pi-bars p-mr-2" style="color: #06b6d4;"></i>
+                                <span>{{nivel.sNivel}}</span>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-field p-mt-2">
+            <label for="observaciones" class="p-text-bold p-mb-2 p-d-block" style="color: #212529;">
+                <i class="pi pi-file-edit p-mr-2 text-secondary"></i>Observaciones
+            </label>
+            <textarea inputId="observaciones" 
+                pInputTextarea 
+                [(ngModel)]="formIniciar.sObservaciones" 
+                rows="3"
+                placeholder="Observaciones generales del inventario (opcional)"
+                [autoResize]="true"
+                style="width: 100%;"></textarea>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="p-d-flex p-jc-end p-ai-center">
+            <button pButton pRipple
+                type="button" 
+                label="Cancelar" 
+                icon="pi pi-times" 
+                class="p-button-text p-button-secondary p-mr-2"
+                (click)="mostrarDialogoIniciar = false"></button>
+            <button pButton pRipple
+                type="button" 
+                label="Iniciar Inventario" 
+                icon="pi pi-check-circle" 
+                class="p-button-success p-button-raised"
+                (click)="iniciarInventario()" 
+                [loading]="cargando"></button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<!-- Diálogo para capturar conteo -->
+<p-dialog [(visible)]="mostrarDialogoCaptura" 
+    [modal]="true" 
+    [style]="{width: '650px'}" 
+    [contentStyle]="{'background-color': '#ffffff'}"
+    [draggable]="false" 
+    [resizable]="false" 
+    [dismissableMask]="true"
+    styleClass="p-fluid">
+    
+    <ng-template pTemplate="header">
+        <div class="p-d-flex p-ai-center">
+            <div class="p-d-flex p-ai-center p-jc-center p-mr-3" 
+                 style="background-color: #dbeafe; width: 45px; height: 45px; border-radius: 50%;">
+                <i class="pi pi-calculator" style="color: #2563eb; font-size: 1.5rem;"></i>
+            </div>
+            <div>
+                <h5 class="p-m-0 p-text-bold" style="color: #212529;">Capturar Conteo</h5>
+                <p class="p-m-0 p-mt-1 p-text-secondary" style="font-size: 0.85rem;">Ingrese la cantidad física contada</p>
+            </div>
+        </div>
+    </ng-template>
+
+    <div *ngIf="detalleSeleccionado" class="p-mt-3">
+        <!-- Información del Producto con Card -->
+        <div class="p-shadow-1 p-p-3 p-mb-3" style="background-color: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
+            <div class="p-d-flex p-ai-start">
+                <i class="pi pi-box p-mr-3 text-primary" style="font-size: 2rem;"></i>
+                <div style="flex: 1;">
+                    <div class="p-text-bold p-mb-1" style="font-size: 1.1rem; color: #212529;">{{detalleSeleccionado.sNoParte}}</div>
+                    <div class="p-text-secondary p-mb-2" style="line-height: 1.4;">{{detalleSeleccionado.sNombreProducto}}</div>
+                    <div class="p-d-flex p-ai-center">
+                        <p-tag [value]="detalleSeleccionado.sMarca" 
+                               severity="info" 
+                               icon="pi pi-tag"
+                               styleClass="p-mr-2"></p-tag>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cantidades de Referencia con Cards -->
+        <div class="p-grid p-mb-3">
+            <div class="p-col-6">
+                <div class="p-p-2 p-text-center" style="border: 1px solid var(--primary-color); border-radius: 6px; background-color: #fff;">
+                    <i class="pi pi-database p-mb-2 text-primary" style="font-size: 1.5rem;"></i>
+                    <div class="p-text-secondary p-mb-1" style="font-size: 0.8rem;">Cantidad Inicial</div>
+                    <div class="p-text-bold text-primary" style="font-size: 1.5rem;">
+                        {{detalleSeleccionado.nCantidadTeoricaIni}}
+                    </div>
+                </div>
+            </div>
+            <div class="p-col-6">
+                <div class="p-p-2 p-text-center" style="border: 1px solid #06b6d4; border-radius: 6px; background-color: #fff;">
+                    <i class="pi pi-sync p-mb-2" style="font-size: 1.5rem; color: #06b6d4;"></i>
+                    <div class="p-text-secondary p-mb-1" style="font-size: 0.8rem;">Cantidad Ref.</div>
+                    <div class="p-text-bold" style="font-size: 1.5rem; color: #0891b2;">
+                        {{detalleSeleccionado.nCantidadTeoricaRef}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p-divider></p-divider>
+
+        <!-- Campo de Captura Principal -->
+        <div class="p-field p-mt-3">
+            <label for="cantidadContada" class="p-text-bold p-d-block p-mb-2" style="font-size: 1.1rem; color: #212529;">
+                <i class="pi pi-hashtag p-mr-2" style="color: #16a34a;"></i>Cantidad Contada *
+            </label>
+            <p-inputNumber inputId="cantidadContada" 
+                [(ngModel)]="formCaptura.nCantidadContada" 
+                [showButtons]="true"
+                [min]="0"
+                buttonLayout="horizontal"
+                spinnerMode="horizontal"
+                [step]="1"
+                decrementButtonClass="p-button-danger"
+                incrementButtonClass="p-button-success"
+                incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"
+                [inputStyle]="{'text-align': 'center', 'font-size': '1.8rem', 'font-weight': 'bold', 'color': '#212529'}"
+                placeholder="0"
+                [style]="{'width':'100%'}">
+            </p-inputNumber>
+        </div>
+
+        <!-- Observación -->
+        <div class="p-field p-mt-3">
+            <label for="observacion" class="p-text-bold p-mb-2 p-d-block" style="color: #212529;">
+                <i class="pi pi-comment p-mr-2 text-secondary"></i>Observación
+            </label>
+            <textarea inputId="observacion" 
+                pInputTextarea 
+                [(ngModel)]="formCaptura.sObservacion" 
+                rows="2"
+                placeholder="Observaciones o incidencias (opcional)"
+                [autoResize]="true"
+                style="width: 100%;"></textarea>
+        </div>
+
+        <!-- Motivo -->
+        <div class="p-field p-mt-3">
+            <label for="motivo" class="p-text-bold p-mb-2 p-d-block" style="color: #212529;">
+                <i class="pi pi-info-circle p-mr-2 text-secondary"></i>Motivo
+            </label>
+            <input inputId="motivo" 
+                type="text" 
+                pInputText 
+                [(ngModel)]="formCaptura.sMotivo"
+                placeholder="Ej: Captura inicial, Corrección..."
+                style="width: 100%;" />
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="p-d-flex p-jc-end p-ai-center">
+            <button pButton pRipple
+                type="button" 
+                label="Cancelar" 
+                icon="pi pi-times" 
+                class="p-button-text p-button-secondary p-mr-2"
+                (click)="mostrarDialogoCaptura = false"></button>
+            <button pButton pRipple
+                type="button" 
+                label="Guardar" 
+                icon="pi pi-save" 
+                class="p-button-success p-button-raised"
+                (click)="guardarConteo()" 
+                [loading]="cargando"></button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+

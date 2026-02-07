@@ -54,6 +54,7 @@ import {PanelMenuModule} from 'primeng/panelmenu';
 import {PasswordModule} from 'primeng/password';
 import {PickListModule} from 'primeng/picklist';
 import {ProgressBarModule} from 'primeng/progressbar';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {RatingModule} from 'primeng/rating';
 import {RippleModule} from 'primeng/ripple';
@@ -154,6 +155,7 @@ FullCalendarModule.registerPlugins([
         PasswordModule,
         PickListModule,
         ProgressBarModule,
+        ProgressSpinnerModule,
         RadioButtonModule,
         RatingModule,
         RippleModule,
