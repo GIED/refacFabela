@@ -70,6 +70,14 @@ export class InventarioUbicacionService {
     }
 
     /**
+     * Obtener inventarios filtrados por estatus.
+     */
+    obtenerInventariosPorEstatus(estatus: number): Observable<InventarioUbicacionDto[]> {
+        const url = environment.servicios.apiRefacFabela + locator.obtenerInventariosPorEstatus + '?estatus=' + estatus;
+        return this.http.get<InventarioUbicacionDto[]>(url);
+    }
+
+    /**
      * Actualizar conteo de un producto (rol ALMACÉN).
      */
     actualizarConteo(
@@ -109,12 +117,31 @@ export class InventarioUbicacionService {
     /**
      * Autorizar inventario (rol ADMIN).
      */
-    autorizarInventario(
-        inventarioId: number,
-        request: AutorizarInventarioRequestDto
-    ): Observable<InventarioUbicacionDto> {
+    autorizarInventario(inventarioId: number, motivo: string): Observable<InventarioUbicacionDto> {
         const url = environment.servicios.apiRefacFabela + locator.autorizarInventarioUbicacion + inventarioId + '/autorizar';
-        return this.http.post<InventarioUbicacionDto>(url, request);
+        return this.http.post<InventarioUbicacionDto>(url, { sMotivoAutorizacion: motivo });
+    }
+
+    /**
+     * Rechazar inventario y regresar a estado ABIERTO (rol ADMIN).
+     */
+    rechazarInventario(inventarioId: number, motivo: string): Observable<InventarioUbicacionDto> {
+        const url = environment.servicios.apiRefacFabela + locator.rechazarInventarioUbicacion + inventarioId + '/rechazar';
+        return this.http.post<InventarioUbicacionDto>(url, { sMotivoRechazo: motivo });
+    }
+
+    /**
+     * Realizar ajuste individual de un producto con diferencia (rol ADMIN).
+     * Actualiza tw_productobodega y marca el detalle como ajustado.
+     */
+    ajustarProductoInventario(
+        inventarioId: number,
+        productoId: number,
+        motivoAjuste: string
+    ): Observable<InventarioUbicacionDetalleDto> {
+        const url = environment.servicios.apiRefacFabela + locator.ajustarProductoInventario 
+                  + inventarioId + '/detalle/' + productoId + '/ajustar';
+        return this.http.post<InventarioUbicacionDetalleDto>(url, { sMotivoAjuste: motivoAjuste });
     }
 
     /**

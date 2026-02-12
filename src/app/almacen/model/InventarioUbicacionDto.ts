@@ -55,6 +55,13 @@ export class InventarioUbicacionDetalleDto {
     sNombreUsuarioCaptura?: string;
     sObservacion?: string;
     
+    // Campos de ajuste individual
+    bAjustado?: boolean;
+    sMotivoAjuste?: string;
+    dFechaAjuste?: Date;
+    nIdUsuarioAjuste?: number;
+    sNombreUsuarioAjuste?: string;
+    
     // Campos calculados
     nDiferencia?: number; // contada - ref
 }

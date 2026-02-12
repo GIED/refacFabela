@@ -261,12 +261,15 @@ static iniciarInventarioUbicacion = '/inventarios-ubicacion';
 static obtenerInventarioUbicacion = '/inventarios-ubicacion/'; // + id
 static listarInventariosUbicacion = '/inventarios-ubicacion';
 static obtenerInventarioAbiertoUsuario = '/inventarios-ubicacion/abierto-usuario';
+static obtenerInventariosPorEstatus = '/inventarios-ubicacion/por-estatus'; // + ?estatus=X
 static sincronizarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/sync'
 static actualizarConteoInventario = '/inventarios-ubicacion/'; // + inventarioId + '/detalle/' + productoId
 static pausarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/pausar'
 static reanudarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/reanudar'
 static cerrarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/cerrar'
 static autorizarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/autorizar'
+static rechazarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/rechazar'
+static ajustarProductoInventario = '/inventarios-ubicacion/'; // + inventarioId + '/detalle/' + productoId + '/ajustar'
 static aplicarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/aplicar'
 static listarInventariosPendientesAutorizacion = '/inventarios-ubicacion/pendientes-autorizacion';
 static obtenerHistorialInventario = '/inventarios-ubicacion/'; // + id + '/historial'

@@ -1,0 +1,614 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="p-grid">
+    <div class="p-col-12">
+        <!-- Header del Panel de Autorización -->
+        <p-card styleClass="p-shadow-3 p-mb-4">
+            <ng-template pTemplate="header">
+                <div class="p-d-flex p-ai-center p-jc-between p-p-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="p-d-flex p-ai-center">
+                        <div class="p-mr-3 p-d-flex p-ai-center p-jc-center" 
+                             style="background-color: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 50%;">
+                            <i class="pi pi-check-square" style="font-size: 2rem; color: white;"></i>
+                        </div>
+                        <div>
+                            <h2 class="p-m-0 p-text-bold">Autorización de Inventarios</h2>
+                            <p class="p-m-0 p-mt-1" style="font-size: 0.95rem; opacity: 0.9;">
+                                Revisión y autorización de ajustes de inventario
+                            </p>
+                        </div>
+                    </div>
+                    <button pButton pRipple
+                        type="button"
+                        icon="pi pi-refresh"
+                        label="Actualizar"
+                        class="p-button-outlined"
+                        style="color: white; border-color: white;"
+                        (click)="cargarInventariosPendientes()"
+                        [loading]="cargando">
+                    </button>
+                </div>
+            </ng-template>
+
+            <!-- Estado Vacío -->
+            <div *ngIf="!cargando && inventariosPendientes.length === 0" class="p-text-center p-p-5">
+                <div class="p-d-flex p-jc-center p-mb-3">
+                    <div class="p-d-flex p-ai-center p-jc-center" 
+                         style="background-color: #f0fdf4; width: 100px; height: 100px; border-radius: 50%;">
+                        <i class="pi pi-check-circle" style="font-size: 4rem; color: #22c55e;"></i>
+                    </div>
+                </div>
+                <h3 class="p-text-bold p-mb-2" style="color: #212529;">No hay inventarios pendientes</h3>
+                <p class="p-text-secondary" style="max-width: 500px; margin: 0 auto;">
+                    Todos los inventarios han sido procesados. Cuando haya nuevos inventarios cerrados, aparecerán aquí para su revisión.
+                </p>
+            </div>
+
+            <!-- Tabla de Inventarios Pendientes -->
+            <div *ngIf="!cargando && inventariosPendientes.length > 0">
+                <p-table [value]="inventariosPendientes" 
+                    [paginator]="true" 
+                    [rows]="10"
+                    [rowsPerPageOptions]="[10,25,50]"
+                    styleClass="p-datatable-sm p-datatable-striped"
+                    [loading]="cargando">
+                    
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                            <h5 class="p-m-0">
+                                <i class="pi pi-list p-mr-2"></i>
+                                Inventarios en Revisión ({{inventariosPendientes.length}})
+                            </h5>
+                        </div>
+                    </ng-template>
+
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th>Ubicación</th>
+                            <th style="width: 150px;">Responsable</th>
+                            <th style="width: 150px;">Fecha Cierre</th>
+                            <th style="width: 100px; text-align: center;">Estatus</th>
+                            <th style="width: 400px; text-align: center;">Estadísticas</th>
+                            <th style="width: 120px; text-align: center;">Acciones</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-inventario>
+                        <tr>
+                            <!-- ID -->
+                            <td>
+                                <span class="p-text-bold text-primary" style="font-size: 1.1rem;">#{{inventario.nId}}</span>
+                            </td>
+
+                            <!-- Ubicación -->
+                            <td>
+                                <div>
+                                    <div class="p-text-bold" style="color: #212529;">
+                                        <i class="pi pi-warehouse p-mr-1 text-primary"></i>
+                                        {{inventario.sBodega}}
+                                    </div>
+                                    <div class="p-text-secondary" style="font-size: 0.85rem;">
+                                        <i class="pi pi-building p-mr-1" style="color: #f59e0b;"></i>
+                                        {{inventario.sAnaquel}} - 
+                                        <i class="pi pi-bars p-mr-1" style="color: #06b6d4;"></i>
+                                        {{inventario.sNivel}}
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Responsable -->
+                            <td>
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-user p-mr-2 text-secondary"></i>
+                                    <span>{{inventario.sNombreUsuarioResponsable || 'N/A'}}</span>
+                                </div>
+                            </td>
+
+                            <!-- Fecha Cierre -->
+                            <td>
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-calendar p-mr-2 text-secondary"></i>
+                                    <span>{{inventario.dCierre | date:'dd/MM/yyyy HH:mm'}}</span>
+                                </div>
+                            </td>
+
+                            <!-- Estatus -->
+                            <td style="text-align: center;">
+                                <p-tag [value]="DESCRIPCION_ESTATUS[inventario.nEstatus!]"
+                                    [severity]="getEstatusSeverity(inventario.nEstatus!)"
+                                    icon="pi pi-clock">
+                                </p-tag>
+                            </td>
+
+                            <!-- Estadísticas -->
+                            <td>
+                                <div class="p-grid p-nogutter">
+                                    <div class="p-col-3 p-text-center">
+                                        <div class="p-text-secondary" style="font-size: 0.75rem;">Total</div>
+                                        <div class="p-text-bold text-primary">{{inventario.totalLineas || 0}}</div>
+                                    </div>
+                                    <div class="p-col-3 p-text-center">
+                                        <div class="p-text-secondary" style="font-size: 0.75rem;">Contados</div>
+                                        <div class="p-text-bold" style="color: #22c55e;">{{inventario.lineasContadas || 0}}</div>
+                                    </div>
+                                    <div class="p-col-3 p-text-center">
+                                        <div class="p-text-secondary" style="font-size: 0.75rem;">Con Diferencias</div>
+                                        <div class="p-text-bold" style="color: #f59e0b;">{{obtenerCantidadConDiferencias(inventario)}}</div>
+                                    </div>
+                                    <div class="p-col-3 p-text-center">
+                                        <div class="p-text-secondary" style="font-size: 0.75rem;">Recontar</div>
+                                        <div class="p-text-bold" style="color: #ef4444;">{{inventario.lineasRecontar || 0}}</div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Acciones -->
+                            <td style="text-align: center;">
+                                <button pButton pRipple
+                                    type="button"
+                                    icon="pi pi-eye"
+                                    label="Revisar"
+                                    class="p-button-info p-button-sm"
+                                    (click)="verDetalleInventario(inventario)">
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="7" class="p-text-center p-p-4">
+                                <i class="pi pi-info-circle p-mr-2"></i>
+                                <span>No se encontraron inventarios pendientes de revisión</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <!-- Spinner de Carga -->
+            <div *ngIf="cargando && inventariosPendientes.length === 0" class="p-text-center p-p-5">
+                <p-progressSpinner></p-progressSpinner>
+                <p class="p-mt-3 p-text-secondary">Cargando inventarios...</p>
+            </div>
+        </p-card>
+    </div>
+</div>
+
+<!-- Diálogo de Detalle del Inventario -->
+<p-dialog [(visible)]="mostrarDialogoDetalle" 
+    [modal]="true" 
+    [style]="{width: '95vw', maxWidth: '1400px'}" 
+    [contentStyle]="{'background-color': '#ffffff'}"
+    [draggable]="false" 
+    [resizable]="false" 
+    [dismissableMask]="true"
+    styleClass="p-fluid">
+    
+    <ng-template pTemplate="header">
+        <div class="p-d-flex p-ai-center p-jc-between" style="width: 100%;">
+            <div class="p-d-flex p-ai-center">
+                <div class="p-d-flex p-ai-center p-jc-center p-mr-3" 
+                     style="background-color: #dbeafe; width: 50px; height: 50px; border-radius: 50%;">
+                    <i class="pi pi-file-edit" style="color: #2563eb; font-size: 1.8rem;"></i>
+                </div>
+                <div>
+                    <h4 class="p-m-0 p-text-bold" style="color: #212529;">Detalle del Inventario #{{inventarioSeleccionado?.nId}}</h4>
+                    <p class="p-m-0 p-mt-1 p-text-secondary" style="font-size: 0.9rem;">
+                        {{inventarioSeleccionado?.sBodega}} - {{inventarioSeleccionado?.sAnaquel}} - {{inventarioSeleccionado?.sNivel}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <div *ngIf="inventarioSeleccionado">
+        <!-- Información General -->
+        <div class="p-grid p-mb-3">
+            <div class="p-col-12 p-md-6">
+                <p-card styleClass="h-100">
+                    <h5 class="p-m-0 p-mb-3">
+                        <i class="pi pi-info-circle p-mr-2 text-primary"></i>
+                        Información General
+                    </h5>
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Responsable</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.sNombreUsuarioResponsable}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Fecha Inicio</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.dInicio | date:'dd/MM/yyyy HH:mm'}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Fecha Cierre</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.dCierre | date:'dd/MM/yyyy HH:mm'}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Usuario Cierra</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.sNombreUsuarioCierra || 'N/A'}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-12" *ngIf="inventarioSeleccionado.sObservaciones">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Observaciones</span>
+                                <span>{{inventarioSeleccionado.sObservaciones}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </p-card>
+            </div>
+
+            <!-- Resumen de Diferencias -->
+            <div class="p-col-12 p-md-6">
+                <p-card styleClass="h-100">
+                    <h5 class="p-m-0 p-mb-3">
+                        <i class="pi pi-exclamation-triangle p-mr-2" style="color: #f59e0b;"></i>
+                        Resumen de Diferencias
+                    </h5>
+                    <div class="p-grid">
+                        <div class="p-col-4">
+                            <div class="p-text-center p-p-2" style="background-color: #f3f4f6; border-radius: 6px;">
+                                <i class="pi pi-list text-primary p-mb-2" style="font-size: 2rem;"></i>
+                                <div class="p-text-bold" style="font-size: 1.5rem; color: #495057;">{{totalDiferencias}}</div>
+                                <div class="text-secondary" style="font-size: 0.85rem;">Total</div>
+                            </div>
+                        </div>
+                        <div class="p-col-4">
+                            <div class="p-text-center p-p-2" style="background-color: #fef2f2; border-radius: 6px;">
+                                <i class="pi pi-arrow-down p-mb-2" style="font-size: 2rem; color: #ef4444;"></i>
+                                <div class="p-text-bold" style="font-size: 1.5rem; color: #495057;">{{cantidadFaltantes}}</div>
+                                <div class="text-secondary" style="font-size: 0.85rem;">Faltantes</div>
+                            </div>
+                        </div>
+                        <div class="p-col-4">
+                            <div class="p-text-center p-p-2" style="background-color: #f0fdf4; border-radius: 6px;">
+                                <i class="pi pi-arrow-up p-mb-2" style="font-size: 2rem; color: #22c55e;"></i>
+                                <div class="p-text-bold" style="font-size: 1.5rem; color: #495057;">{{cantidadSobrantes}}</div>
+                                <div class="text-secondary" style="font-size: 0.85rem;">Sobrantes</div>
+                            </div>
+                        </div>
+                    </div>
+                </p-card>
+            </div>
+        </div>
+
+        <!-- Tabla de Productos con Diferencias -->
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="p-p-3" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                    <h5 class="p-m-0">
+                        <i class="pi pi-box p-mr-2 text-primary"></i>
+                        Productos con Diferencias
+                    </h5>
+                </div>
+            </ng-template>
+
+            <p-table [value]="productosDiferencias" 
+                [scrollable]="true" 
+                scrollHeight="400px"
+                [paginator]="true" 
+                [rows]="10"
+                [rowsPerPageOptions]="[10,25,50]"
+                styleClass="p-datatable-sm p-datatable-striped">
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 50px; text-align: center;"><i class="pi pi-flag"></i></th>
+                        <th>No. Parte</th>
+                        <th>Producto</th>
+                        <th>Marca</th>
+                        <th style="width: 120px; text-align: center;">Cant. Referencia</th>
+                        <th style="width: 120px; text-align: center;">Cant. Contada</th>
+                        <th style="width: 120px; text-align: center;">Diferencia</th>
+                        <th style="width: 200px;">Observación</th>
+                        <th style="width: 150px; text-align: center;">Acciones</th>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="body" let-producto>
+                    <tr>
+                        <td style="text-align: center;">
+                            <i *ngIf="producto.nDiferencia < 0" 
+                               class="pi pi-arrow-down" 
+                               style="color: #ef4444; font-size: 1.2rem;"
+                               pTooltip="Faltante" tooltipPosition="top"></i>
+                            <i *ngIf="producto.nDiferencia > 0" 
+                               class="pi pi-arrow-up" 
+                               style="color: #22c55e; font-size: 1.2rem;"
+                               pTooltip="Sobrante" tooltipPosition="top"></i>
+                        </td>
+                        <td><span class="p-text-bold text-primary">{{producto.sNoParte}}</span></td>
+                        <td><div class="p-text-bold" style="color: #212529;">{{producto.sNombreProducto}}</div></td>
+                        <td><p-tag [value]="producto.sMarca" severity="info" icon="pi pi-tag"></p-tag></td>
+                        <td style="text-align: center;">
+                            <span class="p-text-bold" style="color: #0891b2; font-size: 1.1rem;">{{producto.nCantidadTeoricaRef}}</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="p-text-bold" style="color: #6366f1; font-size: 1.1rem;">{{producto.nCantidadContada}}</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <p-tag [value]="(producto.nDiferencia > 0 ? '+' : '') + producto.nDiferencia" 
+                                   [severity]="producto.nDiferencia < 0 ? 'danger' : 'success'"
+                                   [style]="{'font-size': '1.1rem', 'font-weight': 'bold'}">
+                            </p-tag>
+                        </td>
+                        <td><span class="p-text-secondary" style="font-size: 0.85rem;">{{producto.sObservacion || '-'}}</span></td>
+                        
+                        <!-- Acciones -->
+                        <td style="text-align: center;">
+                            <div *ngIf="!producto.bAjustado">
+                                <button pButton pRipple
+                                    type="button"
+                                    icon="pi pi-wrench"
+                                    label="Ajustar"
+                                    class="p-button-warning p-button-sm"
+                                    (click)="abrirDialogoAjustar(producto)">
+                                </button>
+                            </div>
+                            <div *ngIf="producto.bAjustado">
+                                <p-tag severity="success" icon="pi pi-check-circle" value="Ajustado"></p-tag>
+                                <div class="p-text-secondary p-mt-1" style="font-size: 0.7rem;">
+                                    {{producto.dFechaAjuste | date:'dd/MM/yy HH:mm'}}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="9" class="p-text-center p-p-4">
+                            <i class="pi pi-check-circle p-mr-2" style="color: #22c55e;"></i>
+                            <span>No hay productos con diferencias - Inventario exacto</span>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="p-d-flex p-jc-between p-ai-center">
+            <div>
+                <button pButton pRipple
+                    type="button" 
+                    label="Cancelar" 
+                    icon="pi pi-times" 
+                    class="p-button-text p-button-secondary"
+                    (click)="mostrarDialogoDetalle = false">
+                </button>
+                <p-message *ngIf="!todosProductosAjustados" 
+                    severity="warn" 
+                    [text]="'Atención: Hay ' + productosPendientesAjuste + ' producto(s) pendiente(s) de ajustar'"
+                    styleClass="p-ml-2">
+                </p-message>
+            </div>
+            <div>
+                <button pButton pRipple
+                    type="button" 
+                    label="Rechazar" 
+                    icon="pi pi-times-circle" 
+                    class="p-button-danger p-button-outlined p-mr-2"
+                    (click)="abrirDialogoAutorizar('rechazar')">
+                </button>
+                <button pButton pRipple
+                    type="button" 
+                    label="Autorizar Ajuste" 
+                    icon="pi pi-check-circle" 
+                    class="p-button-success"
+                    [disabled]="!todosProductosAjustados"
+                    (click)="abrirDialogoAutorizar('autorizar')"
+                    pTooltip="{{!todosProductosAjustados ? 'Debe ajustar todos los productos con diferencias antes de autorizar' : ''}}"
+                    tooltipPosition="top">
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<!-- Diálogo de Confirmación de Autorización/Rechazo -->
+<p-dialog [(visible)]="mostrarDialogoAutorizar" 
+    [modal]="true" 
+    [style]="{width: '600px'}" 
+    [contentStyle]="{'background-color': '#ffffff'}"
+    [draggable]="false" 
+    [resizable]="false" 
+    [dismissableMask]="false"
+    styleClass="p-fluid">
+    
+    <ng-template pTemplate="header">
+        <div class="p-d-flex p-ai-center">
+            <div class="p-d-flex p-ai-center p-jc-center p-mr-3" 
+                 [style]="accionAutorizacion === 'autorizar' 
+                    ? 'background-color: #dcfce7; width: 45px; height: 45px; border-radius: 50%;' 
+                    : 'background-color: #fee2e2; width: 45px; height: 45px; border-radius: 50%;'">
+                <i [class]="accionAutorizacion === 'autorizar' ? 'pi pi-check-circle' : 'pi pi-times-circle'" 
+                   [style]="accionAutorizacion === 'autorizar' 
+                    ? 'color: #16a34a; font-size: 1.5rem;' 
+                    : 'color: #dc2626; font-size: 1.5rem;'">
+                </i>
+            </div>
+            <div>
+                <h5 class="p-m-0 p-text-bold" style="color: #212529;">
+                    {{ accionAutorizacion === 'autorizar' ? 'Autorizar Inventario' : 'Rechazar Inventario' }}
+                </h5>
+                <p class="p-m-0 p-mt-1 p-text-secondary" style="font-size: 0.85rem;">
+                    Inventario #{{inventarioSeleccionado?.nId}}
+                </p>
+            </div>
+        </div>
+    </ng-template>
+
+    <div class="p-mt-3">
+        <p-message *ngIf="accionAutorizacion === 'autorizar'" 
+            severity="success" 
+            text="Al autorizar este inventario, se aplicarán los ajustes correspondientes al sistema.">
+        </p-message>
+        <p-message *ngIf="accionAutorizacion === 'rechazar'" 
+            severity="warn" 
+            text="Al rechazar, el inventario regresará a estado ABIERTO para correcciones.">
+        </p-message>
+
+        <div class="p-field p-mt-4">
+            <label for="motivoAutorizacion" class="p-text-bold p-mb-2 p-d-block" style="color: #212529;">
+                <i class="pi pi-file-edit p-mr-2"></i>
+                Motivo de {{ accionAutorizacion === 'autorizar' ? 'Autorización' : 'Rechazo' }} *
+            </label>
+            <textarea inputId="motivoAutorizacion" 
+                pInputTextarea 
+                [(ngModel)]="motivoAutorizacion" 
+                rows="4"
+                [placeholder]="accionAutorizacion === 'autorizar' 
+                    ? 'Ej: Diferencias validadas, proceder con ajuste de inventario' 
+                    : 'Ej: Existen inconsistencias que deben corregirse antes de autorizar'"
+                [autoResize]="true"
+                style="width: 100%;">
+            </textarea>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="p-d-flex p-jc-end p-ai-center">
+            <button pButton pRipple
+                type="button" 
+                label="Cancelar" 
+                icon="pi pi-times" 
+                class="p-button-text p-button-secondary p-mr-2"
+                (click)="mostrarDialogoAutorizar = false">
+            </button>
+            <button pButton pRipple
+                type="button" 
+                [label]="accionAutorizacion === 'autorizar' ? 'Confirmar Autorización' : 'Confirmar Rechazo'" 
+                [icon]="accionAutorizacion === 'autorizar' ? 'pi pi-check' : 'pi pi-times'" 
+                [class]="accionAutorizacion === 'autorizar' ? 'p-button-success' : 'p-button-danger'"
+                (click)="confirmarAutorizacion()" 
+                [loading]="cargando">
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<!-- Diálogo de Ajuste Individual de Producto -->
+<p-dialog [(visible)]="mostrarDialogoAjustar" 
+    [modal]="true" 
+    [style]="{width: '700px'}" 
+    [contentStyle]="{'background-color': '#ffffff'}"
+    [draggable]="false" 
+    [resizable]="false" 
+    [dismissableMask]="false"
+    styleClass="p-fluid">
+    
+    <ng-template pTemplate="header">
+        <div class="p-d-flex p-ai-center">
+            <div class="p-d-flex p-ai-center p-jc-center p-mr-3" 
+                 style="background-color: #fff7ed; width: 45px; height: 45px; border-radius: 50%;">
+                <i class="pi pi-wrench" style="color: #f59e0b; font-size: 1.5rem;"></i>
+            </div>
+            <div>
+                <h5 class="p-m-0 p-text-bold" style="color: #212529;">Ajustar Producto</h5>
+                <p class="p-m-0 p-mt-1 p-text-secondary" style="font-size: 0.85rem;">
+                    Registrar ajuste de inventario en sistema
+                </p>
+            </div>
+        </div>
+    </ng-template>
+
+    <div *ngIf="productoAjustar" class="p-mt-3">
+        <!-- Información del Producto -->
+        <div class="p-shadow-1 p-p-3 p-mb-3" style="background-color: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
+            <div class="p-d-flex p-ai-start">
+                <i class="pi pi-box p-mr-3 text-primary" style="font-size: 2rem;"></i>
+                <div style="flex: 1;">
+                    <div class="p-text-bold p-mb-1" style="font-size: 1.1rem; color: #212529;">
+                        {{productoAjustar.sNoParte}}
+                    </div>
+                    <div class="p-text-secondary p-mb-2" style="line-height: 1.4;">
+                        {{productoAjustar.sNombreProducto}}
+                    </div>
+                    <div class="p-d-flex p-ai-center">
+                        <p-tag [value]="productoAjustar.sMarca" severity="info" icon="pi pi-tag"></p-tag>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detalle de Diferencia -->
+        <div class="p-grid p-mb-3">
+            <div class="p-col-4">
+                <div class="p-p-3 p-text-center" style="border: 1px solid #06b6d4; border-radius: 6px; background-color: #fff;">
+                    <div class="p-text-secondary p-mb-1" style="font-size: 0.85rem;">Sistema</div>
+                    <div class="p-text-bold" style="font-size: 1.8rem; color: #0891b2;">
+                        {{productoAjustar.nCantidadTeoricaRef}}
+                    </div>
+                </div>
+            </div>
+            <div class="p-col-4">
+                <div class="p-p-3 p-text-center" style="border: 1px solid #6366f1; border-radius: 6px; background-color: #fff;">
+                    <div class="p-text-secondary p-mb-1" style="font-size: 0.85rem;">Contado</div>
+                    <div class="p-text-bold" style="font-size: 1.8rem; color: #6366f1;">
+                        {{productoAjustar.nCantidadContada}}
+                    </div>
+                </div>
+            </div>
+            <div class="p-col-4">
+                <div class="p-p-3 p-text-center" 
+                     [style]="'border: 2px solid ' + (productoAjustar.nDiferencia! < 0 ? '#ef4444' : '#22c55e') + '; border-radius: 6px; background-color: #fff;'">
+                    <div class="p-text-secondary p-mb-1" style="font-size: 0.85rem;">Diferencia</div>
+                    <div class="p-text-bold" 
+                         [style]="'font-size: 1.8rem; color: ' + (productoAjustar.nDiferencia! < 0 ? '#ef4444' : '#22c55e')">
+                        {{(productoAjustar.nDiferencia! > 0 ? '+' : '') + productoAjustar.nDiferencia}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p-message severity="info" 
+            [text]="'Al confirmar, se actualizará tw_productobodega con la cantidad contada (' + productoAjustar.nCantidadContada + ' unidades)'">
+        </p-message>
+
+        <div class="p-field p-mt-4">
+            <label for="motivoAjuste" class="p-text-bold p-mb-2 p-d-block" style="color: #212529;">
+                <i class="pi pi-file-edit p-mr-2"></i>
+                Motivo del Ajuste *
+            </label>
+            <textarea inputId="motivoAjuste" 
+                pInputTextarea 
+                [(ngModel)]="motivoAjuste" 
+                rows="4"
+                placeholder="Ej: Diferencia validada por conteo físico, producto dañado encontrado, etc."
+                [autoResize]="true"
+                style="width: 100%;">
+            </textarea>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="p-d-flex p-jc-end p-ai-center">
+            <button pButton pRipple
+                type="button" 
+                label="Cancelar" 
+                icon="pi pi-times" 
+                class="p-button-text p-button-secondary p-mr-2"
+                (click)="mostrarDialogoAjustar = false">
+            </button>
+            <button pButton pRipple
+                type="button" 
+                label="Confirmar Ajuste" 
+                icon="pi pi-check" 
+                class="p-button-warning"
+                (click)="confirmarAjusteProducto()" 
+                [loading]="cargando">
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>

@@ -8,6 +8,7 @@ import { StockMinimoComponent } from "./pages/stock-minimo/stock-minimo.componen
 import { TraspasosComponent } from "./pages/traspasos/traspasos.component";
 import { RegistroProductoFacturaComponent } from "./pages/registro-producto-factura/registro-producto-factura.component";
 import { InventarioUbicacionComponent } from "./pages/inventario-ubicacion/inventario-ubicacion.component";
+import { AutorizacionInventarioComponent } from "./pages/autorizacion-inventario/autorizacion-inventario.component";
 
 const routes: Routes = [
   {
@@ -29,6 +30,11 @@ const routes: Routes = [
         path: "inventario-ubicacion",
         component: InventarioUbicacionComponent,
         data: { expectedRol: ['ROLE_ALMACEN', 'ROLE_ADMIN'] }
+      },
+      {
+        path: "autorizacion-inventario",
+        component: AutorizacionInventarioComponent,
+        data: { expectedRol: ['ROLE_ADMIN'] }
       },
       {
         path: "entrega-de-mercancia",
