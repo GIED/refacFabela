@@ -1,4 +1,5 @@
 <p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" [modal]="true" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
 
 <div class="p-grid">
     <div class="p-col-12">
@@ -184,10 +185,12 @@
                             label="Cerrar Inventario" 
                             icon="pi pi-check-circle"
                             class="p-button-danger"
-                            (click)="cerrarInventario()"
+                            (click)="confirmarCerrarInventario()"
                             [disabled]="inventarioActual.lineasPendientes! > 0 || 
                                        (inventarioActual.nEstatus !== EstatusInventario.ABIERTO && 
-                                        inventarioActual.nEstatus !== EstatusInventario.PAUSADO)">
+                                        inventarioActual.nEstatus !== EstatusInventario.PAUSADO)"
+                            pTooltip="{{inventarioActual.lineasPendientes! > 0 ? 'Hay ' + inventarioActual.lineasPendientes + ' línea(s) pendiente(s) de contar' : 'Finalizar inventario y pasar a revisión'}}"
+                            tooltipPosition="top">
                         </button>
                     </div>
                 </ng-template>
@@ -227,6 +230,11 @@
 
                     <ng-template pTemplate="header">
                         <tr>
+                            <th style="width: 100px; text-align: center;">
+                                <div class="p-d-flex p-ai-center p-jc-center">
+                                    <i class="pi pi-image" style="color: var(--primary-color);"></i>
+                                </div>
+                            </th>
                             <th pSortableColumn="sNoParte" style="min-width: 120px">
                                 <div class="p-d-flex p-ai-center">
                                     <i class="pi pi-tag p-mr-2" style="color: var(--primary-color);"></i>
@@ -283,6 +291,14 @@
 
                     <ng-template pTemplate="body" let-detalle>
                         <tr>
+                            <td style="text-align: center;">
+                                <img [src]="obtenerRutaImagen(detalle.sNoParte)" 
+                                     (error)="imagenError($event)"
+                                     alt="Imagen del producto"
+                                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; cursor: pointer;"
+                                     (click)="ampliarImagen(detalle.sNoParte)"
+                                     pTooltip="Click para ampliar" />
+                            </td>
                             <td>
                                 <span class="p-text-bold" style="color: #212529;">{{detalle.sNoParte}}</span>
                             </td>
@@ -619,4 +635,21 @@
     </ng-template>
 </p-dialog>
 
+<!-- Modal para ampliar imagen -->
+<p-dialog [(visible)]="mostrarImagenAmpliada" 
+          [modal]="true" 
+          [style]="{width: 'auto', maxWidth: '90vw'}" 
+          [closable]="true"
+          (onHide)="cerrarImagenAmpliada()">
+    <ng-template pTemplate="header">
+        <h5>Vista Ampliada</h5>
+    </ng-template>
+    <div style="text-align: center;">
+        <img *ngIf="imagenAmpliada" 
+             [src]="imagenAmpliada" 
+             (error)="imagenError($event)"
+             alt="Imagen ampliada"
+             style="max-width: 100%; max-height: 80vh; border-radius: 12px;" />
+    </div>
+</p-dialog>
 

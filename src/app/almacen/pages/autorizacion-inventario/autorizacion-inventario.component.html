@@ -303,6 +303,7 @@
                 
                 <ng-template pTemplate="header">
                     <tr>
+                        <th style="width: 100px; text-align: center;"><i class="pi pi-image"></i></th>
                         <th style="width: 50px; text-align: center;"><i class="pi pi-flag"></i></th>
                         <th>No. Parte</th>
                         <th>Producto</th>
@@ -317,6 +318,14 @@
                 
                 <ng-template pTemplate="body" let-producto>
                     <tr>
+                        <td style="text-align: center;">
+                            <img [src]="obtenerRutaImagen(producto.sNoParte)" 
+                                 (error)="imagenError($event)"
+                                 alt="Imagen del producto"
+                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; cursor: pointer;"
+                                 (click)="ampliarImagen(producto.sNoParte)"
+                                 pTooltip="Click para ampliar" />
+                        </td>
                         <td style="text-align: center;">
                             <i *ngIf="producto.nDiferencia < 0" 
                                class="pi pi-arrow-down" 
@@ -367,7 +376,7 @@
                 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="9" class="p-text-center p-p-4">
+                        <td colspan="10" class="p-text-center p-p-4">
                             <i class="pi pi-check-circle p-mr-2" style="color: #22c55e;"></i>
                             <span>No hay productos con diferencias - Inventario exacto</span>
                         </td>
@@ -611,4 +620,24 @@
             </button>
         </div>
     </ng-template>
+</p-dialog>
+
+<!-- Modal para imagen ampliada -->
+<p-dialog [(visible)]="mostrarImagenAmpliada" 
+    [modal]="true" 
+    [style]="{width: '600px'}" 
+    [draggable]="false" 
+    [resizable]="false"
+    [baseZIndex]="10000"
+    [dismissableMask]="true"
+    styleClass="imagen-dialog">
+    <ng-template pTemplate="header">
+        <span class="p-dialog-title">Imagen del Producto</span>
+    </ng-template>
+    <div class="p-text-center">
+        <img [src]="imagenAmpliada" 
+             [alt]="'Imagen ampliada'" 
+             style="max-width: 100%; height: auto; border-radius: 8px;"
+             (error)="imagenError($event)">
+    </div>
 </p-dialog>

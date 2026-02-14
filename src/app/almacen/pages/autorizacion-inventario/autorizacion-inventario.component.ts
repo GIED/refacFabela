@@ -40,6 +40,11 @@ export class AutorizacionInventarioComponent implements OnInit {
     EstatusInventario = EstatusInventario;
     DESCRIPCION_ESTATUS = DESCRIPCION_ESTATUS_INVENTARIO;
 
+    // Imágenes de productos
+    rutaImagenDefault: string = 'assets/layout/images/default.png';
+    imagenAmpliada: string | null = null;
+    mostrarImagenAmpliada: boolean = false;
+
     constructor(
         private inventarioService: InventarioUbicacionService,
         private messageService: MessageService,
@@ -48,6 +53,37 @@ export class AutorizacionInventarioComponent implements OnInit {
 
     ngOnInit(): void {
         this.cargarInventariosPendientes();
+    }
+
+    /**
+     * Obtener URL de la imagen del producto
+     */
+    obtenerRutaImagen(noParte: string): string {
+        return 'https://www.ctpsales.costex.com:11443/Webpics/220x220/' + noParte + '.jpg';
+    }
+
+    /**
+     * Manejar error cuando la imagen no existe
+     */
+    imagenError(event: Event) {
+        const imgElement = event.target as HTMLImageElement;
+        imgElement.src = this.rutaImagenDefault;
+    }
+
+    /**
+     * Ampliar imagen en modal
+     */
+    ampliarImagen(noParte: string) {
+        this.imagenAmpliada = this.obtenerRutaImagen(noParte);
+        this.mostrarImagenAmpliada = true;
+    }
+
+    /**
+     * Cerrar modal de imagen ampliada
+     */
+    cerrarImagenAmpliada() {
+        this.mostrarImagenAmpliada = false;
+        this.imagenAmpliada = null;
     }
 
     /**

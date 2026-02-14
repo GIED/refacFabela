@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageService, MenuItem } from 'primeng/api';
+import { MessageService, MenuItem, ConfirmationService } from 'primeng/api';
 import { InventarioUbicacionService } from '../../service/inventario-ubicacion.service';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { AnaquelService } from 'src/app/shared/service/anaquel.service';
@@ -19,7 +19,7 @@ import { TcNivel } from 'src/app/productos/model/TcNivel';
     selector: 'app-inventario-ubicacion',
     templateUrl: './inventario-ubicacion.component.html',
     styleUrls: ['./inventario-ubicacion.component.scss'],
-    providers: [MessageService]
+    providers: [MessageService, ConfirmationService]
 })
 export class InventarioUbicacionComponent implements OnInit {
 
@@ -50,12 +50,18 @@ export class InventarioUbicacionComponent implements OnInit {
     EstatusInventario = EstatusInventario;
     DESCRIPCION_ESTATUS = DESCRIPCION_ESTATUS_INVENTARIO;
 
+    // Imágenes de productos
+    rutaImagenDefault: string = 'assets/layout/images/default.png';
+    imagenAmpliada: string | null = null;
+    mostrarImagenAmpliada: boolean = false;
+
     constructor(
         private inventarioService: InventarioUbicacionService,
         private bodegasService: BodegasService,
         private anaquelService: AnaquelService,
         private nivelService: NivelService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService
     ) { }
 
     ngOnInit(): void {
@@ -64,7 +70,51 @@ export class InventarioUbicacionComponent implements OnInit {
         this.configurarMenu();
     }
 
+    /**
+     * Obtener URL de la imagen del producto
+     */
+    obtenerRutaImagen(noParte: string): string {
+        return 'https://www.ctpsales.costex.com:11443/Webpics/220x220/' + noParte + '.jpg';
+    }
+
+    /**
+     * Manejar error cuando la imagen no existe
+     */
+    imagenError(event: Event) {
+        const imgElement = event.target as HTMLImageElement;
+        imgElement.src = this.rutaImagenDefault;
+    }
+
+    /**
+     * Ampliar imagen en modal
+     */
+    ampliarImagen(noParte: string) {
+        this.imagenAmpliada = this.obtenerRutaImagen(noParte);
+        this.mostrarImagenAmpliada = true;
+    }
+
+    /**
+     * Cerrar modal de imagen ampliada
+     */
+    cerrarImagenAmpliada() {
+        this.mostrarImagenAmpliada = false;
+        this.imagenAmpliada = null;
+    }
+
     configurarMenu(): void {
+        this.actualizarMenu();
+    }
+
+    /**
+     * Actualizar menú dinámicamente según estado del inventario.
+     */
+    actualizarMenu(): void {
+        const puedeReanudar = this.inventarioActual?.nEstatus === EstatusInventario.PAUSADO;
+        const puedePausar = this.inventarioActual?.nEstatus === EstatusInventario.ABIERTO;
+        const puedeCerrar = (this.inventarioActual?.nEstatus === EstatusInventario.ABIERTO || 
+                            this.inventarioActual?.nEstatus === EstatusInventario.PAUSADO) &&
+                            this.inventarioActual?.lineasPendientes === 0;
+
         this.items = [
             {
                 label: 'Acciones de Inventario',
@@ -72,17 +122,20 @@ export class InventarioUbicacionComponent implements OnInit {
                     {
                         label: 'Sincronizar',
                         icon: 'pi pi-refresh',
-                        command: () => this.sincronizarAutomatico()
+                        command: () => this.sincronizarAutomatico(),
+                        disabled: !this.inventarioActual
                     },
                     {
                         label: 'Pausar',
                         icon: 'pi pi-pause',
-                        command: () => this.pausarInventario()
+                        command: () => this.pausarInventario(),
+                        disabled: !puedePausar
                     },
                     {
                         label: 'Reanudar',
                         icon: 'pi pi-play',
-                        command: () => this.reanudarInventario()
+                        command: () => this.reanudarInventario(),
+                        disabled: !puedeReanudar
                     },
                     {
                         separator: true
@@ -90,7 +143,10 @@ export class InventarioUbicacionComponent implements OnInit {
                     {
                         label: 'Finalizar Inventario',
                         icon: 'pi pi-check-square',
-                        command: () => this.cerrarInventario()
+                        command: () => this.confirmarCerrarInventario(),
+                        disabled: !puedeCerrar,
+                        title: !puedeCerrar && this.inventarioActual?.lineasPendientes ? 
+                               `Hay ${this.inventarioActual.lineasPendientes} línea(s) pendiente(s)` : ''
                     }
                 ]
             }
@@ -145,6 +201,7 @@ export class InventarioUbicacionComponent implements OnInit {
             next: (data) => {
                 this.inventarioActual = data;
                 this.cargando = false;
+                this.actualizarMenu(); // Actualizar menú con nuevo estado
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Sincronización exitosa',
@@ -184,6 +241,7 @@ export class InventarioUbicacionComponent implements OnInit {
                             this.inventarioActual = fullData;
                             this.cargando = false;
                             this.mostrarDialogoIniciar = false;
+                            this.actualizarMenu(); // Actualizar menú con nuevo inventario
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Inventario iniciado',
@@ -195,6 +253,7 @@ export class InventarioUbicacionComponent implements OnInit {
                             this.inventarioActual = data;
                             this.cargando = false;
                             this.mostrarDialogoIniciar = false;
+                            this.actualizarMenu(); // Actualizar menú aunque la sincronización falle
                             this.messageService.add({
                                 severity: 'warn',
                                 summary: 'Inventario iniciado',
@@ -290,6 +349,7 @@ export class InventarioUbicacionComponent implements OnInit {
             next: (data) => {
                 this.inventarioActual = data;
                 this.cargando = false;
+                this.actualizarMenu(); // Actualizar menú con nuevo estado
                 this.messageService.add({
                     severity: 'info',
                     summary: 'Inventario pausado',
@@ -314,6 +374,7 @@ export class InventarioUbicacionComponent implements OnInit {
             next: (data) => {
                 this.inventarioActual = data;
                 this.cargando = false;
+                this.actualizarMenu(); // Actualizar menú con nuevo estado
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Inventario reanudado',
@@ -328,19 +389,59 @@ export class InventarioUbicacionComponent implements OnInit {
     }
 
     /**
-     * Cerrar inventario (pasar a revisión).
+     * Confirmar antes de cerrar inventario con sincronización previa.
      */
-    cerrarInventario(): void {
+    confirmarCerrarInventario(): void {
         if (!this.inventarioActual) return;
 
-        if (this.inventarioActual.lineasPendientes! > 0) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'No se puede cerrar',
-                detail: `Hay ${this.inventarioActual.lineasPendientes} línea(s) pendiente(s) de contar`
-            });
-            return;
-        }
+        // Primero sincronizar para obtener datos actualizados
+        this.cargando = true;
+        this.inventarioService.obtenerInventario(this.inventarioActual.nId!).subscribe({
+            next: (data) => {
+                this.inventarioActual = data;
+                this.cargando = false;
+
+                // Validar líneas pendientes con datos actualizados
+                if (this.inventarioActual.lineasPendientes! > 0) {
+                    this.messageService.add({
+                        severity: 'warn',
+                        summary: 'No se puede cerrar',
+                        detail: `Hay ${this.inventarioActual.lineasPendientes} línea(s) pendiente(s) de contar. Por favor, complete el conteo de todos los productos.`,
+                        life: 5000
+                    });
+                    this.actualizarMenu();
+                    return;
+                }
+
+                // Mostrar confirmación
+                this.confirmationService.confirm({
+                    message: `¿Está seguro de finalizar el inventario #${this.inventarioActual.nId}?<br><br>
+                              <strong>Resumen:</strong><br>
+                              • Total de productos: ${this.inventarioActual.totalLineas}<br>
+                              • Productos contados: ${this.inventarioActual.lineasContadas}<br><br>
+                              El inventario pasará a estado EN REVISIÓN.`,
+                    header: 'Confirmar Finalización',
+                    icon: 'pi pi-exclamation-triangle',
+                    acceptLabel: 'Sí, finalizar',
+                    rejectLabel: 'Cancelar',
+                    acceptButtonStyleClass: 'p-button-danger',
+                    accept: () => {
+                        this.cerrarInventario();
+                    }
+                });
+            },
+            error: (err) => {
+                this.cargando = false;
+                this.mostrarError('Error al sincronizar inventario');
+            }
+        });
+    }
+
+    /**
+     * Cerrar inventario (pasar a revisión).
+     */
+    private cerrarInventario(): void {
+        if (!this.inventarioActual) return;
 
         this.cargando = true;
         this.inventarioService.cerrarInventario(this.inventarioActual.nId!).subscribe({
@@ -349,8 +450,8 @@ export class InventarioUbicacionComponent implements OnInit {
                 this.inventarioActual = null; // Limpiamos para permitir nuevo inventario
                 this.messageService.add({
                     severity: 'success',
-                    summary: 'Inventario cerrado',
-                    detail: `El inventario #${data.nId} se finalizó correctamente`
+                    summary: 'Inventario finalizado',
+                    detail: `El inventario #${data.nId} se cerró correctamente y está EN REVISIÓN`
                 });
             },
             error: (err) => {
@@ -369,6 +470,7 @@ export class InventarioUbicacionComponent implements OnInit {
         this.inventarioService.obtenerInventario(this.inventarioActual.nId!).subscribe({
             next: (data) => {
                 this.inventarioActual = data;
+                this.actualizarMenu(); // Actualizar menú con nuevo estado
             },
             error: (err) => {
                 this.mostrarError('Error al recargar inventario');

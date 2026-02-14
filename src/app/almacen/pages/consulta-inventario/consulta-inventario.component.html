@@ -718,6 +718,7 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="width: 50px; text-align: center;"><i class="pi pi-flag"></i></th>
+                            <th style="width: 100px; text-align: center;"><i class="pi pi-image"></i></th>
                             <th>No. Parte</th>
                             <th>Producto</th>
                             <th>Marca</th>
@@ -750,6 +751,15 @@
                                    class="pi pi-minus" 
                                    style="color: #9ca3af; font-size: 1rem;"
                                    pTooltip="Pendiente" tooltipPosition="top"></i>
+                            </td>
+                            <!-- Imagen -->
+                            <td style="text-align: center;">
+                                <img [src]="obtenerRutaImagen(producto.sNoParte)" 
+                                     [alt]="producto.sNoParte"
+                                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer;"
+                                     (error)="imagenError($event)"
+                                     (click)="ampliarImagen(producto.sNoParte)"
+                                     pTooltip="Click para ampliar" tooltipPosition="top">
                             </td>
                             <td><span class="p-text-bold text-primary">{{producto.sNoParte}}</span></td>
                             <td><div class="p-text-bold" style="color: #212529; font-size: 0.9rem;">{{producto.sNombreProducto}}</div></td>
@@ -795,7 +805,7 @@
                     
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="10" class="p-text-center p-p-4">
+                            <td colspan="11" class="p-text-center p-p-4">
                                 <i class="pi pi-info-circle p-mr-2"></i>
                                 <span>No se encontraron productos</span>
                             </td>
@@ -822,6 +832,7 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="width: 50px; text-align: center;"><i class="pi pi-flag"></i></th>
+                            <th style="width: 100px; text-align: center;"><i class="pi pi-image"></i></th>
                             <th>No. Parte</th>
                             <th>Producto</th>
                             <th>Marca</th>
@@ -844,6 +855,15 @@
                                    class="pi pi-arrow-up" 
                                    style="color: #22c55e; font-size: 1.2rem;"
                                    pTooltip="Sobrante" tooltipPosition="top"></i>
+                            </td>
+                            <!-- Imagen -->
+                            <td style="text-align: center;">
+                                <img [src]="obtenerRutaImagen(producto.sNoParte)" 
+                                     [alt]="producto.sNoParte"
+                                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer;"
+                                     (error)="imagenError($event)"
+                                     (click)="ampliarImagen(producto.sNoParte)"
+                                     pTooltip="Click para ampliar" tooltipPosition="top">
                             </td>
                             <td><span class="p-text-bold text-primary">{{producto.sNoParte}}</span></td>
                             <td><div class="p-text-bold" style="color: #212529;">{{producto.sNombreProducto}}</div></td>
@@ -878,7 +898,7 @@
                     
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="9" class="p-text-center p-p-4">
+                            <td colspan="10" class="p-text-center p-p-4">
                                 <i class="pi pi-check-circle p-mr-2" style="color: #22c55e;"></i>
                                 <span>No hay productos con diferencias - Inventario exacto</span>
                             </td>
@@ -904,6 +924,7 @@
                     
                     <ng-template pTemplate="header">
                         <tr>
+                            <th style="width: 100px; text-align: center;"><i class="pi pi-image"></i></th>
                             <th>No. Parte</th>
                             <th>Producto</th>
                             <th>Marca</th>
@@ -918,6 +939,15 @@
                     
                     <ng-template pTemplate="body" let-producto>
                         <tr>
+                            <!-- Imagen -->
+                            <td style="text-align: center;">
+                                <img [src]="obtenerRutaImagen(producto.sNoParte)" 
+                                     [alt]="producto.sNoParte"
+                                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer;"
+                                     (error)="imagenError($event)"
+                                     (click)="ampliarImagen(producto.sNoParte)"
+                                     pTooltip="Click para ampliar" tooltipPosition="top">
+                            </td>
                             <td><span class="p-text-bold text-primary">{{producto.sNoParte}}</span></td>
                             <td><div class="p-text-bold" style="color: #212529;">{{producto.sNombreProducto}}</div></td>
                             <td><p-tag [value]="producto.sMarca" severity="info" icon="pi pi-tag"></p-tag></td>
@@ -952,7 +982,7 @@
                     
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="9" class="p-text-center p-p-4">
+                            <td colspan="10" class="p-text-center p-p-4">
                                 <i class="pi pi-info-circle p-mr-2"></i>
                                 <span>No hay productos ajustados en este inventario</span>
                             </td>
@@ -974,4 +1004,24 @@
             </button>
         </div>
     </ng-template>
+</p-dialog>
+
+<!-- Modal para imagen ampliada -->
+<p-dialog [(visible)]="mostrarImagenAmpliada" 
+    [modal]="true" 
+    [style]="{width: '600px'}" 
+    [draggable]="false" 
+    [resizable]="false"
+    [baseZIndex]="10000"
+    [dismissableMask]="true"
+    styleClass="imagen-dialog">
+    <ng-template pTemplate="header">
+        <span class="p-dialog-title">Imagen del Producto</span>
+    </ng-template>
+    <div class="p-text-center">
+        <img [src]="imagenAmpliada" 
+             [alt]="'Imagen ampliada'" 
+             style="max-width: 100%; height: auto; border-radius: 8px;"
+             (error)="imagenError($event)">
+    </div>
 </p-dialog>
