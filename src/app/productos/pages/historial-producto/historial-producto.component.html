@@ -389,6 +389,112 @@
         </div>
     </div>
 
+    <!-- Historial de Inventarios por Ubicación -->
+    <div *ngIf="cargaInicial && listaInventariosProducto.length > 0" class="p-col-12">
+        <div class="card table-card">
+            <div class="card-header" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+                <i class="pi pi-clipboard"></i>
+                <h4 style="color: white;">Inventarios por Ubicación ({{listaInventariosProducto.length}})</h4>
+            </div>
+            <div class="p-mt-3">
+                <p-table [value]="listaInventariosProducto" [rows]="5" [paginator]="true"
+                    [globalFilterFields]="['sBodega','sAnaquel','sNivel','sNombreUsuarioResponsable','sDescripcionEstatus']" 
+                    [rowHover]="true" dataKey="nId" styleClass="p-datatable-sm p-datatable-striped"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros" 
+                    [showCurrentPageReport]="true" responsiveLayout="scroll">
+                    
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                            <span class="p-text-secondary">
+                                <i class="pi pi-info-circle p-mr-1"></i>
+                                Inventarios donde aparece este producto
+                            </span>
+                        </div>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="nId" style="width: 70px;">
+                                <div class="p-d-flex p-ai-center">
+                                    ID
+                                    <p-sortIcon field="nId"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th>Ubicación</th>
+                            <th pSortableColumn="sNombreUsuarioResponsable">
+                                <div class="p-d-flex p-ai-center">
+                                    Responsable
+                                    <p-sortIcon field="sNombreUsuarioResponsable"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pSortableColumn="dInicio">
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-calendar p-mr-2"></i>
+                                    Fecha
+                                    <p-sortIcon field="dInicio"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th style="text-align: center;">Estatus</th>
+                            <th style="text-align: center;">Cant. Inicial</th>
+                            <th style="text-align: center;">Cant. Contada</th>
+                            <th style="text-align: center;">Diferencia</th>
+                            <th style="text-align: center;">Ajustado</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-inv>
+                        <tr>
+                            <td><span class="p-text-bold" style="color: #8b5cf6;">#{{inv.nId}}</span></td>
+                            <td>
+                                <div class="p-text-bold" style="font-size: 0.9rem;">{{inv.sBodega}}</div>
+                                <div class="p-text-secondary" style="font-size: 0.8rem;">{{inv.sAnaquel}} - {{inv.sNivel}}</div>
+                            </td>
+                            <td>{{inv.sNombreUsuarioResponsable || 'N/A'}}</td>
+                            <td>{{inv.dInicio | date:'dd/MM/yyyy'}}</td>
+                            <td style="text-align: center;">
+                                <p-tag [value]="inv.sDescripcionEstatus" 
+                                    [severity]="inv.nEstatus === 5 ? 'success' : inv.nEstatus === 6 ? 'danger' : inv.nEstatus === 3 ? 'info' : inv.nEstatus === 2 ? 'warning' : 'success'"
+                                    [style]="{'font-size': '0.75rem'}">
+                                </p-tag>
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="p-text-bold" style="color: #64748b;">
+                                    {{inv.detalle && inv.detalle[0] ? inv.detalle[0].nCantidadTeoricaIni : '-'}}
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span *ngIf="inv.detalle && inv.detalle[0]?.nCantidadContada != null" class="p-text-bold" style="color: #6366f1;">
+                                    {{inv.detalle[0].nCantidadContada}}
+                                </span>
+                                <span *ngIf="!(inv.detalle && inv.detalle[0]?.nCantidadContada != null)" class="p-text-secondary">-</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <ng-container *ngIf="inv.detalle && inv.detalle[0]?.nCantidadContada != null && inv.detalle[0]?.nDiferencia !== 0">
+                                    <span class="p-text-bold" [style.color]="inv.detalle[0].nDiferencia < 0 ? '#ef4444' : '#22c55e'">
+                                        {{inv.detalle[0].nDiferencia > 0 ? '+' : ''}}{{inv.detalle[0].nDiferencia}}
+                                    </span>
+                                </ng-container>
+                                <span *ngIf="inv.detalle && inv.detalle[0]?.nCantidadContada != null && inv.detalle[0]?.nDiferencia === 0" 
+                                      class="p-text-bold" style="color: #22c55e;">0</span>
+                                <span *ngIf="!(inv.detalle && inv.detalle[0]?.nCantidadContada != null)" class="p-text-secondary">-</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <i *ngIf="inv.detalle && inv.detalle[0]?.bAjustado" class="pi pi-check-circle" style="color: #22c55e;"></i>
+                                <span *ngIf="!(inv.detalle && inv.detalle[0]?.bAjustado)" class="p-text-secondary">-</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="summary">
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                            <span><i class="pi pi-database p-mr-2"></i>Total: {{listaInventariosProducto.length}} inventarios</span>
+                        </div>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+
   
    
 

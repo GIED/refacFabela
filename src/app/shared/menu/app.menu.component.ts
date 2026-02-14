@@ -117,6 +117,9 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Autorización de Inventarios', icon: 'pi pi-fw pi-check-square', routerLink: ['../almacen/autorizacion-inventario'], visible:this.realRol==='admin'
                     },
+                    {
+                        label: 'Consulta de Inventarios', icon: 'pi pi-fw pi-search', routerLink: ['../almacen/consulta-inventario'], visible:this.realRol==='admin'
+                    },
                    
                     {
                         label: 'Factura-productos', icon: 'pi pi-fw pi-user-plus', routerLink: ['../almacen/factura-producto/registro'], visible:this.realRol==='admin'  || this.realRol==='almacen'

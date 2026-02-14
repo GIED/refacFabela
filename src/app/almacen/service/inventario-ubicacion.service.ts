@@ -159,4 +159,27 @@ export class InventarioUbicacionService {
         const url = environment.servicios.apiRefacFabela + locator.obtenerHistorialInventario + inventarioId + '/historial';
         return this.http.get<any[]>(url);
     }
+
+    /**
+     * Consultar inventarios por ubicación con filtros opcionales.
+     */
+    consultarInventariosPorUbicacion(nIdBodega?: number, nIdAnaquel?: number, nIdNivel?: number): Observable<InventarioUbicacionDto[]> {
+        let url = environment.servicios.apiRefacFabela + locator.consultarInventariosPorUbicacion;
+        const params: string[] = [];
+        if (nIdBodega) { params.push('nIdBodega=' + nIdBodega); }
+        if (nIdAnaquel) { params.push('nIdAnaquel=' + nIdAnaquel); }
+        if (nIdNivel) { params.push('nIdNivel=' + nIdNivel); }
+        if (params.length > 0) {
+            url += '?' + params.join('&');
+        }
+        return this.http.get<InventarioUbicacionDto[]>(url);
+    }
+
+    /**
+     * Consultar inventarios donde aparece un producto específico.
+     */
+    consultarInventariosPorProducto(nIdProducto: number): Observable<InventarioUbicacionDto[]> {
+        const url = environment.servicios.apiRefacFabela + locator.consultarInventariosPorProducto + nIdProducto;
+        return this.http.get<InventarioUbicacionDto[]>(url);
+    }
 }

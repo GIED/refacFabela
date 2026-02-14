@@ -15,6 +15,8 @@ import { TwHistoriaIngresoProducto } from '../../model/TwHistoriaIngresoProducto
 import { TwVentasProducto } from '../../model/TwVentasProducto';
 import { TvStockProducto } from '../../model/TvStockProducto';
 import { HistoriaIngresoProducto } from '../../model/HistoriaIngresoProducto';
+import { InventarioUbicacionService } from '../../../almacen/service/inventario-ubicacion.service';
+import { InventarioUbicacionDto } from '../../../almacen/model/InventarioUbicacionDto';
 
 @Component({
   selector: 'app-historial-producto',
@@ -67,10 +69,13 @@ lineChartOptions:any;
   dataVentasProducto: number[];
   ventasProductoGraf: any;
 
+  //lista de inventarios del producto
+  listaInventariosProducto: InventarioUbicacionDto[] = [];
+
 
 
   constructor(private productService: ProductService, private messageService: MessageService,
-    private confirmationService: ConfirmationService, private spinner: NgxSpinnerService, private productosService:ProductoService, private bodegasService:BodegasService, private ventasService:VentasService) {
+    private confirmationService: ConfirmationService, private spinner: NgxSpinnerService, private productosService:ProductoService, private bodegasService:BodegasService, private ventasService:VentasService, private inventarioUbicacionService: InventarioUbicacionService) {
         this.labelsHistoriaIngresoProducto=[];
         this.dataHistoriaIngresoProducto=[];
         this.laberProductoBodega=[];
@@ -161,6 +166,7 @@ lineChartOptions:any;
     this.dataVentasProducto = [];
     this.labelsIngresoProducto = [];
     this.dataIngresoProducto = [];
+    this.listaInventariosProducto = [];
     
     // Limpiar objetos de gráficas
     this.historiaIngresoGraf = null;
@@ -198,6 +204,8 @@ informacionProducto(nId:number) {
     let ventaMesProducto= this.ventasService.obtenerProductoVentaMesId(nId);
    // consulta de ventas del producto     
    let ventasProducto=this.ventasService.obtenerProductoVenta(nId);
+   // consulta de inventarios del producto
+   let inventariosProducto=this.inventarioUbicacionService.consultarInventariosPorProducto(nId);
    
 
 
@@ -206,11 +214,11 @@ informacionProducto(nId:number) {
     
     //hace la consulta en orden y espera a realizar la recarga hasta que llegen todas las peticiones
     forkJoin([
-        historia,detalleProductos,productoBodegas, ventaMesProducto, historiaIngreso, ventasProducto 
+        historia,detalleProductos,productoBodegas, ventaMesProducto, historiaIngreso, ventasProducto, inventariosProducto 
       ]).subscribe(resultado => {
-        this.listaHistoriaPrecioProducto=resultado[0]    
+        this.listaHistoriaPrecioProducto=resultado[0] as TcHistoriaPrecioProducto[];    
         this.productoDetalle=new TvProductoDetalle(); 
-        this.productoDetalle=resultado[1];
+        this.productoDetalle=resultado[1] as TvProductoDetalle;
 
         for(const key2 in  this.listaHistoriaPrecioProducto){
          
@@ -222,17 +230,19 @@ informacionProducto(nId:number) {
         }
 
 
-        this.listaProductoBodega =resultado[2];
+        this.listaProductoBodega =resultado[2] as TwProductoBodega[];
         for (const key in resultado[2]) {
             this.stockTotal += this.listaProductoBodega[key].nCantidad;
         }
-        this.listaProductosVentaMes=resultado[3];
+        this.listaProductosVentaMes=resultado[3] as TvVentaProductoMes[];
        
         this.cargaInicial=true;
 
-        this.listaIngresoProducto=resultado[4];
+        this.listaIngresoProducto=resultado[4] as HistoriaIngresoProducto[];
        // console.log(resultado[4]);
-        this.listaVentasProducto=resultado[5];
+        this.listaVentasProducto=resultado[5] as TwVentasProducto[];
+
+        this.listaInventariosProducto=resultado[6] as InventarioUbicacionDto[];
 
         this.graficaHistoriaPrecioProducto(this.listaHistoriaPrecioProducto);
         this.graficaproductoBodegas(this.listaProductoBodega);

@@ -273,6 +273,8 @@ static ajustarProductoInventario = '/inventarios-ubicacion/'; // + inventarioId 
 static aplicarInventarioUbicacion = '/inventarios-ubicacion/'; // + id + '/aplicar'
 static listarInventariosPendientesAutorizacion = '/inventarios-ubicacion/pendientes-autorizacion';
 static obtenerHistorialInventario = '/inventarios-ubicacion/'; // + id + '/historial'
+static consultarInventariosPorUbicacion = '/inventarios-ubicacion/consulta'; // + ?nIdBodega=X&nIdAnaquel=Y&nIdNivel=Z
+static consultarInventariosPorProducto = '/inventarios-ubicacion/por-producto/'; // + productoId
 
 
 }

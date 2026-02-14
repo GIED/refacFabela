@@ -1,0 +1,977 @@
+<p-toast></p-toast>
+
+<div class="p-grid">
+    <div class="p-col-12">
+        <!-- Header del Panel de Consulta -->
+        <p-card styleClass="p-shadow-3 p-mb-4">
+            <ng-template pTemplate="header">
+                <div class="p-d-flex p-ai-center p-jc-between p-p-3" style="background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); color: white;">
+                    <div class="p-d-flex p-ai-center">
+                        <div class="p-mr-3 p-d-flex p-ai-center p-jc-center" 
+                             style="background-color: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 50%;">
+                            <i class="pi pi-search" style="font-size: 2rem; color: white;"></i>
+                        </div>
+                        <div>
+                            <h2 class="p-m-0 p-text-bold">Consulta de Inventarios</h2>
+                            <p class="p-m-0 p-mt-1" style="font-size: 0.95rem; opacity: 0.9;">
+                                Consultar inventarios levantados por ubicación o por número de parte
+                            </p>
+                        </div>
+                    </div>
+                    <div *ngIf="modoBusqueda !== null">
+                        <button pButton pRipple
+                            type="button"
+                            icon="pi pi-refresh"
+                            label="Nueva Búsqueda"
+                            class="p-button-outlined p-button-sm"
+                            style="color: white; border-color: rgba(255,255,255,0.6);"
+                            (click)="nuevaBusqueda()">
+                        </button>
+                    </div>
+                </div>
+            </ng-template>
+
+            <!-- Selector de Modo de Búsqueda -->
+            <div *ngIf="modoBusqueda === null" class="p-grid p-jc-center p-p-4">
+                <div class="p-col-12 p-text-center p-mb-4">
+                    <h4 class="p-m-0 p-text-bold" style="color: #212529;">¿Cómo deseas buscar?</h4>
+                    <p class="p-m-0 p-mt-2 p-text-secondary">Selecciona el método de búsqueda para consultar inventarios</p>
+                </div>
+                <div class="p-col-12 p-md-5 p-lg-4">
+                    <div class="p-p-4 p-text-center" 
+                         style="border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.3s ease;"
+                         (click)="seleccionarModo('ubicacion')"
+                         (mouseenter)="$event.currentTarget.style.borderColor='#2563eb'; $event.currentTarget.style.backgroundColor='#eff6ff'"
+                         (mouseleave)="$event.currentTarget.style.borderColor='#e5e7eb'; $event.currentTarget.style.backgroundColor='transparent'">
+                        <div class="p-d-flex p-jc-center p-mb-3">
+                            <div class="p-d-flex p-ai-center p-jc-center" 
+                                 style="background: linear-gradient(135deg, #0ea5e9, #2563eb); width: 80px; height: 80px; border-radius: 50%;">
+                                <i class="pi pi-th-large" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                        </div>
+                        <h4 class="p-m-0 p-text-bold" style="color: #2563eb;">Por Ubicación</h4>
+                        <p class="p-m-0 p-mt-2 p-text-secondary" style="font-size: 0.85rem;">
+                            Buscar inventarios por Bodega, Anaquel y Nivel
+                        </p>
+                    </div>
+                </div>
+                <div class="p-col-12 p-md-1 p-d-flex p-ai-center p-jc-center">
+                    <span class="p-text-secondary p-text-bold" style="font-size: 1.1rem;">ó</span>
+                </div>
+                <div class="p-col-12 p-md-5 p-lg-4">
+                    <div class="p-p-4 p-text-center" 
+                         style="border: 2px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.3s ease;"
+                         (click)="seleccionarModo('producto')"
+                         (mouseenter)="$event.currentTarget.style.borderColor='#7c3aed'; $event.currentTarget.style.backgroundColor='#f5f3ff'"
+                         (mouseleave)="$event.currentTarget.style.borderColor='#e5e7eb'; $event.currentTarget.style.backgroundColor='transparent'">
+                        <div class="p-d-flex p-jc-center p-mb-3">
+                            <div class="p-d-flex p-ai-center p-jc-center" 
+                                 style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); width: 80px; height: 80px; border-radius: 50%;">
+                                <i class="pi pi-box" style="font-size: 2.5rem; color: white;"></i>
+                            </div>
+                        </div>
+                        <h4 class="p-m-0 p-text-bold" style="color: #7c3aed;">Por Número de Parte</h4>
+                        <p class="p-m-0 p-mt-2 p-text-secondary" style="font-size: 0.85rem;">
+                            Consultar en qué inventarios aparece un producto
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros de Búsqueda por Ubicación -->
+            <div *ngIf="modoBusqueda === 'ubicacion'" class="p-grid p-ai-end p-mb-3">
+                <div class="p-col-12 p-md-3">
+                    <label class="p-text-bold p-d-block p-mb-2" style="color: #212529;">
+                        <i class="pi pi-warehouse p-mr-1 text-primary"></i> Bodega
+                    </label>
+                    <p-dropdown [options]="bodegas" 
+                        [(ngModel)]="bodegaSeleccionada" 
+                        optionLabel="sBodega" 
+                        placeholder="Seleccionar bodega"
+                        [showClear]="true"
+                        [filter]="true"
+                        filterBy="sBodega"
+                        [style]="{'width':'100%'}"
+                        (onChange)="anaquelSeleccionado = null; nivelSeleccionado = null;">
+                    </p-dropdown>
+                </div>
+                <div class="p-col-12 p-md-3">
+                    <label class="p-text-bold p-d-block p-mb-2" style="color: #212529;">
+                        <i class="pi pi-building p-mr-1" style="color: #f59e0b;"></i> Anaquel
+                    </label>
+                    <p-dropdown [options]="anaqueles" 
+                        [(ngModel)]="anaquelSeleccionado" 
+                        optionLabel="sAnaquel" 
+                        placeholder="Seleccionar anaquel"
+                        [showClear]="true"
+                        [filter]="true"
+                        filterBy="sAnaquel"
+                        [style]="{'width':'100%'}"
+                        [disabled]="!bodegaSeleccionada"
+                        (onChange)="nivelSeleccionado = null;">
+                    </p-dropdown>
+                </div>
+                <div class="p-col-12 p-md-3">
+                    <label class="p-text-bold p-d-block p-mb-2" style="color: #212929;">
+                        <i class="pi pi-bars p-mr-1" style="color: #06b6d4;"></i> Nivel
+                    </label>
+                    <p-dropdown [options]="niveles" 
+                        [(ngModel)]="nivelSeleccionado" 
+                        optionLabel="sNivel" 
+                        placeholder="Seleccionar nivel"
+                        [showClear]="true"
+                        [filter]="true"
+                        filterBy="sNivel"
+                        [style]="{'width':'100%'}"
+                        [disabled]="!anaquelSeleccionado">
+                    </p-dropdown>
+                </div>
+                <div class="p-col-12 p-md-3">
+                    <div class="p-d-flex" style="gap: 8px;">
+                        <button pButton pRipple
+                            type="button"
+                            icon="pi pi-search"
+                            label="Buscar"
+                            class="p-button-primary"
+                            (click)="buscarInventarios()"
+                            [loading]="cargando"
+                            [disabled]="!bodegaSeleccionada">
+                        </button>
+                        <button pButton pRipple
+                            type="button"
+                            icon="pi pi-filter-slash"
+                            label="Limpiar"
+                            class="p-button-outlined p-button-secondary"
+                            (click)="limpiarFiltros()">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+
+        <!-- Panel de Búsqueda por Producto -->
+        <p-card *ngIf="modoBusqueda === 'producto'" styleClass="p-shadow-3 p-mb-4 p-mt-3">
+            <ng-template pTemplate="header">
+                <div class="p-d-flex p-ai-center p-p-3" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: white;">
+                    <div class="p-mr-3 p-d-flex p-ai-center p-jc-center" 
+                         style="background-color: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 50%;">
+                        <i class="pi pi-box" style="font-size: 1.5rem; color: white;"></i>
+                    </div>
+                    <div>
+                        <h4 class="p-m-0 p-text-bold">Buscar por Número de Parte</h4>
+                        <p class="p-m-0 p-mt-1" style="font-size: 0.85rem; opacity: 0.9;">
+                            Consultar en qué inventarios aparece un producto
+                        </p>
+                    </div>
+                </div>
+            </ng-template>
+            <div class="p-grid p-ai-end">
+                <div class="p-col-12 p-md-8">
+                    <app-input-busqueda 
+                        (consultarPorId)="buscarPorProducto($event)"
+                        (productoSeleccionado)="onProductoSeleccionado($event)">
+                    </app-input-busqueda>
+                </div>
+            </div>
+        </p-card>
+
+        <!-- Resultados de Búsqueda por Producto -->
+        <div *ngIf="modoBusqueda === 'producto' && busquedaProductoRealizada">
+            <p-card styleClass="p-shadow-3 p-mb-4">
+                <!-- Info del producto buscado -->
+                <div *ngIf="productoSeleccionado" class="p-d-flex p-ai-center p-mb-3 p-p-2" 
+                     style="background-color: #f5f3ff; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+                    <i class="pi pi-tag p-mr-3" style="color: #8b5cf6; font-size: 1.3rem;"></i>
+                    <div>
+                        <span class="p-text-bold" style="color: #6d28d9; font-size: 1.05rem;">
+                            {{productoSeleccionado.sNoParte}}
+                        </span>
+                        <span class="p-mx-2 p-text-secondary">|</span>
+                        <span class="p-text-bold" style="color: #212529;">{{productoSeleccionado.sProducto}}</span>
+                        <span class="p-mx-2 p-text-secondary">|</span>
+                        <span style="color: brown;">{{productoSeleccionado.sMarca}}</span>
+                    </div>
+                </div>
+
+                <!-- Resumen -->
+                <div *ngIf="inventariosProducto.length > 0" class="p-d-flex p-ai-center p-jc-between p-mb-3">
+                    <div>
+                        <h4 class="p-m-0">
+                            <i class="pi pi-list p-mr-2" style="color: #8b5cf6;"></i>
+                            Inventarios encontrados: <span style="color: #8b5cf6;">{{inventariosProductoFiltrados.length}}</span>
+                            <span class="p-text-secondary" style="font-size: 0.85rem; font-weight: normal;" *ngIf="estatusFiltroProducto != null">
+                                (filtrado de {{inventariosProducto.length}} total)
+                            </span>
+                        </h4>
+                    </div>
+                    <div class="p-d-flex p-ai-center" style="gap: 8px;">
+                        <label class="p-text-bold" style="font-size: 0.85rem; white-space: nowrap;">Filtrar por estatus:</label>
+                        <p-dropdown [options]="opcionesEstatus" 
+                            [(ngModel)]="estatusFiltroProducto" 
+                            optionLabel="label"
+                            optionValue="value"
+                            [style]="{'min-width':'180px'}"
+                            placeholder="Todos">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <!-- Estado Vacío -->
+                <div *ngIf="!cargandoProducto && inventariosProducto.length === 0" class="p-text-center p-p-5">
+                    <div class="p-d-flex p-jc-center p-mb-3">
+                        <div class="p-d-flex p-ai-center p-jc-center" 
+                             style="background-color: #f5f3ff; width: 80px; height: 80px; border-radius: 50%;">
+                            <i class="pi pi-inbox" style="font-size: 3rem; color: #8b5cf6;"></i>
+                        </div>
+                    </div>
+                    <h4 class="p-text-bold p-mb-2" style="color: #212529;">No se encontraron inventarios</h4>
+                    <p class="p-text-secondary">Este producto no aparece en ningún inventario registrado.</p>
+                </div>
+
+                <!-- Tabla de resultados por producto -->
+                <p-table *ngIf="!cargandoProducto && inventariosProducto.length > 0"
+                    [value]="inventariosProductoFiltrados" 
+                    [paginator]="true" 
+                    [rows]="10"
+                    [rowsPerPageOptions]="[10,25,50]"
+                    styleClass="p-datatable-sm p-datatable-striped"
+                    [globalFilterFields]="['sBodega','sAnaquel','sNivel','sNombreUsuarioResponsable']">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 70px;">ID</th>
+                            <th>Ubicación</th>
+                            <th style="width: 130px;">Responsable</th>
+                            <th style="width: 130px;">Fecha Inicio</th>
+                            <th style="width: 110px; text-align: center;">Estatus</th>
+                            <th style="width: 120px; text-align: center;">Cant. Inicial</th>
+                            <th style="width: 120px; text-align: center;">Cant. Contada</th>
+                            <th style="width: 110px; text-align: center;">Diferencia</th>
+                            <th style="width: 100px; text-align: center;">Ajuste</th>
+                            <th style="width: 100px; text-align: center;">Acciones</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-inventario>
+                        <tr>
+                            <td>
+                                <span class="p-text-bold text-primary" style="font-size: 1.1rem;">#{{inventario.nId}}</span>
+                            </td>
+                            <td>
+                                <div>
+                                    <div class="p-text-bold" style="color: #212529;">
+                                        <i class="pi pi-warehouse p-mr-1 text-primary"></i>
+                                        {{inventario.sBodega}}
+                                    </div>
+                                    <div class="p-text-secondary" style="font-size: 0.85rem;">
+                                        <i class="pi pi-building p-mr-1" style="color: #f59e0b;"></i>
+                                        {{inventario.sAnaquel}} - 
+                                        <i class="pi pi-bars p-mr-1" style="color: #06b6d4;"></i>
+                                        {{inventario.sNivel}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-user p-mr-2 text-secondary"></i>
+                                    <span style="font-size: 0.9rem;">{{inventario.sNombreUsuarioResponsable || 'N/A'}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.85rem;">{{inventario.dInicio | date:'dd/MM/yyyy HH:mm'}}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <p-tag [value]="DESCRIPCION_ESTATUS[inventario.nEstatus!]"
+                                    [severity]="getEstatusSeverity(inventario.nEstatus!)"
+                                    [icon]="getEstatusIcon(inventario.nEstatus!)">
+                                </p-tag>
+                            </td>
+                            <!-- Cant. Inicial del producto en ese inventario -->
+                            <td style="text-align: center;">
+                                <span class="p-text-bold" style="color: #64748b; font-size: 1.05rem;">
+                                    {{inventario.detalle && inventario.detalle[0] ? inventario.detalle[0].nCantidadTeoricaIni : '-'}}
+                                </span>
+                            </td>
+                            <!-- Cant. Contada -->
+                            <td style="text-align: center;">
+                                <span *ngIf="inventario.detalle && inventario.detalle[0]?.nCantidadContada != null" 
+                                      class="p-text-bold" style="color: #6366f1; font-size: 1.05rem;">
+                                    {{inventario.detalle[0].nCantidadContada}}
+                                </span>
+                                <span *ngIf="!(inventario.detalle && inventario.detalle[0]?.nCantidadContada != null)" 
+                                      class="p-text-secondary">-</span>
+                            </td>
+                            <!-- Diferencia -->
+                            <td style="text-align: center;">
+                                <ng-container *ngIf="inventario.detalle && inventario.detalle[0]?.nCantidadContada != null && inventario.detalle[0]?.nDiferencia !== 0">
+                                    <p-tag [value]="(inventario.detalle[0].nDiferencia > 0 ? '+' : '') + inventario.detalle[0].nDiferencia" 
+                                           [severity]="inventario.detalle[0].nDiferencia < 0 ? 'danger' : 'success'"
+                                           [style]="{'font-weight': 'bold'}">
+                                    </p-tag>
+                                </ng-container>
+                                <span *ngIf="inventario.detalle && inventario.detalle[0]?.nCantidadContada != null && inventario.detalle[0]?.nDiferencia === 0" 
+                                      class="p-text-bold" style="color: #22c55e;">0</span>
+                                <span *ngIf="!(inventario.detalle && inventario.detalle[0]?.nCantidadContada != null)" 
+                                      class="p-text-secondary">-</span>
+                            </td>
+                            <!-- Ajuste -->
+                            <td style="text-align: center;">
+                                <div *ngIf="inventario.detalle && inventario.detalle[0]?.bAjustado">
+                                    <p-tag severity="success" icon="pi pi-check-circle" value="Sí"></p-tag>
+                                </div>
+                                <span *ngIf="!(inventario.detalle && inventario.detalle[0]?.bAjustado)" class="p-text-secondary">-</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <button pButton pRipple
+                                    type="button"
+                                    icon="pi pi-eye"
+                                    label="Ver"
+                                    class="p-button-info p-button-sm"
+                                    (click)="verDetalleInventario(inventario)">
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="10" class="p-text-center p-p-4">
+                                <i class="pi pi-info-circle p-mr-2"></i>
+                                <span>No se encontraron inventarios con el filtro aplicado</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <!-- Spinner de Carga -->
+                <div *ngIf="cargandoProducto" class="p-text-center p-p-5">
+                    <p-progressSpinner></p-progressSpinner>
+                    <p class="p-mt-3 p-text-secondary">Buscando inventarios del producto...</p>
+                </div>
+            </p-card>
+        </div>
+
+        <!-- Resultados por Ubicación -->
+        <div *ngIf="modoBusqueda === 'ubicacion' && busquedaRealizada">
+            <p-card styleClass="p-shadow-3">
+                <!-- Barra de resumen -->
+                <div *ngIf="inventarios.length > 0" class="p-d-flex p-ai-center p-jc-between p-mb-3">
+                    <div>
+                        <h4 class="p-m-0">
+                            <i class="pi pi-list p-mr-2 text-primary"></i>
+                            Inventarios encontrados: <span class="text-primary">{{inventariosFiltrados.length}}</span>
+                            <span class="p-text-secondary" style="font-size: 0.85rem; font-weight: normal;" *ngIf="estatusFiltro != null">
+                                (filtrado de {{inventarios.length}} total)
+                            </span>
+                        </h4>
+                        <p class="p-m-0 p-mt-1 p-text-secondary" style="font-size: 0.85rem;">
+                            Ubicación: {{getUbicacionTexto()}}
+                        </p>
+                    </div>
+                    <div class="p-d-flex p-ai-center" style="gap: 8px;">
+                        <label class="p-text-bold" style="font-size: 0.85rem; white-space: nowrap;">Filtrar por estatus:</label>
+                        <p-dropdown [options]="opcionesEstatus" 
+                            [(ngModel)]="estatusFiltro" 
+                            optionLabel="label"
+                            optionValue="value"
+                            [style]="{'min-width':'180px'}"
+                            placeholder="Todos">
+                        </p-dropdown>
+                    </div>
+                </div>
+
+                <!-- Estado Vacío -->
+                <div *ngIf="!cargando && inventarios.length === 0" class="p-text-center p-p-5">
+                    <div class="p-d-flex p-jc-center p-mb-3">
+                        <div class="p-d-flex p-ai-center p-jc-center" 
+                             style="background-color: #fef3c7; width: 100px; height: 100px; border-radius: 50%;">
+                            <i class="pi pi-inbox" style="font-size: 4rem; color: #f59e0b;"></i>
+                        </div>
+                    </div>
+                    <h3 class="p-text-bold p-mb-2" style="color: #212529;">No se encontraron inventarios</h3>
+                    <p class="p-text-secondary" style="max-width: 500px; margin: 0 auto;">
+                        No hay inventarios registrados para la ubicación seleccionada. 
+                        Intente con una combinación de filtros diferente.
+                    </p>
+                </div>
+
+                <!-- Tabla de Inventarios -->
+                <p-table *ngIf="!cargando && inventarios.length > 0"
+                    [value]="inventariosFiltrados" 
+                    [paginator]="true" 
+                    [rows]="10"
+                    [rowsPerPageOptions]="[10,25,50]"
+                    styleClass="p-datatable-sm p-datatable-striped"
+                    [loading]="cargando"
+                    [globalFilterFields]="['sBodega','sAnaquel','sNivel','sNombreUsuarioResponsable']">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 70px;">ID</th>
+                            <th>Ubicación</th>
+                            <th style="width: 130px;">Responsable</th>
+                            <th style="width: 130px;">Fecha Inicio</th>
+                            <th style="width: 130px;">Fecha Cierre</th>
+                            <th style="width: 110px; text-align: center;">Estatus</th>
+                            <th style="width: 340px; text-align: center;">Estadísticas</th>
+                            <th style="width: 100px; text-align: center;">Acciones</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-inventario>
+                        <tr>
+                            <!-- ID -->
+                            <td>
+                                <span class="p-text-bold text-primary" style="font-size: 1.1rem;">#{{inventario.nId}}</span>
+                            </td>
+
+                            <!-- Ubicación -->
+                            <td>
+                                <div>
+                                    <div class="p-text-bold" style="color: #212529;">
+                                        <i class="pi pi-warehouse p-mr-1 text-primary"></i>
+                                        {{inventario.sBodega}}
+                                    </div>
+                                    <div class="p-text-secondary" style="font-size: 0.85rem;">
+                                        <i class="pi pi-building p-mr-1" style="color: #f59e0b;"></i>
+                                        {{inventario.sAnaquel}} - 
+                                        <i class="pi pi-bars p-mr-1" style="color: #06b6d4;"></i>
+                                        {{inventario.sNivel}}
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Responsable -->
+                            <td>
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-user p-mr-2 text-secondary"></i>
+                                    <span style="font-size: 0.9rem;">{{inventario.sNombreUsuarioResponsable || 'N/A'}}</span>
+                                </div>
+                            </td>
+
+                            <!-- Fecha Inicio -->
+                            <td>
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-calendar p-mr-2 text-secondary"></i>
+                                    <span style="font-size: 0.85rem;">{{inventario.dInicio | date:'dd/MM/yyyy HH:mm'}}</span>
+                                </div>
+                            </td>
+
+                            <!-- Fecha Cierre -->
+                            <td>
+                                <div class="p-d-flex p-ai-center" *ngIf="inventario.dCierre">
+                                    <i class="pi pi-calendar-times p-mr-2 text-secondary"></i>
+                                    <span style="font-size: 0.85rem;">{{inventario.dCierre | date:'dd/MM/yyyy HH:mm'}}</span>
+                                </div>
+                                <span *ngIf="!inventario.dCierre" class="p-text-secondary" style="font-size: 0.85rem;">-</span>
+                            </td>
+
+                            <!-- Estatus -->
+                            <td style="text-align: center;">
+                                <p-tag [value]="DESCRIPCION_ESTATUS[inventario.nEstatus!]"
+                                    [severity]="getEstatusSeverity(inventario.nEstatus!)"
+                                    [icon]="getEstatusIcon(inventario.nEstatus!)">
+                                </p-tag>
+                            </td>
+
+                            <!-- Estadísticas -->
+                            <td>
+                                <div class="p-grid p-nogutter">
+                                    <div class="p-col-3 p-text-center">
+                                        <div class="p-text-secondary" style="font-size: 0.7rem;">Total</div>
+                                        <div class="p-text-bold text-primary">{{inventario.totalLineas || 0}}</div>
+                                    </div>
+                                    <div class="p-col-3 p-text-center">
+                                        <div class="p-text-secondary" style="font-size: 0.7rem;">Contados</div>
+                                        <div class="p-text-bold" style="color: #22c55e;">{{inventario.lineasContadas || 0}}</div>
+                                    </div>
+                                    <div class="p-col-3 p-text-center">
+                                        <div class="p-text-secondary" style="font-size: 0.7rem;">Diferencias</div>
+                                        <div class="p-text-bold" style="color: #f59e0b;">{{obtenerCantidadConDiferencias(inventario)}}</div>
+                                    </div>
+                                    <div class="p-col-3 p-text-center">
+                                        <div class="p-text-secondary" style="font-size: 0.7rem;">Ajustados</div>
+                                        <div class="p-text-bold" style="color: #8b5cf6;">{{obtenerCantidadAjustados(inventario)}}</div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Acciones -->
+                            <td style="text-align: center;">
+                                <button pButton pRipple
+                                    type="button"
+                                    icon="pi pi-eye"
+                                    label="Ver"
+                                    class="p-button-info p-button-sm"
+                                    (click)="verDetalleInventario(inventario)">
+                                </button>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8" class="p-text-center p-p-4">
+                                <i class="pi pi-info-circle p-mr-2"></i>
+                                <span>No se encontraron inventarios con el filtro aplicado</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <!-- Spinner de Carga -->
+                <div *ngIf="cargando" class="p-text-center p-p-5">
+                    <p-progressSpinner></p-progressSpinner>
+                    <p class="p-mt-3 p-text-secondary">Buscando inventarios...</p>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>
+
+<!-- Diálogo de Detalle del Inventario -->
+<p-dialog [(visible)]="mostrarDialogoDetalle" 
+    [modal]="true" 
+    [style]="{width: '95vw', maxWidth: '1500px'}" 
+    [contentStyle]="{'background-color': '#ffffff'}"
+    [draggable]="false" 
+    [resizable]="false" 
+    [dismissableMask]="true"
+    styleClass="p-fluid">
+    
+    <ng-template pTemplate="header">
+        <div class="p-d-flex p-ai-center p-jc-between" style="width: 100%;">
+            <div class="p-d-flex p-ai-center">
+                <div class="p-d-flex p-ai-center p-jc-center p-mr-3" 
+                     style="background-color: #dbeafe; width: 50px; height: 50px; border-radius: 50%;">
+                    <i class="pi pi-file-edit" style="color: #2563eb; font-size: 1.8rem;"></i>
+                </div>
+                <div>
+                    <h4 class="p-m-0 p-text-bold" style="color: #212529;">
+                        Inventario #{{inventarioSeleccionado?.nId}}
+                        <p-tag class="p-ml-2"
+                            [value]="DESCRIPCION_ESTATUS[inventarioSeleccionado?.nEstatus!]"
+                            [severity]="getEstatusSeverity(inventarioSeleccionado?.nEstatus!)"
+                            [icon]="getEstatusIcon(inventarioSeleccionado?.nEstatus!)">
+                        </p-tag>
+                    </h4>
+                    <p class="p-m-0 p-mt-1 p-text-secondary" style="font-size: 0.9rem;">
+                        {{inventarioSeleccionado?.sBodega}} - {{inventarioSeleccionado?.sAnaquel}} - {{inventarioSeleccionado?.sNivel}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <div *ngIf="inventarioSeleccionado">
+        <!-- Información General + Resumen -->
+        <div class="p-grid p-mb-3">
+            <!-- Información General -->
+            <div class="p-col-12 p-md-6">
+                <p-card styleClass="h-100">
+                    <h5 class="p-m-0 p-mb-3">
+                        <i class="pi pi-info-circle p-mr-2 text-primary"></i>
+                        Información General
+                    </h5>
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Responsable</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.sNombreUsuarioResponsable}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Fecha Inicio</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.dInicio | date:'dd/MM/yyyy HH:mm'}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Fecha Cierre</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.dCierre ? (inventarioSeleccionado.dCierre | date:'dd/MM/yyyy HH:mm') : 'Pendiente'}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Usuario Cierra</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.sNombreUsuarioCierra || 'N/A'}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-6" *ngIf="inventarioSeleccionado.sNombreUsuarioAutoriza">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Autorizado por</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.sNombreUsuarioAutoriza}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-6" *ngIf="inventarioSeleccionado.dAutorizacion">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Fecha Autorización</span>
+                                <span class="p-text-bold">{{inventarioSeleccionado.dAutorizacion | date:'dd/MM/yyyy HH:mm'}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-12" *ngIf="inventarioSeleccionado.sMotivoAutorizacion">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Motivo Autorización</span>
+                                <span>{{inventarioSeleccionado.sMotivoAutorizacion}}</span>
+                            </div>
+                        </div>
+                        <div class="p-col-12" *ngIf="inventarioSeleccionado.sObservaciones">
+                            <div class="p-mb-2">
+                                <span class="p-text-secondary p-d-block" style="font-size: 0.85rem;">Observaciones</span>
+                                <span>{{inventarioSeleccionado.sObservaciones}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </p-card>
+            </div>
+
+            <!-- Resumen Estadístico -->
+            <div class="p-col-12 p-md-6">
+                <p-card styleClass="h-100">
+                    <h5 class="p-m-0 p-mb-3">
+                        <i class="pi pi-chart-bar p-mr-2" style="color: #8b5cf6;"></i>
+                        Resumen del Inventario
+                    </h5>
+                    <div class="p-grid">
+                        <div class="p-col-3">
+                            <div class="p-text-center p-p-2" style="background-color: #f3f4f6; border-radius: 6px;">
+                                <i class="pi pi-list text-primary p-mb-1" style="font-size: 1.5rem;"></i>
+                                <div class="p-text-bold" style="font-size: 1.3rem; color: #495057;">{{inventarioSeleccionado.totalLineas || 0}}</div>
+                                <div class="text-secondary" style="font-size: 0.75rem;">Total Líneas</div>
+                            </div>
+                        </div>
+                        <div class="p-col-3">
+                            <div class="p-text-center p-p-2" style="background-color: #f0fdf4; border-radius: 6px;">
+                                <i class="pi pi-check p-mb-1" style="font-size: 1.5rem; color: #22c55e;"></i>
+                                <div class="p-text-bold" style="font-size: 1.3rem; color: #495057;">{{inventarioSeleccionado.lineasContadas || 0}}</div>
+                                <div class="text-secondary" style="font-size: 0.75rem;">Contados</div>
+                            </div>
+                        </div>
+                        <div class="p-col-3">
+                            <div class="p-text-center p-p-2" style="background-color: #fef2f2; border-radius: 6px;">
+                                <i class="pi pi-exclamation-triangle p-mb-1" style="font-size: 1.5rem; color: #ef4444;"></i>
+                                <div class="p-text-bold" style="font-size: 1.3rem; color: #495057;">{{totalDiferencias}}</div>
+                                <div class="text-secondary" style="font-size: 0.75rem;">Diferencias</div>
+                            </div>
+                        </div>
+                        <div class="p-col-3">
+                            <div class="p-text-center p-p-2" style="background-color: #f5f3ff; border-radius: 6px;">
+                                <i class="pi pi-wrench p-mb-1" style="font-size: 1.5rem; color: #8b5cf6;"></i>
+                                <div class="p-text-bold" style="font-size: 1.3rem; color: #495057;">{{totalAjustados}}</div>
+                                <div class="text-secondary" style="font-size: 0.75rem;">Ajustados</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sub-resumen de diferencias -->
+                    <div class="p-grid p-mt-3" *ngIf="totalDiferencias > 0">
+                        <div class="p-col-6">
+                            <div class="p-d-flex p-ai-center p-p-2" style="background-color: #fef2f2; border-radius: 6px;">
+                                <i class="pi pi-arrow-down p-mr-2" style="color: #ef4444;"></i>
+                                <div>
+                                    <div class="p-text-bold" style="color: #ef4444;">{{cantidadFaltantes}}</div>
+                                    <div class="text-secondary" style="font-size: 0.75rem;">Faltantes</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-col-6">
+                            <div class="p-d-flex p-ai-center p-p-2" style="background-color: #f0fdf4; border-radius: 6px;">
+                                <i class="pi pi-arrow-up p-mr-2" style="color: #22c55e;"></i>
+                                <div>
+                                    <div class="p-text-bold" style="color: #22c55e;">{{cantidadSobrantes}}</div>
+                                    <div class="text-secondary" style="font-size: 0.75rem;">Sobrantes</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </p-card>
+            </div>
+        </div>
+
+        <!-- Tabs de Detalle -->
+        <p-tabView [(activeIndex)]="tabActivo">
+            <!-- Tab: Todos los Productos -->
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <i class="pi pi-box p-mr-2"></i>
+                    <span>Todos los productos ({{todosProductos.length}})</span>
+                </ng-template>
+                
+                <div class="p-mb-2">
+                    <span class="p-input-icon-left" style="width: 300px;">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" 
+                            [(ngModel)]="filtroProducto" 
+                            placeholder="Buscar por No. Parte, nombre o marca..."
+                            style="width: 100%;">
+                    </span>
+                </div>
+                
+                <p-table [value]="productosFiltrados" 
+                    [scrollable]="true" 
+                    scrollHeight="400px"
+                    [paginator]="true" 
+                    [rows]="15"
+                    [rowsPerPageOptions]="[15,30,50]"
+                    styleClass="p-datatable-sm p-datatable-striped">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 50px; text-align: center;"><i class="pi pi-flag"></i></th>
+                            <th>No. Parte</th>
+                            <th>Producto</th>
+                            <th>Marca</th>
+                            <th style="width: 100px; text-align: center;">Cant. Inicial</th>
+                            <th style="width: 100px; text-align: center;">Cant. Referencia</th>
+                            <th style="width: 100px; text-align: center;">Cant. Contada</th>
+                            <th style="width: 100px; text-align: center;">Diferencia</th>
+                            <th style="width: 90px; text-align: center;">Estatus</th>
+                            <th style="width: 130px; text-align: center;">Ajuste</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-producto>
+                        <tr>
+                            <!-- Indicador -->
+                            <td style="text-align: center;">
+                                <i *ngIf="producto.nCantidadContada != null && producto.nDiferencia < 0" 
+                                   class="pi pi-arrow-down" 
+                                   style="color: #ef4444; font-size: 1rem;"
+                                   pTooltip="Faltante" tooltipPosition="top"></i>
+                                <i *ngIf="producto.nCantidadContada != null && producto.nDiferencia > 0" 
+                                   class="pi pi-arrow-up" 
+                                   style="color: #22c55e; font-size: 1rem;"
+                                   pTooltip="Sobrante" tooltipPosition="top"></i>
+                                <i *ngIf="producto.nCantidadContada != null && producto.nDiferencia === 0" 
+                                   class="pi pi-check" 
+                                   style="color: #6366f1; font-size: 1rem;"
+                                   pTooltip="Exacto" tooltipPosition="top"></i>
+                                <i *ngIf="producto.nCantidadContada == null" 
+                                   class="pi pi-minus" 
+                                   style="color: #9ca3af; font-size: 1rem;"
+                                   pTooltip="Pendiente" tooltipPosition="top"></i>
+                            </td>
+                            <td><span class="p-text-bold text-primary">{{producto.sNoParte}}</span></td>
+                            <td><div class="p-text-bold" style="color: #212529; font-size: 0.9rem;">{{producto.sNombreProducto}}</div></td>
+                            <td><p-tag [value]="producto.sMarca" severity="info" icon="pi pi-tag"></p-tag></td>
+                            <td style="text-align: center;">
+                                <span class="p-text-bold" style="color: #64748b;">{{producto.nCantidadTeoricaIni}}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="p-text-bold" style="color: #0891b2;">{{producto.nCantidadTeoricaRef}}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span *ngIf="producto.nCantidadContada != null" class="p-text-bold" style="color: #6366f1; font-size: 1.05rem;">
+                                    {{producto.nCantidadContada}}
+                                </span>
+                                <span *ngIf="producto.nCantidadContada == null" class="p-text-secondary">-</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <p-tag *ngIf="producto.nCantidadContada != null && producto.nDiferencia !== 0"
+                                    [value]="(producto.nDiferencia > 0 ? '+' : '') + producto.nDiferencia" 
+                                    [severity]="producto.nDiferencia < 0 ? 'danger' : 'success'"
+                                    [style]="{'font-weight': 'bold'}">
+                                </p-tag>
+                                <span *ngIf="producto.nCantidadContada != null && producto.nDiferencia === 0" 
+                                      class="p-text-bold" style="color: #22c55e;">0</span>
+                                <span *ngIf="producto.nCantidadContada == null" class="p-text-secondary">-</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <p-tag *ngIf="producto.nEstatusLinea === 1" value="Pendiente" severity="warning" icon="pi pi-clock"></p-tag>
+                                <p-tag *ngIf="producto.nEstatusLinea === 2" value="Contado" severity="success" icon="pi pi-check"></p-tag>
+                                <p-tag *ngIf="producto.nEstatusLinea === 3" value="Recontar" severity="danger" icon="pi pi-refresh"></p-tag>
+                            </td>
+                            <td style="text-align: center;">
+                                <div *ngIf="producto.bAjustado">
+                                    <p-tag severity="success" icon="pi pi-check-circle" value="Ajustado"></p-tag>
+                                    <div class="p-text-secondary p-mt-1" style="font-size: 0.65rem;">
+                                        {{producto.dFechaAjuste | date:'dd/MM/yy HH:mm'}}
+                                    </div>
+                                </div>
+                                <span *ngIf="!producto.bAjustado" class="p-text-secondary" style="font-size: 0.85rem;">-</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="10" class="p-text-center p-p-4">
+                                <i class="pi pi-info-circle p-mr-2"></i>
+                                <span>No se encontraron productos</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+
+            <!-- Tab: Productos con Diferencias -->
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <i class="pi pi-exclamation-triangle p-mr-2" style="color: #f59e0b;"></i>
+                    <span>Diferencias ({{totalDiferencias}})</span>
+                </ng-template>
+
+                <p-table [value]="productosDiferencias" 
+                    [scrollable]="true" 
+                    scrollHeight="400px"
+                    [paginator]="true" 
+                    [rows]="15"
+                    [rowsPerPageOptions]="[15,30,50]"
+                    styleClass="p-datatable-sm p-datatable-striped">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 50px; text-align: center;"><i class="pi pi-flag"></i></th>
+                            <th>No. Parte</th>
+                            <th>Producto</th>
+                            <th>Marca</th>
+                            <th style="width: 120px; text-align: center;">Cant. Referencia</th>
+                            <th style="width: 120px; text-align: center;">Cant. Contada</th>
+                            <th style="width: 120px; text-align: center;">Diferencia</th>
+                            <th style="width: 200px;">Observación</th>
+                            <th style="width: 180px; text-align: center;">Ajuste</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-producto>
+                        <tr>
+                            <td style="text-align: center;">
+                                <i *ngIf="producto.nDiferencia < 0" 
+                                   class="pi pi-arrow-down" 
+                                   style="color: #ef4444; font-size: 1.2rem;"
+                                   pTooltip="Faltante" tooltipPosition="top"></i>
+                                <i *ngIf="producto.nDiferencia > 0" 
+                                   class="pi pi-arrow-up" 
+                                   style="color: #22c55e; font-size: 1.2rem;"
+                                   pTooltip="Sobrante" tooltipPosition="top"></i>
+                            </td>
+                            <td><span class="p-text-bold text-primary">{{producto.sNoParte}}</span></td>
+                            <td><div class="p-text-bold" style="color: #212529;">{{producto.sNombreProducto}}</div></td>
+                            <td><p-tag [value]="producto.sMarca" severity="info" icon="pi pi-tag"></p-tag></td>
+                            <td style="text-align: center;">
+                                <span class="p-text-bold" style="color: #0891b2; font-size: 1.1rem;">{{producto.nCantidadTeoricaRef}}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="p-text-bold" style="color: #6366f1; font-size: 1.1rem;">{{producto.nCantidadContada}}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <p-tag [value]="(producto.nDiferencia > 0 ? '+' : '') + producto.nDiferencia" 
+                                       [severity]="producto.nDiferencia < 0 ? 'danger' : 'success'"
+                                       [style]="{'font-size': '1.1rem', 'font-weight': 'bold'}">
+                                </p-tag>
+                            </td>
+                            <td><span class="p-text-secondary" style="font-size: 0.85rem;">{{producto.sObservacion || '-'}}</span></td>
+                            <td style="text-align: center;">
+                                <div *ngIf="producto.bAjustado">
+                                    <p-tag severity="success" icon="pi pi-check-circle" value="Ajustado"></p-tag>
+                                    <div class="p-text-secondary p-mt-1" style="font-size: 0.65rem;">
+                                        {{producto.sNombreUsuarioAjuste}} - {{producto.dFechaAjuste | date:'dd/MM/yy HH:mm'}}
+                                    </div>
+                                    <div class="p-text-secondary" style="font-size: 0.65rem;" *ngIf="producto.sMotivoAjuste">
+                                        {{producto.sMotivoAjuste}}
+                                    </div>
+                                </div>
+                                <p-tag *ngIf="!producto.bAjustado" severity="warning" icon="pi pi-clock" value="Sin ajustar"></p-tag>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="9" class="p-text-center p-p-4">
+                                <i class="pi pi-check-circle p-mr-2" style="color: #22c55e;"></i>
+                                <span>No hay productos con diferencias - Inventario exacto</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+
+            <!-- Tab: Productos Ajustados -->
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <i class="pi pi-wrench p-mr-2" style="color: #8b5cf6;"></i>
+                    <span>Ajustados ({{totalAjustados}})</span>
+                </ng-template>
+
+                <p-table [value]="productosAjustados" 
+                    [scrollable]="true" 
+                    scrollHeight="400px"
+                    [paginator]="true" 
+                    [rows]="15"
+                    [rowsPerPageOptions]="[15,30,50]"
+                    styleClass="p-datatable-sm p-datatable-striped">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>No. Parte</th>
+                            <th>Producto</th>
+                            <th>Marca</th>
+                            <th style="width: 110px; text-align: center;">Cant. Referencia</th>
+                            <th style="width: 110px; text-align: center;">Cant. Contada</th>
+                            <th style="width: 110px; text-align: center;">Diferencia</th>
+                            <th style="width: 200px;">Motivo Ajuste</th>
+                            <th style="width: 130px;">Ajustado por</th>
+                            <th style="width: 130px;">Fecha Ajuste</th>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="body" let-producto>
+                        <tr>
+                            <td><span class="p-text-bold text-primary">{{producto.sNoParte}}</span></td>
+                            <td><div class="p-text-bold" style="color: #212529;">{{producto.sNombreProducto}}</div></td>
+                            <td><p-tag [value]="producto.sMarca" severity="info" icon="pi pi-tag"></p-tag></td>
+                            <td style="text-align: center;">
+                                <span class="p-text-bold" style="color: #0891b2;">{{producto.nCantidadTeoricaRef}}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <span class="p-text-bold" style="color: #6366f1;">{{producto.nCantidadContada}}</span>
+                            </td>
+                            <td style="text-align: center;">
+                                <p-tag *ngIf="producto.nDiferencia !== 0"
+                                    [value]="(producto.nDiferencia > 0 ? '+' : '') + producto.nDiferencia" 
+                                    [severity]="producto.nDiferencia < 0 ? 'danger' : 'success'"
+                                    [style]="{'font-weight': 'bold'}">
+                                </p-tag>
+                                <span *ngIf="producto.nDiferencia === 0" class="p-text-bold" style="color: #22c55e;">0</span>
+                            </td>
+                            <td>
+                                <span class="p-text-secondary" style="font-size: 0.85rem;">{{producto.sMotivoAjuste || '-'}}</span>
+                            </td>
+                            <td>
+                                <div class="p-d-flex p-ai-center">
+                                    <i class="pi pi-user p-mr-1 text-secondary" style="font-size: 0.85rem;"></i>
+                                    <span style="font-size: 0.85rem;">{{producto.sNombreUsuarioAjuste || '-'}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.85rem;">{{producto.dFechaAjuste | date:'dd/MM/yyyy HH:mm'}}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="9" class="p-text-center p-p-4">
+                                <i class="pi pi-info-circle p-mr-2"></i>
+                                <span>No hay productos ajustados en este inventario</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="p-d-flex p-jc-end">
+            <button pButton pRipple
+                type="button" 
+                label="Cerrar" 
+                icon="pi pi-times" 
+                class="p-button-text p-button-secondary"
+                (click)="mostrarDialogoDetalle = false">
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>

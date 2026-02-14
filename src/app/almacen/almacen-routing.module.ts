@@ -9,6 +9,7 @@ import { TraspasosComponent } from "./pages/traspasos/traspasos.component";
 import { RegistroProductoFacturaComponent } from "./pages/registro-producto-factura/registro-producto-factura.component";
 import { InventarioUbicacionComponent } from "./pages/inventario-ubicacion/inventario-ubicacion.component";
 import { AutorizacionInventarioComponent } from "./pages/autorizacion-inventario/autorizacion-inventario.component";
+import { ConsultaInventarioComponent } from "./pages/consulta-inventario/consulta-inventario.component";
 
 const routes: Routes = [
   {
@@ -34,6 +35,11 @@ const routes: Routes = [
       {
         path: "autorizacion-inventario",
         component: AutorizacionInventarioComponent,
+        data: { expectedRol: ['ROLE_ADMIN'] }
+      },
+      {
+        path: "consulta-inventario",
+        component: ConsultaInventarioComponent,
         data: { expectedRol: ['ROLE_ADMIN'] }
       },
       {

@@ -23,6 +23,7 @@ import { FormProductoFacturaComponent } from './components/form-producto-factura
 import { FormIngresoProductoComponent } from './components/form-ingreso-producto/form-ingreso-producto.component';
 import { InventarioUbicacionComponent } from './pages/inventario-ubicacion/inventario-ubicacion.component';
 import { AutorizacionInventarioComponent } from './pages/autorizacion-inventario/autorizacion-inventario.component';
+import { ConsultaInventarioComponent } from './pages/consulta-inventario/consulta-inventario.component';
 
 
 
@@ -41,7 +42,8 @@ import { AutorizacionInventarioComponent } from './pages/autorizacion-inventario
     FormProductoFacturaComponent,
     FormIngresoProductoComponent,
     InventarioUbicacionComponent,
-    AutorizacionInventarioComponent
+    AutorizacionInventarioComponent,
+    ConsultaInventarioComponent
   ],
   imports: [
     AlmacenRoutingModule,
