@@ -108,9 +108,7 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Traspasos', icon: 'pi pi-fw pi-sort-alt', routerLink: ['../almacen/traspasos'], visible:this.realRol==='admin' || this.realRol==='almacen'
                     },
-                    {
-                        label: 'Inventario', icon: 'pi pi-fw pi-book', routerLink: ['../almacen/inventario'], visible:this.realRol==='admin'  || this.realRol==='almacen'
-                    },
+                   
                     {
                         label: 'Inventario por Ubicación', icon: 'pi pi-fw pi-map-marker', routerLink: ['../almacen/inventario-ubicacion'], visible:this.realRol==='admin'  || this.realRol==='almacen'
                     },

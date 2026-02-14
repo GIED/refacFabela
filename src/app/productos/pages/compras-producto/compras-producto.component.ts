@@ -62,6 +62,7 @@ export class ComprasProductoComponent implements OnInit {
   displayDialog: boolean = false;
   pedidoGuardado:number;
   cols: any[];
+  colsProductosCompra: any[];
   listaPedidoDetalle:TvPedidoDetalle[];
   listaPedidos:TwPedidoProducto[];
   detalleDialog: boolean = false;
@@ -106,9 +107,18 @@ export class ComprasProductoComponent implements OnInit {
       { field: 'tcProveedor.sRazonSocial', header: 'Proveedor' }
     ];
 
-
-
-
+    this.colsProductosCompra = [
+      { field: 'sNoParte', header: 'No Parte' },
+      { field: 'sProducto', header: 'Producto' },
+      { field: 'sDescripcion', header: 'Descripción' },
+      { field: 'sMarca', header: 'Marca' },
+      { field: 'sMoneda', header: 'Moneda' },
+      { field: 'dUltimaFechaCompra', header: 'Ultima compra' },
+      { field: 'nCantidad', header: 'Stock actual' },
+      { field: 'nStockSugerido', header: 'Stock Sugerido' },
+      { field: 'nSugerenciaCompra', header: 'Sugerencia de Compra' },
+      { field: 'nTotalUnitarioCalculado', header: 'Total Calculado' }
+    ];
 
   }
 

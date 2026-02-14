@@ -159,7 +159,7 @@
               <h4>Lista de productos por su ultima fecha de compra</h4>
             </div>
 
-            <p-table class="mt-2" #dt2 [value]="listaProductosUltimaCompra" [rows]="6" [paginator]="true"
+            <p-table class="mt-2" #dt2 [value]="listaProductosUltimaCompra" [columns]="colsProductosCompra" [rows]="6" [paginator]="true"
               [scrollable]="true" scrollHeight="300px"
               [globalFilterFields]="['sDescripcion', 'sProducto', 'sMarca', 'sMoneda', 'nSugerenciaCompra', 'nStockSugerido', 'nTotalUnitarioCalculado','nCantidad', 'dUltimaFechaCompra']"
               [rowHover]="true" dataKey="nId" styleClass="p-datatable-customers min-width-table"
@@ -170,7 +170,7 @@
                 <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
                   <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                    <input pInputText type="text" (input)="dt2.filterGlobal($event.target.value, 'contains')"
                       placeholder="Buscar producto" />
                   </span>
                 </div>
@@ -234,14 +234,13 @@
                   </td>
                 </tr>
               </ng-template>
-              <!--
               <ng-template pTemplate="summary">
-                <div class="p-input-icon-left">
-                  <i class="pi pi-search"></i>
+                <div class="p-d-flex p-ai-center p-jc-between">
+                  <span>Total de Productos: {{listaProductosUltimaCompra ? listaProductosUltimaCompra.length : 0}}</span>
                   <button *ngIf="listaProductosUltimaCompra.length > 0" type="button" pButton pRipple icon="pi pi-file-excel"
-                    label="Exportar productos" class="p-button-help p-mb-2" (click)="dt.exportCSV()"></button>
+                    label="Exportar consulta" class="p-button-help p-mb-2" (click)="dt2.exportCSV()"></button>
                 </div>
-              </ng-template>-->
+              </ng-template>
             </p-table>
           </div>
         </div>
