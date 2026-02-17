@@ -55,6 +55,9 @@ export class InventarioUbicacionComponent implements OnInit {
     imagenAmpliada: string | null = null;
     mostrarImagenAmpliada: boolean = false;
 
+    // Detección de dispositivo móvil/tablet para dropdowns
+    esMobile: boolean = false;
+
     constructor(
         private inventarioService: InventarioUbicacionService,
         private bodegasService: BodegasService,
@@ -65,9 +68,20 @@ export class InventarioUbicacionComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.detectarMobile();
         this.cargarCatalogos();
         this.verificarInventarioAbierto();
         this.configurarMenu();
+    }
+
+    /**
+     * Detectar si es dispositivo móvil o tablet para ajustar comportamiento de dropdowns.
+     * En móviles el teclado virtual causa que los dropdowns se cierren al filtrar.
+     */
+    detectarMobile(): void {
+        this.esMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                        || ('ontouchstart' in window) 
+                        || (window.innerWidth < 1024);
     }
 
     /**
@@ -268,6 +282,22 @@ export class InventarioUbicacionComponent implements OnInit {
             },
             error: (err) => {
                 this.cargando = false;
+                
+                // Si el servidor devolvió 409 con el inventario existente, cargarlo automáticamente
+                if (err.status === 409 && err.error?.nId) {
+                    this.inventarioActual = err.error;
+                    this.mostrarDialogoIniciar = false;
+                    this.actualizarMenu();
+                    this.messageService.add({
+                        severity: 'warn',
+                        summary: 'Inventario existente',
+                        detail: `Ya tiene el inventario #${err.error.nId} abierto. Se cargó automáticamente.`
+                    });
+                    // Sincronizar para tener datos frescos
+                    this.sincronizarAutomatico();
+                    return;
+                }
+                
                 this.mostrarError(err.error?.mensaje || 'Error al iniciar inventario');
             }
         });

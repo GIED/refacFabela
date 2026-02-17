@@ -89,8 +89,9 @@
                         optionLabel="sBodega" 
                         placeholder="Seleccionar bodega"
                         [showClear]="true"
-                        [filter]="true"
+                        [filter]="!esMobile"
                         filterBy="sBodega"
+                        appendTo="body"
                         [style]="{'width':'100%'}"
                         (onChange)="anaquelSeleccionado = null; nivelSeleccionado = null;">
                     </p-dropdown>
@@ -104,8 +105,9 @@
                         optionLabel="sAnaquel" 
                         placeholder="Seleccionar anaquel"
                         [showClear]="true"
-                        [filter]="true"
+                        [filter]="!esMobile"
                         filterBy="sAnaquel"
+                        appendTo="body"
                         [style]="{'width':'100%'}"
                         [disabled]="!bodegaSeleccionada"
                         (onChange)="nivelSeleccionado = null;">
@@ -120,8 +122,9 @@
                         optionLabel="sNivel" 
                         placeholder="Seleccionar nivel"
                         [showClear]="true"
-                        [filter]="true"
+                        [filter]="!esMobile"
                         filterBy="sNivel"
+                        appendTo="body"
                         [style]="{'width':'100%'}"
                         [disabled]="!anaquelSeleccionado">
                     </p-dropdown>
@@ -210,6 +213,7 @@
                             [(ngModel)]="estatusFiltroProducto" 
                             optionLabel="label"
                             optionValue="value"
+                            appendTo="body"
                             [style]="{'min-width':'180px'}"
                             placeholder="Todos">
                         </p-dropdown>
@@ -374,6 +378,7 @@
                             [(ngModel)]="estatusFiltro" 
                             optionLabel="label"
                             optionValue="value"
+                            appendTo="body"
                             [style]="{'min-width':'180px'}"
                             placeholder="Todos">
                         </p-dropdown>

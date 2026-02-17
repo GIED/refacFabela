@@ -7,18 +7,21 @@
             <div _ngcontent-iho-c213="" class="p-grid p-formgrid">
                 <div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
                     <p-dropdown [options]="listaBodegas" optionLabel="sBodega" optionValue="nId" [(ngModel)]="bodega"
-                        (onChange)="consultaProducto()" placeholder="Selecciona una Bodega" [showClear]="true">
+                        (onChange)="consultaProducto()" placeholder="Selecciona una Bodega" [showClear]="true"
+                        appendTo="body">
                     </p-dropdown>
 
                 </div>
                 <div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
                     <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" [(ngModel)]="anaquel"
-                        (onChange)="consultaProducto()" placeholder="Selecciona un Anaquel" [showClear]="true">
+                        (onChange)="consultaProducto()" placeholder="Selecciona un Anaquel" [showClear]="true"
+                        appendTo="body">
                     </p-dropdown>
                 </div>
                 <div _ngcontent-iho-c213="" class="p-col-12 p-mb-2 p-lg-4 p-mb-lg-0">
                     <p-dropdown [options]="listaNivel" optionLabel="sNivel" optionValue="nId" [(ngModel)]="nivel"
-                        (onChange)="consultaProducto()" placeholder="Selecciona una Nivel" [showClear]="true">
+                        (onChange)="consultaProducto()" placeholder="Selecciona una Nivel" [showClear]="true"
+                        appendTo="body">
                     </p-dropdown>
                 </div>
             </div>

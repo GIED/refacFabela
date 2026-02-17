@@ -85,7 +85,17 @@ export class ConsultaInventarioComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.detectarMobile();
         this.cargarCatalogos();
+    }
+
+    /**
+     * Detectar si es dispositivo móvil o tablet para ajustar comportamiento de dropdowns.
+     */
+    detectarMobile(): void {
+        this.esMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                        || ('ontouchstart' in window) 
+                        || (window.innerWidth < 1024);
     }
 
     /**
@@ -348,6 +358,9 @@ export class ConsultaInventarioComponent implements OnInit {
     rutaImagenDefault: string = 'assets/layout/images/default.png';
     imagenAmpliada: string | null = null;
     mostrarImagenAmpliada: boolean = false;
+
+    // Detección de dispositivo móvil/tablet para dropdowns
+    esMobile: boolean = false;
 
     /**
      * Seleccionar modo de búsqueda.
