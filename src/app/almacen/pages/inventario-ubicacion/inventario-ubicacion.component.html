@@ -295,7 +295,8 @@
                     <ng-template pTemplate="body" let-detalle>
                         <tr [ngClass]="{
                                 'row-diferencia-positiva': detalle.nDiferencia !== null && detalle.nDiferencia !== undefined && detalle.nDiferencia > 0,
-                                'row-diferencia-negativa': detalle.nDiferencia !== null && detalle.nDiferencia !== undefined && detalle.nDiferencia < 0
+                                'row-diferencia-negativa': detalle.nDiferencia !== null && detalle.nDiferencia !== undefined && detalle.nDiferencia < 0,
+                                'row-contada': detalle.nEstatusLinea === 2 && (detalle.nDiferencia === null || detalle.nDiferencia === undefined || detalle.nDiferencia === 0)
                             }">
                             <td style="text-align: center;">
                                 <img [src]="obtenerRutaImagen(detalle.sNoParte)" 

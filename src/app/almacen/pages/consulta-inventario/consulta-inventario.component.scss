@@ -8,6 +8,16 @@
     }
 }
 
+// Filas contadas con fondo sutil
+.row-contada {
+    background-color: #f0f9ff !important;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #e0f2fe !important;
+    }
+}
+
 ::ng-deep .p-datatable {
     .p-datatable-thead > tr > th {
         background-color: #f8f9fa;

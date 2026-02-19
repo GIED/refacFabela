@@ -737,7 +737,9 @@
                     </ng-template>
                     
                     <ng-template pTemplate="body" let-producto>
-                        <tr>
+                        <tr [ngClass]="{
+                                'row-contada': producto.nEstatusLinea === 2 && (producto.nDiferencia === null || producto.nDiferencia === undefined || producto.nDiferencia === 0)
+                            }">
                             <!-- Indicador -->
                             <td style="text-align: center;">
                                 <i *ngIf="producto.nCantidadContada != null && producto.nDiferencia < 0" 
@@ -850,7 +852,9 @@
                     </ng-template>
                     
                     <ng-template pTemplate="body" let-producto>
-                        <tr>
+                        <tr [ngClass]="{
+                                'row-contada': producto.nEstatusLinea === 2 && (producto.nDiferencia === null || producto.nDiferencia === undefined || producto.nDiferencia === 0)
+                            }">
                             <td style="text-align: center;">
                                 <i *ngIf="producto.nDiferencia < 0" 
                                    class="pi pi-arrow-down" 

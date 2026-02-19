@@ -18,6 +18,11 @@
     .row-diferencia-negativa .col-actions-sticky {
         background-color: #fee2e2 !important;
     }
+
+    // Heredar color de fondo en filas contadas
+    .row-contada .col-actions-sticky {
+        background-color: #f0f9ff !important;
+    }
 }
 
 ::ng-deep {
@@ -285,6 +290,16 @@
             font-size: 1rem;
             font-weight: bold;
         }
+    }
+}
+
+// Filas contadas con fondo sutil
+.row-contada {
+    background-color: #f0f9ff !important;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #e0f2fe !important;
     }
 }
 
