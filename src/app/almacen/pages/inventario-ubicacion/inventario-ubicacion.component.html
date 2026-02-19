@@ -1,3 +1,6 @@
+<!-- Toast centrado arriba para mensajes de sincronización -->
+<p-toast position="top-center" key="tc" [baseZIndex]="10000"></p-toast>
+<!-- Toast normal para otros mensajes -->
 <p-toast></p-toast>
 <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" [modal]="true" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
 
@@ -290,7 +293,10 @@
                     </ng-template>
 
                     <ng-template pTemplate="body" let-detalle>
-                        <tr>
+                        <tr [ngClass]="{
+                                'row-diferencia-positiva': detalle.nDiferencia !== null && detalle.nDiferencia !== undefined && detalle.nDiferencia > 0,
+                                'row-diferencia-negativa': detalle.nDiferencia !== null && detalle.nDiferencia !== undefined && detalle.nDiferencia < 0
+                            }">
                             <td style="text-align: center;">
                                 <img [src]="obtenerRutaImagen(detalle.sNoParte)" 
                                      (error)="imagenError($event)"
@@ -326,9 +332,15 @@
                             </td>
                             <td class="p-text-center">
                                 <span *ngIf="detalle.nDiferencia !== null && detalle.nDiferencia !== undefined">
-                                    <span *ngIf="detalle.nDiferencia > 0" class="p-text-bold" style="color: #16a34a;">+{{detalle.nDiferencia}}</span>
-                                    <span *ngIf="detalle.nDiferencia < 0" class="p-text-bold" style="color: #dc2626;">{{detalle.nDiferencia}}</span>
-                                    <span *ngIf="detalle.nDiferencia === 0" class="text-secondary">-</span>
+                                    <span *ngIf="detalle.nDiferencia > 0" class="badge-diferencia-positiva">
+                                        <i class="pi pi-arrow-up" style="font-size: 0.9rem;"></i>
+                                        +{{detalle.nDiferencia}}
+                                    </span>
+                                    <span *ngIf="detalle.nDiferencia < 0" class="badge-diferencia-negativa">
+                                        <i class="pi pi-arrow-down" style="font-size: 0.9rem;"></i>
+                                        {{detalle.nDiferencia}}
+                                    </span>
+                                    <span *ngIf="detalle.nDiferencia === 0" class="text-secondary" style="font-weight: 500;">✓ OK</span>
                                 </span>
                             </td>
                             <td class="p-text-center">

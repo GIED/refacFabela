@@ -216,10 +216,19 @@ export class InventarioUbicacionComponent implements OnInit {
                 this.inventarioActual = data;
                 this.cargando = false;
                 this.actualizarMenu(); // Actualizar menú con nuevo estado
+                
+                // Mostrar mensaje de sincronización personalizado centrado
+                const mensajeCambios = data.sMensajeSincronizacion || 'Sin cambios detectados';
+                
+                // Siempre mostrar como advertencia (warn) para que resalte
                 this.messageService.add({
-                    severity: 'success',
-                    summary: 'Sincronización exitosa',
-                    detail: 'Inventario actualizado con los datos más recientes'
+                    severity: 'warn',
+                    summary: '📊 Sincronización Completada',
+                    detail: mensajeCambios,
+                    life: 8000,
+                    sticky: false,
+                    closable: true,
+                    key: 'tc' // Para que aparezca centrado arriba
                 });
             },
             error: (err) => {

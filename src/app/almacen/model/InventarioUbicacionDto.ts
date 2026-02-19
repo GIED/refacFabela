@@ -30,6 +30,9 @@ export class InventarioUbicacionDto {
     lineasContadas?: number;
     lineasRecontar?: number;
 
+    // Mensaje temporal de sincronización
+    sMensajeSincronizacion?: string;
+
     // Detalle de productos
     detalle?: InventarioUbicacionDetalleDto[];
 }
