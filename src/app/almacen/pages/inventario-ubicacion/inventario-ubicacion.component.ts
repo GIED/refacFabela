@@ -440,20 +440,22 @@ export class InventarioUbicacionComponent implements OnInit {
                 this.inventarioActual = data;
                 this.cargando = false;
 
-                // Validar líneas pendientes con datos actualizados
-                if (this.inventarioActual.lineasPendientes! > 0) {
+                // Validar líneas pendientes calculadas dinámicamente
+                const pendientes = this.lineasPendientes;
+                if (pendientes > 0) {
                     this.messageService.add({
                         severity: 'warn',
                         summary: 'No se puede cerrar',
-                        detail: `Hay ${this.inventarioActual.lineasPendientes} línea(s) pendiente(s) de contar. Por favor, complete el conteo de todos los productos.`,
+                        detail: `Hay ${pendientes} línea(s) pendiente(s) de contar. Por favor, complete el conteo de todos los productos.`,
                         life: 5000
                     });
                     this.actualizarMenu();
                     return;
                 }
 
-                // Verificar si hay productos con diferencias
-                const hayDiferencias = this.verificarDiferencias();
+                // Calcular correctamente los productos con diferencias
+                const productosDiferencias = this.lineasRecontar;
+                const hayDiferencias = productosDiferencias > 0;
                 
                 // Configurar mensaje según si hay diferencias o no
                 let mensaje: string;
@@ -463,9 +465,9 @@ export class InventarioUbicacionComponent implements OnInit {
                 if (hayDiferencias) {
                     mensaje = `¿Está seguro de finalizar el inventario #${this.inventarioActual.nId}?<br><br>
                               <strong>Resumen:</strong><br>
-                              • Total de productos: ${this.inventarioActual.totalLineas}<br>
-                              • Productos contados: ${this.inventarioActual.lineasContadas}<br>
-                              • <span style="color: #ef4444;">Productos con diferencias: ${this.inventarioActual.lineasRecontar}</span><br><br>
+                              • Total de productos: ${this.totalLineas}<br>
+                              • Productos contados: ${this.lineasContadas}<br>
+                              • <span style="color: #ef4444;">Productos con diferencias: ${productosDiferencias}</span><br><br>
                               <strong style="color: #f59e0b;">⚠️ El inventario pasará a estado EN REVISIÓN</strong><br>
                               Un administrador deberá revisar y autorizar las diferencias detectadas.`;
                     headerTexto = 'Confirmar Finalización - Requiere Revisión';
@@ -473,8 +475,8 @@ export class InventarioUbicacionComponent implements OnInit {
                 } else {
                     mensaje = `¿Está seguro de finalizar el inventario #${this.inventarioActual.nId}?<br><br>
                               <strong>Resumen:</strong><br>
-                              • Total de productos: ${this.inventarioActual.totalLineas}<br>
-                              • Productos contados: ${this.inventarioActual.lineasContadas}<br>
+                              • Total de productos: ${this.totalLineas}<br>
+                              • Productos contados: ${this.lineasContadas}<br>
                               • <span style="color: #16a34a;">✓ Sin diferencias detectadas</span><br><br>
                               <strong style="color: #16a34a;">✓ El inventario se cerrará automáticamente</strong><br>
                               No requiere revisión adicional.`;
@@ -596,6 +598,43 @@ export class InventarioUbicacionComponent implements OnInit {
             case EstatusInventario.APLICADO: return 'success';
             default: return 'secondary';
         }
+    }
+
+    /**
+     * Calcular dinámicamente el total de líneas desde el detalle.
+     */
+    get totalLineas(): number {
+        return this.inventarioActual?.detalle?.length || 0;
+    }
+
+    /**
+     * Calcular dinámicamente las líneas pendientes de contar desde el detalle.
+     */
+    get lineasPendientes(): number {
+        if (!this.inventarioActual?.detalle) return 0;
+        return this.inventarioActual.detalle.filter(d => 
+            d.nCantidadContada === null || d.nCantidadContada === undefined
+        ).length;
+    }
+
+    /**
+     * Calcular dinámicamente las líneas ya contadas desde el detalle.
+     */
+    get lineasContadas(): number {
+        if (!this.inventarioActual?.detalle) return 0;
+        return this.inventarioActual.detalle.filter(d => 
+            d.nCantidadContada !== null && d.nCantidadContada !== undefined
+        ).length;
+    }
+
+    /**
+     * Calcular dinámicamente las líneas con diferencias desde el detalle.
+     */
+    get lineasRecontar(): number {
+        if (!this.inventarioActual?.detalle) return 0;
+        return this.inventarioActual.detalle.filter(d => 
+            d.nDiferencia !== null && d.nDiferencia !== undefined && d.nDiferencia !== 0
+        ).length;
     }
 
     /**

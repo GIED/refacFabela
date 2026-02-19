@@ -35,27 +35,28 @@
         }
     }
 
-    // Diálogos más profesionales
+    // Diálogos más profesionales - sin transparencias
     .p-dialog {
         border-radius: 12px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        background-color: #ffffff !important;
         
         .p-dialog-header {
             padding: 1.5rem;
-            background: var(--surface-0);
-            border-bottom: 1px solid var(--surface-border);
+            background-color: #ffffff !important;
+            border-bottom: 1px solid #dee2e6;
             border-radius: 12px 12px 0 0;
         }
         
         .p-dialog-content {
             padding: 1.5rem;
-            background: var(--surface-0);
+            background-color: #ffffff !important;
         }
         
         .p-dialog-footer {
             padding: 1rem 1.5rem;
-            background: var(--surface-50);
-            border-top: 1px solid var(--surface-border);
+            background-color: #f8f9fa !important;
+            border-top: 1px solid #dee2e6;
             border-radius: 0 0 12px 12px;
         }
     }

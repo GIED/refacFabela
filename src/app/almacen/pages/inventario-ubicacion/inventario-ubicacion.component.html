@@ -113,7 +113,7 @@
                                 <p-card styleClass="ui-card-shadow h-100 text-center-card">
                                     <div class="p-text-center p-p-2">
                                         <i class="pi pi-list text-primary" style="font-size: 2rem;"></i>
-                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{inventarioActual.totalLineas || 0}}</div>
+                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{totalLineas}}</div>
                                         <div class="text-secondary" style="font-size: 0.85rem;">Total</div>
                                     </div>
                                 </p-card>
@@ -123,7 +123,7 @@
                                 <p-card styleClass="ui-card-shadow h-100 text-center-card">
                                     <div class="p-text-center p-p-2">
                                         <i class="pi pi-clock" style="font-size: 2rem; color: #f59e0b;"></i>
-                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{inventarioActual.lineasPendientes || 0}}</div>
+                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{lineasPendientes}}</div>
                                         <div class="text-secondary" style="font-size: 0.85rem;">Pendientes</div>
                                     </div>
                                 </p-card>
@@ -133,7 +133,7 @@
                                 <p-card styleClass="ui-card-shadow h-100 text-center-card">
                                     <div class="p-text-center p-p-2">
                                         <i class="pi pi-check-circle" style="font-size: 2rem; color: #22c55e;"></i>
-                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{inventarioActual.lineasContadas || 0}}</div>
+                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{lineasContadas}}</div>
                                         <div class="text-secondary" style="font-size: 0.85rem;">Contados</div>
                                     </div>
                                 </p-card>
@@ -143,7 +143,7 @@
                                 <p-card styleClass="ui-card-shadow h-100 text-center-card">
                                     <div class="p-text-center p-p-2">
                                         <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #ef4444;"></i>
-                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{inventarioActual.lineasRecontar || 0}}</div>
+                                        <div class="p-text-bold p-mt-2" style="font-size: 1.5rem; color: #495057;">{{lineasRecontar}}</div>
                                         <div class="text-secondary" style="font-size: 0.85rem;">Recontar</div>
                                     </div>
                                 </p-card>
@@ -189,10 +189,10 @@
                             icon="pi pi-check-circle"
                             class="p-button-danger"
                             (click)="confirmarCerrarInventario()"
-                            [disabled]="inventarioActual.lineasPendientes! > 0 || 
+                            [disabled]="lineasPendientes > 0 || 
                                        (inventarioActual.nEstatus !== EstatusInventario.ABIERTO && 
                                         inventarioActual.nEstatus !== EstatusInventario.PAUSADO)"
-                            pTooltip="{{inventarioActual.lineasPendientes! > 0 ? 'Hay ' + inventarioActual.lineasPendientes + ' línea(s) pendiente(s) de contar' : 'Finalizar inventario y pasar a revisión'}}"
+                            pTooltip="{{lineasPendientes > 0 ? 'Hay ' + lineasPendientes + ' línea(s) pendiente(s) de contar' : 'Finalizar inventario y pasar a revisión'}}"
                             tooltipPosition="top">
                         </button>
                     </div>
