@@ -1,5 +1,25 @@
 // Estilos profesionales para inventario por ubicación
 
+// Columna de acciones flotante (sticky a la derecha)
+::ng-deep {
+    .col-actions-sticky {
+        position: sticky !important;
+        right: 0 !important;
+        z-index: 2 !important;
+        background-color: white !important;
+        box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+    }
+
+    // Heredar color de fondo en filas con diferencias
+    .row-diferencia-positiva .col-actions-sticky {
+        background-color: #dcfce7 !important;
+    }
+
+    .row-diferencia-negativa .col-actions-sticky {
+        background-color: #fee2e2 !important;
+    }
+}
+
 ::ng-deep {
     // Cards con mejor diseño
     .p-card {
