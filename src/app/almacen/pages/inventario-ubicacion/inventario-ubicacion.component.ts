@@ -443,18 +443,44 @@ export class InventarioUbicacionComponent implements OnInit {
                     return;
                 }
 
-                // Mostrar confirmación
-                this.confirmationService.confirm({
-                    message: `¿Está seguro de finalizar el inventario #${this.inventarioActual.nId}?<br><br>
+                // Verificar si hay productos con diferencias
+                const hayDiferencias = this.verificarDiferencias();
+                
+                // Configurar mensaje según si hay diferencias o no
+                let mensaje: string;
+                let headerTexto: string;
+                let severityIcon: string;
+                
+                if (hayDiferencias) {
+                    mensaje = `¿Está seguro de finalizar el inventario #${this.inventarioActual.nId}?<br><br>
                               <strong>Resumen:</strong><br>
                               • Total de productos: ${this.inventarioActual.totalLineas}<br>
-                              • Productos contados: ${this.inventarioActual.lineasContadas}<br><br>
-                              El inventario pasará a estado EN REVISIÓN.`,
-                    header: 'Confirmar Finalización',
-                    icon: 'pi pi-exclamation-triangle',
+                              • Productos contados: ${this.inventarioActual.lineasContadas}<br>
+                              • <span style="color: #ef4444;">Productos con diferencias: ${this.inventarioActual.lineasRecontar}</span><br><br>
+                              <strong style="color: #f59e0b;">⚠️ El inventario pasará a estado EN REVISIÓN</strong><br>
+                              Un administrador deberá revisar y autorizar las diferencias detectadas.`;
+                    headerTexto = 'Confirmar Finalización - Requiere Revisión';
+                    severityIcon = 'pi pi-exclamation-triangle';
+                } else {
+                    mensaje = `¿Está seguro de finalizar el inventario #${this.inventarioActual.nId}?<br><br>
+                              <strong>Resumen:</strong><br>
+                              • Total de productos: ${this.inventarioActual.totalLineas}<br>
+                              • Productos contados: ${this.inventarioActual.lineasContadas}<br>
+                              • <span style="color: #16a34a;">✓ Sin diferencias detectadas</span><br><br>
+                              <strong style="color: #16a34a;">✓ El inventario se cerrará automáticamente</strong><br>
+                              No requiere revisión adicional.`;
+                    headerTexto = 'Confirmar Finalización - Cierre Automático';
+                    severityIcon = 'pi pi-check-circle';
+                }
+
+                // Mostrar confirmación
+                this.confirmationService.confirm({
+                    message: mensaje,
+                    header: headerTexto,
+                    icon: severityIcon,
                     acceptLabel: 'Sí, finalizar',
                     rejectLabel: 'Cancelar',
-                    acceptButtonStyleClass: 'p-button-danger',
+                    acceptButtonStyleClass: hayDiferencias ? 'p-button-danger' : 'p-button-success',
                     accept: () => {
                         this.cerrarInventario();
                     }
@@ -468,21 +494,51 @@ export class InventarioUbicacionComponent implements OnInit {
     }
 
     /**
-     * Cerrar inventario (pasar a revisión).
+     * Verificar si hay productos con diferencias en el inventario actual.
+     * @returns true si hay al menos un producto con diferencia diferente de cero
+     */
+    private verificarDiferencias(): boolean {
+        if (!this.inventarioActual || !this.inventarioActual.detalle) {
+            return false;
+        }
+
+        return this.inventarioActual.detalle.some(detalle => {
+            return detalle.nDiferencia !== null && 
+                   detalle.nDiferencia !== undefined && 
+                   detalle.nDiferencia !== 0;
+        });
+    }
+
+    /**
+     * Cerrar inventario (pasar a revisión o cerrar automáticamente).
      */
     private cerrarInventario(): void {
         if (!this.inventarioActual) return;
+
+        // Verificar si hay diferencias antes de cerrar
+        const hayDiferencias = this.verificarDiferencias();
 
         this.cargando = true;
         this.inventarioService.cerrarInventario(this.inventarioActual.nId!).subscribe({
             next: (data) => {
                 this.cargando = false;
                 this.inventarioActual = null; // Limpiamos para permitir nuevo inventario
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Inventario finalizado',
-                    detail: `El inventario #${data.nId} se cerró correctamente y está EN REVISIÓN`
-                });
+                
+                // Mostrar mensaje según el resultado
+                if (hayDiferencias) {
+                    this.messageService.add({
+                        severity: 'info',
+                        summary: 'Inventario finalizado',
+                        detail: `El inventario #${data.nId} se cerró correctamente y está EN REVISIÓN. Un administrador deberá revisar las diferencias.`
+                    });
+                } else {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Inventario cerrado automáticamente',
+                        detail: `El inventario #${data.nId} se cerró y aplicó correctamente. No se detectaron diferencias.`,
+                        life: 6000
+                    });
+                }
             },
             error: (err) => {
                 this.cargando = false;
