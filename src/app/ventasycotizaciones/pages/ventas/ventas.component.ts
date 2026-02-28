@@ -392,7 +392,17 @@ valorSeleccionadoProducto(){
   this.productoSeleccionado=this.productoSelecionadoCtrl.value;
   this.nIdProducto=this.productoSeleccionado.nId;
 
-  this.rutaImagen='https://www.ctpsales.costex.com:11443/Webpics/220x220/'+ this.productoSeleccionado.sNoParte+'.jpg';
+  this.rutaImagen = this.rutaImagenDefault;
+  this.productoService.resolverImagenProducto(this.productoSeleccionado.sNoParte).subscribe({
+    next: (res) => {
+      // Usar la URL del backend si existe (aunque encontrada sea false, el fallback sigue siendo válido).
+      // El handler (error) del <img> se encarga de mostrar la imagen default si la URL falla en el navegador.
+      this.rutaImagen = (res.url && res.url.trim() !== '') ? res.url : this.rutaImagenDefault;
+    },
+    error: () => {
+      this.rutaImagen = 'https://www.ctpsales.costex.com:11443/Webpics/220x220/'+ this.productoSeleccionado.sNoParte+'.jpg';
+    }
+  });
   
   
   //consulta las ubicaciones de los productos

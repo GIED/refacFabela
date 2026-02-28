@@ -149,6 +149,23 @@ export class ProductoService {
   return this.http.get<ImagenResponse>(url);
 }
 
+  /**
+   * Resuelve la URL de imagen del producto desde el backend.
+   * Prioridad: Costex CDN -> Cloudflare CDN -> Local (auto-sube a Cloudflare)
+   */
+  resolverImagenProducto(noParte: string): Observable<{url: string, encontrada: string}> {
+    const url = environment.servicios.apiRefacFabela + locator.resolverImagenProducto + 'noParte=' + encodeURIComponent(noParte);
+    return this.http.get<{url: string, encontrada: string}>(url);
+  }
+
+  /**
+   * Fuerza la subida de una imagen local a Cloudflare.
+   */
+  subirImagenCloudflare(noParte: string): Observable<{url: string, subida: string}> {
+    const url = environment.servicios.apiRefacFabela + locator.subirImagenCloudflare + 'noParte=' + encodeURIComponent(noParte);
+    return this.http.post<{url: string, subida: string}>(url, null);
+  }
+
 getProductoByNoParteAndIdMarca(noParte: string, idMarca: number) {
   let params = new Map();
   params.set("noParte", noParte);

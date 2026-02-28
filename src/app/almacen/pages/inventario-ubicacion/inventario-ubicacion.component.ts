@@ -14,6 +14,7 @@ import { EstatusInventario, DESCRIPCION_ESTATUS_INVENTARIO } from '../../model/I
 import { TcBodega } from 'src/app/productos/model/TcBodega';
 import { TcAnaquel } from 'src/app/productos/model/TcAnaquel';
 import { TcNivel } from 'src/app/productos/model/TcNivel';
+import { ProductoService } from 'src/app/shared/service/producto.service';
 
 @Component({
     selector: 'app-inventario-ubicacion',
@@ -64,7 +65,8 @@ export class InventarioUbicacionComponent implements OnInit {
         private anaquelService: AnaquelService,
         private nivelService: NivelService,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private productoService: ProductoService
     ) { }
 
     ngOnInit(): void {
@@ -85,10 +87,23 @@ export class InventarioUbicacionComponent implements OnInit {
     }
 
     /**
-     * Obtener URL de la imagen del producto
+     * Obtener URL de la imagen del producto.
+     * Retorna URL cacheada o default, y resuelve la URL real en background.
      */
+    imagenesCache: {[key: string]: string} = {};
     obtenerRutaImagen(noParte: string): string {
-        return 'https://www.ctpsales.costex.com:11443/Webpics/220x220/' + noParte + '.jpg';
+        if (!noParte) return this.rutaImagenDefault;
+        if (this.imagenesCache[noParte]) return this.imagenesCache[noParte];
+        this.imagenesCache[noParte] = this.rutaImagenDefault;
+        this.productoService.resolverImagenProducto(noParte).subscribe({
+            next: (res) => {
+                this.imagenesCache[noParte] = res.encontrada === 'true' ? res.url : this.rutaImagenDefault;
+            },
+            error: () => {
+                this.imagenesCache[noParte] = this.rutaImagenDefault;
+            }
+        });
+        return this.imagenesCache[noParte];
     }
 
     /**

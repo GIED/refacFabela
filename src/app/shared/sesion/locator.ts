@@ -105,6 +105,8 @@ static getProductosFacturaId='/facturacionProveedor/getProductoFacturaId?';
 
 /*imagen */
 static getImegenProducto='/obtenerImagenProducto?';
+static resolverImagenProducto='/resolverImagenProducto?';
+static subirImagenCloudflare='/subirImagenCloudflare?';
 
 
 

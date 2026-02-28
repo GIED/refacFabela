@@ -6,6 +6,7 @@ import {
     InventarioUbicacionDetalleDto
 } from '../../model/InventarioUbicacionDto';
 import { EstatusInventario, DESCRIPCION_ESTATUS_INVENTARIO } from '../../model/InventarioEnums';
+import { ProductoService } from 'src/app/shared/service/producto.service';
 
 @Component({
     selector: 'app-autorizacion-inventario',
@@ -48,7 +49,8 @@ export class AutorizacionInventarioComponent implements OnInit {
     constructor(
         private inventarioService: InventarioUbicacionService,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private productoService: ProductoService
     ) { }
 
     ngOnInit(): void {
@@ -56,10 +58,23 @@ export class AutorizacionInventarioComponent implements OnInit {
     }
 
     /**
-     * Obtener URL de la imagen del producto
+     * Obtener URL de la imagen del producto.
+     * Retorna URL cacheada o default, y resuelve la URL real en background.
      */
+    imagenesCache: {[key: string]: string} = {};
     obtenerRutaImagen(noParte: string): string {
-        return 'https://www.ctpsales.costex.com:11443/Webpics/220x220/' + noParte + '.jpg';
+        if (!noParte) return this.rutaImagenDefault;
+        if (this.imagenesCache[noParte]) return this.imagenesCache[noParte];
+        this.imagenesCache[noParte] = this.rutaImagenDefault;
+        this.productoService.resolverImagenProducto(noParte).subscribe({
+            next: (res) => {
+                this.imagenesCache[noParte] = res.encontrada === 'true' ? res.url : this.rutaImagenDefault;
+            },
+            error: () => {
+                this.imagenesCache[noParte] = this.rutaImagenDefault;
+            }
+        });
+        return this.imagenesCache[noParte];
     }
 
     /**

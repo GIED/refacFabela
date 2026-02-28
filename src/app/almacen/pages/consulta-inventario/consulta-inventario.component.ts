@@ -13,6 +13,7 @@ import { TcBodega } from 'src/app/productos/model/TcBodega';
 import { TcAnaquel } from 'src/app/productos/model/TcAnaquel';
 import { TcNivel } from 'src/app/productos/model/TcNivel';
 import { TcProducto } from 'src/app/productos/model/TcProducto';
+import { ProductoService } from 'src/app/shared/service/producto.service';
 
 @Component({
     selector: 'app-consulta-inventario',
@@ -81,7 +82,8 @@ export class ConsultaInventarioComponent implements OnInit {
         private bodegasService: BodegasService,
         private anaquelService: AnaquelService,
         private nivelService: NivelService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private productoService: ProductoService
     ) { }
 
     ngOnInit(): void {
@@ -356,6 +358,7 @@ export class ConsultaInventarioComponent implements OnInit {
 
     // Imágenes de productos
     rutaImagenDefault: string = 'assets/layout/images/default.png';
+    imagenesCache: {[key: string]: string} = {};
     imagenAmpliada: string | null = null;
     mostrarImagenAmpliada: boolean = false;
 
@@ -370,10 +373,23 @@ export class ConsultaInventarioComponent implements OnInit {
     }
 
     /**
-     * Obtener URL de la imagen del producto
+     * Obtener URL de la imagen del producto.
+     * Retorna URL cacheada o default, y resuelve la URL real en background.
      */
     obtenerRutaImagen(noParte: string): string {
-        return 'https://www.ctpsales.costex.com:11443/Webpics/220x220/' + noParte + '.jpg';
+        if (!noParte) return this.rutaImagenDefault;
+        if (this.imagenesCache[noParte]) return this.imagenesCache[noParte];
+        // Iniciar resolución async
+        this.imagenesCache[noParte] = this.rutaImagenDefault;
+        this.productoService.resolverImagenProducto(noParte).subscribe({
+            next: (res) => {
+                this.imagenesCache[noParte] = res.encontrada === 'true' ? res.url : this.rutaImagenDefault;
+            },
+            error: () => {
+                this.imagenesCache[noParte] = this.rutaImagenDefault;
+            }
+        });
+        return this.imagenesCache[noParte];
     }
 
     /**
