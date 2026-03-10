@@ -113,6 +113,34 @@ public class TcCliente implements Serializable {
     3.  Create Endpoint to return PDF byte stream.
     4.  Frontend opens blob in new tab.
 
+## Cross-Platform Deployment Rule (CRITICAL)
+
+> **The application is developed on Windows and deployed on Linux (Ubuntu). All code MUST be cross-platform compatible.**
+
+### Absolute Path Ban
+**NEVER** use hardcoded local or Windows-specific paths anywhere in the codebase. This includes:
+- File system paths like `d:/Proyectos/...`, `C:\\Users\\...`, or any drive-letter path.
+- Debug/log files written with `new FileWriter("local/path/file.log")`.
+- Any `java.io.File`, `FileWriter`, `FileOutputStream`, `Paths.get()` pointing to a fixed local directory.
+
+**Why**: A `FileWriter("d:/Proyectos/Fabela/Backend/creditos-debug.log")` once caused a `FileNotFoundException` on the Linux server. Because it was inside a `try-with-resources`, the exception was silently caught, skipping all SOAP logic and returning 0 — making the timbrado CFDI system appear broken for days.
+
+### What to Use Instead
+| Need | Correct Approach |
+|------|-----------------|
+| **Logging/Debug output** | `System.out.println()` / `System.err.println()` or SLF4J/Logback (`log.info(...)`) |
+| **Temp files** | `File.createTempFile(...)` or `System.getProperty("java.io.tmpdir")` |
+| **Config-dependent paths** | `application.properties` values injected with `@Value("${property}")` |
+| **Classpath resources** | `ClassPathResource`, `ResourceUtils`, `getClass().getResourceAsStream()` |
+| **File separators** | `File.separator` or `/` (works on both OS) — never `\\` |
+
+### Code Review Checklist
+Before committing backend code, verify:
+- [ ] No hardcoded absolute paths (search for `d:/`, `c:/`, `C:\\`, `D:\\`).
+- [ ] No `new FileWriter` / `new FileOutputStream` with literal string paths.
+- [ ] All file operations use configurable or relative paths.
+- [ ] Debug logging uses `System.out` / logger framework, not file writers.
+
 ## Security & key Configurations
 - **API Keys**: `ApiKeyMetaCompraFilter` protects specific purchase endpoints.
 - **JWT**: Secrets and expiration are configured in `application.properties`.
