@@ -36,6 +36,8 @@ export class AutorizacionInventarioComponent implements OnInit {
     // Formulario de ajuste individual
     productoAjustar: InventarioUbicacionDetalleDto | null = null;
     motivoAjuste = '';
+    cantidadCorregida: number | null = null;
+    usarCantidadCorregida = false;
 
     // Constantes de estatus
     EstatusInventario = EstatusInventario;
@@ -157,7 +159,30 @@ export class AutorizacionInventarioComponent implements OnInit {
     abrirDialogoAjustar(producto: InventarioUbicacionDetalleDto): void {
         this.productoAjustar = producto;
         this.motivoAjuste = '';
+        this.cantidadCorregida = producto.nCantidadContada;
+        this.usarCantidadCorregida = false;
         this.mostrarDialogoAjustar = true;
+    }
+
+    /**
+     * Calcula la diferencia en tiempo real según la cantidad (corregida o contada).
+     */
+    get diferenciaAjuste(): number {
+        if (!this.productoAjustar) return 0;
+        const cantidad = this.usarCantidadCorregida && this.cantidadCorregida !== null
+            ? this.cantidadCorregida
+            : (this.productoAjustar.nCantidadContada || 0);
+        return cantidad - (this.productoAjustar.nCantidadTeoricaRef || 0);
+    }
+
+    /**
+     * Cantidad final que se aplicará al sistema.
+     */
+    get cantidadFinalAjuste(): number {
+        if (!this.productoAjustar) return 0;
+        return this.usarCantidadCorregida && this.cantidadCorregida !== null
+            ? this.cantidadCorregida
+            : (this.productoAjustar.nCantidadContada || 0);
     }
 
     /**
@@ -176,10 +201,12 @@ export class AutorizacionInventarioComponent implements OnInit {
         }
 
         this.cargando = true;
+        const cantidadEnviar = this.usarCantidadCorregida ? this.cantidadCorregida : undefined;
         this.inventarioService.ajustarProductoInventario(
             this.inventarioSeleccionado.nId!,
             this.productoAjustar.nIdProducto!,
-            this.motivoAjuste
+            this.motivoAjuste,
+            cantidadEnviar
         ).subscribe({
             next: (data) => {
                 // Actualizar el producto en la lista de diferencias

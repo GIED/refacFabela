@@ -534,7 +534,7 @@
 
     <div *ngIf="productoAjustar" class="p-mt-3">
         <!-- Información del Producto -->
-        <div class="p-shadow-1 p-p-3 p-mb-3" style="background-color: #f8f9fa; border-radius: 6px; border: 1px solid #e9ecef;">
+        <div class="p-shadow-1 p-p-3 p-mb-3" style="background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
             <div class="p-d-flex p-ai-start">
                 <i class="pi pi-box p-mr-3 text-primary" style="font-size: 2rem;"></i>
                 <div style="flex: 1;">
@@ -551,19 +551,23 @@
             </div>
         </div>
 
-        <!-- Detalle de Diferencia -->
+        <!-- Detalle de cantidades: Sistema / Contado / Diferencia -->
         <div class="p-grid p-mb-3">
             <div class="p-col-4">
-                <div class="p-p-3 p-text-center" style="border: 1px solid #06b6d4; border-radius: 6px; background-color: #fff;">
-                    <div class="p-text-secondary p-mb-1" style="font-size: 0.85rem;">Sistema</div>
+                <div class="p-p-3 p-text-center" style="border: 1px solid #06b6d4; border-radius: 8px; background-color: #fff;">
+                    <div class="p-text-secondary p-mb-1" style="font-size: 0.82rem;">
+                        <i class="pi pi-database p-mr-1"></i> Sistema
+                    </div>
                     <div class="p-text-bold" style="font-size: 1.8rem; color: #0891b2;">
                         {{productoAjustar.nCantidadTeoricaRef}}
                     </div>
                 </div>
             </div>
             <div class="p-col-4">
-                <div class="p-p-3 p-text-center" style="border: 1px solid #6366f1; border-radius: 6px; background-color: #fff;">
-                    <div class="p-text-secondary p-mb-1" style="font-size: 0.85rem;">Contado</div>
+                <div class="p-p-3 p-text-center" style="border: 1px solid #6366f1; border-radius: 8px; background-color: #fff;">
+                    <div class="p-text-secondary p-mb-1" style="font-size: 0.82rem;">
+                        <i class="pi pi-eye p-mr-1"></i> Contado (original)
+                    </div>
                     <div class="p-text-bold" style="font-size: 1.8rem; color: #6366f1;">
                         {{productoAjustar.nCantidadContada}}
                     </div>
@@ -571,18 +575,66 @@
             </div>
             <div class="p-col-4">
                 <div class="p-p-3 p-text-center" 
-                     [style]="'border: 2px solid ' + (productoAjustar.nDiferencia! < 0 ? '#ef4444' : '#22c55e') + '; border-radius: 6px; background-color: #fff;'">
-                    <div class="p-text-secondary p-mb-1" style="font-size: 0.85rem;">Diferencia</div>
+                     [style]="'border: 2px solid ' + (diferenciaAjuste < 0 ? '#ef4444' : diferenciaAjuste > 0 ? '#22c55e' : '#94a3b8') + '; border-radius: 8px; background-color: #fff;'">
+                    <div class="p-text-secondary p-mb-1" style="font-size: 0.82rem;">
+                        <i class="pi pi-sort-alt p-mr-1"></i> Diferencia
+                    </div>
                     <div class="p-text-bold" 
-                         [style]="'font-size: 1.8rem; color: ' + (productoAjustar.nDiferencia! < 0 ? '#ef4444' : '#22c55e')">
-                        {{(productoAjustar.nDiferencia! > 0 ? '+' : '') + productoAjustar.nDiferencia}}
+                         [style]="'font-size: 1.8rem; color: ' + (diferenciaAjuste < 0 ? '#ef4444' : diferenciaAjuste > 0 ? '#22c55e' : '#94a3b8')">
+                        {{(diferenciaAjuste > 0 ? '+' : '') + diferenciaAjuste}}
                     </div>
                 </div>
             </div>
         </div>
 
-        <p-message severity="info" 
-            [text]="'Al confirmar, se actualizará tw_productobodega con la cantidad contada (' + productoAjustar.nCantidadContada + ' unidades)'">
+        <!-- Toggle para corregir la cantidad -->
+        <div class="p-p-3 p-mb-3" style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 8px;">
+            <div class="p-d-flex p-ai-center p-mb-2">
+                <p-checkbox [(ngModel)]="usarCantidadCorregida" 
+                    [binary]="true"
+                    inputId="chkCorregir">
+                </p-checkbox>
+                <label for="chkCorregir" class="p-ml-2 p-text-bold" style="color: #92400e; cursor: pointer; font-size: 0.92rem;">
+                    <i class="pi pi-pencil p-mr-1"></i>
+                    Corregir cantidad contada
+                </label>
+            </div>
+            <small class="p-d-block p-text-secondary" style="color: #a16207; font-size: 0.82rem;">
+                <i class="pi pi-info-circle p-mr-1"></i>
+                Si el conteo original es incorrecto (ej: se encontró el producto después), active esta opción e ingrese la cantidad real.
+            </small>
+
+            <div *ngIf="usarCantidadCorregida" class="p-mt-3" style="animation: fadeIn 0.2s ease;">
+                <div class="p-d-flex p-ai-center" style="gap: 12px;">
+                    <div style="flex: 1;">
+                        <label class="p-text-bold p-d-block p-mb-1" style="font-size: 0.85rem; color: #212529;">
+                            Cantidad corregida *
+                        </label>
+                        <p-inputNumber [(ngModel)]="cantidadCorregida" 
+                            [showButtons]="true" 
+                            buttonLayout="horizontal"
+                            [min]="0"
+                            incrementButtonIcon="pi pi-plus" 
+                            decrementButtonIcon="pi pi-minus"
+                            inputId="cantidadCorregida"
+                            [style]="{'width': '100%'}"
+                            [inputStyle]="{'text-align': 'center', 'font-size': '1.3rem', 'font-weight': '700'}">
+                        </p-inputNumber>
+                    </div>
+                    <div class="p-text-center" style="min-width: 120px; padding-top: 22px;">
+                        <span class="p-text-secondary" style="font-size: 0.8rem;">Nuevo resultado</span>
+                        <div class="p-text-bold p-mt-1" 
+                             [style]="'font-size: 1.4rem; color: ' + (diferenciaAjuste < 0 ? '#ef4444' : diferenciaAjuste > 0 ? '#22c55e' : '#94a3b8')">
+                            {{(diferenciaAjuste > 0 ? '+' : '') + diferenciaAjuste}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje informativo -->
+        <p-message [severity]="usarCantidadCorregida ? 'warn' : 'info'" 
+            [text]="'Al confirmar, se actualizará el stock en sistema a ' + cantidadFinalAjuste + ' unidades' + (usarCantidadCorregida ? ' (cantidad corregida por admin)' : ' (cantidad del conteo original)')">
         </p-message>
 
         <div class="p-field p-mt-4">
@@ -594,7 +646,9 @@
                 pInputTextarea 
                 [(ngModel)]="motivoAjuste" 
                 rows="4"
-                placeholder="Ej: Diferencia validada por conteo físico, producto dañado encontrado, etc."
+                [placeholder]="usarCantidadCorregida 
+                    ? 'Ej: Se revisó y se encontró el producto, el conteo original era incorrecto...' 
+                    : 'Ej: Diferencia validada por conteo físico, producto dañado encontrado, etc.'"
                 [autoResize]="true"
                 style="width: 100%;">
             </textarea>

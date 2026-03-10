@@ -137,11 +137,16 @@ export class InventarioUbicacionService {
     ajustarProductoInventario(
         inventarioId: number,
         productoId: number,
-        motivoAjuste: string
+        motivoAjuste: string,
+        cantidadCorregida?: number
     ): Observable<InventarioUbicacionDetalleDto> {
         const url = environment.servicios.apiRefacFabela + locator.ajustarProductoInventario 
                   + inventarioId + '/detalle/' + productoId + '/ajustar';
-        return this.http.post<InventarioUbicacionDetalleDto>(url, { sMotivoAjuste: motivoAjuste });
+        const body: any = { sMotivoAjuste: motivoAjuste };
+        if (cantidadCorregida !== undefined && cantidadCorregida !== null) {
+            body.nCantidadCorregida = cantidadCorregida;
+        }
+        return this.http.post<InventarioUbicacionDetalleDto>(url, body);
     }
 
     /**
