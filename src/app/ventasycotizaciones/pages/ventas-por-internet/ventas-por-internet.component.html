@@ -22,14 +22,43 @@
                                 <div class="p-grid p-ai-start vertical-container">
                                     <div class="p-col-6">
                                         <label for="name">Producto</label>
-                                        <input type="text" pInputText name="producto" formControlName="productoCtrl" placeholder="Ingrese el nombre del producto que busca" (input)="inputProducto()" />
-                                        <p-listbox *ngIf="mostrarSugerenciasProducto" [options]="listaProductoSugerencia" formControlName="productoSelecionadoCtrl" optionLabel="sNoParte" (onClick)="valorSeleccionadoProducto()" [listStyle]="{'max-height':'200px'}">
-                                            <ng-template let-producto pTemplate="item">
-                                                <div>
-                                                    <div>{{producto.sNoParte}}-{{producto.sProducto}}</div>
+                                        <div class="busqueda">
+                                            <div class="busqueda__bar">
+                                                <i class="pi pi-search busqueda__icon"></i>
+                                                <input type="text" pInputText name="producto" formControlName="productoCtrl"
+                                                    placeholder="Escribe No. de parte o nombre del producto..."
+                                                    (input)="inputProducto()" class="busqueda__input" />
+                                                <span *ngIf="productoCtrl?.value" class="busqueda__clear"
+                                                      (click)="productoCtrl.setValue(''); mostrarSugerenciasProducto = false">
+                                                    <i class="pi pi-times"></i>
+                                                </span>
+                                            </div>
+                                            <div class="busqueda__results" *ngIf="mostrarSugerenciasProducto && listaProductoSugerencia?.length > 0">
+                                                <div class="busqueda__results-header">
+                                                    <i class="pi pi-list"></i>
+                                                    <span>{{ listaProductoSugerencia.length }} resultado{{ listaProductoSugerencia.length !== 1 ? 's' : '' }}</span>
                                                 </div>
-                                            </ng-template>
-                                        </p-listbox>
+                                                <div class="busqueda__item" *ngFor="let producto of listaProductoSugerencia"
+                                                     (click)="productoSelecionadoCtrl.setValue(producto); valorSeleccionadoProducto()">
+                                                    <div class="busqueda__item-left">
+                                                        <div class="busqueda__item-icon">
+                                                            <i class="pi pi-box"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="busqueda__item-body">
+                                                        <div class="busqueda__item-top">
+                                                            <span class="busqueda__noparte">{{ producto.sNoParte }}</span>
+                                                            <span class="busqueda__marca">{{ producto.sMarca }}</span>
+                                                        </div>
+                                                        <div class="busqueda__item-nombre">{{ producto.sProducto }}</div>
+                                                        <div class="busqueda__item-desc" *ngIf="producto.sDescripcion">{{ producto.sDescripcion }}</div>
+                                                    </div>
+                                                    <div class="busqueda__item-arrow">
+                                                        <i class="pi pi-angle-right"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 

@@ -124,5 +124,12 @@ export class AjusteInventarioComponent implements OnInit {
     return this.formGrp.get('motivoCtrl') as FormControl;
   }
 
+  get diferencia(): number {
+    const nuevo = this.cantidadCtrl.value;
+    if (nuevo === null || nuevo === '' || nuevo === undefined) {
+      return 0;
+    }
+    return Number(nuevo) - (this.productoBodega?.nCantidad || 0);
+  }
 
 }

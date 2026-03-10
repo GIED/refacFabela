@@ -69,8 +69,7 @@ export class InputBusquedaComponent implements OnInit {
 }
 
   valorSeleccionado() {
-    //console.log(this.nId);
-    this.consultarPorId.emit(this.nId)
+    this.consultarPorId.emit(this.nId);
 
     for (let i in this.listaNoParte) {
       if (this.listaNoParte[i].nId == this.nId) {
@@ -81,7 +80,21 @@ export class InputBusquedaComponent implements OnInit {
     this.productoSeleccionado.emit(this.producto);
     this.mostrarSugerencias = false;
     this.sNoParte = '';
+  }
 
+  seleccionarProducto(producto: TcProducto) {
+    this.nId = producto.nId;
+    this.producto = producto;
+    this.consultarPorId.emit(this.nId);
+    this.productoSeleccionado.emit(this.producto);
+    this.mostrarSugerencias = false;
+    this.sNoParte = '';
+  }
+
+  limpiar() {
+    this.sNoParte = '';
+    this.mostrarSugerencias = false;
+    this.listaNoParte = [];
   }
 
 }

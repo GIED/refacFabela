@@ -1,16 +1,51 @@
-<div class="p-grid p-fluid">
-    <div class="p-col-12 p-xl-12 p-md-12">
-        <label for="name">No. de parte</label>
-        <input type="text" pInputText name="sNoParte" [(ngModel)]="sNoParte" (input)="teclaPresionada()" class="input-field" />
-        
-        <div class="listbox-container">
-            <p-listbox *ngIf="mostrarSugerencias" [options]="listaNoParte" [(ngModel)]="nId" optionLabel="sNoParte" (onClick)="valorSeleccionado()" optionValue="nId" [listStyle]="{'max-height':'250px'}" class="p-overlay-panel p-component">
-                <ng-template let-producto pTemplate="item">
-                    <div class="p-listbox-item">
-                        <div><strong>{{producto.sNoParte}}</strong> / <strong style="color: brown;">{{producto.sMarca}} </strong> / <strong style="color:blue;"> {{producto.sProducto}} </strong>/ {{producto.sDescripcion}}</div>
-                    </div>
-                </ng-template>
-            </p-listbox>
+<div class="busqueda">
+    <!-- Search bar -->
+    <div class="busqueda__bar">
+        <i class="pi pi-search busqueda__icon"></i>
+        <input type="text" pInputText
+               name="sNoParte"
+               [(ngModel)]="sNoParte"
+               (input)="teclaPresionada()"
+               placeholder="Escribe No. de parte, mínimo 3 caracteres..."
+               class="busqueda__input" />
+        <span *ngIf="sNoParte?.length > 0" class="busqueda__clear" (click)="limpiar()">
+            <i class="pi pi-times"></i>
+        </span>
+    </div>
+
+    <!-- Hint -->
+    <small *ngIf="!mostrarSugerencias && (!sNoParte || sNoParte.length < 3)" class="busqueda__hint">
+        <i class="pi pi-info-circle"></i> Ingresa al menos 3 caracteres para buscar
+    </small>
+
+    <!-- Results dropdown -->
+    <div class="busqueda__results" *ngIf="mostrarSugerencias && listaNoParte?.length > 0">
+        <div class="busqueda__results-header">
+            <i class="pi pi-list"></i>
+            <span>{{ listaNoParte.length }} resultado{{ listaNoParte.length !== 1 ? 's' : '' }}</span>
+        </div>
+
+        <div class="busqueda__item"
+             *ngFor="let producto of listaNoParte"
+             (click)="seleccionarProducto(producto)">
+            <div class="busqueda__item-left">
+                <div class="busqueda__item-icon">
+                    <i class="pi pi-box"></i>
+                </div>
+            </div>
+            <div class="busqueda__item-body">
+                <div class="busqueda__item-top">
+                    <span class="busqueda__noparte">{{ producto.sNoParte }}</span>
+                    <span class="busqueda__marca">{{ producto.sMarca }}</span>
+                </div>
+                <div class="busqueda__item-nombre">{{ producto.sProducto }}</div>
+                <div class="busqueda__item-desc" *ngIf="producto.sDescripcion">
+                    {{ producto.sDescripcion }}
+                </div>
+            </div>
+            <div class="busqueda__item-arrow">
+                <i class="pi pi-angle-right"></i>
+            </div>
         </div>
     </div>
 </div>

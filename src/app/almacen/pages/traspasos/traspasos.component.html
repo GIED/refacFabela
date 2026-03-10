@@ -1,41 +1,163 @@
-<div class="p-col-12 p-text-center">
-    <h2>Traspaso de Mercancía</h2>
-    <hr />
-</div>
-<app-input-busqueda (consultarPorId)=obtenerBodegas($event)></app-input-busqueda>
-<br>
-<div *ngIf="mostrar">
-    <div class="p-text-center">
-        <h3>Distribución por bodega del producto: {{listaProductoBodega[0].tcProducto.sNoParte}} </h3>
+<p-toast position="top-center" [baseZIndex]="10000"></p-toast>
+
+<div class="p-grid">
+    <div class="p-col-12">
+
+        <!-- ====== HEADER ====== -->
+        <p-card styleClass="p-shadow-3 p-mb-4">
+            <ng-template pTemplate="header">
+                <div class="traspaso-header">
+                    <div class="p-d-flex p-ai-center">
+                        <div class="traspaso-header__icon">
+                            <i class="pi pi-arrows-h" style="font-size: 2rem; color: white;"></i>
+                        </div>
+                        <div>
+                            <h2 class="p-m-0 p-text-bold" style="color: white;">Traspaso de Mercancía</h2>
+                            <p class="p-m-0 p-mt-1" style="font-size: 0.9rem; opacity: 0.85; color: white;">
+                                Mueve productos entre bodegas o cambia su ubicación dentro de la misma
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <!-- Buscador -->
+            <div class="p-p-3">
+                <h4 class="p-mt-0 p-mb-2"><i class="pi pi-search p-mr-2"></i>Buscar Producto</h4>
+                <app-input-busqueda (consultarPorId)="obtenerBodegas($event)"></app-input-busqueda>
+            </div>
+        </p-card>
+
+        <!-- ====== ESTADO VACIO ====== -->
+        <div *ngIf="!mostrar && !cargando" class="p-mb-4">
+            <p-card styleClass="p-shadow-2 p-text-center">
+                <div class="p-p-5">
+                    <div class="p-d-flex p-jc-center p-mb-3">
+                        <div class="empty-state-icon">
+                            <i class="pi pi-box" style="font-size: 3rem; color: #6366f1;"></i>
+                        </div>
+                    </div>
+                    <h3 class="p-text-bold p-mb-2" style="color: #212529;">Sin producto seleccionado</h3>
+                    <p class="p-text-secondary" style="max-width: 450px; margin: 0 auto;">
+                        Escribe el número de parte en el buscador para consultar la distribución del producto en las diferentes bodegas.
+                    </p>
+                </div>
+            </p-card>
+        </div>
+
+        <!-- ====== CARGANDO ====== -->
+        <div *ngIf="cargando" class="p-text-center p-p-5">
+            <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="4"></p-progressSpinner>
+            <p class="p-mt-2 p-text-secondary">Consultando distribución del producto...</p>
+        </div>
+
+        <!-- ====== RESULTADO: INFO PRODUCTO + TABLA ====== -->
+        <div *ngIf="mostrar && !cargando">
+
+            <!-- Tarjeta de resumen del producto -->
+            <p-card styleClass="p-shadow-2 p-mb-3">
+                <div class="producto-resumen">
+                    <div class="p-grid p-ai-center">
+                        <div class="p-col-12 p-md-6">
+                            <div class="p-d-flex p-ai-center">
+                                <div class="producto-resumen__avatar">
+                                    <i class="pi pi-cog" style="font-size: 1.4rem; color: white;"></i>
+                                </div>
+                                <div class="p-ml-3">
+                                    <span class="p-text-secondary" style="font-size: 0.85rem;">No. Parte</span>
+                                    <h3 class="p-m-0 p-text-bold">{{listaProductoBodega[0].tcProducto.sNoParte}}</h3>
+                                    <span style="font-size: 0.95rem; color: #495057;">{{listaProductoBodega[0].tcProducto.sProducto}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-col-12 p-md-3 p-text-center">
+                            <span class="p-text-secondary" style="font-size: 0.85rem;">Bodegas</span>
+                            <h3 class="p-m-0 p-text-bold" style="color: #6366f1;">{{listaProductoBodega.length}}</h3>
+                        </div>
+                        <div class="p-col-12 p-md-3 p-text-center">
+                            <span class="p-text-secondary" style="font-size: 0.85rem;">Stock Total</span>
+                            <h3 class="p-m-0 p-text-bold" style="color: #16a34a;">{{stockTotal}}</h3>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+
+            <!-- Tabla de distribución -->
+            <p-card styleClass="p-shadow-2">
+                <ng-template pTemplate="header">
+                    <div class="p-d-flex p-ai-center p-jc-between p-px-3 p-py-2" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+                        <h4 class="p-m-0"><i class="pi pi-th-large p-mr-2"></i>Distribución por Bodega</h4>
+                        <button pButton pRipple icon="pi pi-refresh" class="p-button-text p-button-sm p-button-secondary"
+                            pTooltip="Actualizar" tooltipPosition="left"
+                            (click)="refrescar()">
+                        </button>
+                    </div>
+                </ng-template>
+
+                <p-table [value]="listaProductoBodega" responsiveLayout="scroll"
+                    styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines"
+                    [scrollable]="true" scrollHeight="400px">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="min-width: 180px;">Producto</th>
+                            <th style="min-width: 120px;">Bodega</th>
+                            <th style="min-width: 100px;">Anaquel</th>
+                            <th style="min-width: 80px;">Nivel</th>
+                            <th style="min-width: 100px;" class="p-text-center">Stock</th>
+                            <th style="min-width: 200px;" class="p-text-center">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-bodega>
+                        <tr>
+                            <td>
+                                <span class="p-text-bold">{{bodega.tcProducto.sProducto}}</span>
+                            </td>
+                            <td>
+                                <p-tag [value]="bodega.tcBodega.sBodega" severity="info" [rounded]="true" icon="pi pi-home"></p-tag>
+                            </td>
+                            <td>{{bodega.tcAnaquel.sAnaquel}}</td>
+                            <td>{{bodega.tcNivel.sNivel}}</td>
+                            <td class="p-text-center">
+                                <span class="stock-badge" [ngClass]="{
+                                    'stock-badge--ok': bodega.nCantidad > 5,
+                                    'stock-badge--low': bodega.nCantidad > 0 && bodega.nCantidad <= 5,
+                                    'stock-badge--zero': bodega.nCantidad === 0
+                                }">
+                                    {{bodega.nCantidad}}
+                                </span>
+                            </td>
+                            <td class="p-text-center">
+                                <div class="p-d-flex p-jc-center p-ai-center" style="gap: 0.4rem;">
+                                    <button pButton pRipple icon="pi pi-arrows-v"
+                                        class="p-button-rounded p-button-info p-button-outlined btn-action"
+                                        (click)="modalProductoBodega(bodega)"
+                                        pTooltip="Movimiento Interno (mover anaquel/nivel)" tooltipPosition="top">
+                                    </button>
+                                    <button pButton pRipple icon="pi pi-send"
+                                        class="p-button-rounded p-button-success p-button-outlined btn-action"
+                                        (click)="modalProductoBodegaExterno(bodega)"
+                                        pTooltip="Movimiento Externo (mover a otra bodega)" tooltipPosition="top">
+                                    </button>
+                                    <button *ngIf="mostrarAjustes" pButton pRipple icon="pi pi-sliders-h"
+                                        class="p-button-rounded p-button-warning p-button-outlined btn-action"
+                                        (click)="modalProductoAjuste(bodega)"
+                                        pTooltip="Ajuste de inventario" tooltipPosition="top">
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6" class="p-text-center p-p-4">
+                                <i class="pi pi-info-circle p-mr-2"></i>No se encontraron registros en bodegas para este producto.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+
+        </div>
+
     </div>
-
-    <p-table [value]="listaProductoBodega" responsiveLayout="scroll" scrollHeight="200px" styleClass="p-datatable-sm">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Producto</th>
-                <th>Bodega</th>
-                <th>Anaquel</th>
-                <th>Nivel</th>
-                <th>Stock</th>
-                <th>Acciones</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-bodega>
-            <tr>
-                <td>{{bodega.tcProducto.sProducto}}</td>
-                <td>{{bodega.tcBodega.sBodega}}</td>
-                <td>{{bodega.tcAnaquel.sAnaquel}}</td>
-                <td>{{bodega.tcNivel.sNivel}}</td>
-                <td>{{bodega.nCantidad}}</td>
-                <td>
-                    <button pButton pRipple icon="pi pi-home" class="p-button-rounded p-button-success p-mr-2 p-button-outlined" (click)="modalProductoBodega(bodega)" pTooltip="Movimiento Interno"></button>
-                    <button pButton pRipple icon="pi pi-send" class="p-button-rounded p-button-success p-mr-2 p-button-outlined" (click)="modalProductoBodegaExterno(bodega)" pTooltip="Movimiento Externo"></button>
-                    <button *ngIf="mostrarAjustes" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-danger p-mr-2 p-button-outlined" (click)="modalProductoAjuste(bodega)" pTooltip="Ajuste de inventario"></button>
-
-                </td>
-
-            </tr>
-        </ng-template>
-    </p-table>
-
 </div>

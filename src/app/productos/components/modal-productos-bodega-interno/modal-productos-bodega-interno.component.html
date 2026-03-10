@@ -1,29 +1,97 @@
-<form [formGroup]="formGrp" class="p-fluid p-pt-4">
-    <div class="p-grid">
- <div class="p-col-12 p-md-4 p-lg-4 p-text-center">No parte: {{productoBodega.tcProducto.sNoParte}} </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Producto: {{productoBodega.tcProducto.sProducto}}</div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center"><span style="background: purple; color: white;">Stock: {{productoBodega.nCantidad}}</span></div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Bodega: {{productoBodega.tcBodega.sBodega}}</div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
-            <label>Anaquel<strong>*</strong></label>
-            <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" formControlName="anaquelCtrl" placeholder="Selecciona un Anaquel" [showClear]="true">
-            </p-dropdown>
+<form [formGroup]="formGrp" class="modal-interno">
+
+    <!-- ===== Sección: Producto actual ===== -->
+    <div class="modal-section">
+        <div class="modal-section__label">
+            <i class="pi pi-box"></i>
+            <span>Producto Actual</span>
         </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
-
-            <label>Nivel<strong>*</strong></label>
-            <p-dropdown [options]="listaNivel" optionLabel="sNivel" optionValue="nId" formControlName="nivelCtrl" placeholder="Selecciona una Nivel" [showClear]="true">
-            </p-dropdown>
-
+        <div class="info-card info-card--sky">
+            <div class="p-grid p-ai-center">
+                <div class="p-col-12 p-md-3">
+                    <div class="info-card__field">
+                        <span class="info-card__label">No. Parte</span>
+                        <span class="info-card__value">{{productoBodega.tcProducto.sNoParte}}</span>
+                    </div>
+                </div>
+                <div class="p-col-12 p-md-3">
+                    <div class="info-card__field">
+                        <span class="info-card__label">Producto</span>
+                        <span class="info-card__value">{{productoBodega.tcProducto.sProducto}}</span>
+                    </div>
+                </div>
+                <div class="p-col-6 p-md-3">
+                    <div class="info-card__field">
+                        <span class="info-card__label">Bodega</span>
+                        <span class="info-card__value">
+                            <i class="pi pi-home p-mr-1" style="color: #0ea5e9;"></i>{{productoBodega.tcBodega.sBodega}}
+                        </span>
+                    </div>
+                </div>
+                <div class="p-col-6 p-md-3 p-text-center">
+                    <span class="info-card__label">Stock</span>
+                    <div class="stock-pill stock-pill--sky">{{productoBodega.nCantidad}}</div>
+                </div>
+            </div>
         </div>
-
     </div>
-    <div class="p-grid p-jc-end p-mt-2">
-        <div class="p-col-3">
-            <button pButton pRipple type="button" class="p-button-outlined p-button-danger p-button-sm" (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times" required></button>
+
+    <!-- ===== Ubicación actual ===== -->
+    <div class="location-current">
+        <div class="location-current__item">
+            <i class="pi pi-th-large" style="color: #64748b;"></i>
+            <span class="p-text-secondary">Anaquel actual:</span>
+            <strong>{{productoBodega.tcAnaquel.sAnaquel}}</strong>
         </div>
-        <div class="p-col-3">
-            <button pButton pRipple type="button" class="p-button-warning p-button-sm p-button-raised" (click)="onGuardarClicked()" label="Mover Mercancía" icon="pi pi-times" [disabled]="formGrp.invalid"></button>
+        <div class="location-current__item">
+            <i class="pi pi-sort-amount-up" style="color: #64748b;"></i>
+            <span class="p-text-secondary">Nivel actual:</span>
+            <strong>{{productoBodega.tcNivel.sNivel}}</strong>
         </div>
+    </div>
+
+    <!-- ===== Flecha de dirección ===== -->
+    <div class="modal-direction">
+        <div class="modal-direction__line"></div>
+        <div class="modal-direction__icon modal-direction__icon--sky">
+            <i class="pi pi-arrow-down"></i>
+        </div>
+        <div class="modal-direction__line"></div>
+    </div>
+
+    <!-- ===== Sección: Nueva ubicación ===== -->
+    <div class="modal-section">
+        <div class="modal-section__label">
+            <i class="pi pi-arrows-v"></i>
+            <span>Nueva Ubicación</span>
+        </div>
+
+        <div class="p-grid">
+            <div class="p-col-12 p-md-6">
+                <div class="field-group">
+                    <label class="field-group__label">Anaquel <span class="field-group__req">*</span></label>
+                    <p-dropdown [options]="listaAnaquel" optionLabel="sAnaquel" optionValue="nId" formControlName="anaquelCtrl"
+                        placeholder="Selecciona un Anaquel" [showClear]="true" [style]="{'width': '100%'}">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="p-col-12 p-md-6">
+                <div class="field-group">
+                    <label class="field-group__label">Nivel <span class="field-group__req">*</span></label>
+                    <p-dropdown [options]="listaNivel" optionLabel="sNivel" optionValue="nId" formControlName="nivelCtrl"
+                        placeholder="Selecciona un Nivel" [showClear]="true" [style]="{'width': '100%'}">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Botones ===== -->
+    <div class="modal-actions">
+        <button pButton pRipple type="button" class="p-button-outlined p-button-secondary"
+            (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times"></button>
+        <button pButton pRipple type="button" class="p-button-info p-button-raised"
+            (click)="onGuardarClicked()" label="Mover Mercancía" icon="pi pi-arrows-v"
+            [disabled]="formGrp.invalid"></button>
     </div>
 </form>

@@ -8,18 +8,42 @@
             <div class="card">
                 <div class="p-grid">
                     <div class="p-col-8">
-                        <h6>Favor de Elegir un cliente </h6>
-                        <input type="text" pInputText name="cliente" formControlName="clienteCtrl"
-                            (input)="inputCliente()" />
-                        <p-listbox *ngIf="mostrarSugerenciasCliente" [options]="listaCliente"
-                            formControlName="clienteSeleccionadoCtrl" optionLabel="sRazonSocial"
-                            (onClick)="valorSeleccionadoCliente()">
-                            <ng-template let-cliente pTemplate="item">
-                                <div>
-                                    <div>{{cliente.sRfc}}-{{cliente.sRazonSocial}}</div>
+                        <h6>Favor de Elegir un cliente</h6>
+                        <div class="busqueda">
+                            <div class="busqueda__bar">
+                                <i class="pi pi-users busqueda__icon"></i>
+                                <input type="text" pInputText name="cliente" formControlName="clienteCtrl"
+                                    (input)="inputCliente()" placeholder="Escribe RFC o razón social del cliente..."
+                                    class="busqueda__input" />
+                                <span *ngIf="clienteCtrl?.value" class="busqueda__clear"
+                                      (click)="clienteCtrl.setValue(''); mostrarSugerenciasCliente = false">
+                                    <i class="pi pi-times"></i>
+                                </span>
+                            </div>
+                            <div class="busqueda__results" *ngIf="mostrarSugerenciasCliente && listaCliente?.length > 0">
+                                <div class="busqueda__results-header">
+                                    <i class="pi pi-list"></i>
+                                    <span>{{ listaCliente.length }} resultado{{ listaCliente.length !== 1 ? 's' : '' }}</span>
                                 </div>
-                            </ng-template>
-                        </p-listbox>
+                                <div class="busqueda__item" *ngFor="let cliente of listaCliente"
+                                     (click)="clienteSeleccionadoCtrl.setValue(cliente); valorSeleccionadoCliente()">
+                                    <div class="busqueda__item-left">
+                                        <div class="busqueda__item-icon busqueda__item-icon--teal">
+                                            <i class="pi pi-user"></i>
+                                        </div>
+                                    </div>
+                                    <div class="busqueda__item-body">
+                                        <div class="busqueda__item-top">
+                                            <span class="busqueda__noparte">{{ cliente.sRfc }}</span>
+                                        </div>
+                                        <div class="busqueda__item-nombre">{{ cliente.sRazonSocial }}</div>
+                                    </div>
+                                    <div class="busqueda__item-arrow">
+                                        <i class="pi pi-angle-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="p-col-4">
                 <div class="flex gap-2 p-mt-4">
@@ -88,23 +112,43 @@
                                         <div class="p-grid p-ai-start vertical-container">
                                             <div class="p-col-12">
                                                 <label for="name">Producto</label>
-                                                <input type="text" pInputText name="producto"
-                                                    formControlName="productoCtrl" (input)="inputProducto()" />
-                                                <div style="position: relative;">
-                                                    <p-listbox *ngIf="mostrarSugerenciasProducto"
-                                                        [options]="listaProductoSugerencia"
-                                                        formControlName="productoSelecionadoCtrl" optionLabel="sNoParte"
-                                                        (onClick)="valorSeleccionadoProducto()"
-                                                        [listStyle]="{'max-height':'200px', 'width': '100%', 'position': 'absolute', 'top': '100%', 'z-index': '1000', 'background-color': 'white', 'box-shadow': '0px 4px 8px rgba(0, 0, 0, 0.1)'}">
-                                                        <ng-template let-producto pTemplate="item">
-                                                            <div style="border-bottom: 1px solid #ddd; padding: 8px; background-color: #EFEFEF;">
-                                                                <div><strong>{{producto.sNoParte}}</strong> / <strong
-                                                                        style="color: #92B673;">{{producto.sMarca}} </strong>
-                                                                    / <strong style="color:#6AB2C6;"> {{producto.sProducto}}</strong>/
-                                                                     <strong style="color:#A879A0;"> {{producto.sDescripcion}}</strong></div>
+                                                <div class="busqueda">
+                                                    <div class="busqueda__bar">
+                                                        <i class="pi pi-search busqueda__icon"></i>
+                                                        <input type="text" pInputText name="producto"
+                                                            formControlName="productoCtrl" (input)="inputProducto()"
+                                                            placeholder="Escribe No. de parte o nombre del producto..."
+                                                            class="busqueda__input" />
+                                                        <span *ngIf="productoCtrl?.value" class="busqueda__clear"
+                                                              (click)="productoCtrl.setValue(''); mostrarSugerenciasProducto = false">
+                                                            <i class="pi pi-times"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div class="busqueda__results" *ngIf="mostrarSugerenciasProducto && listaProductoSugerencia?.length > 0">
+                                                        <div class="busqueda__results-header">
+                                                            <i class="pi pi-list"></i>
+                                                            <span>{{ listaProductoSugerencia.length }} resultado{{ listaProductoSugerencia.length !== 1 ? 's' : '' }}</span>
+                                                        </div>
+                                                        <div class="busqueda__item" *ngFor="let producto of listaProductoSugerencia"
+                                                             (click)="productoSelecionadoCtrl.setValue(producto); valorSeleccionadoProducto()">
+                                                            <div class="busqueda__item-left">
+                                                                <div class="busqueda__item-icon">
+                                                                    <i class="pi pi-box"></i>
+                                                                </div>
                                                             </div>
-                                                        </ng-template>
-                                                    </p-listbox>
+                                                            <div class="busqueda__item-body">
+                                                                <div class="busqueda__item-top">
+                                                                    <span class="busqueda__noparte">{{ producto.sNoParte }}</span>
+                                                                    <span class="busqueda__marca">{{ producto.sMarca }}</span>
+                                                                </div>
+                                                                <div class="busqueda__item-nombre">{{ producto.sProducto }}</div>
+                                                                <div class="busqueda__item-desc" *ngIf="producto.sDescripcion">{{ producto.sDescripcion }}</div>
+                                                            </div>
+                                                            <div class="busqueda__item-arrow">
+                                                                <i class="pi pi-angle-right"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -1,31 +1,239 @@
-::ng-deep .p-dialog {
-    background-color: #ffffff !important;
-    
-    .p-dialog-header {
-        background-color: #ffffff !important;
+/* ===== Modal Ajuste — Rediseño Moderno ===== */
+.modal-ajuste {
+    padding: 0.25rem 0;
+}
+
+/* --- Tarjeta de producto --- */
+.ajuste-producto-card {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+
+    &__icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background-color: #f59e0b;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    
-    .p-dialog-content {
-        background-color: #ffffff !important;
+
+    &__name {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: #1e293b;
+        line-height: 1.3;
     }
-    
-    .p-dialog-footer {
-        background-color: #f8f9fa !important;
+
+    &__part {
+        font-size: 0.82rem;
+        color: #64748b;
+        font-weight: 500;
     }
 }
 
-::ng-deep .p-confirm-dialog {
-    background-color: #ffffff !important;
-    
-    .p-dialog-header {
-        background-color: #ffffff !important;
+.ajuste-detail-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.ajuste-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.7rem;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+
+    i {
+        font-size: 0.8rem;
+        color: #94a3b8;
     }
-    
-    .p-dialog-content {
-        background-color: #ffffff !important;
+}
+
+/* --- Título de sección --- */
+.ajuste-section-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    margin-bottom: 0.6rem;
+
+    i {
+        font-size: 0.85rem;
     }
-    
-    .p-dialog-footer {
-        background-color: #f8f9fa !important;
+}
+
+/* --- Comparación de stock --- */
+.ajuste-stock-compare {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.ajuste-stock-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem 1rem;
+
+    &__label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.5rem;
+    }
+
+    &__value {
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    &--current {
+        background-color: #fef2f2;
+
+        .ajuste-stock-box__value {
+            color: #dc2626;
+        }
+    }
+
+    &--new {
+        background-color: #f0fdf4;
+        padding-bottom: 0.8rem;
+    }
+}
+
+.ajuste-stock-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.7rem;
+    background-color: #f8fafc;
+    border-left: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    min-width: 60px;
+
+    > i {
+        font-size: 1.1rem;
+        color: #94a3b8;
+    }
+}
+
+.ajuste-stock-diff {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    margin-top: 0.4rem;
+
+    &--up {
+        background-color: #dcfce7;
+        color: #15803d;
+    }
+
+    &--down {
+        background-color: #fee2e2;
+        color: #dc2626;
+    }
+
+    &--neutral {
+        background-color: #f1f5f9;
+        color: #64748b;
+    }
+
+    i {
+        font-size: 0.7rem;
+    }
+}
+
+/* --- Motivo --- */
+.ajuste-motivo {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #ffffff;
+
+    &__textarea {
+        border: none !important;
+        width: 100%;
+        resize: vertical;
+        font-size: 0.9rem;
+
+        &:focus {
+            box-shadow: none !important;
+        }
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.4rem 0.75rem;
+        background-color: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    &__counter {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-weight: 500;
+
+        &--warn {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+    }
+}
+
+/* --- Botones del modal --- */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1.2rem;
+    margin-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* --- Override PrimeNG input dentro del box verde --- */
+:host ::ng-deep {
+    .ajuste-stock-box--new {
+        .p-inputnumber {
+            max-width: 180px;
+        }
+    }
+
+    .ajuste-motivo__textarea.p-inputtextarea {
+        border-radius: 0;
+        padding: 0.75rem;
     }
 }

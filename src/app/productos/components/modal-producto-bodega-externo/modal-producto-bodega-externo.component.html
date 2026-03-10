@@ -1,42 +1,91 @@
-<form [formGroup]="formGrp" class="p-fluid p-pt-4">
-    <div class="p-grid">
-        <div class="p-col-12 p-text-center">
-            <h3>Ubicación Actual</h3>
-        </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">Producto: {{productoBodega.tcProducto.sProducto}}</div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center">
-            Bodega: {{productoBodega.tcBodega.sBodega}} Anaquel: {{productoBodega.tcAnaquel.sAnaquel}} Nivel: {{productoBodega.tcNivel.sNivel}}
+<form [formGroup]="formGrp" class="modal-externo">
 
+    <!-- ===== Sección: Origen ===== -->
+    <div class="modal-section">
+        <div class="modal-section__label">
+            <i class="pi pi-map-marker"></i>
+            <span>Origen</span>
         </div>
-        <div class="p-col-12 p-md-4 p-lg-4 p-text-center"><span style="background: purple; color: white;">Stock Actual: {{productoBodega.nCantidad}}</span></div>
-        <p-divider></p-divider>
-        <div class="p-col-12 p-text-center">
-            <h3>Ubicación Destino</h3>
-        </div>
-        <div class="p-col-12 p-md-6 p-lg-6 p-text-center">
-            <label>Bodega<strong>*</strong></label>
-            <p-dropdown [options]="listaAux" optionLabel="sBodega" optionValue="nId" formControlName="bodegaCtrl" placeholder="Selecciona una Bodega" [showClear]="true" optionDisabled="inactive">
-            </p-dropdown>
-            <div *ngIf="bodegaCtrl.invalid && (bodegaCtrl.dirty || bodegaCtrl.touched)">
-                <small class="p-error" *ngIf="bodegaCtrl.errors?.required">Campo obligatorio</small>
+        <div class="info-card info-card--indigo">
+            <div class="p-grid p-ai-center">
+                <div class="p-col-12 p-md-5">
+                    <div class="info-card__field">
+                        <span class="info-card__label">Producto</span>
+                        <span class="info-card__value">{{productoBodega.tcProducto.sProducto}}</span>
+                    </div>
+                </div>
+                <div class="p-col-6 p-md-4">
+                    <div class="info-card__field">
+                        <span class="info-card__label">Bodega</span>
+                        <span class="info-card__value">
+                            <i class="pi pi-home p-mr-1" style="color: #4f46e5;"></i>{{productoBodega.tcBodega.sBodega}}
+                        </span>
+                    </div>
+                    <div class="info-card__field p-mt-1">
+                        <span class="info-card__label">Ubicación</span>
+                        <span class="info-card__value" style="font-size: 0.9rem;">{{productoBodega.tcAnaquel.sAnaquel}} / {{productoBodega.tcNivel.sNivel}}</span>
+                    </div>
+                </div>
+                <div class="p-col-6 p-md-3 p-text-center">
+                    <span class="info-card__label">Stock</span>
+                    <div class="stock-pill stock-pill--indigo">{{productoBodega.nCantidad}}</div>
+                </div>
             </div>
         </div>
-        <div class="p-col-12 p-md-6 p-lg-6 p-text-center">
-
-            <label>Cantidad<strong>*</strong></label>
-            <p-inputNumber formControlName="cantidadCtrl" min="1" [max]="productoBodega.nCantidad" required></p-inputNumber>
-            <div *ngIf="cantidadCtrl.invalid || (cantidadCtrl.dirty || cantidadCtrl.touched)">
-                <small class="p-error" *ngIf="cantidadCtrl.errors?.required">Campo obligatorio</small>
-            </div>
-        </div>
-
     </div>
-    <div class="p-grid p-jc-end p-mt-2">
-        <div class="p-col-3">
-            <button pButton pRipple type="button" class="p-button-outlined p-button-danger p-button-sm" (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times" required></button>
+
+    <!-- ===== Flecha de dirección ===== -->
+    <div class="modal-direction">
+        <div class="modal-direction__line"></div>
+        <div class="modal-direction__icon">
+            <i class="pi pi-arrow-down"></i>
         </div>
-        <div class="p-col-3">
-            <button pButton pRipple type="button" class="p-button-success p-button-sm p-button-raised" (click)="onGuardarClicked()" label="Mover Mercancía" icon="pi pi-check" [disabled]="formGrp.invalid"></button>
+        <div class="modal-direction__line"></div>
+    </div>
+
+    <!-- ===== Sección: Destino ===== -->
+    <div class="modal-section">
+        <div class="modal-section__label">
+            <i class="pi pi-flag"></i>
+            <span>Destino</span>
         </div>
+
+        <div class="p-grid">
+            <div class="p-col-12 p-md-6">
+                <div class="field-group">
+                    <label class="field-group__label">Bodega Destino <span class="field-group__req">*</span></label>
+                    <p-dropdown [options]="listaAux" optionLabel="sBodega" optionValue="nId" formControlName="bodegaCtrl"
+                        placeholder="Selecciona una Bodega" [showClear]="true" optionDisabled="inactive"
+                        [style]="{'width': '100%'}">
+                    </p-dropdown>
+                    <div *ngIf="bodegaCtrl.invalid && (bodegaCtrl.dirty || bodegaCtrl.touched)">
+                        <small class="p-error"><i class="pi pi-exclamation-circle p-mr-1"></i>Campo obligatorio</small>
+                    </div>
+                </div>
+            </div>
+            <div class="p-col-12 p-md-6">
+                <div class="field-group">
+                    <label class="field-group__label">Cantidad a mover <span class="field-group__req">*</span></label>
+                    <p-inputNumber formControlName="cantidadCtrl" [min]="1" [max]="productoBodega.nCantidad"
+                        placeholder="0" [showButtons]="true" buttonLayout="horizontal"
+                        decrementButtonClass="p-button-outlined p-button-secondary" incrementButtonClass="p-button-outlined p-button-secondary"
+                        decrementButtonIcon="pi pi-minus" incrementButtonIcon="pi pi-plus">
+                    </p-inputNumber>
+                    <div *ngIf="cantidadCtrl.invalid && (cantidadCtrl.dirty || cantidadCtrl.touched)">
+                        <small class="p-error"><i class="pi pi-exclamation-circle p-mr-1"></i>Campo obligatorio</small>
+                    </div>
+                    <small class="field-group__hint">Máximo: {{productoBodega.nCantidad}} unidades</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Botones ===== -->
+    <div class="modal-actions">
+        <button pButton pRipple type="button" class="p-button-outlined p-button-secondary"
+            (click)="onCancelarClicked()" label="Cancelar" icon="pi pi-times"></button>
+        <button pButton pRipple type="button" class="p-button-success p-button-raised"
+            (click)="onGuardarClicked()" label="Mover Mercancía" icon="pi pi-send"
+            [disabled]="formGrp.invalid"></button>
     </div>
 </form>

@@ -1,0 +1,183 @@
+/* ====== Header del módulo ====== */
+.traspaso-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    border-radius: 6px 6px 0 0;
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.2);
+        margin-right: 1rem;
+    }
+}
+
+/* ====== Estado vacío ====== */
+.empty-state-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #eef2ff;
+}
+
+/* ====== Resumen del producto ====== */
+.producto-resumen {
+    &__avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    }
+}
+
+/* ====== Badges de Stock ====== */
+.stock-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    min-width: 40px;
+    text-align: center;
+
+    &--ok {
+        background-color: #dcfce7;
+        color: #15803d;
+    }
+
+    &--low {
+        background-color: #fef9c3;
+        color: #a16207;
+    }
+
+    &--zero {
+        background-color: #fee2e2;
+        color: #b91c1c;
+    }
+}
+
+/* ====== Botones de acción en la tabla ====== */
+.btn-action {
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    transition: transform 0.15s ease;
+
+    &:hover {
+        transform: scale(1.12);
+    }
+}
+
+/* ====== Tabla ====== */
+:host ::ng-deep {
+    .p-datatable .p-datatable-thead > tr > th {
+        background-color: #f1f5f9;
+        color: #334155;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .p-datatable .p-datatable-tbody > tr:hover {
+        background-color: #f0f4ff !important;
+    }
+
+    .p-datatable .p-datatable-tbody > tr > td {
+        padding: 0.6rem 0.8rem;
+        vertical-align: middle;
+    }
+}
+
+/* ====== DynamicDialog — Modales de Traspaso (sin transparencias) ====== */
+::ng-deep .modal-traspaso {
+    &.p-dialog {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px -12px rgba(0, 0, 0, 0.25);
+        border: 1px solid #e2e8f0;
+    }
+
+    .p-dialog-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        background-color: #ffffff;
+
+        .p-dialog-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .p-dialog-header-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 8px;
+            transition: background-color 0.15s ease;
+
+            &:hover {
+                background-color: #f1f5f9;
+            }
+        }
+    }
+
+    .p-dialog-content {
+        background-color: #ffffff;
+        padding: 1.2rem 1.5rem;
+    }
+
+    /* --- Variante Externo (verde cabecera) --- */
+    &--externo {
+        .p-dialog-header {
+            background-color: #f0fdf4;
+            border-bottom: 2px solid #22c55e;
+
+            .p-dialog-title {
+                color: #15803d;
+            }
+        }
+    }
+
+    /* --- Variante Interno (azul cabecera) --- */
+    &--interno {
+        .p-dialog-header {
+            background-color: #f0f9ff;
+            border-bottom: 2px solid #0ea5e9;
+
+            .p-dialog-title {
+                color: #0369a1;
+            }
+        }
+    }
+
+    /* --- Variante Ajuste (ambar cabecera) --- */
+    &--ajuste {
+        .p-dialog-header {
+            background-color: #fffbeb;
+            border-bottom: 2px solid #f59e0b;
+
+            .p-dialog-title {
+                color: #b45309;
+            }
+        }
+    }
+}
+
+/* ====== Overlay del Dialog (sin transparencia, fondo s\u00f3lido oscuro) ====== */
+::ng-deep .p-dialog-mask {
+    background-color: rgba(15, 23, 42, 0.6) !important;
+    backdrop-filter: none !important;
+}

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TwProductoBodega } from '../../productos/model/TwProductoBodega';
+import { TraspasoExternoDto } from '../../productos/model/TraspasoExternoDto';
 import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 import { TwAjusteInventario } from '../../productos/model/TwAjusteInventario';
@@ -27,9 +28,9 @@ export class TraspasoService {
     return this.http.post<any>(url,twAjusteInventario);
   }
 
-  guardarMovimientoExterno(twProductoBodega:TwProductoBodega[]){
+  guardarMovimientoExterno(dto: TraspasoExternoDto){
     let url = environment.servicios.apiRefacFabela + locator.movimientoExterno;
-    return this.http.post<any>(url,twProductoBodega);
+    return this.http.post<any>(url, dto);
   }
 
 }

@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { TwProductoBodega } from 'src/app/productos/model/TwProductoBodega';
 import { BodegasService } from '../../../shared/service/bodegas.service';
 import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
 import { ModeActionOnModel } from '../../../shared/utils/model-action-on-model';
 import { ModelContainer } from '../../../shared/utils/model-container';
 import { ModalProductoBodegaExternoComponent } from '../../../productos/components/modal-producto-bodega-externo/modal-producto-bodega-externo.component';
 import { TwProductoBodegaDto } from '../../../productos/model/TwProductoBodegaDto';
+import { TraspasoExternoDto } from '../../../productos/model/TraspasoExternoDto';
 import { TraspasoService } from '../../../shared/service/traspaso.service';
 import { ModalProductosBodegaInternoComponent } from 'src/app/productos/components/modal-productos-bodega-interno/modal-productos-bodega-interno.component';
 import { forkJoin } from 'rxjs';
@@ -15,21 +17,31 @@ import { TokenService } from 'src/app/shared/service/token.service';
 @Component({
   selector: 'app-traspasos',
   templateUrl: './traspasos.component.html',
-  styleUrls: ['./traspasos.component.scss']
+  styleUrls: ['./traspasos.component.scss'],
+  providers: [MessageService]
 })
 export class TraspasosComponent implements OnInit {
 
   listaProductoBodega: TwProductoBodega[];
-  listaProductoBodegaAux: TwProductoBodega[]=[];
-  mostrar:boolean;
-  newProBod:TwProductoBodega; 
-  IdUsuario:number;
-  mostrarAjustes:boolean;
+  mostrar: boolean;
+  cargando: boolean;
+  stockTotal: number;
+  IdUsuario: number;
+  mostrarAjustes: boolean;
+  private ultimoProductoId: number;
   
   
-  constructor(private bodegasService: BodegasService, public dialogService: DialogService,private traspasoService:TraspasoService,    private tokenService: TokenService) {
-    this.mostrar=false;
-   }
+  constructor(
+    private bodegasService: BodegasService,
+    public dialogService: DialogService,
+    private traspasoService: TraspasoService,
+    private tokenService: TokenService,
+    private messageService: MessageService
+  ) {
+    this.mostrar = false;
+    this.cargando = false;
+    this.stockTotal = 0;
+  }
 
   ngOnInit(): void {
 
@@ -48,20 +60,45 @@ export class TraspasosComponent implements OnInit {
 
   
   obtenerBodegas(nId: number){
+    this.cargando = true;
+    this.mostrar = false;
+    this.ultimoProductoId = nId;
     this.bodegasService.obtenerProductoBodegas(nId).subscribe(productoBodega => {
       this.listaProductoBodega = productoBodega;
-      this.mostrar=true;
-  });
+      this.stockTotal = productoBodega.reduce((sum, b) => sum + (b.nCantidad || 0), 0);
+      this.cargando = false;
+      this.mostrar = true;
+    }, () => {
+      this.cargando = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo consultar la distribución del producto.',
+        life: 5000
+      });
+    });
+  }
+
+  refrescar() {
+    if (this.ultimoProductoId) {
+      this.obtenerBodegas(this.ultimoProductoId);
+    }
   }
 
   modalProductoBodega(dataBodega:TwProductoBodega) {
     const ref = this.dialogService.open(ModalProductosBodegaInternoComponent, {
        data: new ModelContainer(ModeActionOnModel.CREATING, dataBodega),
-       header: 'Movimiento Interno de mercancía',
-       width: '70%'
+       header: 'Movimiento Interno de Mercancía',
+       width: '65%',
+       styleClass: 'modal-traspaso modal-traspaso--interno',
+       contentStyle: { 'padding': '1.2rem 1.5rem', 'overflow': 'auto' },
+       baseZIndex: 10000,
+       closable: true,
+       dismissableMask: true,
+       modal: true
    })
    ref.onClose.subscribe((data:TwProductoBodega) =>{
-     ////console.log('data que se recibe al cerrar',data);
+     if (!data) return;
      this.obtenerBodegas(data.nIdProducto);
    })
   }
@@ -69,73 +106,72 @@ export class TraspasosComponent implements OnInit {
   modalProductoAjuste(dataBodega:TwProductoBodega) {
     const ref = this.dialogService.open(AjusteInventarioComponent, {
        data: new ModelContainer(ModeActionOnModel.CREATING, dataBodega),
-       header: 'Ajuste de inventario',
-       width: '70%'
+       header: 'Ajuste de Inventario',
+       width: '65%',
+       styleClass: 'modal-traspaso modal-traspaso--ajuste',
+       contentStyle: { 'padding': '1.2rem 1.5rem', 'overflow': 'auto' },
+       baseZIndex: 10000,
+       closable: true,
+       dismissableMask: true,
+       modal: true
    })
    ref.onClose.subscribe((data:TwProductoBodega) =>{
-     
+     if (!data) return;
      this.obtenerBodegas(data.nIdProducto);
    })
   }
 
+  /**
+   * Movimiento externo: traspaso entre bodegas.
+   * CORRECCIÓN: Ya no se calcula la aritmética en el frontend.
+   * Solo se envía un DTO con productoId, bodegaOrigen, bodegaDestino y cantidad.
+   * El backend lee datos frescos con bloqueo y hace el cálculo atómicamente.
+   */
   modalProductoBodegaExterno(dataBodega:TwProductoBodega) {
     const ref = this.dialogService.open(ModalProductoBodegaExternoComponent, {
        data: new ModelContainer(ModeActionOnModel.CREATING, dataBodega),
        header: 'Movimiento Externo de Mercancía',
-       width: '70%'
+       width: '65%',
+       styleClass: 'modal-traspaso modal-traspaso--externo',
+       contentStyle: { 'padding': '1.2rem 1.5rem', 'overflow': 'auto' },
+       baseZIndex: 10000,
+       closable: true,
+       dismissableMask: true,
+       modal: true
    })
    ref.onClose.subscribe((data:TwProductoBodegaDto) =>{
-     ////console.log('data que se recibe al cerrar externo',data);
-    this.bodegasService.obtenerProductoBodegas(dataBodega.nIdProducto).subscribe(respuesta=>{
-      this.listaProductoBodega=respuesta;
-     // console.log(this.listaProductoBodega);
-     
-      for (const valor of this.listaProductoBodega) {    
- 
-      // console.log(valor.nCantidad);
-       // console.log(valor.nIdBodega);
-  
-         this.newProBod = new TwProductoBodega();
- 
-         this.newProBod.nId=valor.nId;
-         this.newProBod.nIdBodega=valor.nIdBodega;
-         this.newProBod.nIdProducto=valor.nIdProducto;
-         if (valor.nIdBodega == data.nIdBodegaActual) {
-           this.newProBod.nCantidad=valor.nCantidad-data.nCantidadDestino;
-         }else if (valor.nIdBodega==data.nIdBodegaDestino) {
-           this.newProBod.nCantidad=valor.nCantidad+data.nCantidadDestino;
-         }else{
-           this.newProBod.nCantidad=valor.nCantidad;
-         }
-         this.newProBod.nEstatus=valor.nEstatus;
-         this.newProBod.nIdNivel=valor.nIdNivel;
-         this.newProBod.nIdAnaquel=valor.nIdAnaquel;
-         
-         this.listaProductoBodegaAux.push(this.newProBod);
-        
-      }
-      this.traspasoService.guardarMovimientoExterno(this.listaProductoBodegaAux).subscribe(resp =>{
-        
-       this.obtenerBodegas(resp.listaProductoBodega[0].nIdProducto);
-     })
+     if (!data) {
+       return; // El usuario cerró el modal sin hacer nada
+     }
 
-    }) ;
-    
+     // Construir DTO ligero — la aritmética la hace el backend
+     const dto = new TraspasoExternoDto();
+     dto.nIdProducto = dataBodega.nIdProducto;
+     dto.nIdBodegaOrigen = data.nIdBodegaActual;
+     dto.nIdBodegaDestino = data.nIdBodegaDestino;
+     dto.nCantidad = data.nCantidadDestino;
 
-    
-
-     
-
-
-     
-
-     
+     this.traspasoService.guardarMovimientoExterno(dto).subscribe({
+       next: () => {
+         this.messageService.add({
+           severity: 'success',
+           summary: 'Traspaso exitoso',
+           detail: 'El movimiento se registró correctamente.'
+         });
+         this.obtenerBodegas(dataBodega.nIdProducto);
+       },
+       error: (err) => {
+         const mensaje = err?.error?.error
+           || 'No se pudo completar el traspaso. Intente de nuevo.';
+         this.messageService.add({
+           severity: 'error',
+           summary: 'Error en el traspaso',
+           detail: mensaje,
+           life: 8000
+         });
+       }
+     });
    });
-
   }
-
-
-
-
 
 }
