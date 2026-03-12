@@ -165,15 +165,28 @@ console.log('este el numero total de pendietes por entregar',this.totalProductoP
     }
   
     const { bodega, cantidad, anaquel, nivel } = this.formGrp.controls;
-    const productoBodega = this.buscarProductoBodega(bodega.value);
-  
-    if (productoBodega) {
-      productoBodega.nCantidad += cantidad.value;
+    let productoBodega = this.buscarProductoBodega(bodega.value);
+
+    // Si no existe registro para esta bodega, NO se debe enviar un objeto sin nId
+    // porque eso crearía un registro duplicado. El backend se encargará de validar.
+    if (!productoBodega) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Advertencia',
+        detail: 'No se encontró registro de bodega para este producto. Se creará automáticamente.',
+        life: 3000
+      });
+      // Crear objeto con el ID del producto para que el backend pueda validar
+      productoBodega = new TwProductoBodega();
+      productoBodega.nId = null;
+      productoBodega.nIdProducto = this.twFacturaProveedorProducto.nIdProducto;
+      productoBodega.nIdBodega = bodega.value;
+      productoBodega.nCantidad = 0;
+      productoBodega.nEstatus = 1;
     }
 
-   
-    
-  
+    productoBodega.nCantidad += cantidad.value;
+
     this.twFacturaProveedorProductoIngreso = {
       ...this.twFacturaProveedorProductoIngreso,
       nCantidad: cantidad.value,
@@ -184,13 +197,13 @@ console.log('este el numero total de pendietes por entregar',this.totalProductoP
       nIdBodega: bodega.value ?? productoBodega?.nIdBodega,
       nIdAnaquel: anaquel.value ?? productoBodega?.nIdAnaquel,
       nIdNivel: nivel.value ?? productoBodega?.nIdNivel
-    };  
+    };
 
-    console.log( this.twFacturaProveedorProductoIngreso);
-    
-    productoBodega.nIdAnaquel=  this.twFacturaProveedorProductoIngreso.nIdAnaquel;
-    productoBodega.nIdBodega=this.twFacturaProveedorProductoIngreso.nIdBodega;
-    productoBodega.nIdNivel=this.twFacturaProveedorProductoIngreso.nIdNivel;
+    console.log(this.twFacturaProveedorProductoIngreso);
+
+    productoBodega.nIdAnaquel = this.twFacturaProveedorProductoIngreso.nIdAnaquel;
+    productoBodega.nIdBodega = this.twFacturaProveedorProductoIngreso.nIdBodega;
+    productoBodega.nIdNivel = this.twFacturaProveedorProductoIngreso.nIdNivel;
      
     
 
