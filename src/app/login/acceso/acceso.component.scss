@@ -1,0 +1,305 @@
+.rf-password-group {
+  position: relative;
+
+  .rf-input-password {
+    padding-right: 2.8rem !important;
+  }
+
+  .rf-eye-toggle {
+    position: absolute;
+    right: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #b89f50;
+    font-size: 1.25rem;
+    opacity: 0.85;
+    transition: color 0.2s, opacity 0.2s;
+    z-index: 2;
+  }
+
+  .rf-eye-toggle:hover {
+    color: #ebd282;
+    opacity: 1;
+  }
+}
+// ──────────────────────────────────────────────────────────
+// Refacciones Fabela — Login (Split-Screen Modern Design)
+// Primary brand gold: #ebd282  |  Dark navy: #1a202c
+// ──────────────────────────────────────────────────────────
+
+// ════════════════════════════════════════════════════════════════
+//  Refacciones Fabela — Login  |  Modern Minimalist Theme
+//  Primary: #ebd282 (Gold)  |  Backgrounds: Clean Whites & Darks
+// ════════════════════════════════════════════════════════════════
+
+$primary:   #ebd282;
+$text-main: #2e3440;
+$text-mute: #8892a3;
+
+:host {
+  display: block;
+  height: 100vh;
+  width: 100%;
+}
+
+.rf-login-ui {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+// ── Panel Izquierdo (Marca Sólida) ──
+.rf-brand-side {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  // Acento color oro sutil en el borde izquierdo
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background-color: $primary;
+  }
+}
+
+// Animaciones de entrada suaves y modernas
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rf-brand {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #ffffff;
+  padding: 0 2rem;
+
+  h1 {
+    font-size: 3.8rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    margin: 0;
+    color: #ffffff;
+    opacity: 0;
+    animation: fadeSlideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .rf-divider {
+    width: 80px;
+    height: 4px;
+    background-color: $primary;
+    margin: 1.5rem auto;
+    border-radius: 2px;
+    opacity: 0;
+    animation: fadeSlideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.3s;
+  }
+
+  p {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: $primary;
+    margin: 0;
+    opacity: 0;
+    animation: fadeSlideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 0.5s;
+  }
+}
+
+// ── Panel Derecho (Formulario Minimalista) ──
+.rf-form-side {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  box-shadow: -12px 0 45px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 5;
+}
+
+.rf-form-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+
+  h2 {
+    font-size: 2.2rem;
+    color: #1e293b;
+    margin: 0 0 0.4rem 0;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .rf-subtitle {
+    color: #475569;
+    font-size: 1.05rem;
+    margin: 0 0 2.5rem 0;
+    line-height: 1.4;
+  }
+}
+
+.rf-input-group {
+  margin-bottom: 1.5rem;
+
+  .p-input-icon-left {
+    display: block; // Forza a ocupar 100% de la caja padre
+
+    i {
+      color: #b89f50; // Agregando color al icono (dorado oscuro)
+      font-size: 1.2rem;
+      left: 1.25rem;
+      margin-top: -0.55rem;
+    }
+  }
+}
+
+// Sobrescribimos el Input de PrimeNG para hacerlo redondeado y moderno
+.rf-input {
+  width: 100% !important;
+  height: 52px;
+  padding: 1rem 1rem 1rem 3.2rem !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  background: #f8fafc !important;
+  color: $text-main !important;
+  font-size: 1rem !important;
+  transition: all 0.25s ease !important;
+
+  &:focus {
+    outline: none !important;
+    border-color: $primary !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(235, 210, 130, 0.15) !important;
+  }
+
+  &::placeholder {
+    color: #a0aec0 !important;
+    font-weight: 400;
+  }
+}
+
+// Alerta de credenciales incorrectas refinada
+.rf-error-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #c53030;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  padding: 0.85rem 1.1rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+
+  i { font-size: 1.1rem; flex-shrink: 0; }
+}
+
+// Botón de submit minimalista
+.rf-submit-btn {
+  width: 100% !important;
+  height: 52px !important;
+  border: none !important;
+  border-radius: 12px !important; // Match input border radius
+  background: $primary !important;
+  color: #1a202c !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease !important;
+  box-shadow: 0 4px 14px rgba(235, 210, 130, 0.3) !important;
+  margin-top: 1rem;
+
+  &:enabled:hover {
+    background: lighten($primary, 4%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(235, 210, 130, 0.45) !important;
+  }
+
+  &:enabled:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(235, 210, 130, 0.2) !important;
+  }
+
+  &[disabled] {
+    opacity: 0.5 !important;
+    cursor: not-allowed;
+    background: #e2e8f0 !important;
+    color: #a0aec0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .p-button-label { font-weight: 600 !important; letter-spacing: 1px; }
+}
+
+// ────────────────────────────────────────────────────────
+// RESPONSIVE MOBILE
+// ────────────────────────────────────────────────────────
+@media (max-width: 820px) {
+  .rf-login-ui {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .rf-brand-side {
+    flex: none;
+    height: 45vh;
+    min-height: 300px;
+    padding: 2rem 1rem;
+
+    .rf-brand {
+      h1 { font-size: 2.2rem; letter-spacing: 2px; }
+      .rf-divider { width: 50px; height: 3px; margin: 1rem auto; }
+      p { font-size: 1.2rem; letter-spacing: 4px; }
+    }
+  }
+
+  .rf-form-side {
+    width: 100%;
+    flex: 1;
+    border-radius: 28px 28px 0 0;
+    margin-top: -28px;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .rf-form-container {
+    padding: 2.5rem 1.5rem;
+    max-width: 400px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+

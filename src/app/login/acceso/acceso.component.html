@@ -1,38 +1,78 @@
-<div class="login-body" [ngClass]="{'layout-dark': dark, 'layout-light': !dark}">
+<div class="rf-login-ui">
 
-    <div class="login-content">
-        <div class="night-switch">
-            <p-button styleClass="dark-switch" icon="pi pi-circle-on" (click)="dark = true"></p-button>
-            <p-button styleClass="light-switch" icon="pi pi-circle-off" (click)="dark = false"></p-button>
-        </div>
-        <div class="login-panel">
-            <div class="login-panel-content">
-                <div class="logo">
-                    <img src="assets/layout/images/LOGO.png" alt="mirage-layout" />
-                </div>
-                <h1>Refacciones Fabela</h1>
-                <p>Bienvenidos, favor de ingresar los datos del formulario</p>
-                <div class="forms">
-                    <form #f="ngForm" (ngSubmit)="onLogin()" novalidate>
-                        <div class="login-input-wrapper">
-                            <label for="username">Usuario</label>
-                            <input name="sUsuario" id="sUsuario" [(ngModel)]="sUsuario" required pInputText placeholder="Escriba su nombre de usuario..." />
-                            <i class="pi pi-user"></i>
-                        </div>
-
-                        <div class="login-input-wrapper">
-                            <label for="password">Constraseña</label>
-                            <input type="password" name="sPassword" id="password" [(ngModel)]="sPassword" required placeholder="Escriba su contraseña" pPassword [feedback]="false" />
-                            <i class="pi pi-lock"></i>
-                        </div>
-                        <div class="buttons">
-                            <button pButton type="submit" [disabled]="!f.valid" label="Acceso"></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="desert"></div>
+  <!-- Panel Izquierdo (Marca) -->
+  <div class="rf-brand-side">
+    <div class="rf-brand">
+      <h1>REFACCIONES FABELA</h1>
+      <div class="rf-divider"></div>
+      <p>JEMKAL</p>
     </div>
+  </div>
+
+  <!-- Panel Formulario (Derecha) -->
+  <div class="rf-form-side">
+    <div class="rf-form-container">
+
+      <!-- Saludo Minimalista -->
+      <h2>Bienvenido</h2>
+      <p class="rf-subtitle">Ingresa tus credenciales para acceder al sistema</p>
+
+      <form #f="ngForm" (ngSubmit)="onLogin()" novalidate autocomplete="off">
+
+        <!-- Input de Usuario -->
+        <div class="rf-input-group">
+          <span class="p-input-icon-left" style="width: 100%;">
+            <i class="pi pi-user"></i>
+            <input 
+              type="text" 
+              pInputText 
+              id="sUsuario" 
+              name="sUsuario" 
+              [(ngModel)]="sUsuario" 
+              required 
+              placeholder="Usuario" 
+              class="rf-input">
+          </span>
+        </div>
+
+        <!-- Input de Contraseña con toggle (ojo al final) -->
+        <div class="rf-input-group rf-password-group">
+          <span class="p-input-icon-left" style="width: 100%;">
+            <i class="pi pi-lock"></i>
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              pInputText
+              id="sPassword"
+              name="sPassword"
+              [(ngModel)]="sPassword"
+              required
+              placeholder="Contraseña"
+              class="rf-input rf-input-password">
+          </span>
+          <i 
+            class="pi rf-eye-toggle"
+            [ngClass]="showPassword ? 'pi-eye-slash' : 'pi-eye'"
+            (click)="showPassword = !showPassword"
+            title="Mostrar/Ocultar contraseña"
+          ></i>
+        </div>
+
+        <!-- Alerta de Error Clara y Sutil -->
+        <div *ngIf="errorLogin" class="rf-error-alert">
+          <i class="pi pi-exclamation-circle"></i>
+          <span>{{ errorLogin }}</span>
+        </div>
+
+        <!-- Botón Integrado de Acceso -->
+        <button 
+          pButton 
+          type="submit" 
+          [disabled]="!f.valid || cargando"
+          [label]="cargando ? 'INGRESANDO...' : 'INICIAR SESIÓN'"
+          class="rf-submit-btn">
+        </button>
+
+      </form>
+    </div>
+  </div>
 </div>

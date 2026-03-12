@@ -1,87 +1,84 @@
-import { JsonPipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 const TOKEN_KEY = 'AuthToken';
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
 
-  roles:Array<string> = [];
+  roles: Array<string> = [];
 
-  constructor(private router:Router) { }
+  constructor(private router: Router) { }
 
-
-  public setToken(token : string){
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+  public setToken(token: string) {
+    window.localStorage.removeItem(TOKEN_KEY);
+    window.localStorage.setItem(TOKEN_KEY, token);
   }
 
-  public getToken(){
-    return sessionStorage.getItem(TOKEN_KEY);
+  public getToken(): string | null {
+    return localStorage.getItem(TOKEN_KEY);
   }
 
-  public getRoles(){
+  public getRoles() {
     if (!this.isLogged()) {
       this.logout();
       return null;
     }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const roles = values.roles;
-
-    return roles;
+    try {
+      const token = this.getToken();
+      const payload = token.split('.')[1];
+      const payloadDecoded = atob(payload);
+      const values = JSON.parse(payloadDecoded);
+      return values.roles;
+    } catch (e) {
+      this.logout();
+      return null;
+    }
   }
 
-  
- 
-
-  public isLogged(): boolean{
-    
-   if (this.getToken() != null) {
-     return true;
-   }
-   return false;
+  public isLogged(): boolean {
+    return this.getToken() != null;
   }
 
-  public getNameUser(){
+  public getNameUser() {
     if (!this.isLogged()) {
       this.logout();
       return null;
     }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const nameUser = values.nombreUsuario;
-
-    return nameUser;
+    try {
+      const token = this.getToken();
+      const payload = token.split('.')[1];
+      const payloadDecoded = atob(payload);
+      const values = JSON.parse(payloadDecoded);
+      return values.nombreUsuario;
+    } catch (e) {
+      this.logout();
+      return null;
+    }
   }
 
-  //obtener id del usuario
-  public getIdUser(){
+  // obtener id del usuario
+  public getIdUser() {
     if (!this.isLogged()) {
       this.logout();
       return null;
     }
-    const token = this.getToken();
-    const payload = token.split('.')[1];
-    const payloadDecoded = atob(payload);
-    const values =JSON.parse(payloadDecoded);
-    const idUser = values.nId;
-
-    return idUser;
+    try {
+      const token = this.getToken();
+      const payload = token.split('.')[1];
+      const payloadDecoded = atob(payload);
+      const values = JSON.parse(payloadDecoded);
+      return values.nId;
+    } catch (e) {
+      this.logout();
+      return null;
+    }
   }
 
-
-
-  public logout(){
-    window.sessionStorage.clear();
+  public logout() {
+    window.localStorage.clear();
     this.router.navigate(['/login']);
   }
 

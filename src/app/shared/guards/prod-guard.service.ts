@@ -31,7 +31,7 @@ export class ProdGuardService implements CanActivate{
     })
 
    
-    if (!this.tokenService.isLogged || expectedRol.indexOf(this.realRol) < 0) {
+    if (!this.tokenService.isLogged() || expectedRol.indexOf(this.realRol) < 0) {
       this.router.navigate(['/login']);
       return false;
     }

@@ -28,10 +28,13 @@ export class SpinnerInterceptor implements HttpInterceptor {
             this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'Error de conexión con el servidor', life: 3000});
             break;
           case 401:
-            this.messageService.add({ severity: 'error', summary: 'Error de autenticación', detail: error.error.message, life: 3000 });
-              break;
+            // No mostrar toast genérico si es del login — el componente lo maneja
+            if (!request.url.includes('/auth/login')) {
+              this.messageService.add({ severity: 'error', summary: 'Sesión expirada', detail: 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.', life: 5000 });
+            }
+            break;
             default:
-              this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'ocurrio un error', life: 3000});
+              this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'Ocurrió un error, intenta de nuevo.', life: 3000});
               break;
         }
         return throwError(error);
