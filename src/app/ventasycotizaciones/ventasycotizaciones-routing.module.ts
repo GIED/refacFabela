@@ -10,6 +10,8 @@ import { VentasPorInternetComponent } from './pages/ventas-por-internet/ventas-p
 import { ProdGuardService } from '../shared/guards/prod-guard.service';
 import { DescuentoVentaComponent } from './pages/descuento-venta/descuento-venta.component';
 import { PagoVentaInternetComponent } from "./pages/pago-venta-internet/pago-venta-internet.component";
+import { RevendedorVentasComponent } from './pages/revendedor-ventas/revendedor-ventas.component';
+import { RevendedorCuentaComponent } from './pages/revendedor-cuenta/revendedor-cuenta.component';
 
 
 const routes: Routes = [
@@ -46,7 +48,15 @@ const routes: Routes = [
         
       },
       {path: "pagos-venta-internet",  canActivate:[ProdGuardService], data: {expectedRol: ['distribuidor']},
-      component: PagoVentaInternetComponent}
+      component: PagoVentaInternetComponent},
+      {
+        path: "revendedor", canActivate:[ProdGuardService], data: {expectedRol: ['admin','revendedor']},
+        component: RevendedorVentasComponent,
+      },
+      {
+        path: "revendedor-cuenta", canActivate:[ProdGuardService], data: {expectedRol: ['admin','revendedor']},
+        component: RevendedorCuentaComponent,
+      }
     ],
   },
 ];

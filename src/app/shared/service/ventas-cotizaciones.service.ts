@@ -43,6 +43,11 @@ export class VentasCotizacionesService {
     return this.http.get<TwCotizacion[]>(url);
   }
 
+  obtenerHistorialCotizacionesCliente(nIdCliente: number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaHistorialCotizacionesCliente + 'nIdCliente=' + nIdCliente;
+    return this.http.get<TwCotizacion[]>(url);
+  }
+
 
   obtenerCotizacionesBusqueda(busqueda:string){   
     let url = environment.servicios.apiRefacFabela + locator.consultaCotizacionesBusqueda+'buscar='+busqueda;

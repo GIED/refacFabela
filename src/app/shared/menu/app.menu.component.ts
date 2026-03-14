@@ -26,6 +26,8 @@ export class AppMenuComponent implements OnInit {
               this.realRol= 'almacen';
             }else if (rol === 'ROLE_CAJA') {
               this.realRol= 'caja';
+            }else if (rol === 'ROLE_REVENDEDOR') {
+              this.realRol= 'revendedor';
             }
           });
         this.model = [
@@ -97,8 +99,12 @@ export class AppMenuComponent implements OnInit {
                     },
                     {
                         label: 'Cancela Venta', icon: 'pi pi-fw pi-search-minus', routerLink: ['../ventasycotizaciones/cancela-venta'],visible:this.realRol==='admin' || this.realRol==='caja'
+                    },                    {
+                        label: 'Revendedores', icon: 'pi pi-fw pi-users', routerLink: ['../ventasycotizaciones/revendedor'], visible:this.realRol==='revendedor' 
                     },
-
+                    {
+                        label: 'Mi Cuenta', icon: 'pi pi-fw pi-chart-bar', routerLink: ['../ventasycotizaciones/revendedor-cuenta'], visible:this.realRol==='revendedor' 
+                    },
                 ]
             },
             {
@@ -187,6 +193,17 @@ export class AppMenuComponent implements OnInit {
                         label:'Pago de Cotizaciones', icon: 'pi pi-dollar', routerLink: ['../ventasycotizaciones/pagos-venta-internet']
                     }
 
+                ]
+            },
+            {
+                label:'Revendedor', icon: 'pi pi-shopping-cart', visible:this.realRol==='revendedor',
+                items:[
+                    {
+                        label:'Ventas', icon: 'pi pi-fw pi-dollar', routerLink: ['../ventasycotizaciones/revendedor']
+                    },
+                    {
+                        label:'Mi Cuenta', icon: 'pi pi-fw pi-chart-bar', routerLink: ['../ventasycotizaciones/revendedor-cuenta']
+                    }
                 ]
             }
            /* {

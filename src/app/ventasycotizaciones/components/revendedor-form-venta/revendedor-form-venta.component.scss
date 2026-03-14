@@ -1,0 +1,253 @@
+// === Tokens (consistent with main component) ===
+$gold: #ebd282;
+$gold-dark: #d4b84a;
+$text: #1e293b;
+$text-muted: #64748b;
+$text-light: #94a3b8;
+$green: #16a34a;
+$red: #dc2626;
+$radius: 12px;
+$ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+.rvf-container { padding: 0.25rem 0; }
+
+// Credit warning
+.rvf-credito-warn {
+  margin-bottom: 1.25rem;
+  ::ng-deep .p-message { width: 100%; border-radius: 8px; }
+}
+
+// Sections
+.rvf-section {
+  margin-bottom: 1.5rem;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $text;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f1f5f9;
+
+    i { color: $gold-dark; font-size: 1.05rem; }
+  }
+}
+
+// Payment options
+.rvf-pago-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.rvf-pago-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: $radius;
+  cursor: pointer;
+  transition: all 0.2s $ease;
+  background: #fafbfc;
+
+  &:hover:not(.rvf-pago-option--disabled) {
+    border-color: $gold;
+    background: #fffef5;
+  }
+
+  &--selected {
+    border-color: $gold !important;
+    background: #fffbe6 !important;
+    box-shadow: 0 0 0 3px rgba(235,210,130,0.2);
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8fafc;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: inherit;
+    flex: 1;
+
+    > i { font-size: 1.3rem; color: $gold-dark; }
+  }
+
+  &__name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: $text;
+  }
+
+  &__desc {
+    display: block;
+    font-size: 0.8rem;
+    color: $text-light;
+    margin-top: 0.15rem;
+
+    &--warn { color: $red; font-weight: 500; }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+  }
+}
+
+// Crédito saldo lines inside payment option
+.rvf-credito-saldo {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 0.15rem;
+
+  i { font-size: 0.85rem; flex-shrink: 0; }
+
+  &--ok    { color: $green; }
+  &--warn  { color: #d97706; }   // amber — tiene algo de crédito pero no alcanza
+  &--error { color: $red; }
+  &--error-text {
+    font-size: 0.75rem;
+    color: $red;
+    font-weight: 600;
+    margin-top: 0.05rem;
+  }
+}
+
+// Bloque informativo cuando el crédito existe pero no alcanza
+.rvf-credito-bloqueado {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: $radius;
+  margin-bottom: 0.65rem;
+
+  > i { color: #d97706; font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+  &__detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.85rem;
+    color: #92400e;
+    font-weight: 600;
+  }
+
+  &__nums {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #78350f;
+
+    strong { font-weight: 700; }
+  }
+}
+
+// Validate button
+.rvf-btn-validar { margin-bottom: 0.75rem; }
+
+// Loading
+.rvf-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  color: $text-light;
+  font-size: 0.9rem;
+
+  i { font-size: 1.1rem; color: $gold-dark; }
+}
+
+// Stock results
+.rvf-stock-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rvf-stock-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  transition: background 0.15s;
+
+  &--ok { background: #dcfce7; color: $green; }
+  &--fail { background: #fef2f2; color: $red; }
+
+  i { font-size: 1.05rem; flex-shrink: 0; }
+
+  &__producto {
+    flex: 1;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__qty {
+    font-weight: 600;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+
+  &__status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+  }
+}
+
+// Total bar
+.rvf-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  padding: 1rem 1.25rem;
+  border-radius: $radius;
+  margin-bottom: 1.25rem;
+
+  &__label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #cbd5e1;
+  }
+
+  &__valor {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: $gold;
+  }
+}
+
+// Actions
+.rvf-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    button { width: 100%; }
+  }
+}

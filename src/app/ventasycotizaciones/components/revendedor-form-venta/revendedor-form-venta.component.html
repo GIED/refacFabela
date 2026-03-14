@@ -1,0 +1,124 @@
+<div class="rvf-container">
+  <!-- Método de pago -->
+  <div class="rvf-section">
+    <h4 class="rvf-section__title">
+      <i class="pi pi-credit-card"></i>
+      Método de pago
+    </h4>
+
+    <div class="rvf-pago-options">
+
+      <!-- Crédito: siempre visible, pero bloqueado cuando no está disponible -->
+      <div class="rvf-pago-option"
+           [class.rvf-pago-option--selected]="tipoPago === 1"
+           [class.rvf-pago-option--disabled]="!muestraCredito"
+           (click)="muestraCredito ? tipoPago = 1 : null">
+        <p-radioButton name="tipoPago" [value]="1" [(ngModel)]="tipoPago"
+          [disabled]="!muestraCredito" inputId="credito">
+        </p-radioButton>
+        <label for="credito" class="rvf-pago-option__label">
+          <i class="pi pi-calendar"></i>
+          <div class="rvf-pago-option__info">
+            <span class="rvf-pago-option__name">Crédito (30 días)</span>
+
+            <!-- Tiene crédito suficiente -->
+            <ng-container *ngIf="muestraCredito">
+              <span class="rvf-credito-saldo rvf-credito-saldo--ok">
+                <i class="pi pi-check-circle"></i>
+                Disponible: {{ saldoGeneralCliente?.nCreditoDisponible | currency:'MXN':'symbol-narrow':'1.2-2' }}
+              </span>
+            </ng-container>
+
+            <!-- Tiene crédito pero no alcanza para esta compra -->
+            <ng-container *ngIf="!muestraCredito && creditoInsuficiente && saldoGeneralCliente">
+              <span class="rvf-credito-saldo rvf-credito-saldo--warn">
+                <i class="pi pi-exclamation-triangle"></i>
+                Disponible: {{ saldoGeneralCliente.nCreditoDisponible | currency:'MXN':'symbol-narrow':'1.2-2' }}
+              </span>
+              <span class="rvf-credito-saldo rvf-credito-saldo--error">
+                <i class="pi pi-times-circle"></i>
+                Necesario: {{ total.toNumber() | currency:'MXN':'symbol-narrow':'1.2-2' }}
+              </span>
+              <span class="rvf-credito-saldo rvf-credito-saldo--error-text">
+                Crédito insuficiente — solo contado
+              </span>
+            </ng-container>
+
+            <!-- Sin crédito registrado (saldo = 0 o sin datos) -->
+            <ng-container *ngIf="!muestraCredito && !creditoInsuficiente && saldoGeneralCliente">
+              <span class="rvf-credito-saldo rvf-credito-saldo--error">
+                <i class="pi pi-times-circle"></i>
+                Sin crédito disponible ({{ saldoGeneralCliente.nCreditoDisponible | currency:'MXN':'symbol-narrow':'1.2-2' }})
+              </span>
+            </ng-container>
+
+            <!-- Sin información de crédito (sin cliente asociado) -->
+            <ng-container *ngIf="!muestraCredito && !saldoGeneralCliente">
+              <span class="rvf-credito-saldo rvf-credito-saldo--error">
+                <i class="pi pi-times-circle"></i>
+                No disponible para este usuario
+              </span>
+            </ng-container>
+          </div>
+        </label>
+      </div>
+
+      <!-- Contado: siempre disponible -->
+      <div class="rvf-pago-option" [class.rvf-pago-option--selected]="tipoPago === 0"
+           (click)="tipoPago = 0">
+        <p-radioButton name="tipoPago" [value]="0" [(ngModel)]="tipoPago" inputId="contado">
+        </p-radioButton>
+        <label for="contado" class="rvf-pago-option__label">
+          <i class="pi pi-money-bill"></i>
+          <div class="rvf-pago-option__info">
+            <span class="rvf-pago-option__name">Contado</span>
+            <span class="rvf-pago-option__desc">Pago inmediato</span>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading validación de Stock -->
+  <div class="rvf-loading" *ngIf="validandoStock">
+    <i class="pi pi-spin pi-spinner"></i>
+    <span>Verificando disponibilidad de stock...</span>
+  </div>
+
+  <!-- Resultados de validación de Stock -->
+  <div class="rvf-section" *ngIf="stockValidado && listaStockStatus.length > 0">
+    <h4 class="rvf-section__title">
+      <i class="pi pi-check-square"></i>
+      Resultado de disponibilidad
+    </h4>
+
+    <div class="rvf-stock-results">
+      <div class="rvf-stock-item" *ngFor="let item of listaStockStatus"
+        [ngClass]="{'rvf-stock-item--ok': item.disponible, 'rvf-stock-item--fail': !item.disponible}">
+        <i class="pi" [ngClass]="{'pi-check-circle': item.disponible, 'pi-times-circle': !item.disponible}"></i>
+        <span class="rvf-stock-item__producto">{{ item.producto.tcProducto?.sNoParte }} - {{ item.producto.tcProducto?.sProducto }}</span>
+        <span class="rvf-stock-item__qty">× {{ item.producto.nCantidad }}</span>
+        <span class="rvf-stock-item__status" *ngIf="item.disponible">Disponible</span>
+        <span class="rvf-stock-item__status" *ngIf="!item.disponible">Sin stock suficiente</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total -->
+  <div class="rvf-total">
+    <span class="rvf-total__label">Total de la venta:</span>
+    <span class="rvf-total__valor">${{ total.toNumber() | number:'1.2-2' }}</span>
+  </div>
+
+  <!-- Botones -->
+  <div class="rvf-acciones">
+    <button pButton type="button" label="Solo cotización" icon="pi pi-file"
+      class="p-button-outlined p-button-secondary"
+      (click)="emiteSoloCotizacion()" [disabled]="validandoStock">
+    </button>
+    <button pButton type="button" label="Generar venta" icon="pi pi-check"
+      class="p-button-warning p-button-lg"
+      (click)="generarVenta()" [disabled]="validandoStock">
+    </button>
+  </div>
+</div>

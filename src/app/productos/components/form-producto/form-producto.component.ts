@@ -169,10 +169,12 @@ export class FormProductoComponent implements OnInit {
       'ROLE_VENTA': 'ventas',
       'ROLE_DISTRIBUIDOR': 'distribuidor',
       'ROLE_ALMACEN': 'almacen',
-      'ROLE_CAJA': 'caja'
+      'ROLE_CAJA': 'caja',
+      'ROLE_REVENDEDOR': 'revendedor'
+
     };
 
-    const jerarquia = ['ROLE_ADMIN', 'ROLE_VENTA', 'ROLE_DISTRIBUIDOR', 'ROLE_ALMACEN', 'ROLE_CAJA'];
+    const jerarquia = ['ROLE_ADMIN', 'ROLE_VENTA', 'ROLE_DISTRIBUIDOR', 'ROLE_ALMACEN', 'ROLE_CAJA', 'ROLE_REVENDEDOR'];
 
     for (const rol of jerarquia) {
       if (roles.includes(rol)) {

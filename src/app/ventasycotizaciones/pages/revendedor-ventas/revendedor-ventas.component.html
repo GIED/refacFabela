@@ -1,0 +1,279 @@
+<div class="rv-page">
+  <!-- Top Banner -->
+  <div class="rv-banner">
+    <div class="rv-banner__info">
+      <h1 class="rv-banner__title">
+        <i class="pi pi-shopping-bag"></i> Portal de Revendedores
+      </h1>
+      <p class="rv-banner__subtitle">Consulta inventario, cotiza y realiza tus compras</p>
+    </div>
+    <div class="rv-banner__credit" *ngIf="saldoGeneralCliente && saldoGeneralCliente.nCreditoDisponible != null">
+      <i class="pi pi-wallet"></i>
+      <div>
+        <span class="rv-banner__credit-label">Crédito disponible</span>
+        <span class="rv-banner__credit-value"
+          [class.rv-banner__credit-value--low]="saldoGeneralCliente.nCreditoDisponible < 1000">
+          {{ saldoGeneralCliente.nCreditoDisponible | currency:'MXN':'symbol-narrow':'1.2-2' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-Panel Layout -->
+  <div class="rv-layout">
+    <!-- LEFT: Catalog Area -->
+    <div class="rv-catalog">
+      <!-- Search -->
+      <div class="rv-search" [formGroup]="formGrp">
+        <div class="rv-search__bar">
+          <i class="pi pi-search rv-search__icon"></i>
+          <input type="text" class="rv-search__input" formControlName="productoCtrl"
+            placeholder="Buscar por número de parte, nombre o descripción..."
+            (keydown)="onBusquedaKeydown($event)" autocomplete="off" />
+          <i class="pi pi-times rv-search__clear" *ngIf="productoCtrl.value" (click)="limpiarBusqueda()"></i>
+          <button type="button" class="rv-search__btn" (click)="buscarProductos()" [disabled]="cargandoBusqueda">
+            <i class="pi pi-spin pi-spinner" *ngIf="cargandoBusqueda"></i>
+            <i class="pi pi-search" *ngIf="!cargandoBusqueda"></i>
+            <span>Buscar</span>
+          </button>
+        </div>
+        <div class="rv-search__meta" *ngIf="mostrarSugerenciasProducto && productosFiltrados.length > 0">
+          <i class="pi pi-check-circle"></i>
+          {{ productosFiltrados.length }} producto{{ productosFiltrados.length !== 1 ? 's' : '' }}
+          encontrado{{ productosFiltrados.length !== 1 ? 's' : '' }}
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="rv-state rv-state--loading" *ngIf="cargandoBusqueda">
+        <i class="pi pi-spin pi-spinner"></i>
+        <p>Buscando productos...</p>
+      </div>
+
+      <!-- Welcome (no search yet) -->
+      <div class="rv-state rv-state--welcome" *ngIf="!mostrarSugerenciasProducto && !cargandoBusqueda">
+        <div class="rv-state__icon"><i class="pi pi-search"></i></div>
+        <h3>Busca productos en nuestro catálogo</h3>
+        <p>Ingresa un número de parte, nombre o descripción para comenzar</p>
+      </div>
+
+      <!-- Empty results -->
+      <div class="rv-state rv-state--empty" *ngIf="mostrarSugerenciasProducto && productosFiltrados.length === 0 && !cargandoBusqueda">
+        <div class="rv-state__icon"><i class="pi pi-inbox"></i></div>
+        <h3>Sin resultados</h3>
+        <p>No encontramos productos con ese criterio. Intenta con otro término.</p>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="rv-grid" *ngIf="mostrarSugerenciasProducto && productosFiltrados.length > 0 && !cargandoBusqueda">
+        <div class="rv-card" *ngFor="let producto of productosFiltrados; let i = index"
+          [style.animation-delay]="(i * 0.05) + 's'">
+
+          <!-- Image + Badges -->
+          <div class="rv-card__visual">
+            <img [src]="getImagenProducto(producto.tcProducto?.sNoParte)"
+              [alt]="producto.tcProducto?.sProducto" (error)="onImageError($event)" />
+            <span class="rv-card__brand" *ngIf="producto.tcProducto?.sMarca">{{ producto.tcProducto.sMarca }}</span>
+            <span class="rv-card__stock"
+              [ngClass]="{
+                'rv-card__stock--ok': producto.nCantidadTotal > 5,
+                'rv-card__stock--low': producto.nCantidadTotal > 0 && producto.nCantidadTotal <= 5,
+                'rv-card__stock--out': producto.nCantidadTotal <= 0
+              }">
+              <span *ngIf="producto.nCantidadTotal > 5">{{ producto.nCantidadTotal }} disp.</span>
+              <span *ngIf="producto.nCantidadTotal > 0 && producto.nCantidadTotal <= 5">¡Solo {{ producto.nCantidadTotal }}!</span>
+              <span *ngIf="producto.nCantidadTotal <= 0">Agotado</span>
+            </span>
+          </div>
+
+          <!-- Info -->
+          <div class="rv-card__body">
+            <span class="rv-card__part">{{ producto.tcProducto?.sNoParte }}</span>
+            <h3 class="rv-card__name">{{ producto.tcProducto?.sProducto }}</h3>
+            <p class="rv-card__desc">{{ producto.tcProducto?.sDescripcion }}</p>
+            <div class="rv-card__price">
+              <strong>{{ producto.tcProducto?.nPrecioConIva | currency:'MXN':'symbol-narrow':'1.2-2' }}</strong>
+              <small>IVA incluido</small>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="rv-card__actions">
+            <div class="rv-card__qty">
+              <p-inputNumber [min]="1" [max]="producto.nCantidadTotal" [(ngModel)]="producto.nCantidad"
+                [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal"
+                decrementButtonClass="p-button-text p-button-sm" incrementButtonClass="p-button-text p-button-sm"
+                decrementButtonIcon="pi pi-minus" incrementButtonIcon="pi pi-plus"
+                [disabled]="producto.nCantidadTotal <= 0" size="2">
+              </p-inputNumber>
+            </div>
+            <div class="rv-card__btns">
+              <button pButton type="button" icon="pi pi-cart-plus" label="Agregar"
+                class="p-button-warning p-button-sm rv-card__btn-add"
+                [disabled]="producto.nCantidadTotal <= 0"
+                (click)="agregarProductoDesdeCard(producto, producto.nCantidad)">
+              </button>
+              <button pButton type="button" icon="pi pi-sync" pTooltip="Ver alternativos" tooltipPosition="top"
+                class="p-button-outlined p-button-sm rv-card__btn-alt"
+                (click)="muestraAlternativo(producto)">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Cart Sidebar -->
+    <aside class="rv-sidebar" [class.rv-sidebar--active]="listaProductos.length > 0">
+      <div class="rv-sidebar__head">
+        <i class="pi pi-shopping-cart"></i>
+        <span>Mi Carrito</span>
+        <span class="rv-sidebar__count" *ngIf="listaProductos.length > 0">{{ listaProductos.length }}</span>
+      </div>
+
+      <!-- Empty Cart -->
+      <div class="rv-sidebar__empty" *ngIf="listaProductos.length === 0">
+        <i class="pi pi-shopping-cart"></i>
+        <p>Tu carrito está vacío</p>
+        <small>Agrega productos para comenzar</small>
+      </div>
+
+      <!-- Cart Items -->
+      <div class="rv-sidebar__list" *ngIf="listaProductos.length > 0">
+        <div class="rv-item" *ngFor="let producto of listaProductos">
+          <div class="rv-item__detail">
+            <span class="rv-item__name">{{ producto.tcProducto?.sProducto }}</span>
+            <span class="rv-item__part">{{ producto.tcProducto?.sNoParte }}</span>
+            <div class="rv-item__row">
+              <span class="rv-item__qty">
+                ${{ producto.nTotalUnitario?.toNumber() | number:'1.2-2' }} × {{ producto.nCantidad }}
+              </span>
+              <strong class="rv-item__subtotal">
+                ${{ producto.nTotalPartida?.toNumber() | number:'1.2-2' }}
+              </strong>
+            </div>
+          </div>
+          <button pButton type="button" icon="pi pi-trash"
+            class="p-button-rounded p-button-danger p-button-text p-button-sm"
+            (click)="quitarProducto(producto)" pTooltip="Quitar">
+          </button>
+        </div>
+      </div>
+
+      <!-- Cart Footer -->
+      <div class="rv-sidebar__foot" *ngIf="listaProductos.length > 0">
+        <div class="rv-sidebar__total">
+          <span>Total</span>
+          <strong>${{ total.toNumber() | number:'1.2-2' }}</strong>
+        </div>
+        <button pButton type="button" label="Cotizar y vender" icon="pi pi-file"
+          class="p-button-warning rv-sidebar__checkout"
+          (click)="guardarCotizacion()">
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Mobile Cart Floating Bar -->
+  <div class="rv-fab" *ngIf="listaProductos.length > 0" (click)="mostrarCarritoMovil = true">
+    <i class="pi pi-shopping-cart"></i>
+    <span class="rv-fab__badge">{{ listaProductos.length }}</span>
+    <span class="rv-fab__total">${{ total.toNumber() | number:'1.2-2' }}</span>
+    <i class="pi pi-chevron-up"></i>
+  </div>
+
+  <!-- Mobile Cart Dialog -->
+  <p-dialog header="Mi Carrito" [(visible)]="mostrarCarritoMovil"
+    [modal]="true" [closable]="true" [draggable]="false"
+    [style]="{width: '95vw'}" styleClass="rv-dialog-modern">
+    <ng-container *ngIf="listaProductos.length > 0">
+      <div class="rv-item" *ngFor="let producto of listaProductos" style="margin-bottom:0.5rem">
+        <div class="rv-item__detail">
+          <span class="rv-item__name">{{ producto.tcProducto?.sProducto }}</span>
+          <span class="rv-item__part">{{ producto.tcProducto?.sNoParte }}</span>
+          <div class="rv-item__row">
+            <span class="rv-item__qty">× {{ producto.nCantidad }}</span>
+            <strong class="rv-item__subtotal">
+              ${{ producto.nTotalPartida?.toNumber() | number:'1.2-2' }}
+            </strong>
+          </div>
+        </div>
+        <button pButton type="button" icon="pi pi-trash"
+          class="p-button-rounded p-button-danger p-button-text p-button-sm"
+          (click)="quitarProducto(producto)">
+        </button>
+      </div>
+      <div class="rv-sidebar__total" style="margin-top:1rem">
+        <span>Total</span>
+        <strong>${{ total.toNumber() | number:'1.2-2' }}</strong>
+      </div>
+      <button pButton type="button" label="Cotizar y vender" icon="pi pi-file"
+        class="p-button-warning" style="width:100%;margin-top:1rem"
+        (click)="guardarCotizacion(); mostrarCarritoMovil = false">
+      </button>
+    </ng-container>
+  </p-dialog>
+
+  <!-- Venta Options Dialog -->
+  <p-dialog header="Opciones de Venta" [(visible)]="mostrarOpcionesVenta"
+    [modal]="true" [closable]="true" [draggable]="false"
+    [style]="{width: '700px'}" [breakpoints]="{'960px': '95vw'}" styleClass="rv-dialog-modern">
+    <app-revendedor-form-venta *ngIf="mostrarOpcionesVenta"
+      [listaProductos]="listaProductos"
+      [saldoGeneralCliente]="saldoGeneralCliente"
+      [nIdCliente]="cliente?.nId"
+      [total]="total"
+      (emitirVenta)="generarVenta($event)"
+      (soloCotizacion)="soloCotizacion()">
+    </app-revendedor-form-venta>
+  </p-dialog>
+
+  <!-- Alternatives Dialog -->
+  <p-dialog header="Productos Alternativos" [(visible)]="mostrarAlternativos"
+    [modal]="true" [closable]="true" [draggable]="false"
+    [style]="{width: '800px'}" [breakpoints]="{'960px': '95vw'}" styleClass="rv-dialog-modern">
+    <app-productos-alternativos-venta *ngIf="mostrarAlternativos"
+      [nIdProducto]="nIdProducto"
+      (producto)="agregarProductoAlternativo($event)">
+    </app-productos-alternativos-venta>
+  </p-dialog>
+
+  <!-- Resultado de operación (cotización / venta) -->
+  <p-dialog
+    [header]="resultadoTipo === 'venta' ? '¡Venta generada!' : '¡Cotización registrada!'"
+    [(visible)]="mostrarResultado"
+    [modal]="true" [closable]="false" [draggable]="false"
+    [style]="{width: '420px'}" [breakpoints]="{'640px': '95vw'}"
+    styleClass="rv-dialog-modern rv-dialog-resultado">
+
+    <div class="rv-resultado">
+      <div class="rv-resultado__icon" [ngClass]="resultadoTipo === 'venta' ? 'rv-resultado__icon--venta' : 'rv-resultado__icon--cotizacion'">
+        <i class="pi" [ngClass]="resultadoTipo === 'venta' ? 'pi-check-circle' : 'pi-file'"></i>
+      </div>
+
+      <p class="rv-resultado__msg" *ngIf="resultadoTipo === 'venta'">
+        La venta <strong>#{{ resultadoIdVenta }}</strong> fue registrada exitosamente.
+      </p>
+      <p class="rv-resultado__msg" *ngIf="resultadoTipo === 'cotizacion'">
+        La cotización <strong>#{{ resultadoIdCotizacion }}</strong> fue guardada exitosamente.
+      </p>
+
+      <div class="rv-resultado__acciones">
+        <button pButton type="button"
+          [label]="resultadoTipo === 'venta' ? 'Descargar comprobante' : 'Descargar cotización'"
+          icon="pi pi-download"
+          class="p-button-outlined p-button-secondary"
+          (click)="descargarResultado()">
+        </button>
+        <button pButton type="button"
+          label="Nueva operación"
+          icon="pi pi-plus"
+          class="p-button-warning"
+          (click)="cerrarResultado()">
+        </button>
+      </div>
+    </div>
+  </p-dialog>
+</div>
+
+<p-toast position="top-right"></p-toast>

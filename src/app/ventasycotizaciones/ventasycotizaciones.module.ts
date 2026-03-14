@@ -28,6 +28,9 @@ import { CotizacionProductoComponent } from './components/cotizacion-producto/co
 import { CotizacionesClienteVigentesComponent } from './components/cotizaciones-cliente-vigentes/cotizaciones-cliente-vigentes.component';
 import { FormActualizaVentaComponent } from './components/form-actualiza-venta/form-actualiza-venta.component';
 import { VentaProductoCancelaComponent } from './components/venta-producto-cancela/venta-producto-cancela.component';
+import { RevendedorVentasComponent } from './pages/revendedor-ventas/revendedor-ventas.component';
+import { RevendedorFormVentaComponent } from './components/revendedor-form-venta/revendedor-form-venta.component';
+import { RevendedorCuentaComponent } from './pages/revendedor-cuenta/revendedor-cuenta.component';
 
 
 
@@ -37,7 +40,7 @@ import { VentaProductoCancelaComponent } from './components/venta-producto-cance
 @NgModule({
   declarations: [VentasComponent, VentasPorPedidoComponent, ConsultaVentaComponent,
 
-    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, FormCompraInternetComponent, PagoVentaInternetComponent, FormCargaComprobanteComponent, DescuentoVentaComponent, MaquinaClienteComponent, FormMaquinaClienteComponent, CotizacionClienteProductoComponent, CotizacionProductoComponent, CotizacionesClienteVigentesComponent, FormActualizaVentaComponent, VentaProductoCancelaComponent ],
+    ConsultaCotizacionComponent, CancelaVentaComponent, DetalleClienteComponent, FormVentaComponent, DetalleCotizacionComponent, ProductosAlternativosVentaComponent, VentaProductosDetalleComponent, FormVentaPedidoComponent, VentasPorInternetComponent, FormCompraInternetComponent, PagoVentaInternetComponent, FormCargaComprobanteComponent, DescuentoVentaComponent, MaquinaClienteComponent, FormMaquinaClienteComponent, CotizacionClienteProductoComponent, CotizacionProductoComponent, CotizacionesClienteVigentesComponent, FormActualizaVentaComponent, VentaProductoCancelaComponent, RevendedorVentasComponent, RevendedorFormVentaComponent, RevendedorCuentaComponent ],
 
   imports: [
     VentasycotizacionesRoutingModule,

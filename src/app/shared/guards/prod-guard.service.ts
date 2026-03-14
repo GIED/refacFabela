@@ -13,9 +13,20 @@ export class ProdGuardService implements CanActivate{
               private router: Router  ) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean{
+    if (!this.tokenService.isLogged()) {
+      this.router.navigate(['/login']);
+      return false;
+    }
+
     const expectedRol = route.data.expectedRol;
     const roles = this.tokenService.getRoles();
 
+    if (!roles || roles.length === 0) {
+      this.tokenService.logout();
+      return false;
+    }
+
+    this.realRol = null;
     roles.forEach(rol =>{
       if (rol === 'ROLE_ADMIN') {
         this.realRol= 'admin';
@@ -27,11 +38,12 @@ export class ProdGuardService implements CanActivate{
         this.realRol= 'almacen';
       }else if (rol === 'ROLE_CAJA') {
         this.realRol= 'caja';
+      }else if (rol === 'ROLE_REVENDEDOR') {
+        this.realRol= 'revendedor';
       }
-    })
+    });
 
-   
-    if (!this.tokenService.isLogged() || expectedRol.indexOf(this.realRol) < 0) {
+    if (!this.realRol || expectedRol.indexOf(this.realRol) < 0) {
       this.router.navigate(['/login']);
       return false;
     }

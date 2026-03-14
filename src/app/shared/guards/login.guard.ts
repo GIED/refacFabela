@@ -13,7 +13,12 @@ export class LoginGuard implements CanActivate {
   canActivate( next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     
     if (this.tokenService.isLogged()) {
-      this.router.navigate(['/inicio']);
+      const roles = this.tokenService.getRoles();
+      if (roles.indexOf('ROLE_REVENDEDOR') >= 0) {
+        this.router.navigate(['/ventasycotizaciones/revendedor']);
+      } else {
+        this.router.navigate(['/inicio']);
+      }
       return false;
     }
     return true;

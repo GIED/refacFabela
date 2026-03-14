@@ -40,7 +40,13 @@ export class AccesoComponent{
     this.authService.login(this.loginUsuario).subscribe(data =>{
       this.cargando = false;
       this.tokenService.setToken(data.token);
-      this.router.navigate(['/inicio/inicio-general'])
+      // Redirigir según rol
+      const roles = this.tokenService.getRoles();
+      if (roles && roles.indexOf('ROLE_REVENDEDOR') >= 0) {
+        this.router.navigate(['/ventasycotizaciones/revendedor']);
+      } else {
+        this.router.navigate(['/inicio/inicio-general']);
+      }
       this.messageService.add({ severity: 'success', summary: 'Acceso Correcto', detail: "Inicio de sesión correcto", life: 3000 });
 
     },error =>{

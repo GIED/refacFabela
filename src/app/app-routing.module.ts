@@ -15,7 +15,7 @@ const routes: Routes = [
      
    },
    {
-    path:'ventasycotizaciones', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','caja']},
+    path:'ventasycotizaciones', component: AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','caja','revendedor']},
     loadChildren:() => import('./ventasycotizaciones/ventasycotizaciones.module').then(m => m.VentasycotizacionesModule),
    
   },
@@ -40,7 +40,7 @@ const routes: Routes = [
     
   },
   {
-    path:'inicio', component:AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','distribuidor','almacen','caja']},
+    path:'inicio', component:AppMainComponent, canActivate:[ProdGuardService], data: {expectedRol: ['admin','ventas','distribuidor','almacen','caja','revendedor']},
     loadChildren:() => import('./inicio/inicio.module').then(m => m.InicioModule),
     
   },

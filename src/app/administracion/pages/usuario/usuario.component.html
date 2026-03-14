@@ -103,7 +103,7 @@
                     <div class="p-formgrid p-grid">
                         <div class="p-field p-col-6">
                             <label for="price">Rol</label>
-                            <p-listbox [options]="roles" formControlName="roles" optionValue="code" (click)="verificaDistribuidor()" [class.is-invalid]="validaRol" [metaKeySelection]="false" [checkbox]="false" [filter]="false" [multiple]="true" optionLabel="name" [listStyle]="{'max-height':'250px'}"
+                            <p-listbox [options]="roles" formControlName="roles" optionValue="code" (onChange)="verificaDistribuidor()" [class.is-invalid]="validaRol" [metaKeySelection]="false" [checkbox]="false" [filter]="false" [multiple]="true" optionLabel="name" [listStyle]="{'max-height':'250px'}"
                                 [style]="{'width':'15rem'}">
                                 <ng-template let-rol pTemplate="item">
                                     <div class="country-item">
@@ -118,6 +118,12 @@
                             <label for="name">RFC del cliente</label>
                             <input type="text" pInputText name="rfcDistribuidor" formControlName="rfcDistribuidor" [class.is-invalid]="validaRfcDistribuidor" required />
                             <small class="p-error" *ngIf="validaRfcDistribuidor">*rfc del cliente requerido</small>
+                        </div>
+                        <div class="p-field p-col-6" *ngIf="muestraInputCliente">
+                            <label for="clienteRevendedor">Cliente (Revendedor)</label>
+                            <p-autoComplete [(ngModel)]="clienteSeleccionado" [ngModelOptions]="{standalone: true}" [suggestions]="clientesFiltrados" (completeMethod)="buscarClientes($event)" (onSelect)="seleccionarCliente($event)" field="sRazonSocial" [minLength]="3" placeholder="Buscar cliente por nombre..." [forceSelection]="true">
+                            </p-autoComplete>
+                            <small class="p-text-secondary" *ngIf="clienteSeleccionado?.nId">Cliente seleccionado: {{clienteSeleccionado.sRazonSocial}} (ID: {{clienteSeleccionado.nId}})</small>
                         </div>
 
                     </div>

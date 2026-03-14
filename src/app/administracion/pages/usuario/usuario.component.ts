@@ -5,6 +5,8 @@ import { UsuarioService } from '../../service/usuario.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Usuarios } from '../../interfaces/usuarios';
 import { NuevoUsuario } from '../../model/nuevo-usuario';
+import { ClienteService } from '../../service/cliente.service';
+import { TcCliente } from '../../model/TcCliente';
 
 interface Roles {
     name: string;
@@ -40,23 +42,28 @@ export class UsuarioComponent implements OnInit {
     formulario: FormGroup;
     usuarioDialog: boolean;
     muestraInput:boolean;
+    muestraInputCliente:boolean;
     nuevoUsuario: NuevoUsuario;
     roles: Roles[];
     guarda:boolean=false;
     actualizaUsiario:Usuarios;
+    clientesFiltrados: TcCliente[] = [];
+    clienteSeleccionado: TcCliente;
 
     constructor(private usuarioService: UsuarioService, private fb: FormBuilder, private messageService: MessageService,
-        private confirmationService: ConfirmationService) {
+        private confirmationService: ConfirmationService, private clienteService: ClienteService) {
         this.crearFormulario()
         this.roles = [
             { name: "Administrador", code: "admin" },
             { name: "Ventas", code: "ventas" },
             { name: "Almacen", code: "almacen" },
             { name: "Caja", code: "caja" },
-            { name: "distribuidor", code:"distribuidor"}
+            { name: "distribuidor", code:"distribuidor"},
+            { name: "Revendedor", code: "revendedor" }
           ];
         this.listaUsuarios=[];
         this.muestraInput=false;
+        this.muestraInputCliente=false;
     }
 
     ngOnInit() {
@@ -103,7 +110,8 @@ export class UsuarioComponent implements OnInit {
             sUsuario: ['', [Validators.required]],
             sPassword: ['', [Validators.required]],
             roles: ['', [Validators.required]],
-            rfcDistribuidor:['',[Validators.required]]
+            rfcDistribuidor:['',[Validators.required]],
+            nIdCliente: [null, []]
         })
     }
 
@@ -134,6 +142,12 @@ export class UsuarioComponent implements OnInit {
         this.fUsuario.sUsuario.setValue("");
         this.fUsuario.sPassword.setValue("");
         this.fUsuario.roles.setValue("");
+        this.fUsuario.rfcDistribuidor.setValue('no aplica');
+        this.fUsuario.nIdCliente.setValue(null);
+        this.clienteSeleccionado = null;
+        this.clientesFiltrados = [];
+        this.muestraInput = false;
+        this.muestraInputCliente = false;
     }
 
     deleteUsuario(usuario: Usuarios) {
@@ -215,15 +229,22 @@ export class UsuarioComponent implements OnInit {
 
         if (valor.length === 0) {
             this.muestraInput=false;
+            this.muestraInputCliente=false;
             this.fUsuario.rfcDistribuidor.setValue('no aplica');
+            this.fUsuario.nIdCliente.setValue(null);
         }else{
             this.muestraInput=false;
+            this.muestraInputCliente=false;
             this.fUsuario.rfcDistribuidor.setValue('no aplica');
+            this.fUsuario.nIdCliente.setValue(null);
             for (const valor of this.fUsuario.roles.value) {
                 ////console.log(valor);
                     if (valor === 'distribuidor') {
                         this.muestraInput=true;
                         this.fUsuario.rfcDistribuidor.setValue('');
+                    }
+                    if (valor === 'revendedor') {
+                        this.muestraInputCliente=true;
                     }
             }
         }
@@ -253,6 +274,27 @@ export class UsuarioComponent implements OnInit {
         }
         return id;
     }
+    buscarClientes(event: any) {
+        const query = event.query;
+        if (query && query.length >= 3) {
+            this.clienteService.obtenerClientesLike(query).subscribe(
+                clientes => {
+                    this.clientesFiltrados = clientes || [];
+                },
+                () => {
+                    this.clientesFiltrados = [];
+                }
+            );
+        } else {
+            this.clientesFiltrados = [];
+        }
+    }
+
+    seleccionarCliente(event: any) {
+        this.clienteSeleccionado = event;
+        this.fUsuario.nIdCliente.setValue(event.nId);
+    }
+
     get fUsuario() {
         return this.formulario.controls;
     }

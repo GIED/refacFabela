@@ -213,6 +213,8 @@ static generarAbonoVentaPdf='/getAbonoVentaId?';
 static generarHistorialAbonoVentaPdf='/getAbonoVentaIdCliente?';
 static generarVentaPedidoPdf='/getVentaPedido?';
 static cambiarVentaACredito='/cambiarVentaACredito'
+static consultaHistorialVentasCliente='/obtenerHistorialVentasCliente?';
+static consultaVentasPendientesCliente='/obtenerVentasPendientesCliente?';
 
 //Cotizaciones
 static guardaCotizacion= '/guardarCotizacion';
@@ -222,6 +224,7 @@ static consultaCotizacionClienteProducto='/consultaCotizacionClienteProducto?';
 static consultaCotizacionId='/consultaCotizacionId?';
 static consultaCotizacionIdCotizacion='/consultaCotizacionIdCotizacion?';
 static consultaCotizacionesIdClienteVigente='/consultaCotizacionesClienteVigente?';
+static consultaHistorialCotizacionesCliente='/consultaHistorialCotizacionesCliente?';
 
 static obtenerVentaIdcotizacon='/obtenerVentaIdCotizacion?';
 static generarCotizacionPdf='/getCotizacion?';

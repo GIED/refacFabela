@@ -34,6 +34,16 @@ export class VentasService {
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleEstatus+'nIdCliente='+nIdCliente+'&nTipoPago='+nTipoPago;
     return this.http.get<TvVentasDetalle[]>(url);
   }
+
+  obtenerHistorialVentasCliente(nIdCliente: number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaHistorialVentasCliente + 'nIdCliente=' + nIdCliente;
+    return this.http.get<TvVentasDetalle[]>(url);
+  }
+
+  obtenerVentasPendientesCliente(nIdCliente: number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaVentasPendientesCliente + 'nIdCliente=' + nIdCliente;
+    return this.http.get<TvVentasDetalle[]>(url);
+  }
     obtenerVentaDetalleEstatusVenta(nEstatusVenta:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaVentaDetalleEstatusVenta+'nEstatusVenta='+nEstatusVenta;
     return this.http.get<TvVentasDetalle[]>(url);

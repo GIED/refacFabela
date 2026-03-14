@@ -1,0 +1,357 @@
+<div class="rc-page">
+  <p-toast></p-toast>
+
+  <!-- ====== Banner ====== -->
+  <div class="rc-banner">
+    <div class="rc-banner__info">
+      <h1 class="rc-banner__title">
+        <i class="pi pi-user-edit"></i>
+        Mi Cuenta
+      </h1>
+      <p class="rc-banner__subtitle">{{ nombreCliente || 'Cargando...' }}</p>
+    </div>
+
+    <div class="rc-banner__credit" *ngIf="saldoGeneralCliente?.nCreditoDisponible != null">
+      <i class="pi pi-credit-card"></i>
+      <div>
+        <span class="rc-banner__credit-label">Crédito disponible</span>
+        <span class="rc-banner__credit-amount">{{ formatCurrency(saldoGeneralCliente.nCreditoDisponible) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== Tabs ====== -->
+  <p-tabView styleClass="rc-tabs">
+
+    <!-- ===== TAB 1: ESTADO DE CUENTA ===== -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="rc-tab-header"><i class="pi pi-chart-bar"></i> Estado de Cuenta</span>
+      </ng-template>
+
+      <ng-template #skelSaldo>
+        <div class="rc-skel-row">
+          <p-skeleton height="90px" *ngFor="let i of [1,2,3,4]" styleClass="rc-skel-kpi"></p-skeleton>
+        </div>
+      </ng-template>
+
+      <ng-container *ngIf="!cargandoSaldo; else skelSaldo">
+
+        <!-- KPI Cards -->
+        <div class="rc-kpi-grid">
+          <div class="rc-kpi rc-kpi--primary">
+            <div class="rc-kpi__icon"><i class="pi pi-wallet"></i></div>
+            <div class="rc-kpi__body">
+              <span class="rc-kpi__label">Límite de Crédito</span>
+              <span class="rc-kpi__value">{{ formatCurrency(saldoGeneralCliente?.nLimiteCredito) }}</span>
+            </div>
+          </div>
+          <div class="rc-kpi rc-kpi--success">
+            <div class="rc-kpi__icon"><i class="pi pi-check-circle"></i></div>
+            <div class="rc-kpi__body">
+              <span class="rc-kpi__label">Crédito Disponible</span>
+              <span class="rc-kpi__value">{{ formatCurrency(saldoGeneralCliente?.nCreditoDisponible) }}</span>
+            </div>
+          </div>
+          <div class="rc-kpi rc-kpi--warning">
+            <div class="rc-kpi__icon"><i class="pi pi-exclamation-triangle"></i></div>
+            <div class="rc-kpi__body">
+              <span class="rc-kpi__label">Saldo Utilizado</span>
+              <span class="rc-kpi__value">{{ formatCurrency(saldoGeneralCliente?.nSaldoTotal) }}</span>
+            </div>
+          </div>
+          <div class="rc-kpi rc-kpi--danger">
+            <div class="rc-kpi__icon"><i class="pi pi-clock"></i></div>
+            <div class="rc-kpi__body">
+              <span class="rc-kpi__label">Pagos Pendientes</span>
+              <span class="rc-kpi__value">{{ listaPendientes.length }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de crédito -->
+        <div class="rc-credit-bar-wrap">
+          <div class="rc-credit-bar-header">
+            <span>Uso de Crédito</span>
+            <span class="rc-credit-bar-pct">{{ creditoUtilizadoPct | number:'1.0-0' }}%</span>
+          </div>
+          <div class="rc-credit-bar">
+            <div class="rc-credit-bar__fill" [style.width.%]="creditoUtilizadoPct" [style.background]="barColor"></div>
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="rc-charts-grid" *ngIf="chartMensual">
+          <div class="rc-chart-card rc-chart-card--wide">
+            <div class="rc-chart-card__head">
+              <h4 class="rc-chart-card__title"><i class="pi pi-chart-bar"></i> Consumo por Mes (últimos 6 meses)</h4>
+            </div>
+            <div class="rc-chart-card__body">
+              <p-chart type="bar" [data]="chartMensual" [options]="chartOptions" height="260px"></p-chart>
+            </div>
+          </div>
+          <div class="rc-chart-card">
+            <div class="rc-chart-card__head">
+              <h4 class="rc-chart-card__title"><i class="pi pi-chart-pie"></i> Distribución de Ventas</h4>
+            </div>
+            <div class="rc-chart-card__body rc-chart-card__body--center">
+              <p-chart type="doughnut" [data]="chartTipos" [options]="chartDonutOptions" height="260px"></p-chart>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!chartMensual && !cargandoVentas" class="rc-empty rc-empty--sm">
+          <i class="pi pi-spin pi-spinner"></i>
+          <p>Cargando gráficas...</p>
+        </div>
+
+      </ng-container>
+    </p-tabPanel>
+
+    <!-- ===== TAB 2: PAGOS PENDIENTES ===== -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="rc-tab-header">
+          <i class="pi pi-clock"></i> Pagos Pendientes
+          <span class="rc-tab-badge" *ngIf="listaPendientes.length > 0">{{ listaPendientes.length }}</span>
+        </span>
+      </ng-template>
+
+      <div class="rc-toolbar">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" [(ngModel)]="filtroPendientes" placeholder="Buscar por folio, forma pago..." class="rc-search" />
+        </span>
+        <button pButton type="button" icon="pi pi-refresh" label="Actualizar"
+          class="p-button-outlined p-button-sm" (click)="cargarPendientes()"></button>
+      </div>
+
+      <div *ngIf="pendientesFiltrados.length === 0 && !cargandoVentas" class="rc-empty">
+        <i class="pi pi-check-circle"></i>
+        <p>¡Sin pagos pendientes! Tu cuenta está al corriente.</p>
+      </div>
+
+      <p-table *ngIf="pendientesFiltrados.length > 0"
+        [value]="pendientesFiltrados"
+        [loading]="cargandoVentas"
+        [paginator]="pendientesFiltrados.length > 8"
+        [rows]="8"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="{first} - {last} de {totalRecords} pendientes"
+        styleClass="p-datatable-sm p-datatable-striped rc-table"
+        responsiveLayout="stack"
+        breakpoint="768px">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="sFolioVenta">Folio <p-sortIcon field="sFolioVenta"></p-sortIcon></th>
+            <th pSortableColumn="dFechaVenta">Fecha Venta <p-sortIcon field="dFechaVenta"></p-sortIcon></th>
+            <th>Inicio Crédito</th>
+            <th pSortableColumn="dFechaTerminoCredito">Vence <p-sortIcon field="dFechaTerminoCredito"></p-sortIcon></th>
+            <th pSortableColumn="nTotalVenta">Total <p-sortIcon field="nTotalVenta"></p-sortIcon></th>
+            <th pSortableColumn="nSaldoTotal">Saldo Pendiente <p-sortIcon field="nSaldoTotal"></p-sortIcon></th>
+            <th>Forma Pago</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-v>
+          <tr [class.rc-row--vencido]="v.nVencido">
+            <td><span class="rc-folio">{{ v.sFolioVenta }}</span></td>
+            <td>{{ v.dFechaVenta | date:'dd/MM/yyyy' }}</td>
+            <td>{{ v.dFechaInicioCredito | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <span class="rc-badge" [class.rc-badge--danger]="v.nVencido" [class.rc-badge--warning]="!v.nVencido">
+                <i class="pi" [class.pi-times-circle]="v.nVencido" [class.pi-calendar]="!v.nVencido"></i>
+                {{ v.dFechaTerminoCredito | date:'dd/MM/yyyy' }}
+              </span>
+            </td>
+            <td class="rc-amount">{{ formatCurrency(v.nTotalVenta) }}</td>
+            <td class="rc-amount rc-amount--pending">{{ formatCurrency(v.nSaldoTotal) }}</td>
+            <td>{{ v.tcFormapago?.sDescripcion || '—' }}</td>
+            <td>
+              <div class="rc-row-actions">
+                <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-sm rc-btn-action"
+                  pTooltip="Ver abonos" (click)="verAbonos(v)"></button>
+                <button pButton type="button" icon="pi pi-file-pdf" class="p-button-text p-button-sm rc-btn-action"
+                  pTooltip="Descargar PDF" (click)="descargarVentaPdf(v.nId)"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+
+    <!-- ===== TAB 3: HISTORIAL DE VENTAS ===== -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="rc-tab-header"><i class="pi pi-history"></i> Historial de Ventas</span>
+      </ng-template>
+
+      <div class="rc-toolbar">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" [(ngModel)]="filtroVentas" placeholder="Buscar por folio, estatus..." class="rc-search" />
+        </span>
+        <button pButton type="button" icon="pi pi-refresh" label="Actualizar"
+          class="p-button-outlined p-button-sm" (click)="cargarVentas()"></button>
+      </div>
+
+      <p-table
+        [value]="ventasFiltradas"
+        [loading]="cargandoVentas"
+        [paginator]="true"
+        [rows]="12"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="{first} - {last} de {totalRecords} ventas"
+        styleClass="p-datatable-sm p-datatable-striped rc-table"
+        responsiveLayout="stack"
+        breakpoint="768px">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="nId"># <p-sortIcon field="nId"></p-sortIcon></th>
+            <th pSortableColumn="sFolioVenta">Folio <p-sortIcon field="sFolioVenta"></p-sortIcon></th>
+            <th pSortableColumn="dFechaVenta">Fecha <p-sortIcon field="dFechaVenta"></p-sortIcon></th>
+            <th>Tipo</th>
+            <th>Forma Pago</th>
+            <th pSortableColumn="nTotalVenta">Total <p-sortIcon field="nTotalVenta"></p-sortIcon></th>
+            <th pSortableColumn="nSaldoTotal">Saldo Pendiente <p-sortIcon field="nSaldoTotal"></p-sortIcon></th>
+            <th>Estatus</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-v>
+          <tr>
+            <td class="rc-id">{{ v.nId }}</td>
+            <td><span class="rc-folio">{{ v.sFolioVenta }}</span></td>
+            <td>{{ v.dFechaVenta | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <span class="rc-tipo" [class.rc-tipo--credito]="v.nTipoPago === 1" [class.rc-tipo--contado]="v.nTipoPago !== 1">
+                {{ v.nTipoPago === 1 ? 'Crédito' : 'Contado' }}
+              </span>
+            </td>
+            <td>{{ v.tcFormapago?.sDescripcion || '—' }}</td>
+            <td class="rc-amount">{{ formatCurrency(v.nTotalVenta) }}</td>
+            <td class="rc-amount" [class.rc-amount--pending]="v.nSaldoTotal > 0">
+              {{ formatCurrency(v.nSaldoTotal) }}
+            </td>
+            <td>
+              <p-tag [value]="v.tcEstatusVenta?.sDescripcion || 'N/A'"
+                [severity]="getEstatusTag(v.tcEstatusVenta?.sDescripcion)">
+              </p-tag>
+            </td>
+            <td>
+              <div class="rc-row-actions">
+                <button pButton type="button" icon="pi pi-list" class="p-button-text p-button-sm rc-btn-action"
+                  pTooltip="Ver abonos" (click)="verAbonos(v)"></button>
+                <button pButton type="button" icon="pi pi-file-pdf" class="p-button-text p-button-sm rc-btn-action rc-btn-pdf"
+                  pTooltip="Descargar PDF" (click)="descargarVentaPdf(v.nId)"></button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="9">
+              <div class="rc-empty"><i class="pi pi-inbox"></i><p>Sin ventas registradas.</p></div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+
+    <!-- ===== TAB 4: COTIZACIONES ===== -->
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <span class="rc-tab-header"><i class="pi pi-file"></i> Mis Cotizaciones</span>
+      </ng-template>
+
+      <div class="rc-toolbar">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" [(ngModel)]="filtroCotizaciones" placeholder="Buscar por folio o ID..." class="rc-search" />
+        </span>
+        <button pButton type="button" icon="pi pi-refresh" label="Actualizar"
+          class="p-button-outlined p-button-sm" (click)="cargarCotizaciones()"></button>
+      </div>
+
+      <p-table
+        [value]="cotizacionesFiltradas"
+        [loading]="cargandoCotizaciones"
+        [paginator]="true"
+        [rows]="12"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="{first} - {last} de {totalRecords} cotizaciones"
+        styleClass="p-datatable-sm p-datatable-striped rc-table"
+        responsiveLayout="stack"
+        breakpoint="768px">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="nId"># <p-sortIcon field="nId"></p-sortIcon></th>
+            <th pSortableColumn="sFolioCotizacion">Folio <p-sortIcon field="sFolioCotizacion"></p-sortIcon></th>
+            <th pSortableColumn="dFecha">Fecha <p-sortIcon field="dFecha"></p-sortIcon></th>
+            <th pSortableColumn="nTotalCotizacion">Total <p-sortIcon field="nTotalCotizacion"></p-sortIcon></th>
+            <th>Estatus</th>
+            <th>Acciones</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-c>
+          <tr>
+            <td class="rc-id">{{ c.nId }}</td>
+            <td><span class="rc-folio">{{ c.sFolioCotizacion }}</span></td>
+            <td>{{ c.dFecha | date:'dd/MM/yyyy' }}</td>
+            <td class="rc-amount">{{ formatCurrency(c.nTotalCotizacion) }}</td>
+            <td>
+              <p-tag [value]="getEstatusCotizacion(c.nEstatus).label" [severity]="getEstatusCotizacion(c.nEstatus).severity"></p-tag>
+            </td>
+            <td>
+              <button pButton type="button" icon="pi pi-file-pdf" class="p-button-text p-button-sm rc-btn-action rc-btn-pdf"
+                pTooltip="Descargar PDF" (click)="descargarCotizacionPdf(c.nId)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">
+              <div class="rc-empty"><i class="pi pi-inbox"></i><p>Sin cotizaciones registradas.</p></div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+
+  </p-tabView>
+</div>
+
+<!-- ====== Dialog Abonos ====== -->
+<p-dialog [(visible)]="mostrarAbonos" [modal]="true" [draggable]="false" [resizable]="false"
+  header="Historial de Abonos" styleClass="rc-dialog" [style]="{width: '580px'}">
+  <div *ngIf="ventaSeleccionada" class="rc-abono-header">
+    <span class="rc-folio">{{ ventaSeleccionada.sFolioVenta }}</span>
+    <span class="rc-amount rc-amount--pending">Pendiente: {{ formatCurrency(ventaSeleccionada.nSaldoTotal) }}</span>
+  </div>
+  <p-table [value]="abonosVenta" [loading]="cargandoAbonos"
+    styleClass="p-datatable-sm p-datatable-striped rc-table">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>#</th>
+        <th>Fecha</th>
+        <th>Monto</th>
+        <th>Forma Pago</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-a>
+      <tr>
+        <td>{{ a.nId }}</td>
+        <td>{{ a.dFecha | date:'dd/MM/yyyy' }}</td>
+        <td class="rc-amount">{{ formatCurrency(a.nAbono) }}</td>
+        <td>{{ a.tcFormapago?.sDescripcion || '—' }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr><td colspan="4" style="text-align:center; color:#64748b; padding:1.5rem">Sin abonos registrados.</td></tr>
+    </ng-template>
+  </p-table>
+  <ng-template pTemplate="footer">
+    <button pButton type="button" label="Cerrar" icon="pi pi-times" class="p-button-text"
+      (click)="mostrarAbonos = false"></button>
+  </ng-template>
+</p-dialog>
