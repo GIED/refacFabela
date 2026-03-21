@@ -38,7 +38,7 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  background: linear-gradient(135deg, #374151 0%, #6b7280 100%);
   border-radius: $radius;
   padding: 1.5rem 2rem;
   margin-bottom: 1.5rem;
@@ -60,7 +60,7 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
   &__subtitle {
     margin: 0;
     font-size: 0.9rem;
-    color: #94a3b8;
+    color: #ffffff;
     font-weight: 400;
   }
 
@@ -80,7 +80,7 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
   &__credit-label {
     display: block;
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 0.15rem;
@@ -92,6 +92,60 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 700;
     color: #fff;
   }
+}
+
+// ===== Alerta Ventas Vencidas =====
+.rc-alert-vencidas {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: $red-light;
+  border: 1px solid #fecaca;
+  border-left: 4px solid $red;
+  border-radius: $radius;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  animation: alertPulse 0.5s ease;
+
+  &__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: $red;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    strong {
+      font-size: 0.95rem;
+      color: $red;
+    }
+
+    > span {
+      font-size: 0.85rem;
+      color: $text;
+    }
+  }
+
+  &__hint {
+    font-size: 0.8rem !important;
+    color: $text-muted !important;
+    font-style: italic;
+  }
+}
+
+@keyframes alertPulse {
+  0% { opacity: 0; transform: translateY(-8px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 // ===== Tabs =====
@@ -533,4 +587,72 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
 
 @media (max-width: 480px) {
   .rc-kpi-grid { grid-template-columns: 1fr; }
+}
+
+// ===== Convert button =====
+.rc-btn-convert {
+  ::ng-deep { color: $green !important; }
+  &:hover ::ng-deep { color: darken($green, 10%) !important; }
+}
+
+// ===== Convert dialog content =====
+.rc-convert-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1rem;
+}
+
+.rc-convert-products {
+  margin-bottom: 1rem;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.rc-convert-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f1f5f9;
+
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  &__part {
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    color: $text-muted;
+  }
+
+  &__name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: $text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__qty {
+    font-size: 0.85rem;
+    color: $text-muted;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &__price {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $text;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
 }

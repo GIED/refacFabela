@@ -5,7 +5,9 @@ export class TcUsuario {
     sPassword?:string;
     sClaveUser?:string;
     nEstatus?:number;
-    authorities:string[];
-    rfcDistribuidor:string;
-
+    authorities?:string[];
+    rfcDistribuidor?:string;
+    roles?:any[];
+    nIdCliente?:number;
+    nTipoRevendedor?:number;
 }

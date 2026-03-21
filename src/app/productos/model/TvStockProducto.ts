@@ -10,4 +10,5 @@ export class TvStockProducto{
     nIdProveedor?:number;
     nTotalUnitario?:Decimal=new Decimal(0);
     nTotalPartida?:Decimal=new Decimal(0);
+    esAlternativo?:boolean;
 }

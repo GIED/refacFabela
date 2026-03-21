@@ -17,6 +17,7 @@ export class RevendedorFormVentaComponent implements OnInit {
   @Input() saldoGeneralCliente: SaldoGeneralCliente;
   @Input() total: Decimal;
   @Input() nIdCliente: number;
+  @Input() ocultarCotizacion: boolean = false;
 
   @Output() emitirVenta: EventEmitter<DatosVenta> = new EventEmitter<DatosVenta>();
   @Output() soloCotizacion: EventEmitter<any> = new EventEmitter<any>();

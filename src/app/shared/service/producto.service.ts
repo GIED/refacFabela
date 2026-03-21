@@ -46,6 +46,14 @@ export class ProductoService {
     return this.http.get<TcProducto[]>(url);
   }
 
+  buscarProductosRevendedor(producto: string, nTipoRevendedor?: number) {
+    let url = environment.servicios.apiRefacFabela + locator.buscarProductosRevendedor + 'producto=' + producto;
+    if (nTipoRevendedor != null) {
+      url += '&nTipoRevendedor=' + nTipoRevendedor;
+    }
+    return this.http.get<TvStockProducto[]>(url);
+  }
+
   obtenerTotalBodegasIdProducto(nId:number){
     let url =environment.servicios.apiRefacFabela + locator.obtenerTotalBodegasIdProducto+'id='+nId;
   

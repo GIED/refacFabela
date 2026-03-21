@@ -2,7 +2,7 @@
   <!-- Top Banner -->
   <div class="rv-banner">
     <div class="rv-banner__info">
-      <h1 class="rv-banner__title">
+      <h1 class="rv-banner__title" style="color: white;">
         <i class="pi pi-shopping-bag"></i> Portal de Revendedores
       </h1>
       <p class="rv-banner__subtitle">Consulta inventario, cotiza y realiza tus compras</p>
@@ -74,6 +74,10 @@
             <img [src]="getImagenProducto(producto.tcProducto?.sNoParte)"
               [alt]="producto.tcProducto?.sProducto" (error)="onImageError($event)" />
             <span class="rv-card__brand" *ngIf="producto.tcProducto?.sMarca">{{ producto.tcProducto.sMarca }}</span>
+            <span class="rv-card__badge-alt" *ngIf="producto.esAlternativo"
+              style="position:absolute; top:8px; left:8px; background:var(--orange-500); color:#fff; padding:0.2rem 0.6rem; border-radius:12px; font-size:0.75rem; font-weight:600; display:flex; align-items:center; gap:0.25rem; z-index:2;">
+              <i class="pi pi-sync" style="font-size:0.7rem;"></i> Alternativo
+            </span>
             <span class="rv-card__stock"
               [ngClass]="{
                 'rv-card__stock--ok': producto.nCantidadTotal > 5,
@@ -91,8 +95,25 @@
             <span class="rv-card__part">{{ producto.tcProducto?.sNoParte }}</span>
             <h3 class="rv-card__name">{{ producto.tcProducto?.sProducto }}</h3>
             <p class="rv-card__desc">{{ producto.tcProducto?.sDescripcion }}</p>
-            <div class="rv-card__price">
+            <div class="rv-card__price"
+              [class.rv-card__price--has-discount]="nTipoRevendedor && nTipoRevendedor !== 1
+                && producto.tcProducto?.nPrecioOriginal
+                && producto.tcProducto?.nPrecioOriginal != producto.tcProducto?.nPrecioConIva">
+              <!-- Precio original tachado solo para revendedor/mayorista si difiere del precio con descuento -->
+              <small class="rv-card__price-original"
+                *ngIf="nTipoRevendedor && nTipoRevendedor !== 1
+                  && producto.tcProducto?.nPrecioOriginal
+                  && producto.tcProducto?.nPrecioOriginal != producto.tcProducto?.nPrecioConIva">
+                {{ producto.tcProducto?.nPrecioOriginal | currency:'MXN':'symbol-narrow':'1.2-2' }}
+              </small>
               <strong>{{ producto.tcProducto?.nPrecioConIva | currency:'MXN':'symbol-narrow':'1.2-2' }}</strong>
+              <span class="rv-card__price-save"
+                *ngIf="nTipoRevendedor && nTipoRevendedor !== 1
+                  && producto.tcProducto?.nPrecioOriginal
+                  && producto.tcProducto?.nPrecioOriginal != producto.tcProducto?.nPrecioConIva">
+                <i class="pi pi-arrow-down"></i>
+                Ahorras {{ producto.tcProducto?.nPrecioOriginal - producto.tcProducto?.nPrecioConIva | currency:'MXN':'symbol-narrow':'1.2-2' }}
+              </span>
               <small>IVA incluido</small>
             </div>
           </div>

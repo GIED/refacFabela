@@ -4,8 +4,8 @@
   <!-- ====== Banner ====== -->
   <div class="rc-banner">
     <div class="rc-banner__info">
-      <h1 class="rc-banner__title">
-        <i class="pi pi-user-edit"></i>
+      <h1 class="rc-banner__title" style="color:white">
+        <i class="pi pi-user-edit" style="color:white"></i>
         Mi Cuenta
       </h1>
       <p class="rc-banner__subtitle">{{ nombreCliente || 'Cargando...' }}</p>
@@ -17,6 +17,18 @@
         <span class="rc-banner__credit-label">Crédito disponible</span>
         <span class="rc-banner__credit-amount">{{ formatCurrency(saldoGeneralCliente.nCreditoDisponible) }}</span>
       </div>
+    </div>
+  </div>
+
+  <!-- ====== Alerta de ventas vencidas ====== -->
+  <div class="rc-alert-vencidas" *ngIf="ventasVencidas.length > 0">
+    <div class="rc-alert-vencidas__icon">
+      <i class="pi pi-exclamation-circle"></i>
+    </div>
+    <div class="rc-alert-vencidas__body">
+      <strong>Tienes {{ ventasVencidas.length }} pago{{ ventasVencidas.length !== 1 ? 's' : '' }} vencido{{ ventasVencidas.length !== 1 ? 's' : '' }}</strong>
+      <span>Monto total vencido: <strong>{{ formatCurrency(montoVencido) }}</strong></span>
+      <span class="rc-alert-vencidas__hint">Solicita tu pago lo antes posible para evitar restricciones en tu cuenta.</span>
     </div>
   </div>
 
@@ -303,8 +315,15 @@
               <p-tag [value]="getEstatusCotizacion(c.nEstatus).label" [severity]="getEstatusCotizacion(c.nEstatus).severity"></p-tag>
             </td>
             <td>
-              <button pButton type="button" icon="pi pi-file-pdf" class="p-button-text p-button-sm rc-btn-action rc-btn-pdf"
-                pTooltip="Descargar PDF" (click)="descargarCotizacionPdf(c.nId)"></button>
+              <div class="rc-row-actions">
+                <button pButton type="button" icon="pi pi-shopping-cart" class="p-button-text p-button-sm rc-btn-action rc-btn-convert"
+                  pTooltip="Convertir a venta" tooltipPosition="top"
+                  [disabled]="c.nEstatus !== 1 || cargandoConversion"
+                  (click)="convertirAVenta(c)">
+                </button>
+                <button pButton type="button" icon="pi pi-file-pdf" class="p-button-text p-button-sm rc-btn-action rc-btn-pdf"
+                  pTooltip="Descargar PDF" (click)="descargarCotizacionPdf(c.nId)"></button>
+              </div>
             </td>
           </tr>
         </ng-template>
@@ -354,4 +373,63 @@
     <button pButton type="button" label="Cerrar" icon="pi pi-times" class="p-button-text"
       (click)="mostrarAbonos = false"></button>
   </ng-template>
+</p-dialog>
+
+<!-- ====== Dialog Convertir Cotización a Venta ====== -->
+<p-dialog header="Convertir Cotización a Venta" [(visible)]="mostrarConvertirVenta"
+  [modal]="true" [closable]="true" [draggable]="false"
+  [style]="{width: '700px'}" [breakpoints]="{'960px': '95vw'}" styleClass="rc-dialog">
+
+  <!-- Loading -->
+  <div *ngIf="cargandoConversion" style="text-align:center; padding:2rem">
+    <i class="pi pi-spin pi-spinner" style="font-size:2rem; color:#2563eb"></i>
+    <p style="margin:0.5rem 0 0; color:#64748b">Cargando productos de la cotización...</p>
+  </div>
+
+  <!-- Detalle de cotización -->
+  <div *ngIf="!cargandoConversion && cotizacionAConvertir" class="rc-convert-header">
+    <span class="rc-folio">{{ cotizacionAConvertir.sFolioCotizacion }}</span>
+    <span style="color:#64748b; font-size:0.85rem">{{ productosConvertir.length }} producto{{ productosConvertir.length !== 1 ? 's' : '' }}</span>
+  </div>
+
+  <!-- Tabla de productos -->
+  <div *ngIf="!cargandoConversion && productosConvertir.length > 0" class="rc-convert-products">
+    <div class="rc-convert-item" *ngFor="let p of productosConvertir">
+      <div class="rc-convert-item__info">
+        <span class="rc-convert-item__part">{{ p.tcProducto?.sNoParte }}</span>
+        <span class="rc-convert-item__name">{{ p.tcProducto?.sProducto }}</span>
+      </div>
+      <span class="rc-convert-item__qty">× {{ p.nCantidad }}</span>
+      <span class="rc-convert-item__price">${{ p.nTotalPartida?.toNumber() | number:'1.2-2' }}</span>
+    </div>
+  </div>
+
+  <!-- Form venta (mismo componente que en revendedor-ventas) -->
+  <app-revendedor-form-venta *ngIf="!cargandoConversion && mostrarConvertirVenta"
+    [listaProductos]="productosConvertir"
+    [saldoGeneralCliente]="saldoGeneralCliente"
+    [nIdCliente]="nIdCliente"
+    [total]="totalConvertir"
+    [ocultarCotizacion]="true"
+    (emitirVenta)="generarVentaDesdeCotizacion($event)">
+  </app-revendedor-form-venta>
+</p-dialog>
+
+<!-- ====== Dialog Resultado Venta ====== -->
+<p-dialog header="¡Venta generada!" [(visible)]="mostrarResultado"
+  [modal]="true" [closable]="false" [draggable]="false"
+  [style]="{width: '420px'}" [breakpoints]="{'640px': '95vw'}" styleClass="rc-dialog">
+  <div style="text-align:center; padding:1.5rem 0">
+    <i class="pi pi-check-circle" style="font-size:3rem; color:#16a34a"></i>
+    <p style="margin:1rem 0 0.5rem; font-size:1rem; color:#1e293b">
+      La venta <strong>#{{ resultadoIdVenta }}</strong> fue registrada exitosamente
+      <span *ngIf="resultadoIdCotizacion"> desde la cotización <strong>#{{ resultadoIdCotizacion }}</strong></span>.
+    </p>
+    <div style="display:flex; gap:0.75rem; justify-content:center; margin-top:1.5rem">
+      <button pButton type="button" label="Descargar comprobante" icon="pi pi-download"
+        class="p-button-outlined p-button-secondary" (click)="descargarResultadoVenta()"></button>
+      <button pButton type="button" label="Cerrar" icon="pi pi-times"
+        class="p-button-warning" (click)="cerrarResultadoVenta()"></button>
+    </div>
+  </div>
 </p-dialog>

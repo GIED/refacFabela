@@ -33,7 +33,7 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  background: linear-gradient(135deg, #374151 0%, #6b7280 100%);
   border-radius: $radius;
   padding: 1.5rem 2rem;
   margin-bottom: 1.5rem;
@@ -55,7 +55,7 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
   &__subtitle {
     margin: 0;
     font-size: 0.9rem;
-    color: #cbd5e1;
+    color: #ffffff;
   }
 
   &__credit {
@@ -343,6 +343,7 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
     align-items: baseline;
     gap: 0.4rem;
     margin-top: auto;
+    flex-wrap: wrap;
 
     strong {
       font-size: 1.25rem;
@@ -353,6 +354,35 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
     small {
       font-size: 0.7rem;
       color: $text-light;
+    }
+
+    &-original {
+      font-size: 0.82rem;
+      color: $red;
+      text-decoration: line-through;
+      font-weight: 500;
+      order: -1;
+      width: 100%;
+      opacity: 0.7;
+    }
+
+    &-save {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      background: #dcfce7;
+      color: $green;
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      white-space: nowrap;
+
+      i { font-size: 0.6rem; }
+    }
+
+    &--has-discount strong {
+      color: $green;
     }
   }
 

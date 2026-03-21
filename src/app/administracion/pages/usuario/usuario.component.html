@@ -1,140 +1,207 @@
 <div class="p-grid">
-    <div class="p-col-12">      
-        <p-toolbar styleClass="p-mb-4">
-        <div class="p-col-12 text-center"><h3>Administración de Usuarios</h3></div>
-        </p-toolbar>
+    <div class="p-col-12">
 
         <div class="card">
-            <p-toolbar styleClass="p-mb-4">
-                <ng-template pTemplate="left">
-                    <button pButton pRipple label="Nuevo usuario" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
+            <!-- Header moderno -->
+            <div class="usuarios-header">
+                <div class="header-left">
+                    <h2 style="margin:0; font-weight:700; color:var(--text-color);"><i class="pi pi-users" style="margin-right:0.5rem; color:var(--primary-color);"></i>Administración de Usuarios</h2>
+                    <small style="color:var(--text-color-secondary);">Gestiona las cuentas y permisos del sistema</small>
+                </div>
+                <div class="header-right">
+                    <button pButton pRipple label="Nuevo usuario" icon="pi pi-plus" class="p-button-success p-button-raised" (click)="openNew()"></button>
+                </div>
+            </div>
 
-                </ng-template>
+            <p-table #dt [value]="listaUsuarios" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,25,50]"
+             [globalFilterFields]="['sNombreUsuario','sUsuario', 'sClaveUser','nEstatus']"
+            [rowHover]="true" dataKey="nId" styleClass="p-datatable-striped p-datatable-gridlines"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
+                [showCurrentPageReport]="true" paginatorPosition="bottom">
 
-
-            </p-toolbar>
-
-            <p-table #dt [value]="listaUsuarios" [rows]="25" [paginator]="false"
-             [globalFilterFields]="['sNombreusuario','sUsuario', 'sClaveUser','nEstatus']" 
-            [rowHover]="true" dataKey="id" styleClass="p-datatable-customers" 
-            currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
-                [showCurrentPageReport]="true">
                 <ng-template pTemplate="caption">
-                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-end table-header">
-                      <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar usuario" />
-                      </span>
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.75rem;">
+                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                            <span class="p-tag p-tag-info" style="font-size:0.85rem;">{{listaUsuarios ? listaUsuarios.length : 0}} usuarios</span>
+                        </div>
+                        <span class="p-input-icon-left" style="min-width:280px;">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Buscar por nombre, usuario o clave..." style="width:100%; border-radius:6px;" />
+                        </span>
                     </div>
-                  </ng-template>
-                
-                
-                <ng-template pTemplate="left">
-                    <button pButton pRipple label="Nuevo usuario" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2" (click)="openNew()"></button>
-
                 </ng-template>
+
                 <ng-template pTemplate="header">
                     <tr>
-
-                        <th pSortableColumn="sNombreusuario">Nombre Completo
-                            <p-sortIcon field="sNombreusuario"></p-sortIcon>
+                        <th pSortableColumn="sNombreUsuario" style="min-width:14rem;">
+                            <div style="display:flex; align-items:center; gap:0.35rem;">
+                                <i class="pi pi-user" style="font-size:0.85rem; color:var(--primary-color);"></i>
+                                Nombre Completo
+                                <p-sortIcon field="sNombreUsuario"></p-sortIcon>
+                            </div>
                         </th>
-                        <th pSortableColumn="sClaveUser">clave de identificación
-                            <p-sortIcon field="sClaveUser"></p-sortIcon>
+                        <th pSortableColumn="sClaveUser" style="min-width:8rem;">
+                            <div style="display:flex; align-items:center; gap:0.35rem;">
+                                <i class="pi pi-key" style="font-size:0.85rem; color:var(--primary-color);"></i>
+                                Clave ID
+                                <p-sortIcon field="sClaveUser"></p-sortIcon>
+                            </div>
                         </th>
-                        <!--<th>Image</th>-->
-                        <th pSortableColumn="sUsuario">Usuario
-                            <p-sortIcon field="sUsuario"></p-sortIcon>
-                           
+                        <th pSortableColumn="sUsuario" style="min-width:10rem;">
+                            <div style="display:flex; align-items:center; gap:0.35rem;">
+                                <i class="pi pi-at" style="font-size:0.85rem; color:var(--primary-color);"></i>
+                                Usuario
+                                <p-sortIcon field="sUsuario"></p-sortIcon>
+                            </div>
                         </th>
-                        <th pSortableColumn="nEstatus">Estatus
-                            <p-sortIcon field="nEstatus"></p-sortIcon>
-                           
+                        <th pSortableColumn="nEstatus" style="min-width:7rem; text-align:center;">
+                            <div style="display:flex; align-items:center; gap:0.35rem; justify-content:center;">
+                                <i class="pi pi-circle-fill" style="font-size:0.65rem; color:var(--primary-color);"></i>
+                                Estatus
+                                <p-sortIcon field="nEstatus"></p-sortIcon>
+                            </div>
                         </th>
-                        <th class="">Acción</th>
+                        <th style="min-width:8rem; text-align:center;">Acciones</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-usuario>
                     <tr>
-                        <td><span class="p-column-title">Nombre</span>{{usuario.sNombreUsuario}}</td>
-                        <td><span class="p-column-title">Clave</span>{{usuario.sClaveUser}}</td>
-                        <td><span class="p-column-title">Nombre Usuario</span>{{usuario.sUsuario}}</td>
-                        <td><span class="p-column-title">Estatus</span>{{usuario.nEstatus === 1 ? 'Activo': 'Inactivo'}}</td>
                         <td>
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined p-mr-2" (click)="editUsuario(usuario)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined" (click)="deleteUsuario(usuario)"></button>
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span class="avatar-circle">{{usuario.sNombreUsuario?.charAt(0)?.toUpperCase()}}</span>
+                                <span style="font-weight:500;">{{usuario.sNombreUsuario}}</span>
+                            </div>
+                        </td>
+                        <td><code style="background:var(--surface-100,#f1f3f5); padding:0.2rem 0.5rem; border-radius:4px; font-size:0.85rem;">{{usuario.sClaveUser}}</code></td>
+                        <td>{{usuario.sUsuario}}</td>
+                        <td style="text-align:center;">
+                            <span [class]="usuario.nEstatus === 1 ? 'status-badge status-active' : 'status-badge status-inactive'">
+                                <i [class]="usuario.nEstatus === 1 ? 'pi pi-check-circle' : 'pi pi-times-circle'" style="font-size:0.75rem;"></i>
+                                {{usuario.nEstatus === 1 ? 'Activo': 'Inactivo'}}
+                            </span>
+                        </td>
+                        <td style="text-align:center;">
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined p-mr-2" pTooltip="Editar" tooltipPosition="top" (click)="editUsuario(usuario)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-outlined" pTooltip="Desactivar" tooltipPosition="top" (click)="deleteUsuario(usuario)"></button>
                         </td>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="summary">
-                    <div class="p-d-flex p-ai-center p-jc-between">
-                        En total hay {{listaUsuarios ? listaUsuarios.length : 0 }} usuarios.
-                    </div>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:2rem;">
+                            <i class="pi pi-inbox" style="font-size:2rem; color:var(--text-color-secondary); display:block; margin-bottom:0.5rem;"></i>
+                            <span style="color:var(--text-color-secondary);">No se encontraron usuarios</span>
+                        </td>
+                    </tr>
                 </ng-template>
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="usuarioDialog" [style]="{width: '600px'}" header="Datos del Usuario" [modal]="true" styleClass="p-fluid">
+        <p-dialog [(visible)]="usuarioDialog" [style]="{width: '720px'}" header="{{guarda ? 'Nuevo Usuario' : 'Editar Usuario'}}" [modal]="true" styleClass="p-fluid usuario-dialog">
 
             <ng-template pTemplate="content">
                 <form [formGroup]="formulario">
                     <input type="text" pInputText formControlName="nId" hidden />
                     <input type="text" pInputText formControlName="nEstatus" hidden />
                     <input type="text" pInputText formControlName="sClaveUser" hidden />
-                    <div class="p-field">
-                        <label for="name">Nombre del usuario</label>
-                        <input type="text" pInputText name="sNombreUsuario" formControlName="sNombreUsuario" [class.is-invalid]="validaNomUsu" />
-                        <small class="p-error" *ngIf="validaNomUsu">*nombre de usuario requerido</small>
-                    </div>
 
-                    <div class="p-field">
-                        <label for="quantity">Usuario</label>
-                        <input name="sUsuario" pInputText formControlName="sUsuario" [class.is-invalid]="validaUsuario" placeholder="" />
-                        <small class="p-error" *ngIf="validaUsuario">*usuario requerido</small>
-                    </div>
-
-                    <div class="p-formgrid p-grid">
-                        <div class="p-field p-col">
-                            <label for="price">Password</label>
-                            <input type="password" name="sPassword" formControlName="sPassword" [class.is-invalid]="validaPassword" placeholder="Escribe contraseña" pPassword [feedback]="false" />
-                            <small class="p-error" *ngIf="validaPassword">*password requerido</small>
+                    <!-- Sección: Información Personal -->
+                    <div class="section-card">
+                        <div class="section-title">
+                            <i class="pi pi-user"></i> Información Personal
+                        </div>
+                        <div class="p-formgrid p-grid">
+                            <div class="p-field p-col-12">
+                                <label class="campo-label"><i class="pi pi-user"></i>Nombre completo</label>
+                                <input type="text" pInputText name="sNombreUsuario" formControlName="sNombreUsuario" [class.is-invalid]="validaNomUsu" placeholder="Ej. Juan Pérez López" />
+                                <small class="p-error" *ngIf="validaNomUsu">*Nombre de usuario requerido</small>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-formgrid p-grid">
-                        <div class="p-field p-col-6">
-                            <label for="price">Rol</label>
-                            <p-listbox [options]="roles" formControlName="roles" optionValue="code" (onChange)="verificaDistribuidor()" [class.is-invalid]="validaRol" [metaKeySelection]="false" [checkbox]="false" [filter]="false" [multiple]="true" optionLabel="name" [listStyle]="{'max-height':'250px'}"
-                                [style]="{'width':'15rem'}">
-                                <ng-template let-rol pTemplate="item">
-                                    <div class="country-item">
-                                        <div>{{rol.name}}</div>
+
+                    <!-- Sección: Credenciales -->
+                    <div class="section-card">
+                        <div class="section-title">
+                            <i class="pi pi-shield"></i> Credenciales de Acceso
+                        </div>
+                        <div class="p-formgrid p-grid">
+                            <div class="p-field p-col-12 p-md-6">
+                                <label class="campo-label"><i class="pi pi-at"></i>Usuario</label>
+                                <input name="sUsuario" pInputText formControlName="sUsuario" [class.is-invalid]="validaUsuario" placeholder="usuario.acceso" />
+                                <small class="p-error" *ngIf="validaUsuario">*Usuario requerido</small>
+                            </div>
+
+                            <div class="p-field p-col-12 p-md-6">
+                                <label class="campo-label"><i class="pi pi-lock"></i>Contraseña <span *ngIf="!guarda" style="font-weight:400; font-size:0.8rem; color:var(--text-color-secondary);">(Ingresa nueva contraseña)</span></label>
+                                <div class="p-inputgroup">
+                                    <input [type]="mostrarPassword ? 'text' : 'password'" name="sPassword" formControlName="sPassword" [class.is-invalid]="validaPassword" [placeholder]="guarda ? 'Escribe una contraseña segura' : 'Ingresa nueva contraseña para actualizar'" pInputText />
+                                    <button type="button" pButton [icon]="mostrarPassword ? 'pi pi-eye-slash' : 'pi pi-eye'" class="p-button-text p-button-secondary" (click)="togglePassword()" pTooltip="{{mostrarPassword ? 'Ocultar' : 'Mostrar'}} contraseña" tooltipPosition="top"></button>
+                                </div>
+                                <small class="p-error" *ngIf="validaPassword">*Contraseña requerida</small>
+                                <small *ngIf="!guarda" style="color:var(--text-color-secondary); font-size:0.8rem; display:block; margin-top:0.25rem;"><i class="pi pi-info-circle" style="font-size:0.75rem;"></i> Debes ingresar una nueva contraseña para guardar cambios</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección: Rol y Permisos -->
+                    <div class="section-card">
+                        <div class="section-title">
+                            <i class="pi pi-briefcase"></i> Rol y Permisos
+                        </div>
+                        <div class="p-formgrid p-grid">
+                            <div class="p-field" [ngClass]="{'p-col-12 p-md-6': muestraInput || muestraInputCliente, 'p-col-12': !muestraInput && !muestraInputCliente}">
+                                <label class="campo-label"><i class="pi pi-verified"></i>Selecciona uno o más roles</label>
+                                <p-listbox [options]="roles" formControlName="roles" optionValue="code" (onChange)="verificaDistribuidor()" [class.is-invalid]="validaRol" [metaKeySelection]="false" [checkbox]="true" [filter]="false" [multiple]="true" optionLabel="name" [listStyle]="{'max-height':'220px'}"
+                                    [style]="{'width':'100%'}">
+                                    <ng-template let-rol pTemplate="item">
+                                        <div style="display:flex; align-items:center; gap:0.5rem;">
+                                            <span>{{rol.name}}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-listbox>
+                                <small class="p-error" *ngIf="validaRol">*Selecciona al menos un rol</small>
+                            </div>
+
+                            <div class="p-field p-col-12 p-md-6" *ngIf="muestraInput || muestraInputCliente">
+                                <!-- Distribuidor: RFC -->
+                                <div *ngIf="muestraInput" class="p-mb-3 revendedor-panel">
+                                    <label class="campo-label"><i class="pi pi-building"></i>RFC del cliente</label>
+                                    <input type="text" pInputText name="rfcDistribuidor" formControlName="rfcDistribuidor" [class.is-invalid]="validaRfcDistribuidor" placeholder="Ej. XAXX010101000" required />
+                                    <small class="p-error" *ngIf="validaRfcDistribuidor">*RFC del cliente requerido</small>
+                                </div>
+
+                                <!-- Revendedor: Cliente + Tipo -->
+                                <div *ngIf="muestraInputCliente" class="revendedor-panel">
+                                    <div class="p-mb-3">
+                                        <label class="campo-label"><i class="pi pi-users"></i>Cliente asociado</label>
+                                        <p-autoComplete [(ngModel)]="clienteSeleccionado" [ngModelOptions]="{standalone: true}" [suggestions]="clientesFiltrados" (completeMethod)="buscarClientes($event)" (onSelect)="seleccionarCliente($event)" field="sRazonSocial" [minLength]="3" placeholder="Buscar cliente por nombre..." [forceSelection]="true">
+                                        </p-autoComplete>
+                                        <div *ngIf="clienteSeleccionado?.nId" class="info-chip">
+                                            <i class="pi pi-check-circle"></i>
+                                            {{clienteSeleccionado.sRazonSocial}}
+                                        </div>
                                     </div>
-                                </ng-template>
-                            </p-listbox>
 
-                            <small class="p-error" *ngIf="validaRol">*Rol requerido</small>
+                                    <div class="p-mb-3">
+                                        <label class="campo-label"><i class="pi pi-tag"></i>Tipo de Revendedor</label>
+                                        <p-dropdown [options]="tiposRevendedor" formControlName="nTipoRevendedor" optionLabel="sTipo" optionValue="nId" placeholder="Selecciona tipo de revendedor" [showClear]="true" [style]="{'width':'100%'}">
+                                        </p-dropdown>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-field p-col-6" *ngIf="muestraInput">
-                            <label for="name">RFC del cliente</label>
-                            <input type="text" pInputText name="rfcDistribuidor" formControlName="rfcDistribuidor" [class.is-invalid]="validaRfcDistribuidor" required />
-                            <small class="p-error" *ngIf="validaRfcDistribuidor">*rfc del cliente requerido</small>
-                        </div>
-                        <div class="p-field p-col-6" *ngIf="muestraInputCliente">
-                            <label for="clienteRevendedor">Cliente (Revendedor)</label>
-                            <p-autoComplete [(ngModel)]="clienteSeleccionado" [ngModelOptions]="{standalone: true}" [suggestions]="clientesFiltrados" (completeMethod)="buscarClientes($event)" (onSelect)="seleccionarCliente($event)" field="sRazonSocial" [minLength]="3" placeholder="Buscar cliente por nombre..." [forceSelection]="true">
-                            </p-autoComplete>
-                            <small class="p-text-secondary" *ngIf="clienteSeleccionado?.nId">Cliente seleccionado: {{clienteSeleccionado.sRazonSocial}} (ID: {{clienteSeleccionado.nId}})</small>
-                        </div>
-
                     </div>
+
                 </form>
             </ng-template>
 
             <ng-template pTemplate="footer">
-                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-                <button *ngIf="guarda" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="!formulario.valid" (click)="guardarUsuario()"></button>
-                <button *ngIf="!guarda" pButton pRipple label="Actualizar" icon="pi pi-check" class="p-button-text" [disabled]="!formulario.valid" (click)="actualizarUsuario()"></button>
-
+                <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+                    <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-outlined p-button-secondary" (click)="hideDialog()"></button>
+                    <button *ngIf="guarda" pButton pRipple label="Guardar Usuario" icon="pi pi-check" class="p-button-success" [disabled]="!formulario.valid" (click)="guardarUsuario()"></button>
+                    <button *ngIf="!guarda" pButton pRipple label="Actualizar Usuario" icon="pi pi-sync" class="p-button-warning" [disabled]="!formulario.valid" (click)="actualizarUsuario()"></button>
+                </div>
             </ng-template>
 
         </p-dialog>

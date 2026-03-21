@@ -37,6 +37,7 @@ static obtenerUsuarios='/obtenerUsuarios';
 static nuevoUsuario = '/nuevo';
 static guardarUsuario = '/guardarUsuario';
 static obtenerUsuariosId='/consultarUsuarioId?';
+static getTipoRevendedor='/getTipoRevendedor';
 //api login
 static login = '/auth/login';
 static refresh= '/auth/refresh';
@@ -70,6 +71,7 @@ static obtenerProductoId= '/obtenerProductoId?';
 static obtenerProductoBeanId= '/obtenerProductoBeanId?';
 
 static obtenerProductosLike= '/obtenerProductosLike?';
+static buscarProductosRevendedor= '/buscarProductosRevendedor?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static obtenerProductosNoParte= '/obtenerProductosNoParte?';
 static guardarProducto= '/guardarProducto';

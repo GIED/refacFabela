@@ -6,6 +6,9 @@ import { VentasCotizacionesService } from '../../../shared/service/ventas-cotiza
 import { SaldoGeneralCliente } from '../../model/TvSaldoGeneralCliente';
 import { TvVentasDetalle } from '../../../productos/model/TvVentasDetalle';
 import { TwCotizacion } from '../../../productos/model/TcCotizacion';
+import { TvStockProducto } from '../../../productos/model/TvStockProducto';
+import { TwCotizacionProducto } from '../../../productos/model/TwCotizacionProducto';
+import { DatosVenta } from '../../interfaces/DatosVenta';
 import { MessageService } from 'primeng/api';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
@@ -46,6 +49,18 @@ export class RevendedorCuentaComponent implements OnInit {
   abonosVenta: any[] = [];
   ventaSeleccionada: TvVentasDetalle = null;
   cargandoAbonos: boolean = false;
+
+  // Convertir cotización a venta
+  mostrarConvertirVenta: boolean = false;
+  cotizacionAConvertir: TwCotizacion = null;
+  productosConvertir: TvStockProducto[] = [];
+  totalConvertir: Decimal = new Decimal(0);
+  cargandoConversion: boolean = false;
+
+  // Resultado de operación
+  mostrarResultado: boolean = false;
+  resultadoIdVenta: number = null;
+  resultadoIdCotizacion: number = null;
 
   // Charts
   chartMensual: any;
@@ -269,6 +284,17 @@ export class RevendedorCuentaComponent implements OnInit {
     );
   }
 
+  get ventasVencidas(): TvVentasDetalle[] {
+    return this.listaPendientes.filter(v => v.nVencido);
+  }
+
+  get montoVencido(): number {
+    return this.ventasVencidas.reduce((acc, v) => {
+      const monto = v.nSaldoTotal ? new Decimal(v.nSaldoTotal.toString()).toNumber() : 0;
+      return acc + monto;
+    }, 0);
+  }
+
   get ventasFiltradas(): TvVentasDetalle[] {
     if (!this.filtroVentas?.trim()) return this.listaVentas;
     const q = this.filtroVentas.toLowerCase();
@@ -366,5 +392,131 @@ export class RevendedorCuentaComponent implements OnInit {
       case 3: return { label: 'Vencida', severity: 'warning' };
       default: return { label: 'Desconocido', severity: 'secondary' };
     }
+  }
+
+  // ---- Convertir cotización a venta ----
+
+  convertirAVenta(cotizacion: TwCotizacion): void {
+    this.cotizacionAConvertir = cotizacion;
+    this.cargandoConversion = true;
+    this.productosConvertir = [];
+    this.totalConvertir = new Decimal(0);
+
+    this.ventasCotizacionesService.obtenerCotizacionProducto(cotizacion.nId).subscribe({
+      next: (productos: TwCotizacionProducto[]) => {
+        if (!productos || productos.length === 0) {
+          this.messageService.add({ severity: 'warn', summary: 'Sin productos', detail: 'La cotización no tiene productos registrados.', life: 3000 });
+          this.cargandoConversion = false;
+          return;
+        }
+
+        // Mapear productos de cotización a TvStockProducto para el componente form-venta
+        const mapped: TvStockProducto[] = productos.map(cp => {
+          const stock = new TvStockProducto();
+          stock.nIdProducto = cp.nIdProducto;
+          stock.nCantidad = cp.nCantidad;
+          stock.nCantidadTotal = cp.nCantidad; // se validará contra stock real en el form
+          stock.tcProducto = cp.tcProducto;
+
+          // Usar precios almacenados en la cotización
+          if (cp.nPrecioUnitario != null && cp.nTotalUnitario != null) {
+            stock.tcProducto.nPrecioSinIva = cp.nPrecioUnitario;
+            stock.tcProducto.nPrecioConIva = cp.nTotalUnitario;
+          }
+
+          // Calcular totales de la partida
+          const precio = new Decimal(stock.tcProducto.nPrecioSinIva.toString());
+          const cant = new Decimal(stock.nCantidad.toString());
+          const iva = new Decimal('0.16');
+          const subtotal = precio.mul(cant);
+          const montoIva = subtotal.mul(iva);
+          stock.nTotalUnitario = precio.plus(precio.mul(iva)).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+          stock.nTotalPartida = subtotal.plus(montoIva).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+
+          return stock;
+        });
+
+        this.productosConvertir = mapped;
+        this.totalConvertir = mapped.reduce(
+          (acc, p) => acc.plus(new Decimal(p.nTotalPartida.toString())),
+          new Decimal(0)
+        ).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+
+        this.cargandoConversion = false;
+        this.mostrarConvertirVenta = true;
+      },
+      error: () => {
+        this.cargandoConversion = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los productos de la cotización.', life: 3000 });
+      }
+    });
+  }
+
+  generarVentaDesdeCotizacion(datosVenta: DatosVenta): void {
+    datosVenta.idCliente = this.nIdCliente;
+    datosVenta.idUsuario = this.tokenService.getIdUser();
+    datosVenta.sFolioVenta = this.createFolio();
+    datosVenta.idTipoVenta = 1;
+    datosVenta.twCotizacion = this.cotizacionAConvertir;
+
+    if (datosVenta.tipoPago === 1) {
+      datosVenta.fechaIniCredito = new Date();
+      const fin = new Date();
+      fin.setDate(fin.getDate() + 30);
+      datosVenta.fechaFinCredito = fin;
+    } else {
+      datosVenta.fechaIniCredito = null;
+      datosVenta.fechaFinCredito = null;
+    }
+
+    this.ventasService.guardaVenta(datosVenta).subscribe({
+      next: (venta) => {
+        this.mostrarConvertirVenta = false;
+        this.resultadoIdVenta = venta.nId;
+        this.resultadoIdCotizacion = this.cotizacionAConvertir?.nId;
+        this.mostrarResultado = true;
+        this.cargarCotizaciones();
+        this.cargarVentas();
+        this.cargarSaldo();
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar la venta.', life: 5000 });
+      }
+    });
+  }
+
+  descargarResultadoVenta(): void {
+    if (this.resultadoIdVenta) {
+      this.ventasService.generarVentaPdf(this.resultadoIdVenta).subscribe(resp => {
+        const file = new Blob([resp], { type: 'application/pdf' });
+        if (file && file.size > 0) {
+          const fileURL = window.URL.createObjectURL(file);
+          const anchor = document.createElement('a');
+          anchor.download = 'venta_' + this.resultadoIdVenta + '.pdf';
+          anchor.href = fileURL;
+          anchor.click();
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo descargar el comprobante', life: 3000 });
+        }
+      });
+    }
+  }
+
+  cerrarResultadoVenta(): void {
+    this.mostrarResultado = false;
+    this.resultadoIdVenta = null;
+    this.resultadoIdCotizacion = null;
+    this.cotizacionAConvertir = null;
+    this.productosConvertir = [];
+    this.totalConvertir = new Decimal(0);
+  }
+
+  private createFolio(): string {
+    let folio = '';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 5; i++) {
+      folio += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return folio;
   }
 }

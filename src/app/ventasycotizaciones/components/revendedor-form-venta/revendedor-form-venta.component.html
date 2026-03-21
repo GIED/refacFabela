@@ -114,7 +114,8 @@
   <div class="rvf-acciones">
     <button pButton type="button" label="Solo cotización" icon="pi pi-file"
       class="p-button-outlined p-button-secondary"
-      (click)="emiteSoloCotizacion()" [disabled]="validandoStock">
+      (click)="emiteSoloCotizacion()" [disabled]="validandoStock"
+      *ngIf="!ocultarCotizacion">
     </button>
     <button pButton type="button" label="Generar venta" icon="pi pi-check"
       class="p-button-warning p-button-lg"

@@ -62,6 +62,8 @@ export class RevendedorVentasComponent implements OnInit {
   imagenesProducto: Map<string, string> = new Map();
   // Default placeholder
   imagenDefault: string = 'assets/layout/images/no-image.png';
+  // Tipo de revendedor (del JWT)
+  nTipoRevendedor: number = null;
 
   constructor(
     private tokenService: TokenService,
@@ -78,6 +80,7 @@ export class RevendedorVentasComponent implements OnInit {
   ngOnInit(): void {
     this.consultarCliente();
     this._initFormGroup();
+    this.nTipoRevendedor = this.tokenService.getTipoRevendedor();
   }
 
   _initFormGroup(): void {
@@ -180,31 +183,47 @@ export class RevendedorVentasComponent implements OnInit {
     this.productosFiltrados = [];
     this.mostrarSugerenciasProducto = false;
 
-    this.productoService.obtenerProductosLike(valor).subscribe(productos => {
+    this.productoService.buscarProductosRevendedor(valor, this.nTipoRevendedor).subscribe(resultados => {
       this.cargandoBusqueda = false;
-      if (productos != null && productos.length !== 0) {
-        this.listaProductoSugerencia = productos;
-        // Para cada producto, obtener stock y precio con descuento
-        for (const prod of productos) {
-          this.resolverImagenProductoCard(prod);
-          this.productoService.obtenerTotalBodegasIdProducto(prod.nId).subscribe(productoStock => {
-            // Calcular precio con descuento del cliente si tiene cliente asociado
-            if (this.clienteCargado && this.saldoGeneralCliente?.tcCliente) {
-              const dto = new ProductoDescuentoDto();
-              dto.tcProducto = prod;
-              dto.tcCliente = this.saldoGeneralCliente.tcCliente;
-              this.productoService.calcularPrecioProducto(dto).subscribe(productoConPrecio => {
-                productoStock.tcProducto = productoConPrecio;
-                this.productosFiltrados.push(productoStock);
-              });
-            } else {
-              productoStock.tcProducto = prod;
-              this.productosFiltrados.push(productoStock);
+      if (resultados != null && resultados.length !== 0) {
+        // Identificar cuáles son alternativos: el backend devuelve primero los principales y luego sus alternativos
+        // Marcamos los que no coinciden directamente con la búsqueda como alternativos
+        const valorLower = valor.toLowerCase();
+        let principalesIds = new Set<number>();
+
+        // Primera pasada: identificar principales (coinciden con búsqueda)
+        for (const stock of resultados) {
+          const prod = stock.tcProducto;
+          if (prod) {
+            const matchNoParte = prod.sNoParte?.toLowerCase().includes(valorLower);
+            const matchProducto = prod.sProducto?.toLowerCase().includes(valorLower);
+            const matchDesc = prod.sDescripcion?.toLowerCase().includes(valorLower);
+            const matchMarca = prod.sMarca?.toLowerCase().includes(valorLower);
+            if (matchNoParte || matchProducto || matchDesc || matchMarca) {
+              principalesIds.add(stock.nIdProducto);
             }
-          });
+          }
         }
+
+        // Segunda pasada: marcar alternativos y resolver imágenes
+        for (const stock of resultados) {
+          stock.esAlternativo = !principalesIds.has(stock.nIdProducto);
+          stock.nCantidad = 1;
+          if (stock.tcProducto) {
+            this.resolverImagenProductoCard(stock.tcProducto);
+          }
+        }
+
+        this.productosFiltrados = resultados;
         this.mostrarSugerenciasProducto = true;
-        this.messageService.add({ severity: 'info', summary: 'Productos encontrados', detail: productos.length + ' coincidencias', life: 3000 });
+
+        const principales = resultados.filter(r => !r.esAlternativo).length;
+        const alternativos = resultados.filter(r => r.esAlternativo).length;
+        let detalle = principales + ' producto' + (principales !== 1 ? 's' : '');
+        if (alternativos > 0) {
+          detalle += ' + ' + alternativos + ' alternativo' + (alternativos !== 1 ? 's' : '');
+        }
+        this.messageService.add({ severity: 'info', summary: 'Productos encontrados', detail: detalle, life: 3000 });
       } else {
         this.mostrarSugerenciasProducto = false;
         this.messageService.add({ severity: 'warn', summary: 'Sin resultados', detail: 'No se encontraron productos, verifique la búsqueda.', life: 3000 });

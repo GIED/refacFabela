@@ -4,6 +4,7 @@ import { locator } from 'src/app/shared/sesion/locator';
 import { environment } from 'src/environments/environment';
 import { NuevoUsuario } from '../model/nuevo-usuario';
 import { TcUsuario } from '../model/TcUsuario';
+import { TcTipoRevendedor } from '../model/TcTipoRevendedor';
 import { Usuarios } from '../interfaces/usuarios';
 
 @Injectable({
@@ -29,6 +30,11 @@ export class UsuarioService {
 
   guardarUsuario(usuarios:Usuarios) {
     return this.http.post<any>(environment.servicios.apiRefacFabela+locator.guardarUsuario, usuarios);
+  }
+
+  getTipoRevendedor() {
+    const url = environment.servicios.apiRefacFabela + locator.getTipoRevendedor;
+    return this.http.get<TcTipoRevendedor[]>(url);
   }
 
 }

@@ -82,6 +82,11 @@ export class TokenService {
     return payload ? payload.nIdCliente : null;
   }
 
+  public getTipoRevendedor(): number {
+    const payload = this.getTokenPayload();
+    return payload ? payload.nTipoRevendedor : null;
+  }
+
   public logout() {
     window.localStorage.clear();
     this.router.navigate(['/login']);
