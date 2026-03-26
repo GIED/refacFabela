@@ -185,8 +185,6 @@ console.log('este el numero total de pendietes por entregar',this.totalProductoP
       productoBodega.nEstatus = 1;
     }
 
-    productoBodega.nCantidad += cantidad.value;
-
     this.twFacturaProveedorProductoIngreso = {
       ...this.twFacturaProveedorProductoIngreso,
       nCantidad: cantidad.value,
