@@ -75,6 +75,7 @@ static buscarProductosRevendedor= '/buscarProductosRevendedor?';
 static consultaNoParte= '/obtenerProductosNoParteLike?';
 static obtenerProductosNoParte= '/obtenerProductosNoParte?';
 static guardarProducto= '/guardarProducto';
+static eliminarProducto= '/eliminarProducto?';
 static guardarProductoCarritoPedido= '/guardarProductoCarritoCompraUsuario';
 
 /*Factura Proveedor Producto */

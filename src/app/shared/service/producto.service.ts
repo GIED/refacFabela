@@ -98,6 +98,12 @@ export class ProductoService {
     let url = environment.servicios.apiRefacFabela + locator.guardarProducto;
     return this.http.post<TcProducto>(url,producto);
   }
+
+  eliminarProducto(nIdProducto: number){
+    let url = environment.servicios.apiRefacFabela + locator.eliminarProducto + 'nIdProducto=' + nIdProducto;
+    return this.http.post<any>(url, null);
+  }
+
   guardaProductoGeneral(producto: TcProducto){
     let url = environment.servicios.apiRefacFabela + locator.guardarProductoGeneral;
     return this.http.post<TcProducto>(url,producto);

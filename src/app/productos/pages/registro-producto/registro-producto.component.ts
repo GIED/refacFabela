@@ -179,30 +179,55 @@ export class RegistroProductoComponent implements OnInit {
 
     deleteProduct(product: TcProducto) {
         this.muestraConfirmDialog = true;
-        this.confirmationService.confirm({
-            message: 'Desea borrar el producto ' + product.sProducto + '?',
-            header: 'Confirmar',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                product.nEstatus = 0;
-                this.productosService.guardaProducto(product).subscribe(productoEliminado => {
-                    this.listaProductos = this.listaProductos.filter(val => val.nId !== product.nId);
-                    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Producto Borrado', life: 3000 });
-                    this.muestraConfirmDialog = false;
-                });
-            },
-            reject: (type) => {
-                switch (type) {
-                    case ConfirmEventType.REJECT:
-                        this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'no se borro el producto' });
-                        this.muestraConfirmDialog = false;
-                        break;
-                    case ConfirmEventType.CANCEL:
-                        this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'acción cancelada' });
-                        this.muestraConfirmDialog = false;
-                        break;
+        // Primero consultar stock en bodegas
+        this.bodegasService.obtenerProductoBodegas(product.nId).subscribe(bodegas => {
+            let stockTotal = 0;
+            if (bodegas) {
+                for (const bodega of bodegas) {
+                    stockTotal += bodega.nCantidad || 0;
                 }
             }
+
+            let mensaje = 'Desea borrar el producto ' + product.sProducto + '?';
+            if (stockTotal > 0) {
+                mensaje = 'El producto ' + product.sProducto + ' tiene un stock total de ' + stockTotal 
+                    + ' unidades en bodegas. Al eliminarlo se pondrá el stock en 0 en todas las bodegas. \u00bfDesea continuar?';
+            }
+
+            this.confirmationService.confirm({
+                message: mensaje,
+                header: 'Confirmar eliminación',
+                icon: 'pi pi-exclamation-triangle',
+                accept: () => {
+                    this.productosService.eliminarProducto(product.nId).subscribe(
+                        response => {
+                            this.listaProductos = this.listaProductos.filter(val => val.nId !== product.nId);
+                            this.messageService.add({ severity: 'success', summary: 'Exitoso', detail: 'Producto borrado correctamente', life: 3000 });
+                            this.muestraConfirmDialog = false;
+                        },
+                        error => {
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo borrar el producto', life: 3000 });
+                            this.muestraConfirmDialog = false;
+                        }
+                    );
+                },
+                reject: (type) => {
+                    switch (type) {
+                        case ConfirmEventType.REJECT:
+                            this.messageService.add({ severity: 'error', summary: 'Rechazado', detail: 'No se borró el producto' });
+                            this.muestraConfirmDialog = false;
+                            break;
+                        case ConfirmEventType.CANCEL:
+                            this.messageService.add({ severity: 'warn', summary: 'Cancelado', detail: 'Acción cancelada' });
+                            this.muestraConfirmDialog = false;
+                            break;
+                    }
+                }
+            });
+        },
+        error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo verificar el stock del producto', life: 3000 });
+            this.muestraConfirmDialog = false;
         });
     }
 
