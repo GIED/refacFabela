@@ -11,21 +11,27 @@ import { JwtDto } from 'src/app/login/model/jwt-dto';
 })
 export class ProdInterceptorService implements HttpInterceptor {
 
+  private readonly refreshFailedToken = 'REFRESH_FAILED';
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
   constructor(private tokenService: TokenService, private auth: AuthService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    if (!this.tokenService.isLogged()) {
+    if (this.isAuthRequest(req)) {
       return next.handle(req);
     }
 
-    let intReq = this.addToken(req, this.tokenService.getToken());
+    const token = this.tokenService.getToken();
+
+    if (!token) {
+      return next.handle(req);
+    }
+
+    const intReq = this.addToken(req, token);
 
     return next.handle(intReq).pipe(catchError((err: HttpErrorResponse) => {
-      if (err.status === 401) {
+      if (err.status === 401 && this.tokenService.hasToken()) {
         return this.handle401Error(req, next);
       }
       return throwError(err);
@@ -34,7 +40,6 @@ export class ProdInterceptorService implements HttpInterceptor {
 
   private handle401Error(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!this.isRefreshing) {
-      // Primer 401 — iniciar refresh
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
@@ -48,26 +53,37 @@ export class ProdInterceptorService implements HttpInterceptor {
             this.refreshTokenSubject.next(data.token);
             return next.handle(this.addToken(req, data.token));
           }
-          // Refresh falló — cerrar sesión
-          this.tokenService.logout();
+
+          this.handleRefreshFailure('Token refresh failed');
           return throwError('Token refresh failed');
         }),
         catchError((refreshErr) => {
-          this.isRefreshing = false;
-          this.tokenService.logout();
+          this.handleRefreshFailure(refreshErr);
           return throwError(refreshErr);
         })
       );
     } else {
-      // Ya hay un refresh en curso — esperar a que termine y reintentar
       return this.refreshTokenSubject.pipe(
         filter(token => token != null),
         take(1),
         switchMap(token => {
+          if (token === this.refreshFailedToken) {
+            return throwError('Token refresh failed');
+          }
           return next.handle(this.addToken(req, token));
         })
       );
     }
+  }
+
+  private handleRefreshFailure(error: any): void {
+    this.isRefreshing = false;
+    this.refreshTokenSubject.next(this.refreshFailedToken);
+    this.tokenService.logout();
+  }
+
+  private isAuthRequest(req: HttpRequest<any>): boolean {
+    return req.url.includes('/auth/login') || req.url.includes('/auth/refresh');
   }
 
   private addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {

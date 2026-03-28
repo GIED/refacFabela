@@ -23,21 +23,50 @@ export class SpinnerInterceptor implements HttpInterceptor {
         this.spinner.hide()
       }),
       catchError((error: HttpErrorResponse)=>{
+        const requestIsLogin = request.url.includes('/auth/login');
+        const requestIsRefresh = request.url.includes('/auth/refresh');
+
         switch (error.status) {
+          case 0:
+            this.messageService.add({severity: 'error', summary: 'Sin conexión', detail: 'No fue posible comunicarse con el servidor. Verifica la red o el estado del backend.', life: 5000});
+            break;
           case 504:
-            this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'Error de conexión con el servidor', life: 3000});
+            this.messageService.add({severity: 'error', summary: 'Servidor sin respuesta', detail: 'El backend tardó demasiado en responder. Intenta nuevamente.', life: 5000});
             break;
           case 401:
-            // No mostrar toast genérico si es del login — el componente lo maneja
-            if (!request.url.includes('/auth/login')) {
+            if (!requestIsLogin && !requestIsRefresh) {
               this.messageService.add({ severity: 'error', summary: 'Sesión expirada', detail: 'Tu sesión ha expirado. Por favor inicia sesión nuevamente.', life: 5000 });
             }
             break;
+          case 403:
+            this.messageService.add({severity: 'error', summary: 'Acceso denegado', detail: 'No tienes permisos para realizar esta acción.', life: 5000});
+            break;
+          case 500:
+          case 502:
+          case 503:
+            this.messageService.add({severity: 'error', summary: 'Error del servidor', detail: 'El backend reportó un error interno. Intenta de nuevo en unos momentos.', life: 5000});
+            break;
             default:
-              this.messageService.add({severity: 'error', summary: 'Error de conexión', detail: 'Ocurrió un error, intenta de nuevo.', life: 3000});
+              this.messageService.add({severity: 'error', summary: 'Error en la operación', detail: this.obtenerMensaje(error), life: 5000});
               break;
         }
         return throwError(error);
       }));
+  }
+
+  private obtenerMensaje(error: HttpErrorResponse): string {
+    if (typeof error.error === 'string' && error.error.trim().length > 0) {
+      return error.error;
+    }
+
+    if (error.error && error.error.mensaje) {
+      return error.error.mensaje;
+    }
+
+    if (error.message) {
+      return error.message;
+    }
+
+    return 'Ocurrió un error inesperado. Intenta de nuevo.';
   }
 }

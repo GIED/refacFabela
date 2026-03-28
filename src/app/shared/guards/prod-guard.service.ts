@@ -14,6 +14,7 @@ export class ProdGuardService implements CanActivate{
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean{
     if (!this.tokenService.isLogged()) {
+      this.tokenService.logout();
       this.router.navigate(['/login']);
       return false;
     }

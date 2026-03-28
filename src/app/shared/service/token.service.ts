@@ -32,12 +32,15 @@ export class TokenService {
    * Retorna null si no hay token o si el parseo falla.
    */
   private getTokenPayload(): any {
-    if (!this.isLogged()) {
+    const token = this.getToken();
+    if (!token) {
       return null;
     }
     try {
-      const token = this.getToken();
       const payload = token.split('.')[1];
+      if (!payload) {
+        return null;
+      }
       const payloadDecoded = this.decodeBase64Url(payload);
       return JSON.parse(payloadDecoded);
     } catch (e) {
@@ -55,6 +58,19 @@ export class TokenService {
     return localStorage.getItem(TOKEN_KEY);
   }
 
+  public hasToken(): boolean {
+    return !!this.getToken();
+  }
+
+  public isTokenExpired(): boolean {
+    const payload = this.getTokenPayload();
+    if (!payload || !payload.exp) {
+      return true;
+    }
+
+    return Date.now() >= payload.exp * 1000;
+  }
+
   public getRoles(): string[] {
     const payload = this.getTokenPayload();
     if (!payload || !payload.roles) {
@@ -64,7 +80,7 @@ export class TokenService {
   }
 
   public isLogged(): boolean {
-    return this.getToken() != null;
+    return this.hasToken() && !this.isTokenExpired();
   }
 
   public getNameUser(): string {
