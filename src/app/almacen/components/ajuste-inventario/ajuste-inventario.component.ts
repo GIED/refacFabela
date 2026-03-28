@@ -41,6 +41,7 @@ export class AjusteInventarioComponent implements OnInit {
    private anaquelService:AnaquelService,
    private nivelService:NivelService,
    private tokenService: TokenService,
+   private messageService: MessageService,
 
   ) { 
 
@@ -102,6 +103,7 @@ export class AjusteInventarioComponent implements OnInit {
     this.traspasoService.guardarAjusteInventario(this.twAjusteInventario).subscribe(data=>{
 
       this.traspasoService.guardarMovimientoInterno2(this.castFormGrup()).subscribe(resp => {
+        this.messageService.add({ severity: 'success', summary: 'Ajuste guardado', detail: 'El ajuste se registró y el correo de notificación se envió con éxito.', life: 4000 });
         this.ref.close(resp.twProductobodega);
       });
     })

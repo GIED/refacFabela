@@ -286,7 +286,7 @@ export class AutorizacionInventarioComponent implements OnInit {
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Inventario autorizado',
-                    detail: `El inventario #${data.nId} fue autorizado exitosamente`
+                    detail: `El inventario #${data.nId} fue autorizado y el correo de notificación se envió con éxito.`
                 });
                 
                 // Recargar la lista
