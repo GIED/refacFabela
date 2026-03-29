@@ -21,6 +21,7 @@ import { TokenService } from 'src/app/shared/service/token.service';
 import { TwMaquinaCliente } from '../../../productos/model/TwMaquinaCliente';
 import { ProductoDescuentoDto } from '../../../productos/model/ProductoDescuentoDto';
 import Decimal from 'decimal.js';
+import { CalculaPrecioDto } from 'src/app/productos/model/CalculaPrecioDto';
 import { PartService } from 'src/app/shared/service/part.service';
 import { CtpConstantes } from 'src/app/shared/utils/UserPart.enum';
 import { PartResponse } from 'src/app/productos/model/PartResponse ';
@@ -37,6 +38,11 @@ import { ModelContainer } from 'src/app/shared/utils/model-container';
   styleUrls: ['./ventas.component.scss']
 })
 export class VentasComponent implements OnInit {
+
+  private readonly ivaFactor = new Decimal('1.16');
+  private readonly incrementoMinimo = new Decimal('0');
+  private preciosBasePorProducto = new Map<number, { precioPeso: Decimal; precioConIva: Decimal; precioSinIva: Decimal; precioIva: Decimal; sProducto: string; nIdDescuento: number; tcDescuento: any; nPrecioOriginal: number }>();
+  private incrementosPorProducto = new Map<number, Decimal>();
 
   formGrp: FormGroup;
 
@@ -431,32 +437,24 @@ valorSeleccionadoProducto(){
 
 sumarIncremento(tvStockProducto :TvStockProducto){
 
-   if(this.nIncrementoCtrl.value>=0){ 
+  const incremento = this.obtenerIncrementoProducto(tvStockProducto);
 
-  this.productoService.obtenerTotalBodegasIdProducto(this.productoSeleccionado.nId).subscribe(productoStock =>{
-   this.incremento=this.nIncrementoCtrl.value;
+  if (incremento.lessThan(this.incrementoMinimo)) {
+    this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar un aumento igual ó superior 0', life: 3000});
+    return;
+  }
 
-  let suma;
-  
-  suma=new Decimal(productoStock.tcProducto.nPrecio).plus(new Decimal(this.incremento));
-  tvStockProducto.tcProducto.nPrecio=suma;
- 
- this.calcularPrecio(tvStockProducto);
+  if (!this.tienePrecioBase(tvStockProducto)) {
+    this.calcularPrecio(tvStockProducto);
+    return;
+  }
 
+  if (incremento.equals(this.incrementoMinimo)) {
+    this.restaurarPrecioBase(tvStockProducto);
+    return;
+  }
 
-
-  });
-}
-
-else{
-
-  this.messageService.add({severity: 'warn', summary: 'Atención', detail: 'Debe agregar un aumento igual ó superior 0', life: 3000});
-
-}
-
-
-
-
+  this.aplicarIncrementoPorUnidad(tvStockProducto, incremento);
 }
 
 calcularPrecio(tvStockProducto :TvStockProducto){
@@ -464,25 +462,27 @@ calcularPrecio(tvStockProducto :TvStockProducto){
 
 this.productoDescuentoDto=new ProductoDescuentoDto;
 this.productoDescuentoDto.tcProducto=tvStockProducto.tcProducto;
-this.productoDescuentoDto.tcCliente=this.clienteSeleccionado;
+this.productoDescuentoDto.tcCliente={
+  ...this.clienteSeleccionado,
+  nDescuento: this.tieneClienteDescuento()
+} as any;
 
 
  this.productoService.calcularPrecioProducto(this.productoDescuentoDto).subscribe(data=>{
  
    this.productoNuevoPrecio=data;
 
-   //console.log("ESTE ES EL NUEVO PRECIO",this.productoNuevoPrecio);
-   
-  for (let index = 0; index < this.productosFiltrados.length; index++) {
-       
+   this.actualizarPreciosProducto(tvStockProducto, this.productoNuevoPrecio);
+   this.guardarPrecioBase(tvStockProducto);
 
-     this.productosFiltrados[index].tcProducto.nPrecioPeso=this.productoNuevoPrecio.nPrecioPeso;
-     this.productosFiltrados[index].tcProducto.nPrecioConIva=this.productoNuevoPrecio.nPrecioConIva;
-     this.productosFiltrados[index].tcProducto.nPrecioSinIva=this.productoNuevoPrecio.nPrecioSinIva;
-     this.productosFiltrados[index].tcProducto.nPrecioIva=this.productoNuevoPrecio.nPrecioIva;
-     this.productosFiltrados[index].tcProducto.sProducto=this.productoNuevoPrecio.sProducto;
-    
-  }
+   const incremento = this.obtenerIncrementoProducto(tvStockProducto);
+
+   if (incremento.greaterThan(this.incrementoMinimo)) {
+     this.aplicarIncrementoPorUnidad(tvStockProducto, incremento);
+     return;
+   }
+
+   this.actualizarTotalesProducto(tvStockProducto);
 
   this.regreso=true;
 
@@ -491,6 +491,175 @@ this.productoDescuentoDto.tcCliente=this.clienteSeleccionado;
 
   return this.productoNuevoPrecio;
 
+}
+
+actualizarIncrementoProducto(tvStockProducto: TvStockProducto, valor: number | string | null) {
+  const valorNormalizado = this.normalizarIncremento(valor);
+  const incremento = valorNormalizado === ''
+    ? new Decimal(0)
+    : new Decimal(valorNormalizado);
+
+  this.incrementosPorProducto.set(tvStockProducto.nIdProducto, incremento);
+}
+
+obtenerIncrementoProductoValor(tvStockProducto: TvStockProducto): number {
+  return this.obtenerIncrementoProducto(tvStockProducto).toNumber();
+}
+
+obtenerIncrementoProductoTexto(tvStockProducto: TvStockProducto): string {
+  const incremento = this.obtenerIncrementoProducto(tvStockProducto);
+  return incremento.isZero() ? '' : incremento.toString();
+}
+
+obtenerValorNumerico(valor: Decimal | number | string): number {
+  return this.toDecimal(valor).toNumber();
+}
+
+formatearPrecio(valor: Decimal | number | string, minimoDecimales: number = 2, maximoDecimales: number = 3): string {
+  return new Intl.NumberFormat('es-MX', {
+    minimumFractionDigits: minimoDecimales,
+    maximumFractionDigits: maximoDecimales
+  }).format(this.obtenerValorNumerico(valor));
+}
+
+private aplicarIncrementoPorUnidad(tvStockProducto: TvStockProducto, incremento: Decimal) {
+  const precioBase = this.preciosBasePorProducto.get(tvStockProducto.nIdProducto);
+
+  if (!precioBase) {
+    this.calcularPrecio(tvStockProducto);
+    return;
+  }
+
+  const totalObjetivo = Decimal.max(
+    precioBase.precioConIva,
+    precioBase.precioConIva.plus(incremento)
+  ).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+
+  const calculaPrecioDto = new CalculaPrecioDto();
+  calculaPrecioDto.cantidad = this.obtenerCantidadCalculo(tvStockProducto);
+  calculaPrecioDto.precioUnitario = this.calcularPrecioSinIvaObjetivo(totalObjetivo).toNumber();
+
+  this.ventaService.calcularNuevoPrecioAjustado(calculaPrecioDto).subscribe(data => {
+    tvStockProducto.tcProducto.nPrecioSinIva = this.toDecimal(data.precioUnitario);
+    tvStockProducto.tcProducto.nPrecioIva = this.toDecimal(data.ivaUnitario);
+    tvStockProducto.tcProducto.nPrecioConIva = this.toDecimal(data.totalUnitario);
+    tvStockProducto.tcProducto.nPrecioPeso = this.toDecimal(data.totalUnitario);
+    tvStockProducto.nTotalUnitario = this.toDecimal(data.totalUnitario);
+    tvStockProducto.nTotalPartida = this.toDecimal(data.totalPartida);
+    this.regreso = true;
+  });
+}
+
+private restaurarPrecioBase(tvStockProducto: TvStockProducto) {
+  const precioBase = this.preciosBasePorProducto.get(tvStockProducto.nIdProducto);
+
+  if (!precioBase) {
+    this.calcularPrecio(tvStockProducto);
+    return;
+  }
+
+  tvStockProducto.tcProducto.nPrecioPeso = precioBase.precioPeso;
+  tvStockProducto.tcProducto.nPrecioConIva = precioBase.precioConIva;
+  tvStockProducto.tcProducto.nPrecioSinIva = precioBase.precioSinIva;
+  tvStockProducto.tcProducto.nPrecioIva = precioBase.precioIva;
+  tvStockProducto.tcProducto.sProducto = precioBase.sProducto;
+  tvStockProducto.tcProducto.nIdDescuento = precioBase.nIdDescuento;
+  tvStockProducto.tcProducto.tcDescuento = precioBase.tcDescuento;
+  tvStockProducto.tcProducto.nPrecioOriginal = precioBase.nPrecioOriginal;
+  this.actualizarTotalesProducto(tvStockProducto);
+  this.regreso = true;
+}
+
+private actualizarPreciosProducto(tvStockProducto: TvStockProducto, tcProducto: TcProducto) {
+  tvStockProducto.tcProducto.nPrecioPeso = this.toDecimal(tcProducto.nPrecioPeso);
+  tvStockProducto.tcProducto.nPrecioConIva = this.toDecimal(tcProducto.nPrecioConIva);
+  tvStockProducto.tcProducto.nPrecioSinIva = this.toDecimal(tcProducto.nPrecioSinIva);
+  tvStockProducto.tcProducto.nPrecioIva = this.toDecimal(tcProducto.nPrecioIva);
+  tvStockProducto.tcProducto.sProducto = tcProducto.sProducto;
+  tvStockProducto.tcProducto.nIdDescuento = tcProducto.nIdDescuento;
+  tvStockProducto.tcProducto.tcDescuento = tcProducto.tcDescuento;
+  tvStockProducto.tcProducto.nPrecioOriginal = tcProducto.nPrecioOriginal;
+}
+
+private guardarPrecioBase(tvStockProducto: TvStockProducto) {
+  this.preciosBasePorProducto.set(tvStockProducto.nIdProducto, {
+    precioPeso: this.toDecimal(tvStockProducto.tcProducto.nPrecioPeso),
+    precioConIva: this.toDecimal(tvStockProducto.tcProducto.nPrecioConIva),
+    precioSinIva: this.toDecimal(tvStockProducto.tcProducto.nPrecioSinIva),
+    precioIva: this.toDecimal(tvStockProducto.tcProducto.nPrecioIva),
+    sProducto: tvStockProducto.tcProducto.sProducto,
+    nIdDescuento: tvStockProducto.tcProducto.nIdDescuento,
+    tcDescuento: tvStockProducto.tcProducto.tcDescuento,
+    nPrecioOriginal: tvStockProducto.tcProducto.nPrecioOriginal
+  });
+}
+
+private actualizarTotalesProducto(tvStockProducto: TvStockProducto) {
+  const cantidad = new Decimal(this.obtenerCantidadCalculo(tvStockProducto).toString());
+  const precio = this.toDecimal(tvStockProducto.tcProducto.nPrecioSinIva);
+  const { totalFinal, precioUnitario } = this.calcularTotales(precio, cantidad);
+
+  tvStockProducto.nTotalUnitario = precioUnitario;
+  tvStockProducto.nTotalPartida = totalFinal;
+}
+
+private calcularPrecioSinIvaObjetivo(totalObjetivo: Decimal): Decimal {
+  let precioSinIva = totalObjetivo.div(this.ivaFactor).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+  let totalCalculado = this.calcularTotalConIva(precioSinIva);
+
+  while (totalCalculado.lessThan(totalObjetivo)) {
+    precioSinIva = precioSinIva.plus(new Decimal('0.01')).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+    totalCalculado = this.calcularTotalConIva(precioSinIva);
+  }
+
+  return precioSinIva;
+}
+
+private calcularTotalConIva(precioSinIva: Decimal): Decimal {
+  const precioTruncado = precioSinIva.toDecimalPlaces(2, Decimal.ROUND_DOWN);
+  const iva = precioTruncado.mul(new Decimal('0.16')).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+  return precioTruncado.plus(iva).toDecimalPlaces(2, Decimal.ROUND_DOWN);
+}
+
+private obtenerCantidadCalculo(tvStockProducto: TvStockProducto): number {
+  if (tvStockProducto.nCantidad && tvStockProducto.nCantidad > 0) {
+    return tvStockProducto.nCantidad;
+  }
+
+  return 1;
+}
+
+private obtenerIncrementoProducto(tvStockProducto: TvStockProducto): Decimal {
+  return this.incrementosPorProducto.get(tvStockProducto.nIdProducto) ?? new Decimal(0);
+}
+
+private tienePrecioBase(tvStockProducto: TvStockProducto): boolean {
+  return this.preciosBasePorProducto.has(tvStockProducto.nIdProducto);
+}
+
+private tieneClienteDescuento(): boolean {
+  const descuento = this.clienteSeleccionado?.nDescuento as any;
+  return descuento === true || descuento === 1 || descuento === '1';
+}
+
+private toDecimal(valor: Decimal | number | string): Decimal {
+  return new Decimal((valor ?? 0).toString());
+}
+
+private normalizarIncremento(valor: number | string | null): string {
+  if (valor === null || valor === undefined) {
+    return '';
+  }
+
+  const texto = valor.toString().replace(/,/g, '.');
+  const soloPermitidos = texto.replace(/[^\d.]/g, '');
+  const partes = soloPermitidos.split('.');
+
+  if (partes.length === 1) {
+    return partes[0];
+  }
+
+  return `${partes[0]}.${partes.slice(1).join('')}`;
 }
 
  trunc (x, posiciones = 0) {
@@ -730,9 +899,12 @@ private crearProductoActualizado(
 private resetFormulario() {
   this.productosFiltrados = [];
   this.nCantidadCtrl.setValue(0);
+  this.nIncrementoCtrl.setValue(0);
   this.muestraProductosBodega = false;
   this.listaProductoBodega = [];
   this.nIdProducto = null;
+  this.incrementosPorProducto.clear();
+  this.preciosBasePorProducto.clear();
   this.limpiarlistas();
 }
 modificarCantidad(producto: TvStockProducto, cambio: number): void {
@@ -876,6 +1048,8 @@ limpiaFormulario(){
   this.mostrarOpcionesVenta=false;
   this.muestraProductos = false;
   this.nIncrementoCtrl.setValue(0);
+  this.incrementosPorProducto.clear();
+  this.preciosBasePorProducto.clear();
 
 
 }
