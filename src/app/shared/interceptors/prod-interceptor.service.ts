@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { TokenService } from '../service/token.service';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
-import { AuthService } from '../service/auth.service';
-import { JwtDto } from 'src/app/login/model/jwt-dto';
+import { AuthSessionService } from '../service/auth-session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +14,7 @@ export class ProdInterceptorService implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-  constructor(private tokenService: TokenService, private auth: AuthService) { }
+  constructor(private tokenService: TokenService, private authSessionService: AuthSessionService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.isAuthRequest(req)) {
@@ -26,6 +25,13 @@ export class ProdInterceptorService implements HttpInterceptor {
 
     if (!token) {
       return next.handle(req);
+    }
+
+    if (this.tokenService.isTokenExpired()) {
+      return this.authSessionService.refreshSession().pipe(
+        switchMap((newToken: string) => next.handle(this.addToken(req, newToken))),
+        catchError((error) => throwError(error))
+      );
     }
 
     const intReq = this.addToken(req, token);
@@ -43,15 +49,12 @@ export class ProdInterceptorService implements HttpInterceptor {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
-      const dto: JwtDto = new JwtDto(this.tokenService.getToken());
-
-      return this.auth.refresh(dto).pipe(
-        switchMap((data: any) => {
+      return this.authSessionService.refreshSession().pipe(
+        switchMap((token: string) => {
           this.isRefreshing = false;
-          if (data && data.token) {
-            this.tokenService.setToken(data.token);
-            this.refreshTokenSubject.next(data.token);
-            return next.handle(this.addToken(req, data.token));
+          if (token) {
+            this.refreshTokenSubject.next(token);
+            return next.handle(this.addToken(req, token));
           }
 
           this.handleRefreshFailure('Token refresh failed');
