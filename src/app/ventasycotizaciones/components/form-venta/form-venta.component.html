@@ -45,12 +45,12 @@
 
                         <td>{{productoVenta.tcProducto.sNoParte}}</td>
                         <td>{{productoVenta.tcProducto.sProducto}}</td>
-                        <td>{{productoVenta.tcProducto.nPrecioConIva | currency:'$'}}</td>
+                        <td>{{formatearMoneda(productoVenta.tcProducto.nPrecioConIva)}}</td>
                         <td>{{productoVenta.nCantidadTotal}}</td>
                         <td class="p-text-center" *ngIf="productoVenta.nStatus == 1"><i class="pi pi-check" style="color: green;"></i> </td>
                         <td class="p-text-center" *ngIf="productoVenta.nStatus == 0"><i class="pi pi-times" style="color: red;"></i> </td>
                         <td>{{productoVenta.nCantidad}}</td>
-                        <td>{{productoVenta.tcProducto.nPrecioConIva * productoVenta.nCantidad | currency:'$'}}</td>
+                        <td>{{formatearMoneda(calcularTotalProducto(productoVenta))}}</td>
                         <td>
                             <button pButton pRipple icon="pi pi-trash" (click)="quitarProducto(productoVenta)" class="p-button-rounded p-button-danger p-mr-2 p-button-outlined"></button>
                         </td>
@@ -59,7 +59,7 @@
                 <ng-template pTemplate="summary">
 
                     <div class="p-d-flex p-jc-end">
-                        <strong>Cantidad Total: </strong> {{total.toFixed(2)| currency:'MXN'}}
+                        <strong>Cantidad Total: </strong> {{formatearMoneda(total)}}
                     </div>
 
                 </ng-template>

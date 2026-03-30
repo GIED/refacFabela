@@ -102,6 +102,21 @@ export class FormVentaComponent implements OnInit {
     this.validaCredito();
   }
 
+  calcularTotalProducto(producto: TvStockProducto): Decimal {
+    const precio = this.ensureDec(producto?.tcProducto?.nPrecioConIva);
+    const cantidad = this.ensureDec(producto?.nCantidad);
+    return precio.mul(cantidad);
+  }
+
+  formatearMoneda(valor: Decimal | number | string): string {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(this.ensureDec(valor).toNumber());
+  }
+
 
   generarVenta(){
     if(this.listaValidada.length===0){
