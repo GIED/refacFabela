@@ -137,18 +137,18 @@
     <div class="p-field p-col-12 p-md-9">
       <label for="imagen">Imagen del producto (máx 1MB) <span style="color:red">*</span></label>
 
-      <div *ngIf="formGrp.get('sRutaImagen')?.value; else campoImagen" class="p-grid p-ai-center">
+      <div *ngIf="imagenPreview || formGrp.get('sRutaImagen')?.value; else campoImagen" class="p-grid p-ai-center">
 
         <!-- 📷 Columna para mostrar la imagen -->
         <div class="p-col-12 p-md-4">
-          <img [src]="formGrp.get('sRutaImagen')?.value" alt="Vista previa" width="120"
+          <img [src]="imagenPreview || formGrp.get('sRutaImagen')?.value" alt="Vista previa" width="120"
             style="border: 1px solid #ccc; border-radius: 5px;" />
         </div>
 
         <!-- 🔘 Columna para botones -->
         <div class="p-col-12 p-md-8">
           <div class="p-d-flex p-flex-column p-ai-start">
-            <a [href]="formGrp.get('sRutaImagen')?.value" download="imagen-producto.jpg" target="_blank"
+            <a [href]="imagenPreview || formGrp.get('sRutaImagen')?.value" download="imagen-producto.jpg" target="_blank"
               class="p-button p-button-secondary p-button-sm mb-2" style="text-decoration: none; color: white;">
               Descargar Imagen
             </a>

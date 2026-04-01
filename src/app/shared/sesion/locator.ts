@@ -111,12 +111,6 @@ static getImegenProducto='/obtenerImagenProducto?';
 static resolverImagenProducto='/resolverImagenProducto?';
 static subirImagenCloudflare='/subirImagenCloudflare?';
 
-/* CADECO - scraping imagenes proveedor */
-static cadecoImagen='/cadeco/imagen?';
-static cadecoImagenDescargar='/cadeco/imagen/descargar?';
-static cadecoImagenesMasivo='/cadeco/imagenes/masivo';
-static cadecoCacheLimpiar='/cadeco/cache/limpiar';
-
 
 
 static obtenerSimuladorPrecioProducto='/simuladorPrecioProducto';

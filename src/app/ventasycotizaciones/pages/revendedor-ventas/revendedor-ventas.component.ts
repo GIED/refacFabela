@@ -241,7 +241,7 @@ export class RevendedorVentasComponent implements OnInit {
     if (producto.sNoParte && !this.imagenesProducto.has(producto.sNoParte)) {
       this.productoService.resolverImagenProducto(producto.sNoParte).subscribe(
         resp => {
-          if (resp && resp.url) {
+          if (resp && resp.encontrada === 'true' && resp.url) {
             this.imagenesProducto.set(producto.sNoParte, resp.url);
           }
         },

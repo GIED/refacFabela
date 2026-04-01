@@ -58,6 +58,7 @@ export class FormProductoComponent implements OnInit {
   realRol: string = '';
   guardando: boolean = false;
   productoProveedor: PartResponse;
+  imagenPreview: string = '';
 
   noParte: string;
   nIdMarca: number;
@@ -321,19 +322,29 @@ export class FormProductoComponent implements OnInit {
       sRutaImagen: this.producto.sRutaImagen ?? ''
     });
 
-    if (this.producto?.sRutaImagen) {
+    this.imagenPreview = '';
 
+    if (this.producto?.sRutaImagen) {
       this.productosService.getImegenProducto(this.producto.sRutaImagen).subscribe({
         next: (data) => {
-          this.formGrp.patchValue({ sRutaImagen: data?.imagenBase64 || '' });
-          this.formGrp.get('sRutaImagen')?.updateValueAndValidity(); // 👈
+          const imagenBase64 = data?.imagenBase64 || '';
+          this.imagenPreview = imagenBase64;
+          this.formGrp.patchValue({ sRutaImagen: imagenBase64 || this.producto.sRutaImagen || '' });
+          this.formGrp.get('sRutaImagen')?.updateValueAndValidity();
         },
-        error: (err) => {
-          this.formGrp.patchValue({ sRutaImagen: '' });
-          this.formGrp.get('sRutaImagen')?.updateValueAndValidity(); // 👈
+        error: () => {
+          this.productosService.resolverImagenProducto(this.producto.sNoParte).subscribe({
+            next: (resp) => {
+              this.imagenPreview = resp?.encontrada === 'true' ? (resp.url || '') : '';
+              this.formGrp.get('sRutaImagen')?.updateValueAndValidity();
+            },
+            error: () => {
+              this.imagenPreview = '';
+              this.formGrp.get('sRutaImagen')?.updateValueAndValidity();
+            }
+          });
         }
       });
-
     }
 
     // ✅ Normaliza 0 → null si el campo es opcional para el rol
@@ -731,6 +742,7 @@ export class FormProductoComponent implements OnInit {
       reader.onload = () => {
         const base64 = reader.result as string;
         this.formGrp.get('sRutaImagen')?.setValue(base64);
+        this.imagenPreview = base64;
         this.formGrp.get('sRutaImagen')?.markAsTouched(); // marca para validación visual
 
       };

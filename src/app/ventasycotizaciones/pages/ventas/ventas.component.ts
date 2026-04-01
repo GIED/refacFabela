@@ -406,7 +406,7 @@ valorSeleccionadoProducto(){
       this.rutaImagen = (res.url && res.url.trim() !== '') ? res.url : this.rutaImagenDefault;
     },
     error: () => {
-      this.rutaImagen = 'https://www.ctpsales.costex.com:11443/Webpics/220x220/'+ this.productoSeleccionado.sNoParte+'.jpg';
+      this.rutaImagen = this.rutaImagenDefault;
     }
   });
   
