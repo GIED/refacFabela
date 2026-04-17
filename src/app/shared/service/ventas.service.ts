@@ -35,8 +35,11 @@ export class VentasService {
     return this.http.get<TvVentasDetalle[]>(url);
   }
 
-  obtenerHistorialVentasCliente(nIdCliente: number){
+  obtenerHistorialVentasCliente(nIdCliente: number, nMeses?: number){
     let url = environment.servicios.apiRefacFabela + locator.consultaHistorialVentasCliente + 'nIdCliente=' + nIdCliente;
+    if (nMeses != null) {
+      url += '&nMeses=' + nMeses;
+    }
     return this.http.get<TvVentasDetalle[]>(url);
   }
 

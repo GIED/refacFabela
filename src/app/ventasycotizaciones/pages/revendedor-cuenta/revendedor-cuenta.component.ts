@@ -35,6 +35,7 @@ export class RevendedorCuentaComponent implements OnInit {
   filtroVentas: string = '';
   filtroPendientes: string = '';
   cargandoVentas: boolean = false;
+  cargandoPendientes: boolean = false;
 
   // Cotizaciones
   listaCotizaciones: TwCotizacion[] = [];
@@ -67,6 +68,11 @@ export class RevendedorCuentaComponent implements OnInit {
   chartTipos: any;
   chartOptions: any;
   chartDonutOptions: any;
+  periodoConsumoMeses: number = 6;
+  readonly opcionesPeriodoConsumo: number[] = [6, 12, 18];
+  periodoHistorialVentasMeses: number = 3;
+  periodoCotizacionesMeses: number = 3;
+  readonly opcionesPeriodoHistorial: number[] = [3, 6, 9];
 
   constructor(
     private tokenService: TokenService,
@@ -80,6 +86,10 @@ export class RevendedorCuentaComponent implements OnInit {
   ngOnInit(): void {
     this.nIdCliente = this.tokenService.getIdCliente();
     this.cargarTodo();
+  }
+
+  get cargandoPantalla(): boolean {
+    return this.cargandoSaldo || this.cargandoVentas || this.cargandoPendientes || this.cargandoCotizaciones;
   }
 
   cargarTodo(): void {
@@ -104,7 +114,7 @@ export class RevendedorCuentaComponent implements OnInit {
 
   cargarVentas(): void {
     this.cargandoVentas = true;
-    this.ventasService.obtenerHistorialVentasCliente(this.nIdCliente).subscribe({
+    this.ventasService.obtenerHistorialVentasCliente(this.nIdCliente, this.periodoHistorialVentasMeses).subscribe({
       next: (data) => {
         this.listaVentas = (data || []).map(v => {
           if (v.dFechaVenta) {
@@ -123,6 +133,7 @@ export class RevendedorCuentaComponent implements OnInit {
   }
 
   cargarPendientes(): void {
+    this.cargandoPendientes = true;
     this.ventasService.obtenerVentasPendientesCliente(this.nIdCliente).subscribe({
       next: (data) => {
         this.listaPendientes = (data || []).map(v => {
@@ -135,17 +146,20 @@ export class RevendedorCuentaComponent implements OnInit {
             const hoy = new Date();
             const venc = new Date(v.dFechaTerminoCredito);
             v.nVencido = venc < hoy;
+          } else {
+            v.nVencido = false;
           }
           return v;
-        });
+        }).filter(v => v.nTipoPago === 1 && Number(v.nSaldoTotal || 0) > 0 && !v.dFechaPagoCredito);
+        this.cargandoPendientes = false;
       },
-      error: () => {}
+      error: () => { this.cargandoPendientes = false; }
     });
   }
 
   cargarCotizaciones(): void {
     this.cargandoCotizaciones = true;
-    this.ventasCotizacionesService.obtenerHistorialCotizacionesCliente(this.nIdCliente).subscribe({
+    this.ventasCotizacionesService.obtenerHistorialCotizacionesCliente(this.nIdCliente, this.periodoCotizacionesMeses).subscribe({
       next: (data) => {
         this.listaCotizaciones = data || [];
         this.cargandoCotizaciones = false;
@@ -158,18 +172,17 @@ export class RevendedorCuentaComponent implements OnInit {
   prepararCharts(): void {
     const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     const hoy = new Date();
-    // últimos 6 meses
+    const totalMeses = this.periodoConsumoMeses;
     const labels: string[] = [];
     const mesesSlots: { y: number; m: number }[] = [];
-    for (let i = 5; i >= 0; i--) {
+    for (let i = totalMeses - 1; i >= 0; i--) {
       const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
       labels.push(MESES[d.getMonth()] + ' ' + d.getFullYear().toString().slice(2));
       mesesSlots.push({ y: d.getFullYear(), m: d.getMonth() });
     }
 
-    const contadoMes = new Array(6).fill(0);
-    const creditoPagadoMes = new Array(6).fill(0);
-    const creditoPendienteMes = new Array(6).fill(0);
+    const consumoContadoMes = new Array(totalMeses).fill(0);
+    const consumoCreditoMes = new Array(totalMeses).fill(0);
 
     let totalContado = 0;
     let totalCreditoPagado = 0;
@@ -181,20 +194,23 @@ export class RevendedorCuentaComponent implements OnInit {
       const idx = mesesSlots.findIndex(s => s.y === fv.getFullYear() && s.m === fv.getMonth());
       const monto = v.nTotalVenta ? new Decimal(v.nTotalVenta.toString()).toNumber() : 0;
 
+      if (idx < 0) {
+        continue;
+      }
+
       if (v.nTipoPago === 1) {
+        consumoCreditoMes[idx] += monto;
         // Crédito
         const pagado = (v as any).dFechaPagoCredito != null;
         if (pagado) {
           totalCreditoPagado += monto;
-          if (idx >= 0) creditoPagadoMes[idx] += monto;
         } else {
           totalCreditoPendiente += monto;
-          if (idx >= 0) creditoPendienteMes[idx] += monto;
         }
       } else {
+        consumoContadoMes[idx] += monto;
         // Contado
         totalContado += monto;
-        if (idx >= 0) contadoMes[idx] += monto;
       }
     }
 
@@ -205,22 +221,17 @@ export class RevendedorCuentaComponent implements OnInit {
           type: 'bar',
           label: 'Contado',
           backgroundColor: '#2563eb',
+          hoverBackgroundColor: '#1d4ed8',
           borderRadius: 6,
-          data: contadoMes.map(v => +v.toFixed(2))
+          data: consumoContadoMes.map(v => +v.toFixed(2))
         },
         {
           type: 'bar',
-          label: 'Crédito Pagado',
+          label: 'Crédito',
           backgroundColor: '#16a34a',
+          hoverBackgroundColor: '#15803d',
           borderRadius: 6,
-          data: creditoPagadoMes.map(v => +v.toFixed(2))
-        },
-        {
-          type: 'bar',
-          label: 'Crédito Pendiente',
-          backgroundColor: '#ea580c',
-          borderRadius: 6,
-          data: creditoPendienteMes.map(v => +v.toFixed(2))
+          data: consumoCreditoMes.map(v => +v.toFixed(2))
         }
       ]
     };
@@ -242,7 +253,7 @@ export class RevendedorCuentaComponent implements OnInit {
         legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } },
         tooltip: {
           callbacks: {
-            label: (ctx: any) => ' $' + ctx.parsed.y.toLocaleString('es-MX', { minimumFractionDigits: 2 })
+            label: (ctx: any) => `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`
           }
         }
       },
@@ -272,6 +283,33 @@ export class RevendedorCuentaComponent implements OnInit {
         }
       }
     };
+  }
+
+  cambiarPeriodoConsumo(meses: number): void {
+    if (this.periodoConsumoMeses === meses) {
+      return;
+    }
+
+    this.periodoConsumoMeses = meses;
+    this.prepararCharts();
+  }
+
+  cambiarPeriodoHistorialVentas(meses: number): void {
+    if (this.periodoHistorialVentasMeses === meses) {
+      return;
+    }
+
+    this.periodoHistorialVentasMeses = meses;
+    this.cargarVentas();
+  }
+
+  cambiarPeriodoCotizaciones(meses: number): void {
+    if (this.periodoCotizacionesMeses === meses) {
+      return;
+    }
+
+    this.periodoCotizacionesMeses = meses;
+    this.cargarCotizaciones();
   }
 
   // ---- Filtros ----

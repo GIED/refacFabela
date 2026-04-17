@@ -1,6 +1,13 @@
 <div class="rc-page">
   <p-toast></p-toast>
 
+  <div class="rc-loading-overlay" *ngIf="cargandoPantalla">
+    <div class="rc-loading-overlay__content">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Cargando datos de tu cuenta...</span>
+    </div>
+  </div>
+
   <!-- ====== Banner ====== -->
   <div class="rc-banner">
     <div class="rc-banner__info">
@@ -96,7 +103,20 @@
         <div class="rc-charts-grid" *ngIf="chartMensual">
           <div class="rc-chart-card rc-chart-card--wide">
             <div class="rc-chart-card__head">
-              <h4 class="rc-chart-card__title"><i class="pi pi-chart-bar"></i> Consumo por Mes (últimos 6 meses)</h4>
+              <div class="rc-chart-card__head-row">
+                <h4 class="rc-chart-card__title"><i class="pi pi-chart-bar"></i> Consumo por Mes</h4>
+                <div class="rc-chart-range" aria-label="Rango de consumo por mes">
+                  <button
+                    *ngFor="let meses of opcionesPeriodoConsumo"
+                    pButton
+                    type="button"
+                    [label]="meses + ' meses'"
+                    class="p-button-text p-button-sm rc-chart-range__btn"
+                    [class.rc-chart-range__btn--active]="periodoConsumoMeses === meses"
+                    (click)="cambiarPeriodoConsumo(meses)">
+                  </button>
+                </div>
+              </div>
             </div>
             <div class="rc-chart-card__body">
               <p-chart type="bar" [data]="chartMensual" [options]="chartOptions" height="260px"></p-chart>
@@ -155,7 +175,7 @@
         breakpoint="768px">
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="sFolioVenta">Folio <p-sortIcon field="sFolioVenta"></p-sortIcon></th>
+            <th pSortableColumn="sFolioVenta">Folio <p-sortIcon field="nId"></p-sortIcon></th>
             <th pSortableColumn="dFechaVenta">Fecha Venta <p-sortIcon field="dFechaVenta"></p-sortIcon></th>
             <th>Inicio Crédito</th>
             <th pSortableColumn="dFechaTerminoCredito">Vence <p-sortIcon field="dFechaTerminoCredito"></p-sortIcon></th>
@@ -167,7 +187,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-v>
           <tr [class.rc-row--vencido]="v.nVencido">
-            <td><span class="rc-folio">{{ v.sFolioVenta }}</span></td>
+            <td><span class="rc-folio">{{ v.nId }}</span></td>
             <td>{{ v.dFechaVenta | date:'dd/MM/yyyy' }}</td>
             <td>{{ v.dFechaInicioCredito | date:'dd/MM/yyyy' }}</td>
             <td>
@@ -203,6 +223,17 @@
           <i class="pi pi-search"></i>
           <input pInputText type="text" [(ngModel)]="filtroVentas" placeholder="Buscar por folio, estatus..." class="rc-search" />
         </span>
+        <div class="rc-chart-range" aria-label="Rango de historial de ventas">
+          <button
+            *ngFor="let meses of opcionesPeriodoHistorial"
+            pButton
+            type="button"
+            [label]="meses + ' meses'"
+            class="p-button-text p-button-sm rc-chart-range__btn"
+            [class.rc-chart-range__btn--active]="periodoHistorialVentasMeses === meses"
+            (click)="cambiarPeriodoHistorialVentas(meses)">
+          </button>
+        </div>
         <button pButton type="button" icon="pi pi-refresh" label="Actualizar"
           class="p-button-outlined p-button-sm" (click)="cargarVentas()"></button>
       </div>
@@ -281,6 +312,17 @@
           <i class="pi pi-search"></i>
           <input pInputText type="text" [(ngModel)]="filtroCotizaciones" placeholder="Buscar por folio o ID..." class="rc-search" />
         </span>
+        <div class="rc-chart-range" aria-label="Rango de historial de cotizaciones">
+          <button
+            *ngFor="let meses of opcionesPeriodoHistorial"
+            pButton
+            type="button"
+            [label]="meses + ' meses'"
+            class="p-button-text p-button-sm rc-chart-range__btn"
+            [class.rc-chart-range__btn--active]="periodoCotizacionesMeses === meses"
+            (click)="cambiarPeriodoCotizaciones(meses)">
+          </button>
+        </div>
         <button pButton type="button" icon="pi pi-refresh" label="Actualizar"
           class="p-button-outlined p-button-sm" (click)="cargarCotizaciones()"></button>
       </div>
