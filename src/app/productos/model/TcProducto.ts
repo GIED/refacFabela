@@ -41,5 +41,7 @@ nAncho:Decimal;
 nVolumen:Decimal;	
 sRutaImagen:string;
 nPrecioOriginal:number;
+bPrecioConvenioMayorista:boolean;
+sMensajePrecioConvenio:string;
 
 }

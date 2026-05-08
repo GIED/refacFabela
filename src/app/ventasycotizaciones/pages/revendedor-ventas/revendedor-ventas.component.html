@@ -78,6 +78,14 @@
               [class.rv-card__badge-alt--with-brand]="producto.tcProducto?.sMarca">
               <i class="pi pi-sync" style="font-size:0.7rem;"></i> Alternativo
             </span>
+            <span class="rv-card__badge-convenio"
+              *ngIf="nTipoRevendedor === 3 && producto.tcProducto?.bPrecioConvenioMayorista"
+              [class.rv-card__badge-convenio--with-brand]="producto.tcProducto?.sMarca"
+              [class.rv-card__badge-convenio--with-alt]="producto.esAlternativo"
+              [pTooltip]="producto.tcProducto?.sMensajePrecioConvenio || 'Precio especial por convenio'"
+              tooltipPosition="top">
+              <i class="pi pi-star-fill" style="font-size:0.7rem;"></i> Convenio
+            </span>
             <span class="rv-card__stock"
               [ngClass]="{
                 'rv-card__stock--ok': producto.nCantidadTotal > 5,
