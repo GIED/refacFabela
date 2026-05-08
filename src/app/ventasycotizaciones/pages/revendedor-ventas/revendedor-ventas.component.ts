@@ -224,6 +224,18 @@ export class RevendedorVentasComponent implements OnInit {
           detalle += ' + ' + alternativos + ' alternativo' + (alternativos !== 1 ? 's' : '');
         }
         this.messageService.add({ severity: 'info', summary: 'Productos encontrados', detail: detalle, life: 3000 });
+
+        if (this.nTipoRevendedor === 3) {
+          const productosConvenio = resultados.filter(r => r.tcProducto?.bPrecioConvenioMayorista === true);
+          if (productosConvenio.length > 0) {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Precio especial por convenio',
+              detail: 'Se detectaron ' + productosConvenio.length + ' producto' + (productosConvenio.length !== 1 ? 's' : '') + ' con precio especial por convenio.',
+              life: 4500
+            });
+          }
+        }
       } else {
         this.mostrarSugerenciasProducto = false;
         this.messageService.add({ severity: 'warn', summary: 'Sin resultados', detail: 'No se encontraron productos, verifique la búsqueda.', life: 3000 });
