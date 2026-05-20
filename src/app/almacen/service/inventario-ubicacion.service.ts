@@ -150,6 +150,26 @@ export class InventarioUbicacionService {
     }
 
     /**
+     * Re-contar un producto que tiene stock obsoleto (rol ALMACÉN/ADMIN).
+     * Cuando se detecta que el stock cambió desde el levantamiento inicial (bRequiereReconteo=true),
+     * se actualiza la referencia al stock actual y se captura la nueva cantidad contada.
+     */
+    recontarProductoInventario(
+        inventarioId: number,
+        productoId: number,
+        nCantidadContada: number,
+        motivo: string
+    ): Observable<InventarioUbicacionDetalleDto> {
+        const url = environment.servicios.apiRefacFabela + locator.ajustarProductoInventario 
+                  + inventarioId + '/detalle/' + productoId + '/recontar';
+        const body = {
+            nCantidadContada: nCantidadContada,
+            sMotivo: motivo
+        };
+        return this.http.post<InventarioUbicacionDetalleDto>(url, body);
+    }
+
+    /**
      * Aplicar inventario al stock operativo (rol ADMIN).
      */
     aplicarInventario(inventarioId: number): Observable<InventarioUbicacionDto> {

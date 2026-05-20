@@ -23,6 +23,10 @@ export class AutorizacionInventarioComponent implements OnInit {
     // Productos con diferencias del inventario seleccionado
     productosDiferencias: InventarioUbicacionDetalleDto[] = [];
     
+    // Productos que requieren re-conteo por cambios en stock
+    productosRequierenReconteo: InventarioUbicacionDetalleDto[] = [];
+    hayProductosConCambioStock: boolean = false;
+    
     // Controles de vista
     mostrarDialogoDetalle = false;
     mostrarDialogoAutorizar = false;
@@ -38,6 +42,15 @@ export class AutorizacionInventarioComponent implements OnInit {
     motivoAjuste = '';
     cantidadCorregida: number | null = null;
     usarCantidadCorregida = false;
+
+    // Formulario de re-conteo de productos con stock obsoleto
+    mostrarDialogoReconteo = false;
+    productosReconteoFormulario: Array<{
+        producto: InventarioUbicacionDetalleDto;
+        nCantidadContada: number | null;
+        motivo: string;
+        procesando: boolean;
+    }> = [];
 
     // Constantes de estatus
     EstatusInventario = EstatusInventario;
@@ -133,6 +146,22 @@ export class AutorizacionInventarioComponent implements OnInit {
                 this.productosDiferencias = (data.detalle || []).filter(
                     item => item.nCantidadContada != null && item.nDiferencia !== 0
                 );
+
+                // Detectar productos que requieren re-conteo (stock cambió desde levantamiento)
+                this.productosRequierenReconteo = (data.detalle || []).filter(
+                    item => item.bRequiereReconteo === true
+                );
+                this.hayProductosConCambioStock = this.productosRequierenReconteo.length > 0;
+
+                // Mostrar aviso si hay productos con stock obsoleto
+                if (this.hayProductosConCambioStock) {
+                    this.messageService.add({
+                        severity: 'warn',
+                        summary: '⚠️ Stock Obsoleto Detectado',
+                        detail: `${this.productosRequierenReconteo.length} producto(s) con cambios en stock desde el levantamiento. Requiere re-conteo.`,
+                        life: 5000
+                    });
+                }
                 
                 this.cargando = false;
                 this.mostrarDialogoDetalle = true;
@@ -140,6 +169,144 @@ export class AutorizacionInventarioComponent implements OnInit {
             error: (err) => {
                 this.cargando = false;
                 this.mostrarError('Error al cargar detalle del inventario');
+            }
+        });
+    }
+
+    /**
+     * Abrir diálogo para hacer re-conteo de productos con stock obsoleto.
+     */
+    abrirDialogoReconteo(): void {
+        // Inicializar el formulario de reconteo con los productos que requieren reconteo
+        this.productosReconteoFormulario = this.productosRequierenReconteo.map(producto => ({
+            producto: producto,
+            nCantidadContada: producto.nCantidadContada || null, // Pre-llenar con cantidad actual
+            motivo: 'Stock cambió en sistema',
+            procesando: false
+        }));
+
+        this.mostrarDialogoReconteo = true;
+    }
+
+    /**
+     * Guardar re-conteo individual de un producto.
+     */
+    guardarReconteoProducto(formularioItem: any): void {
+        const producto = formularioItem.producto;
+
+        // Validaciones
+        if (formularioItem.nCantidadContada === null || formularioItem.nCantidadContada === undefined) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Validación',
+                detail: `Debe ingresar la cantidad contada para ${producto.sNoParte}`
+            });
+            return;
+        }
+
+        if (formularioItem.nCantidadContada < 0) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Validación',
+                detail: 'La cantidad contada no puede ser negativa'
+            });
+            return;
+        }
+
+        if (!formularioItem.motivo || formularioItem.motivo.trim() === '') {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Validación',
+                detail: 'Debe proporcionar un motivo para el re-conteo'
+            });
+            return;
+        }
+
+        formularioItem.procesando = true;
+
+        this.recontarProducto(
+            producto.nIdProducto,
+            formularioItem.nCantidadContada,
+            formularioItem.motivo
+        );
+    }
+
+    /**
+     * Recontar un producto individual que tiene stock obsoleto.
+     * Actualiza la referencia al stock actual y captura la nueva cantidad.
+     */
+    recontarProducto(productoId: number, nCantidadContada: number, motivo: string): void {
+        if (!this.inventarioSeleccionado) return;
+
+        this.inventarioService.recontarProductoInventario(
+            this.inventarioSeleccionado.nId!,
+            productoId,
+            nCantidadContada,
+            motivo
+        ).subscribe({
+            next: (detalle) => {
+                // Remover de la lista de productos que requieren reconteo
+                const index = this.productosRequierenReconteo.findIndex(
+                    p => p.nIdProducto === productoId
+                );
+                if (index >= 0) {
+                    this.productosRequierenReconteo.splice(index, 1);
+                }
+
+                // Actualizar en el formulario de reconteo
+                const indexForm = this.productosReconteoFormulario.findIndex(
+                    p => p.producto.nIdProducto === productoId
+                );
+                if (indexForm >= 0) {
+                    this.productosReconteoFormulario[indexForm].procesando = false;
+                }
+
+                // Actualizar también en el inventario completo
+                if (this.inventarioSeleccionado && this.inventarioSeleccionado.detalle) {
+                    const indexDetalle = this.inventarioSeleccionado.detalle.findIndex(
+                        p => p.nIdProducto === productoId
+                    );
+                    if (indexDetalle >= 0) {
+                        this.inventarioSeleccionado.detalle[indexDetalle] = detalle;
+                    }
+                }
+
+                // Actualizar también en la lista de diferencias
+                const indexDif = this.productosDiferencias.findIndex(
+                    p => p.nIdProducto === productoId
+                );
+                if (indexDif >= 0) {
+                    this.productosDiferencias[indexDif] = detalle;
+                }
+
+                this.hayProductosConCambioStock = this.productosRequierenReconteo.length > 0;
+
+                // Si no hay más productos por recontar, cerrar el diálogo
+                if (this.productosRequierenReconteo.length === 0) {
+                    this.mostrarDialogoReconteo = false;
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Re-Conteo Completado',
+                        detail: 'Todos los productos han sido recontados exitosamente.'
+                    });
+                } else {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Re-Conteo Completado',
+                        detail: `${detalle.sNoParte} fue recontado. ${this.productosRequierenReconteo.length} productos restantes.`
+                    });
+                }
+            },
+            error: (err) => {
+                // Marcar como no procesando para permitir reintentar
+                const indexForm = this.productosReconteoFormulario.findIndex(
+                    p => p.producto.nIdProducto === productoId
+                );
+                if (indexForm >= 0) {
+                    this.productosReconteoFormulario[indexForm].procesando = false;
+                }
+
+                this.mostrarError(err.error?.mensaje || 'Error al hacer re-conteo del producto');
             }
         });
     }
@@ -255,6 +422,16 @@ export class AutorizacionInventarioComponent implements OnInit {
                 severity: 'warn',
                 summary: 'Validación',
                 detail: 'Debe proporcionar un motivo para esta acción'
+            });
+            return;
+        }
+
+        // VALIDACIÓN CRÍTICA: No permitir autorización si hay productos con stock obsoleto
+        if (this.accionAutorizacion === 'autorizar' && this.hayProductosConCambioStock) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Operación No Permitida',
+                detail: `No se puede autorizar el inventario. Hay ${this.productosRequierenReconteo.length} producto(s) con stock obsoleto que requiere(n) re-conteo.`
             });
             return;
         }
@@ -385,6 +562,19 @@ export class AutorizacionInventarioComponent implements OnInit {
             summary: 'Error',
             detail: mensaje
         });
+    }
+
+    /**
+     * Generar tooltip dinámico para el botón de autorizar.
+     */
+    getTooltipAutorizar(): string {
+        if (this.hayProductosConCambioStock) {
+            return `⚠️ No puede autorizar: ${this.productosRequierenReconteo?.length || 0} producto(s) con stock obsoleto requiere(n) re-conteo`;
+        }
+        if (!this.todosProductosAjustados) {
+            return `Debe ajustar todos los productos con diferencias antes de autorizar`;
+        }
+        return '';
     }
 
     /**

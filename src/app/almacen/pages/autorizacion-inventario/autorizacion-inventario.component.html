@@ -282,6 +282,86 @@
             </div>
         </div>
 
+        <!-- ALERTA: Productos que Requieren Re-Conteo (Stock Obsoleto) -->
+        <div *ngIf="hayProductosConCambioStock" class="p-mb-4 p-p-4" style="background-color: #fef2f2; border-left: 4px solid #ef4444; border-radius: 6px; color: #7f1d1d;">
+            <div class="p-d-flex p-ai-start">
+                <i class="pi pi-exclamation-triangle" style="color: #ef4444; font-size: 1.5rem; margin-right: 1rem; margin-top: 0.2rem; flex-shrink: 0;"></i>
+                <div style="flex-grow: 1;">
+                    <h5 class="p-m-0 p-mb-2" style="color: #991b1b;">
+                        ⚠️ Stock Obsoleto Detectado - Requiere Re-Conteo
+                    </h5>
+                    <p class="p-m-0 p-mb-3" style="font-size: 0.95rem;">
+                        Se detectaron cambios en el inventario desde el levantamiento inicial. 
+                        El número registrado de referencia ya no coincide con el stock actual en el sistema.
+                        <strong>Debe realizar un re-conteo antes de poder autorizar este inventario.</strong>
+                    </p>
+                    
+                    <!-- Tabla de Productos con Stock Obsoleto -->
+                    <p-table [value]="productosRequierenReconteo" 
+                        [scrollable]="true" 
+                        scrollHeight="300px"
+                        styleClass="p-datatable-sm p-datatable-striped"
+                        [paginator]="true"
+                        [rows]="5"
+                        [rowsPerPageOptions]="[5,10,25]">
+                        
+                        <ng-template pTemplate="header">
+                            <tr style="background-color: #fee2e2;">
+                                <th style="width: 80px; text-align: center;">Imagen</th>
+                                <th>No. Parte</th>
+                                <th>Producto</th>
+                                <th style="width: 150px; text-align: center;">Cantidad en Levantamiento</th>
+                                <th style="width: 150px; text-align: center;">Stock Actual System</th>
+                                <th style="width: 120px; text-align: center;">Diferencia</th>
+                            </tr>
+                        </ng-template>
+                        
+                        <ng-template pTemplate="body" let-producto>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <img [src]="obtenerRutaImagen(producto.sNoParte)" 
+                                         (error)="imagenError($event)"
+                                         alt="Imagen"
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"
+                                         pTooltip="Click para ampliar" />
+                                </td>
+                                <td><span class="p-text-bold" style="color: #7f1d1d;">{{producto.sNoParte}}</span></td>
+                                <td>
+                                    <div class="p-text-bold">{{producto.sNombreProducto}}</div>
+                                    <div class="p-text-secondary" style="font-size: 0.75rem;">{{producto.sMarca}}</div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="p-text-bold">{{producto.nCantidadTeoricaRef}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="p-text-bold" style="color: #2563eb;">{{producto.nCantidadActualTwProductoBodega}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <p-tag [value]="(producto.nDiferenciaTiempoReal >= 0 ? '+' : '') + producto.nDiferenciaTiempoReal" 
+                                           severity="{{producto.nDiferenciaTiempoReal < 0 ? 'danger' : 'warning'}}"
+                                           [style]="{'font-weight': 'bold'}">
+                                    </p-tag>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <div class="p-mt-3 p-d-flex p-ai-center p-jc-between">
+                        <div style="font-size: 0.9rem;">
+                            <strong>Total productos con stock obsoleto:</strong> {{productosRequierenReconteo?.length || 0}}
+                        </div>
+                        <button pButton pRipple
+                            type="button"
+                            icon="pi pi-refresh"
+                            label="Hacer Re-Conteo"
+                            class="p-button-warning p-button-sm"
+                            (click)="abrirDialogoReconteo()">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Tabla de Productos con Diferencias -->
         <p-card>
             <ng-template pTemplate="header">
@@ -401,6 +481,11 @@
                     [text]="'Atención: Hay ' + productosPendientesAjuste + ' producto(s) pendiente(s) de ajustar'"
                     styleClass="p-ml-2">
                 </p-message>
+                <p-message *ngIf="hayProductosConCambioStock" 
+                    severity="error" 
+                    text="⚠️ Hay productos con stock obsoleto que requieren re-conteo antes de autorizar"
+                    styleClass="p-ml-2">
+                </p-message>
             </div>
             <div>
                 <button pButton pRipple
@@ -415,9 +500,9 @@
                     label="Autorizar Ajuste" 
                     icon="pi pi-check-circle" 
                     class="p-button-success"
-                    [disabled]="!todosProductosAjustados"
+                    [disabled]="!todosProductosAjustados || hayProductosConCambioStock"
                     (click)="abrirDialogoAutorizar('autorizar')"
-                    pTooltip="{{!todosProductosAjustados ? 'Debe ajustar todos los productos con diferencias antes de autorizar' : ''}}"
+                    [pTooltip]="getTooltipAutorizar()"
                     tooltipPosition="top">
                 </button>
             </div>
@@ -671,6 +756,143 @@
                 class="p-button-warning"
                 (click)="confirmarAjusteProducto()" 
                 [loading]="cargando">
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<!-- Diálogo de Re-Conteo para Productos con Stock Obsoleto -->
+<p-dialog [(visible)]="mostrarDialogoReconteo" 
+    [modal]="true" 
+    [style]="{width: '95vw', maxWidth: '1000px'}" 
+    [contentStyle]="{'background-color': '#ffffff'}"
+    [draggable]="false" 
+    [resizable]="false" 
+    [dismissableMask]="true"
+    styleClass="p-fluid">
+    
+    <ng-template pTemplate="header">
+        <div class="p-d-flex p-ai-center p-jc-between" style="width: 100%;">
+            <div class="p-d-flex p-ai-center">
+                <div class="p-d-flex p-ai-center p-jc-center p-mr-3" 
+                     style="background-color: #fee2e2; width: 50px; height: 50px; border-radius: 50%;">
+                    <i class="pi pi-refresh" style="color: #dc2626; font-size: 1.8rem;"></i>
+                </div>
+                <div>
+                    <h4 class="p-m-0 p-text-bold" style="color: #212529;">Re-Conteo de Inventario</h4>
+                    <p class="p-m-0 p-mt-1 p-text-secondary" style="font-size: 0.9rem;">
+                        Se detectaron cambios en el stock. Capture las cantidades nuevas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <!-- Instrucciones -->
+    <div class="p-mb-4 p-p-3" style="background-color: #fef2f2; border-left: 4px solid #dc2626; border-radius: 6px;">
+        <p class="p-m-0" style="color: #7f1d1d; font-size: 0.95rem;">
+            <i class="pi pi-info-circle p-mr-2"></i>
+            <strong>Stock Obsoleto Detectado:</strong> El inventario en el sistema cambió desde el levantamiento inicial. 
+            Debe hacer un nuevo conteo físico y capturar la cantidad actual para cada producto.
+        </p>
+    </div>
+
+    <!-- Tabla de Productos para Re-Contear -->
+    <p-table [value]="productosReconteoFormulario" 
+        [scrollable]="true" 
+        scrollHeight="400px"
+        styleClass="p-datatable-sm p-datatable-striped"
+        [paginator]="true"
+        [rows]="5"
+        [rowsPerPageOptions]="[5,10,25]">
+        
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 80px; text-align: center;">Imagen</th>
+                <th style="width: 120px;">No. Parte</th>
+                <th>Producto</th>
+                <th style="width: 100px; text-align: center;">Stock Actual</th>
+                <th style="width: 130px; text-align: center;">Nueva Cantidad</th>
+                <th>Motivo</th>
+                <th style="width: 100px; text-align: center;">Acción</th>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="body" let-formularioItem>
+            <tr>
+                <td style="text-align: center;">
+                    <img [src]="obtenerRutaImagen(formularioItem.producto.sNoParte)" 
+                         (error)="imagenError($event)"
+                         alt="Imagen"
+                         style="width: 70px; height: 70px; object-fit: cover; border-radius: 4px;"
+                         pTooltip="Click para ampliar" />
+                </td>
+                <td>
+                    <span class="p-text-bold text-primary">{{formularioItem.producto.sNoParte}}</span>
+                </td>
+                <td>
+                    <div class="p-text-bold" style="color: #212529;">{{formularioItem.producto.sNombreProducto}}</div>
+                    <div class="p-text-secondary" style="font-size: 0.8rem;">{{formularioItem.producto.sMarca}}</div>
+                </td>
+                <td style="text-align: center;">
+                    <span class="p-text-bold" style="font-size: 1.1rem; color: #2563eb;">
+                        {{formularioItem.producto.nCantidadActualTwProductoBodega}}
+                    </span>
+                </td>
+                <td style="text-align: center;">
+                    <p-inputNumber 
+                        [(ngModel)]="formularioItem.nCantidadContada" 
+                        [min]="0"
+                        [disabled]="formularioItem.procesando"
+                        [style]="{'width': '100%'}"
+                        [inputStyle]="{'text-align': 'center', 'font-weight': '600'}"
+                        placeholder="0">
+                    </p-inputNumber>
+                </td>
+                <td>
+                    <input pInputText 
+                        [(ngModel)]="formularioItem.motivo" 
+                        [disabled]="formularioItem.procesando"
+                        placeholder="Stock cambió..."
+                        style="width: 100%;">
+                </td>
+                <td style="text-align: center;">
+                    <button pButton pRipple
+                        type="button"
+                        icon="pi pi-check"
+                        class="p-button-success p-button-sm"
+                        [loading]="formularioItem.procesando"
+                        [disabled]="formularioItem.procesando"
+                        (click)="guardarReconteoProducto(formularioItem)"
+                        pTooltip="Guardar re-conteo">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <!-- Resumen -->
+    <div class="p-mt-4 p-p-3" style="background-color: #f0fdf4; border-radius: 6px; border: 1px solid #86efac;">
+        <div style="font-size: 0.9rem;">
+            <strong>Productos pendientes de re-conteo:</strong> 
+            <span class="p-text-bold" style="color: #dc2626;">{{productosRequierenReconteo.length}}</span>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="p-d-flex p-jc-between p-ai-center">
+            <div>
+                <p-message severity="info" 
+                    text="Cada producto debe ser grabado individualmente desde el botón de acción de la fila."
+                    [style]="{'font-size': '0.9rem'}">
+                </p-message>
+            </div>
+            <button pButton pRipple
+                type="button" 
+                label="Cerrar" 
+                icon="pi pi-times" 
+                class="p-button-text p-button-secondary"
+                (click)="mostrarDialogoReconteo = false">
             </button>
         </div>
     </ng-template>

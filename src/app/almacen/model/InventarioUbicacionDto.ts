@@ -67,4 +67,9 @@ export class InventarioUbicacionDetalleDto {
     
     // Campos calculados
     nDiferencia?: number; // contada - ref
+    
+    // Campos de validación de vigencia
+    nCantidadActualTwProductoBodega?: number; // Stock ACTUAL en tw_productobodega
+    bRequiereReconteo?: boolean; // TRUE si referencia quedó obsoleta
+    nDiferenciaTiempoReal?: number; // Diferencia actual: contada - cantidadActualTwProductoBodega
 }
