@@ -141,27 +141,8 @@ export class AutorizacionInventarioComponent implements OnInit {
         this.inventarioService.obtenerInventario(inventario.nId!).subscribe({
             next: (data) => {
                 this.inventarioSeleccionado = data;
-                
-                // Filtrar productos con diferencias
-                this.productosDiferencias = (data.detalle || []).filter(
-                    item => item.nCantidadContada != null && item.nDiferencia !== 0
-                );
 
-                // Detectar productos que requieren re-conteo (stock cambió desde levantamiento)
-                this.productosRequierenReconteo = (data.detalle || []).filter(
-                    item => item.bRequiereReconteo === true
-                );
-                this.hayProductosConCambioStock = this.productosRequierenReconteo.length > 0;
-
-                // Mostrar aviso si hay productos con stock obsoleto
-                if (this.hayProductosConCambioStock) {
-                    this.messageService.add({
-                        severity: 'warn',
-                        summary: '⚠️ Stock Obsoleto Detectado',
-                        detail: `${this.productosRequierenReconteo.length} producto(s) con cambios en stock desde el levantamiento. Requiere re-conteo.`,
-                        life: 5000
-                    });
-                }
+                this.actualizarListasDetalle(data.detalle || []);
                 
                 this.cargando = false;
                 this.mostrarDialogoDetalle = true;
@@ -177,15 +158,66 @@ export class AutorizacionInventarioComponent implements OnInit {
      * Abrir diálogo para hacer re-conteo de productos con stock obsoleto.
      */
     abrirDialogoReconteo(): void {
-        // Inicializar el formulario de reconteo con los productos que requieren reconteo
-        this.productosReconteoFormulario = this.productosRequierenReconteo.map(producto => ({
-            producto: producto,
-            nCantidadContada: producto.nCantidadContada || null, // Pre-llenar con cantidad actual
-            motivo: 'Stock cambió en sistema',
-            procesando: false
-        }));
+        if (!this.hayProductosConCambioStock) {
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Sin re-conteos pendientes',
+                detail: 'No hay productos con diferencia que requieran re-conteo en este inventario.'
+            });
+            return;
+        }
+
+        this.sincronizarFormularioReconteo();
 
         this.mostrarDialogoReconteo = true;
+    }
+
+    tieneDiferenciaPendiente(producto: InventarioUbicacionDetalleDto): boolean {
+        return producto.nCantidadContada != null
+            && (producto.nDiferencia || 0) !== 0
+            && producto.bAjustado !== true;
+    }
+
+    requiereReconteoParaAjuste(producto: InventarioUbicacionDetalleDto): boolean {
+        return this.tieneDiferenciaPendiente(producto)
+            && producto.bRequiereReconteo === true;
+    }
+
+    getTooltipAjuste(producto: InventarioUbicacionDetalleDto): string {
+        if (this.requiereReconteoParaAjuste(producto)) {
+            return 'Debe hacer re-conteo porque el stock actual cambió desde el levantamiento';
+        }
+
+        return '';
+    }
+
+    actualizarListasDetalle(detalle: InventarioUbicacionDetalleDto[]): void {
+        this.productosDiferencias = detalle.filter(item => this.tieneDiferenciaPendiente(item));
+        this.productosRequierenReconteo = this.productosDiferencias.filter(
+            item => this.requiereReconteoParaAjuste(item)
+        );
+        this.hayProductosConCambioStock = this.productosRequierenReconteo.length > 0;
+
+        if (this.mostrarDialogoReconteo) {
+            this.sincronizarFormularioReconteo();
+        }
+    }
+
+    sincronizarFormularioReconteo(): void {
+        const formularioAnterior = new Map(
+            this.productosReconteoFormulario.map(item => [item.producto.nIdProducto, item])
+        );
+
+        this.productosReconteoFormulario = this.productosRequierenReconteo.map(producto => {
+            const previo = formularioAnterior.get(producto.nIdProducto);
+
+            return {
+                producto,
+                nCantidadContada: previo?.nCantidadContada ?? producto.nCantidadContada ?? null,
+                motivo: previo?.motivo ?? 'Stock cambió en sistema',
+                procesando: false
+            };
+        });
     }
 
     /**
@@ -324,6 +356,16 @@ export class AutorizacionInventarioComponent implements OnInit {
      * Abrir diálogo para ajustar un producto individual.
      */
     abrirDialogoAjustar(producto: InventarioUbicacionDetalleDto): void {
+        if (this.requiereReconteoParaAjuste(producto)) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Re-Conteo requerido',
+                detail: `Debe recontar ${producto.sNoParte} antes de ajustar porque el stock actual ya cambió.`
+            });
+            this.abrirDialogoReconteo();
+            return;
+        }
+
         this.productoAjustar = producto;
         this.motivoAjuste = '';
         this.cantidadCorregida = producto.nCantidadContada;
@@ -358,6 +400,16 @@ export class AutorizacionInventarioComponent implements OnInit {
     confirmarAjusteProducto(): void {
         if (!this.inventarioSeleccionado || !this.productoAjustar) return;
 
+        if (this.requiereReconteoParaAjuste(this.productoAjustar)) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Re-Conteo requerido',
+                detail: `Debe recontar ${this.productoAjustar.sNoParte} antes de aplicar el ajuste.`
+            });
+            this.abrirDialogoReconteo();
+            return;
+        }
+
         if (!this.motivoAjuste || this.motivoAjuste.trim() === '') {
             this.messageService.add({
                 severity: 'warn',
@@ -376,22 +428,16 @@ export class AutorizacionInventarioComponent implements OnInit {
             cantidadEnviar
         ).subscribe({
             next: (data) => {
-                // Actualizar el producto en la lista de diferencias
-                const index = this.productosDiferencias.findIndex(
-                    p => p.nIdProducto === this.productoAjustar!.nIdProducto
-                );
-                if (index >= 0) {
-                    this.productosDiferencias[index] = data;
-                }
-
-                // Actualizar también en el inventario completo
-                if (this.inventarioSeleccionado.detalle) {
+                if (this.inventarioSeleccionado?.detalle) {
                     const indexDetalle = this.inventarioSeleccionado.detalle.findIndex(
                         p => p.nIdProducto === this.productoAjustar!.nIdProducto
                     );
+
                     if (indexDetalle >= 0) {
                         this.inventarioSeleccionado.detalle[indexDetalle] = data;
                     }
+
+                    this.actualizarListasDetalle(this.inventarioSeleccionado.detalle);
                 }
 
                 this.cargando = false;
@@ -401,6 +447,7 @@ export class AutorizacionInventarioComponent implements OnInit {
                     summary: 'Ajuste realizado',
                     detail: `El producto ${data.sNoParte} fue ajustado exitosamente`
                 });
+
                 this.productoAjustar = null;
                 this.motivoAjuste = '';
             },
@@ -431,7 +478,7 @@ export class AutorizacionInventarioComponent implements OnInit {
             this.messageService.add({
                 severity: 'error',
                 summary: 'Operación No Permitida',
-                detail: `No se puede autorizar el inventario. Hay ${this.productosRequierenReconteo.length} producto(s) con stock obsoleto que requiere(n) re-conteo.`
+                detail: `No se puede autorizar el inventario. Hay ${this.productosRequierenReconteo.length} producto(s) con diferencia cuyo stock cambió y requiere(n) re-conteo.`
             });
             return;
         }
@@ -569,7 +616,7 @@ export class AutorizacionInventarioComponent implements OnInit {
      */
     getTooltipAutorizar(): string {
         if (this.hayProductosConCambioStock) {
-            return `⚠️ No puede autorizar: ${this.productosRequierenReconteo?.length || 0} producto(s) con stock obsoleto requiere(n) re-conteo`;
+            return `⚠️ No puede autorizar: ${this.productosRequierenReconteo?.length || 0} producto(s) con diferencia requieren re-conteo`;
         }
         if (!this.todosProductosAjustados) {
             return `Debe ajustar todos los productos con diferencias antes de autorizar`;
