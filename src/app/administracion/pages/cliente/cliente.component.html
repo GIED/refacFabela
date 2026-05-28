@@ -41,6 +41,8 @@
                         <th pSortableColumn="sCorreo">Correo
                            
                         </th>
+                        <th pSortableColumn="nCorreoBloqueado">Estatus correo
+                        </th>
                         <th pSortableColumn="sTelefono">Telénono
                           
                         </th>
@@ -79,6 +81,14 @@
                         <td><span class="p-column-title">Dirección</span> {{cliente.sDireccion}}
                         </td>
                         <td><span class="p-column-title">Correo</span> {{cliente.sCorreo}}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Estatus correo</span>
+                            <span *ngIf="cliente.nCorreoBloqueado!==true" style="color: green;">Habilitado</span>
+                            <div *ngIf="cliente.nCorreoBloqueado===true" style="color: #b42318;">
+                                Correo bloqueado
+                                <small style="display:block;" *ngIf="cliente.sMotivoBloqueoCorreo">{{cliente.sMotivoBloqueoCorreo}}</small>
+                            </div>
                         </td>
                         <td><span class="p-column-title">Télefono</span> {{cliente.sTelefono}}
                         </td>

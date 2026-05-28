@@ -132,6 +132,12 @@
                                     <label for="float-input"><strong>Correo electrónico: </strong> {{tvVentasFactura.tcCliente.sCorreo}}</label>
                                 </span>
                             </div>
+                            <div class="p-field p-col-12 p-md-12" *ngIf="tvVentasFactura.tcCliente?.nCorreoBloqueado">
+                                <div style="padding: 12px 16px; border-radius: 8px; border: 1px solid #fcd34d; background: #fffbeb; color: #92400e;">
+                                    <strong>Correo bloqueado.</strong> La factura puede generarse, pero el sistema omitirá el envío automático hasta que se capture un correo distinto.
+                                    <div *ngIf="tvVentasFactura.tcCliente?.sMotivoBloqueoCorreo"><strong>Motivo:</strong> {{tvVentasFactura.tcCliente.sMotivoBloqueoCorreo}}</div>
+                                </div>
+                            </div>
                             <div class="p-field p-col-12 p-md-12">
                                 <span class="p-float-label">
                                     <label for="float-input"><strong> Teléfono: </strong> {{tvVentasFactura.tcCliente.sTelefono == null ? 'SIN INFORMACIÓN' : tvVentasFactura.tcCliente.sTelefono}}</label>

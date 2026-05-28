@@ -52,6 +52,13 @@
                 <small *ngIf="validaCorreo" class="p-error">Dirección invalida, favor de verificar.</small>
             </div>
         </div>
+        <div class="p-col-12" *ngIf="objCliente?.nCorreoBloqueado">
+            <div style="padding: 12px 16px; border-radius: 8px; border: 1px solid #fecaca; background: #fff1f2; color: #9f1239;">
+                <strong>Correo bloqueado para envíos automáticos.</strong>
+                <div *ngIf="objCliente?.sMotivoBloqueoCorreo">Motivo: {{objCliente.sMotivoBloqueoCorreo}}</div>
+                <div>Guarda un correo distinto para desbloquearlo automáticamente.</div>
+            </div>
+        </div>
         <div class="p-col-6">
             <div class="p-field">
                 <label for="marca">Razón social</label>

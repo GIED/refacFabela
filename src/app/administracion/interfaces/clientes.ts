@@ -20,5 +20,8 @@ export class Clientes implements Model{
     nDescuento?:number;
     nIdDatoFactura?:number;
     nDatosValidados?:boolean;
+    nCorreoBloqueado?: boolean;
+    sMotivoBloqueoCorreo?: string;
+    dFechaBloqueoCorreo?: Date;
     tcCp?:TcCp;
 }

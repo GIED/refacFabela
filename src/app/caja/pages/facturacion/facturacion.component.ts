@@ -232,7 +232,7 @@ export class FacturacionComponent implements OnInit {
     this.facturaService.facturarVenta(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
       this.formFactura=false;
       this.obtenerFacruras();
-        this.messageService.add({ severity: 'success', summary: 'Factura generada', detail: 'La factura se generó y se envió por correo con éxito.', life: 4000 });
+        this.messageService.add({ severity: 'success', summary: 'Factura generada', detail: 'La factura se generó correctamente.', life: 4000 });
     });
 
   }
@@ -244,7 +244,7 @@ export class FacturacionComponent implements OnInit {
     this.facturaService.facturarComplemento(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
       this.formFactura=false;
       this.obtenerFacruras();
-      this.messageService.add({ severity: 'success', summary: 'Complemento generado', detail: 'El complemento se generó y se envió por correo con éxito.', life: 4000 });
+      this.messageService.add({ severity: 'success', summary: 'Complemento generado', detail: 'El complemento se generó correctamente.', life: 4000 });
     });
 
   }

@@ -6,6 +6,10 @@ export class TcCliente{
     nEstatus?: number;
     n_idUsuarioCredito?: number;
     n_limiteCredito?: Decimal = new Decimal(0);
+    nDatosValidados?: boolean;
+    nCorreoBloqueado?: boolean;
+    sMotivoBloqueoCorreo?: string;
+    dFechaBloqueoCorreo?: Date;
     sCorreo?: string;
     sDireccion?: string;
     sRazonSocial?: string;
