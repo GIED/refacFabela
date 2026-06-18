@@ -12,6 +12,7 @@
         "declaration": false,
         "downlevelIteration": true,
         "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
         "moduleResolution": "node",
         "importHelpers": true,
         "target": "es2017",
@@ -25,8 +26,6 @@
         "enableI18nLegacyMessageIdFormat": false,
         "strictInjectionParameters": false,
         "strictInputAccessModifiers": false,
-        "strictTemplates": false,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
+        "strictTemplates": false
     }
 }

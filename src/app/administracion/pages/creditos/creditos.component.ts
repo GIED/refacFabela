@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import { Product } from '../../../demo/domain/product';
-import { ProductService } from '../../../demo/service/productservice';
+import { Product } from '../../../shared/model/product';
+import { ProductService } from '../../../shared/service/productservice';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { SaldoGeneralCliente } from '../../../ventasycotizaciones/model/TvSaldoGeneralCliente';

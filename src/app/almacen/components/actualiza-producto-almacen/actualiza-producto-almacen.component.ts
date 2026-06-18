@@ -6,7 +6,7 @@ import { TcProducto } from 'src/app/productos/model/TcProducto';
 import { TokenService } from 'src/app/shared/service/token.service';
 import { CatalogoService } from '../../../shared/service/catalogo.service';
 import { TcMarca } from 'src/app/productos/model/TcMarca';
-import { ProductService } from 'src/app/demo/service/productservice';
+import { ProductService } from 'src/app/shared/service/productservice';
 import { ProductoService } from 'src/app/shared/service/producto.service';
 
 @Component({

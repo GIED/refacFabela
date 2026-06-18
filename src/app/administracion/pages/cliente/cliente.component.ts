@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../demo/domain/product';
+import { Product } from '../../../shared/model/product';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { ClienteService } from '../../service/cliente.service';
@@ -114,10 +114,17 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  hideDialog(event: boolean) {
+  hideDialog(clienteActualizado?: Clientes) {
+    if (clienteActualizado && clienteActualizado.nId) {
+      const index = this.findIndexById(clienteActualizado.nId.toString());
+      if (index >= 0) {
+        this.listaClientes[index] = clienteActualizado;
+      } else {
+        this.listaClientes = [clienteActualizado, ...this.listaClientes];
+      }
+      this.listaClientes = [...this.listaClientes];
+    }
 
-    this.listaClientes=[];
-    this.obtenerClientes();
     this.clienteDialog = false;
     this.credito = false;
     this.submitted = false;
@@ -140,12 +147,10 @@ export class ClienteComponent implements OnInit {
           this.cliente.n_idUsuarioCredito = this.tokenService.getIdUser();
           this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
             this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
+            this.listaClientes = [...this.listaClientes];
             this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
             this.credito = false;
           })
-
-          this.listaClientes=[];
-          this.obtenerClientes();
         }
         else{
           this.messageService.add({ severity: 'info', summary: 'El limite de crédito no puede ser menor al adeudo actual que es de:'+this.saldoGeneralCliente.nSaldoTotal, detail: 'Cliente no actualizado', life: 10000 });
@@ -161,11 +166,10 @@ export class ClienteComponent implements OnInit {
         this.cliente.n_idUsuarioCredito = this.tokenService.getIdUser();
         this.clienteService.guardaCliente(this.cliente).subscribe(respuesta => {
           this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
+          this.listaClientes = [...this.listaClientes];
           this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
           this.credito = false;
         })
-        this.listaClientes=[];
-        this.obtenerClientes();
 
 
 
@@ -211,9 +215,12 @@ export class ClienteComponent implements OnInit {
  // console.log(cliente.nDescuento);
 
 this.clienteService.guardaCliente(cliente).subscribe(data=>{
+  const index = this.findIndexById(data.nId.toString());
+  if (index >= 0) {
+    this.listaClientes[index] = data;
+    this.listaClientes = [...this.listaClientes];
+  }
   this.messageService.add({ severity: 'success', summary: 'Se realizó con éxito', detail: 'Cliente actualizado', life: 10000 });
-  this.listaClientes=[];
-  this.obtenerClientes();
 
 })
 

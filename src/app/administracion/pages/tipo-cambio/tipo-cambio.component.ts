@@ -1,6 +1,6 @@
 import { MessageService, SelectItem } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
-import { CountryService } from 'src/app/demo/service/countryservice';
+import { CountryService } from 'src/app/shared/service/countryservice';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TipoCambioService } from '../../service/tipo-cambio.service';
 import { TipoCambio } from '../../interfaces/tipoCambio';

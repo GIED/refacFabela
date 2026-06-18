@@ -16,7 +16,7 @@ import {AppFooterComponent} from './shared/footer/app.footer.component';
 // Application services
 import {AppCodeModule} from './app.code.component';
 import { PrimeModule } from './shared/prime/prime.module';
-import { ProductService } from './demo/service/productservice';
+import { ProductService } from './shared/service/productservice';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SpinnerComponent } from './shared/spinner/spinner.component';

@@ -8,8 +8,8 @@ import { IngresoMercanciaComponent } from './pages/ingreso-mercancia/ingreso-mer
 import { InventarioComponent } from './pages/inventario/inventario.component';
 import { TraspasosComponent } from './pages/traspasos/traspasos.component';
 
-import { CountryService } from '../demo/service/countryservice';
-import { ProductService } from '../demo/service/productservice';
+import { CountryService } from '../shared/service/countryservice';
+import { ProductService } from '../shared/service/productservice';
 import { InputBusquedaComponent } from '../productos/components/input-busqueda/input-busqueda.component';
 import { ProductosModule } from '../productos/productos.module';
 import { VentasycotizacionesModule } from '../ventasycotizaciones/ventasycotizaciones.module';

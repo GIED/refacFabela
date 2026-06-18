@@ -16,6 +16,7 @@ export class Clientes implements Model{
     sTelefono?: string;
     sClave?:string;
     nCp?:number;
+    nIdRegimenFiscal?: number;
     tcRegimenFiscal?:TcRegimenFiscal;
     nDescuento?:number;
     nIdDatoFactura?:number;

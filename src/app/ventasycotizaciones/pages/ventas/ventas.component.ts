@@ -1014,6 +1014,15 @@ soloCotizacion(){
 
   this.generarCotizacionPdf(this.cotizacionData.nId);
 
+  if (this.clienteSeleccionado && this.clienteSeleccionado.nCorreoBloqueado) {
+    this.messageService.add({
+      severity: 'warn',
+      summary: 'Correo no enviado',
+      detail: 'La cotizacion se genero correctamente, pero el correo del cliente esta bloqueado y no se envio notificacion.',
+      life: 6000
+    });
+  }
+
   this.clienteCtrl.setValue('');
   this.productoCtrl.setValue('');
   this.clienteSeleccionadoCtrl.setValue('');
@@ -1027,7 +1036,7 @@ soloCotizacion(){
 
 
 }
-hideDialog(event:boolean) {
+hideDialog(event:any) {
     
   this.clienteDialog = false;
  

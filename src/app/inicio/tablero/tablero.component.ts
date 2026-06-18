@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { Product } from 'src/app/demo/domain/product';
-import { ProductService } from 'src/app/demo/service/productservice';
+import { Product } from 'src/app/shared/model/product';
+import { ProductService } from 'src/app/shared/service/productservice';
 import { TotalesGeneralesTablero } from '../model/TotalesGeneralesTablero';
 import { TableroService } from '../../shared/service/tablero.service';
 import { VwVentaProductoAno } from '../model/VwVentraProductoAno';

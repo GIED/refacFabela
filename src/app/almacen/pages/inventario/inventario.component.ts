@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
-import { Product } from 'src/app/demo/domain/product';
-import { ProductService } from 'src/app/demo/service/productservice';
+import { Product } from 'src/app/shared/model/product';
+import { ProductService } from 'src/app/shared/service/productservice';
 import { AnaquelService } from 'src/app/shared/service/anaquel.service';
 import { BodegasService } from 'src/app/shared/service/bodegas.service';
 import { NivelService } from 'src/app/shared/service/nivel.service';

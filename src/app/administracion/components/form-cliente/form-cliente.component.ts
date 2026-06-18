@@ -26,7 +26,7 @@ import Decimal from "decimal.js";
   styleUrls: ["./form-cliente.component.scss"],
 })
 export class FormClienteComponent implements OnInit {
-  @Output() cerrar: EventEmitter<boolean> = new EventEmitter();
+  @Output() cerrar: EventEmitter<Clientes | null> = new EventEmitter();
   @Input() objCliente: Clientes;
   formulario: FormGroup;
   listaRegimenFiscal: TcRegimenFiscal[];
@@ -232,7 +232,7 @@ export class FormClienteComponent implements OnInit {
     this.fclientes.sRazonSocial.setValue(this.objCliente.sRazonSocial);
     this.fclientes.sRfc.setValue(this.objCliente.sRfc);
     this.fclientes.sClave.setValue(this.objCliente.sClave);
-    this.fclientes.nCp.setValue(this.objCliente.tcCp.sCp);
+    this.fclientes.nCp.setValue(this.objCliente.tcCp?.sCp || '');
     this.fclientes.nDatosValidados.setValue(this.objCliente.nDatosValidados);
     // console.log(this.objCliente.nDatosValidados);
 
@@ -257,7 +257,7 @@ export class FormClienteComponent implements OnInit {
     this.credito = false;
     this.submitted = false;
     this.limpiarFormulario();
-    this.cerrar.emit(true);
+    this.cerrar.emit(null);
   }
 
   guardar() {
@@ -281,10 +281,11 @@ export class FormClienteComponent implements OnInit {
   if (this.cliente.nId) {
     // ------- ACTUALIZACIÓN -------
     this.clienteService.guardaCliente(this.cliente).subscribe((respuesta) => {
+      this.completarDatosVisuales(respuesta);
       this.listaClientes[this.findIndexById(respuesta.nId.toString())] = respuesta;
       this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Cliente actualizado', life: 10000 });
       this.listaClientes = [...this.listaClientes];
-      this.cerrar.emit(true);
+      this.cerrar.emit(respuesta);
     });
   } else {
     // ------- CREACIÓN -------
@@ -298,6 +299,8 @@ export class FormClienteComponent implements OnInit {
         });
         return;
       }
+
+      this.completarDatosVisuales(clienteGuardado);
 
       // Mantén tu lista sincronizada
       this.listaClientes.push(clienteGuardado);
@@ -316,7 +319,7 @@ export class FormClienteComponent implements OnInit {
       // 3) (Opcional) Cerrar este formulario después de abrir el modal de direcciones
       // this.cerrar.emit(true);
       //    Si prefieres cerrar hasta que cierren el modal de direcciones:
-      this.ref?.onClose?.subscribe(() => this.cerrar.emit(true));
+      this.ref?.onClose?.subscribe(() => this.cerrar.emit(clienteGuardado));
 
       // 4) Limpia de forma segura (evita asignar {} a objetos tipados)
       this.formulario.reset();
@@ -324,6 +327,30 @@ export class FormClienteComponent implements OnInit {
     });
   }
 }
+
+  private completarDatosVisuales(cliente: Clientes) {
+    if (!cliente) {
+      return;
+    }
+
+    const idRegimen = cliente.nIdRegimenFiscal ?? this.fclientes.nIdRegimenFiscal.value;
+    if (idRegimen != null) {
+      const regimenSeleccionado = this.listaRegimenFiscal.find((r) => r.nId === idRegimen);
+      if (regimenSeleccionado) {
+        cliente.tcRegimenFiscal = regimenSeleccionado;
+      }
+    }
+
+    if (this.tcCp && this.tcCp.nId === cliente.nCp) {
+      cliente.tcCp = this.tcCp;
+      return;
+    }
+
+    const cpFormulario = this.fclientes.nCp.value;
+    if (cpFormulario && !cliente.tcCp) {
+      cliente.tcCp = { nId: cliente.nCp, sCp: String(cpFormulario) } as TcCp;
+    }
+  }
 
   consultaRfc() {
     if (this.fclientes.sRfc.value.length >= 5) {

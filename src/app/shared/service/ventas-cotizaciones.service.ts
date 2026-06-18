@@ -5,18 +5,19 @@ import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 import { TwCotizacion } from '../../productos/model/TcCotizacion';
 import { TvStockProducto } from '../../productos/model/TvStockProducto';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TwPagoComprobanteInternet } from '../../ventasycotizaciones/model/TwPagoComprobanteInternet';
 import { TwVenta } from '../../productos/model/TwVenta';
 import { TwCotizacionProducto } from 'src/app/productos/model/TwCotizacionProducto';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VentasCotizacionesService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private messageService: MessageService) { }
 
   guardaCotizacion(listaCotizacion: Array<CotizacionDto>){
     let url = environment.servicios.apiRefacFabela + locator.guardaCotizacion;
@@ -72,10 +73,18 @@ export class VentasCotizacionesService {
   }
 
   generarCotizacionPdf(nIdCotizacion: number){
-    const httpOptions = {
-      responseType: 'arraybuffer' as 'json'
-    };
-    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.generarCotizacionPdf + 'nIdCotizacion=' + nIdCotizacion, httpOptions).pipe(
+    const url = environment.servicios.apiRefacFabela + locator.generarCotizacionPdf + 'nIdCotizacion=' + nIdCotizacion;
+    return this.http.get(url, {
+      responseType: 'arraybuffer',
+      observe: 'response'
+    }).pipe(
+      tap(response => {
+        const aviso = response.headers.get('X-Aviso-Correo');
+        if (aviso) {
+          this.messageService.add({ severity: 'warn', summary: 'Correo no enviado', detail: aviso, life: 6000 });
+        }
+      }),
+      map(response => response.body),
       catchError(e => {
         console.error(e);
         return throwError(e);

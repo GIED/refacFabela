@@ -40,7 +40,7 @@
                             "node_modules/prismjs/components/prism-typescript.js",
                             "node_modules/bootstrap/dist/js/bootstrap.min.js"
                         ],
-                        "allowedCommonJsDependencies": ["@fullcalendar/daygrid", "@fullcalendar/timegrid", "@fullcalendar/interaction", "chart.js"]
+                        "allowedCommonJsDependencies": ["@fullcalendar/daygrid", "@fullcalendar/timegrid", "@fullcalendar/interaction", "chart.js", "moment-timezone"]
                     },
                     "configurations": {
                         "production": {

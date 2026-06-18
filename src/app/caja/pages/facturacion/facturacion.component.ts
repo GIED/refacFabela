@@ -233,6 +233,9 @@ export class FacturacionComponent implements OnInit {
       this.formFactura=false;
       this.obtenerFacruras();
         this.messageService.add({ severity: 'success', summary: 'Factura generada', detail: 'La factura se generó correctamente.', life: 4000 });
+        if (resp && resp.avisoCorreo) {
+          this.messageService.add({ severity: 'warn', summary: 'Correo no enviado', detail: resp.avisoCorreo, life: 6000 });
+        }
     });
 
   }

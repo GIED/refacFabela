@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SelectItem, MessageService, ConfirmationService } from 'primeng/api';
-import { CountryService } from 'src/app/demo/service/countryservice';
-import { ProductService } from 'src/app/demo/service/productservice';
-import { Product } from '../../../demo/domain/product';
 import { Clientes } from 'src/app/administracion/interfaces/clientes';
 import { TcProducto } from 'src/app/productos/model/TcProducto';
 import { Subject } from 'rxjs';

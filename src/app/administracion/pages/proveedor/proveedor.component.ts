@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../demo/domain/product';
+import { Product } from '../../../shared/model/product';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { Clientes } from '../../interfaces/clientes';

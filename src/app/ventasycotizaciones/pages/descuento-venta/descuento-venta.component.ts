@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Product } from 'src/app/demo/domain/product';
+import { Product } from 'src/app/shared/model/product';
 import { TvVentasDetalle } from 'src/app/productos/model/TvVentasDetalle';
 import { VentasService } from 'src/app/shared/service/ventas.service';
 import { validators } from 'src/app/shared/validators/validators';
