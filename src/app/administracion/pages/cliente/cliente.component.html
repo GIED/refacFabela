@@ -84,11 +84,12 @@
                         </td>
                         <td>
                             <span class="p-column-title">Estatus correo</span>
-                            <span *ngIf="cliente.nCorreoBloqueado!==true" style="color: green;">Habilitado</span>
-                            <div *ngIf="cliente.nCorreoBloqueado===true" style="color: #b42318;">
-                                Correo bloqueado
-                                <small style="display:block;" *ngIf="cliente.sMotivoBloqueoCorreo">{{cliente.sMotivoBloqueoCorreo}}</small>
-                            </div>
+                            <span *ngIf="cliente.nCorreoBloqueado!==true">
+                                <p-tag severity="success" value="Habilitado"></p-tag>
+                            </span>
+                            <span *ngIf="cliente.nCorreoBloqueado===true">
+                                <p-tag severity="danger" value="Bloqueado"></p-tag>
+                            </span>
                         </td>
                         <td><span class="p-column-title">Télefono</span> {{cliente.sTelefono}}
                         </td>
@@ -102,8 +103,14 @@
                             <p-checkbox [(ngModel)]="cliente.nDescuento" [binary]="true" inputId="cliente.nDescuento" (onChange)=guardarDescuento(cliente)></p-checkbox>
                         </td>
 
-                        <td *ngIf="cliente.nDatosValidados==true" style="color: green;">Datos validados</td>
-                        <td *ngIf="cliente.nDatosValidados==false" style="color: red;">Datos no validados</td>
+                        <td>
+                            <span *ngIf="cliente.nDatosValidados===true">
+                                <p-tag severity="success" value="Validados"></p-tag>
+                            </span>
+                            <span *ngIf="cliente.nDatosValidados!==true">
+                                <p-tag severity="danger" value="Pendientes"></p-tag>
+                            </span>
+                        </td>
                        
                         <td>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning p-button-outlined p-mr-2"
