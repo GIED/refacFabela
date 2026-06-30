@@ -103,6 +103,7 @@ export class VentasComponent implements OnInit {
     mostrarPrecioProveedor:boolean=false;
     rutaImagen:string=null;
     rutaImagenDefault: string = 'assets/layout/images/default.png';
+    razonesSocialesPorId: { [key: number]: string } = {};
 
 
   constructor(
@@ -132,6 +133,7 @@ export class VentasComponent implements OnInit {
     
     this.buscaCliente();
     this.buscaProducto();
+    this.cargarRazonesSociales();
     this._initFormGroup();
     this.banBusquedaCorizaciones=false;
   
@@ -151,6 +153,26 @@ export class VentasComponent implements OnInit {
 
 
   }
+
+      cargarRazonesSociales() {
+        this.clienteService.obtenerCatalogoRazonSocial().subscribe(resp => {
+          this.razonesSocialesPorId = {};
+          (resp || []).forEach(item => {
+            if (item?.nId != null) {
+              this.razonesSocialesPorId[item.nId] = item.sRazonSocial;
+            }
+          });
+        });
+      }
+
+      obtenerNombreRazonSocialCliente(): string {
+        const nIdDatoFactura = this.saldoGeneralCliente?.tcCliente?.nIdDatoFactura;
+        if (!nIdDatoFactura) {
+          return '';
+        }
+
+        return this.razonesSocialesPorId[nIdDatoFactura] || '';
+      }
 
   _initFormGroup(): void{ 
     this.formGrp=new FormGroup({

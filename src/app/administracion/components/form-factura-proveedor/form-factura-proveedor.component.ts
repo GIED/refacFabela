@@ -50,7 +50,7 @@ export class FormFacturaProveedorComponent implements OnInit {
 
   getDatosFactura(){
 
-    this.clienteService.obtenerCatalogoRazonSocial().subscribe(data2=>{
+    this.clienteService.obtenerCatalogoRazonSocialAsignable().subscribe(data2=>{
   this.listaDatosFactura=data2
 
     })

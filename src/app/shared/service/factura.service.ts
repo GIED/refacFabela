@@ -3,6 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 import { TvVentasFactura } from '../../productos/model/TvVentasFactura';
+import { CancelacionFacturaDto } from '../../productos/model/CancelacionFacturaDto';
+import { StatusCfdiResponse } from '../../productos/model/StatusCfdiResponse';
+import { CfdiRelacionadosResponse } from '../../productos/model/CfdiRelacionadosResponse';
+import { SolicitudCancelacionDto } from '../../productos/model/SolicitudCancelacionDto';
+import { SolicitudCancelacionAccionDto } from '../../productos/model/SolicitudCancelacionAccionDto';
+import { CancelacionResponse } from '../../productos/model/CancelacionResponse';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
@@ -33,6 +39,36 @@ export class FacturaService {
   facturarComplemento(idVenta:number, cveCfdi:string){
     let url = environment.servicios.apiRefacFabela + locator.facturarComplemento+ 'nIdVenta='+idVenta + '&cveCfdi='+cveCfdi;
     return this.http.get<any>(url);
+  }
+
+  cancelarFactura(payload: CancelacionFacturaDto){
+    let url = environment.servicios.apiRefacFabela + locator.cancelarFactura;
+    return this.http.post<any>(url, payload);
+  }
+
+  consultarEstatusSat(nIdVenta:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaEstatusSat + 'nIdVenta=' + nIdVenta;
+    return this.http.get<StatusCfdiResponse>(url);
+  }
+
+  consultarCfdiRelacionados(nIdVenta:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaCfdiRelacionados + 'nIdVenta=' + nIdVenta;
+    return this.http.get<CfdiRelacionadosResponse>(url);
+  }
+
+  consultarSolicitudesPendientes(nIdDatoFactura:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaSolicitudesPendientes + 'nIdDatoFactura=' + nIdDatoFactura;
+    return this.http.get<SolicitudCancelacionDto[]>(url);
+  }
+
+  aceptarSolicitudPendiente(payload: SolicitudCancelacionAccionDto){
+    let url = environment.servicios.apiRefacFabela + locator.aceptarSolicitudPendiente;
+    return this.http.post<CancelacionResponse>(url, payload);
+  }
+
+  rechazarSolicitudPendiente(payload: SolicitudCancelacionAccionDto){
+    let url = environment.servicios.apiRefacFabela + locator.rechazarSolicitudPendiente;
+    return this.http.post<CancelacionResponse>(url, payload);
   }
 
   descargarDocumento(nIdVenta: number, tipoDoc:string){

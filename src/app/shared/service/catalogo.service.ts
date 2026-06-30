@@ -19,6 +19,7 @@ import { TcCp } from 'src/app/productos/model/TcCp';
 import { TcMoneda } from 'src/app/productos/model/TcMoneda';
 import { TcCuentaBancaria } from 'src/app/productos/model/TcCuentaBancaria';
 import { TcTipoProveedor } from 'src/app/administracion/interfaces/TcTipoProveedor';
+import { DatosFacturaDto } from 'src/app/productos/model/DatosFacturaDto';
 
 @Injectable({
   providedIn: 'root'
@@ -128,6 +129,11 @@ export class CatalogoService {
   getTipoProveedor(){
     let url= environment.servicios.apiRefacFabela + locator.getTipoProveedor ;
     return this.http.get<TcTipoProveedor[]>(url);
+  }
+
+  obtenerCatalogoRazonSocial(){
+    let url = environment.servicios.apiRefacFabela + locator.consultaCatalogoRazonSocial;
+    return this.http.get<DatosFacturaDto[]>(url);
   }
 
 

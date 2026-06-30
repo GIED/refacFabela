@@ -6,14 +6,13 @@
                 <h3>Módulo de Facturación</h3>
             </div>
             <div class="p-text-right">
-                <h5>Créditos disponibles Fabela: {{creditosRestantesFabela}} </h5>
+                <h5>Créditos disponibles: {{creditosTotales}} </h5>
             </div>
-            <div class="p-text-right">
-                <h5>Créditos disponibles Jemkal: {{creditosRestantesJemkal}} </h5>
-            </div>
+           
            
             <button pButton pRipple type="button" label="Para Facturar" class="p-button-danger" (click)="obtenerFacruras()"></button>
             <button pButton pRipple pRipple type="button" label="Ventas Facturadas" class="p-button-success" (click)="obtenerVentasFacturadas()"></button>
+            <button pButton pRipple type="button" label="Solicitudes Pendientes" class="p-button-help p-ml-2" (click)="abrirDialogoSolicitudesPendientes()"></button>
 
             <p-table #dt [value]="listaVentas" [rows]="10" [paginator]="true"
             [globalFilterFields]="['nId','tcCliente.sRfc', 'tcCliente.sRazonSocial']" 
@@ -84,6 +83,18 @@
 
                                 <td *ngIf="venta.idFactura!=0">
                                     <button pButton pRipple icon="pi pi-book" pTooltip="Descargar xml" class="p-button-rounded p-button-info p-mr-2 p-button-outlined" (click)="descargarXML(venta.nId)"></button>
+                                </td>
+
+                                <td *ngIf="venta.idFactura!=0">
+                                    <button pButton pRipple icon="pi pi-times" pTooltip="Cancelar CFDI" class="p-button-rounded p-button-secondary p-mr-2 p-button-outlined" (click)="abrirDialogoCancelacion(venta)"></button>
+                                </td>
+
+                                <td *ngIf="venta.idFactura!=0">
+                                    <button pButton pRipple icon="pi pi-search" pTooltip="Consultar estatus SAT" class="p-button-rounded p-button-help p-mr-2 p-button-outlined" (click)="abrirDialogoEstatusSat(venta)"></button>
+                                </td>
+
+                                <td *ngIf="venta.idFactura!=0">
+                                    <button pButton pRipple icon="pi pi-sitemap" pTooltip="Consultar CFDI relacionados" class="p-button-rounded p-button-info p-mr-2 p-button-outlined" (click)="abrirDialogoRelacionados(venta)"></button>
                                 </td>
                             </tr>
                         </td>
@@ -186,7 +197,144 @@
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger" (click)="hideDialog()"></button>
         <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-success" (click)="generarFactura()"></button>
-      <!--  <button pButton pRipple label="Complemento" icon="pi pi-check" class="p-button-text" (click)="generarComplemento()"></button>-->
+        <button pButton pRipple label="Complemento" icon="pi pi-check" class="p-button-text" (click)="generarComplemento()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarDialogoEstatusSat" [style]="{width: '650px'}" header="Estatus SAT" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>Venta:</strong> {{tvVentasFactura?.nId}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>UUID:</strong> {{estatusSat?.uuid || 'Sin información'}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>Estatus SAT:</strong> {{estatusSat?.estatusSat || 'Sin información'}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>Estatus cancelación:</strong> {{estatusSat?.estatusCancelacion || 'Sin información'}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12" *ngIf="estatusSat?.codigoError || estatusSat?.mensajeError">
+            <div class="pac-result pac-result-warn">
+                <strong>Código:</strong> {{estatusSat?.codigoError || 'N/D'}}
+                <div><strong>Mensaje:</strong> {{estatusSat?.mensajeError || 'Sin detalle'}}</div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="mostrarDialogoEstatusSat=false"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarDialogoRelacionados" [style]="{width: '650px'}" header="CFDI Relacionados" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>Venta:</strong> {{tvVentasFactura?.nId}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>UUID base:</strong> {{cfdiRelacionados?.uuid || 'Sin información'}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12" *ngIf="cfdiRelacionados?.relacionados?.length; else sinRelacionados">
+            <ul class="pac-list">
+                <li *ngFor="let relacionado of cfdiRelacionados.relacionados">{{relacionado}}</li>
+            </ul>
+        </div>
+        <ng-template #sinRelacionados>
+            <div class="pac-result pac-result-neutral">No se encontraron CFDI relacionados.</div>
+        </ng-template>
+        <div class="p-field p-col-12 p-md-12" *ngIf="cfdiRelacionados?.codigoError || cfdiRelacionados?.mensajeError">
+            <div class="pac-result pac-result-warn">
+                <strong>Código:</strong> {{cfdiRelacionados?.codigoError || 'N/D'}}
+                <div><strong>Mensaje:</strong> {{cfdiRelacionados?.mensajeError || 'Sin detalle'}}</div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="mostrarDialogoRelacionados=false"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarDialogoSolicitudesPendientes" [style]="{width: '900px'}" header="Solicitudes Pendientes de Cancelación" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="p-grid">
+            <div class="p-field p-col-12 p-md-8">
+                <label for="razonSocialSolicitud">Razón social emisora</label>
+                <p-dropdown id="razonSocialSolicitud" [options]="listaDatosFactura" optionLabel="sRazonSocial" optionValue="nId" [(ngModel)]="nIdDatoFacturaSeleccionado" (onChange)="onRazonSocialSeleccionada()" placeholder="Selecciona una razón social"></p-dropdown>
+            </div>
+            <div class="p-field p-col-12 p-md-4 p-d-flex p-ai-end">
+                <button pButton pRipple type="button" label="Consultar" icon="pi pi-search" class="p-button-help p-mt-3" (click)="consultarSolicitudesPendientes()"></button>
+            </div>
+            <div class="p-col-12" *ngIf="obtenerNombreRazonSocialSeleccionada()">
+                <div class="pac-result pac-result-neutral">
+                    Consultando solicitudes para: <strong>{{obtenerNombreRazonSocialSeleccionada()}}</strong>
+                </div>
+            </div>
+            <div class="p-col-12" *ngIf="cargandoSolicitudes">
+                <p-progressSpinner styleClass="custom-spinner" strokeWidth="4"></p-progressSpinner>
+            </div>
+            <div class="p-col-12" *ngIf="!cargandoSolicitudes">
+                <p-table [value]="listaSolicitudesPendientes" [rows]="5" [paginator]="true" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>UUID</th>
+                            <th>RFC Emisor</th>
+                            <th>RFC Receptor</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-solicitud>
+                        <tr>
+                            <td>{{solicitud.uuid}}</td>
+                            <td>{{solicitud.rfcEmisor}}</td>
+                            <td>{{solicitud.rfcReceptor}}</td>
+                            <td>{{solicitud.estado || 'Pendiente'}}</td>
+                            <td>{{solicitud.fechaSolicitud || 'Sin información'}}</td>
+                            <td>
+                                <button pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-success p-button-outlined p-mr-2" pTooltip="Aceptar solicitud" (click)="procesarSolicitudPendiente(solicitud, true)"></button>
+                                <button pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined" pTooltip="Rechazar solicitud" (click)="procesarSolicitudPendiente(solicitud, false)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6">No hay solicitudes pendientes para la razón social seleccionada.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="mostrarDialogoSolicitudesPendientes=false"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarDialogoCancelacion" [style]="{width: '650px'}" header="Cancelar CFDI" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>Venta:</strong> {{ventaCancelar?.nId}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>RFC cliente:</strong> {{ventaCancelar?.tcCliente?.sRfc}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label><strong>Razón social:</strong> {{ventaCancelar?.tcCliente?.sRazonSocial}}</label>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label for="motivoCancelacion">Motivo SAT</label>
+            <p-dropdown [options]="motivosCancelacion" optionLabel="label" optionValue="value" [(ngModel)]="motivoCancelacion" placeholder="Selecciona un motivo"></p-dropdown>
+        </div>
+        <div class="p-field p-col-12 p-md-12" *ngIf="motivoCancelacion === '01'">
+            <label for="folioFiscalSustitucion">Folio fiscal de sustitución</label>
+            <input pInputText id="folioFiscalSustitucion" [(ngModel)]="folioFiscalSustitucion" />
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-danger" (click)="cerrarDialogoCancelacion()"></button>
+        <button pButton pRipple label="Cancelar CFDI" icon="pi pi-check" class="p-button-success" (click)="confirmarCancelacion()"></button>
     </ng-template>
 </p-dialog>
 

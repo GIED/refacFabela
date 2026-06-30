@@ -218,7 +218,7 @@ export class FormClienteComponent implements OnInit {
   }
 
   obtenerCatalogoRazonSocial() {
-    this.clienteService.obtenerCatalogoRazonSocial().subscribe((data) => {
+    this.clienteService.obtenerCatalogoRazonSocialAsignable().subscribe((data) => {
       this.listaDatosFactura = data;
     });
   }

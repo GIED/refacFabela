@@ -76,11 +76,8 @@
                     <p-accordion class="p-col-12" *ngIf="mostrarDetalleCliente">
                         <p-accordionTab header="Datos del cliente">
                             <div class="grid">
-                                <div *ngIf="saldoGeneralCliente.tcCliente.nIdDatoFactura==1" class="col-12">
-                                    <h6>Cliente de: Refacciones Fabela</h6>
-                                </div>
-                                <div *ngIf="saldoGeneralCliente.tcCliente.nIdDatoFactura==2" class="col-12">
-                                    <h6>Cliente de: JEMKAL</h6>
+                                <div *ngIf="obtenerNombreRazonSocialCliente() as razonSocialCliente" class="col-12">
+                                    <h6>Cliente de: {{razonSocialCliente}}</h6>
                                 </div>
                                 <div class="p-col-12">
                                     <ng-template [ngIf]="mostrarDetalleCliente">

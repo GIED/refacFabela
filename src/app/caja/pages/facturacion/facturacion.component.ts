@@ -10,6 +10,12 @@ import { TcFormaPago } from 'src/app/productos/model/TcFormaPago';
 import { VentasService } from '../../../shared/service/ventas.service';
 import { TrVentaCobro } from '../../../productos/model/TrVentaCobro';
 import { SubirFacturaDto } from '../../../productos/model/SubirFacturaDto';
+import { CancelacionFacturaDto } from '../../../productos/model/CancelacionFacturaDto';
+import { StatusCfdiResponse } from '../../../productos/model/StatusCfdiResponse';
+import { CfdiRelacionadosResponse } from '../../../productos/model/CfdiRelacionadosResponse';
+import { SolicitudCancelacionDto } from '../../../productos/model/SolicitudCancelacionDto';
+import { SolicitudCancelacionAccionDto } from '../../../productos/model/SolicitudCancelacionAccionDto';
+import { DatosFacturaDto } from '../../../productos/model/DatosFacturaDto';
 import Decimal from 'decimal.js';
 
 @Component({
@@ -29,8 +35,6 @@ export class FacturacionComponent implements OnInit {
     clienteDialog:boolean;
     objCliente: TcCliente;
     creditosRestantes:number;
-    creditosRestantesFabela:number;
-    creditosRestantesJemkal:number;
     ListaTrVentaCobro: TrVentaCobro[];
     nuevaFormaPago:string;
     efectivoValida:boolean;
@@ -43,6 +47,28 @@ export class FacturacionComponent implements OnInit {
     fileXml: File | null = null;
     pdf:boolean;
     xml:boolean;
+    mostrarDialogoCancelacion:boolean;
+    motivoCancelacion:string;
+    folioFiscalSustitucion:string;
+    ventaCancelar?: TvVentasFactura;
+    mostrarDialogoEstatusSat:boolean;
+    mostrarDialogoRelacionados:boolean;
+    mostrarDialogoSolicitudesPendientes:boolean;
+    estatusSat: StatusCfdiResponse;
+    cfdiRelacionados: CfdiRelacionadosResponse;
+    listaSolicitudesPendientes: SolicitudCancelacionDto[];
+    listaDatosFactura: DatosFacturaDto[];
+    nIdDatoFacturaSeleccionado?: number;
+    cargandoSolicitudes:boolean;
+    hayTimbresDisponibles:boolean;
+    creditosTotales:number;
+
+    readonly motivosCancelacion = [
+      { label: '01 - Comprobante emitido con errores con relación', value: '01' },
+      { label: '02 - Comprobante emitido con errores sin relación', value: '02' },
+      { label: '03 - No se llevó a cabo la operación', value: '03' },
+      { label: '04 - Operación nominativa relacionada en factura global', value: '04' }
+    ];
 
     
 
@@ -54,17 +80,28 @@ export class FacturacionComponent implements OnInit {
         this.clienteDialog= false;
         this.objCliente= new TcCliente();
         this.creditosRestantes=0;
-        this.creditosRestantesFabela=0;
-        this.creditosRestantesJemkal=0;
         this.nuevaFormaPago='';
         this.efectivoValida=false;
         this.subirFacturaDto=new SubirFacturaDto();
+        this.mostrarDialogoCancelacion = false;
+        this.motivoCancelacion = '';
+        this.folioFiscalSustitucion = '';
+          this.mostrarDialogoEstatusSat = false;
+          this.mostrarDialogoRelacionados = false;
+          this.mostrarDialogoSolicitudesPendientes = false;
+          this.estatusSat = new StatusCfdiResponse();
+          this.cfdiRelacionados = new CfdiRelacionadosResponse();
+          this.listaSolicitudesPendientes = [];
+          this.listaDatosFactura = [];
+          this.cargandoSolicitudes = false;
+          this.hayTimbresDisponibles = false;
+          this.creditosTotales = 0;
      }
 
   ngOnInit(){
    this.obtenerFacruras();
    this.obtenerUsocfdi();
-   this.consultaCreditos();
+    this.obtenerCatalogoRazonSocial();
 
 
     
@@ -137,6 +174,27 @@ export class FacturacionComponent implements OnInit {
 
   }
 
+  obtenerCatalogoRazonSocial(){
+    this.catalogoService.obtenerCatalogoRazonSocial().subscribe(resp => {
+    this.listaDatosFactura = resp || [];
+    this.nIdDatoFacturaSeleccionado = this.resolverRazonSocialSeleccionadaId();
+    this.consultaCreditos(this.nIdDatoFacturaSeleccionado);
+    });
+  }
+
+  private resolverRazonSocialSeleccionadaId(): number | undefined {
+    if (this.nIdDatoFacturaSeleccionado && this.listaDatosFactura.some(item => item.nId === this.nIdDatoFacturaSeleccionado)) {
+    return this.nIdDatoFacturaSeleccionado;
+    }
+
+    const razonSocialPredeterminada = this.listaDatosFactura.find(item => item.nPredeterminado === 1);
+    if (razonSocialPredeterminada) {
+    return razonSocialPredeterminada.nId;
+    }
+
+    return this.listaDatosFactura.length > 0 ? this.listaDatosFactura[0].nId : undefined;
+  }
+
   obtenerFacruras(){
 
     this.facturaService.obtenerVentaFactura().subscribe(resp =>{
@@ -156,15 +214,25 @@ export class FacturacionComponent implements OnInit {
   });
 
   }
-  consultaCreditos(){
+  consultaCreditos(nIdDatoFactura?: number) {
+    const razonSocialId = nIdDatoFactura || this.resolverRazonSocialSeleccionadaId();
+    if (!razonSocialId) {
+      this.creditosTotales = 0;
+      this.hayTimbresDisponibles = false;
+      return;
+    }
 
-    this.facturaService.consultaCreditos(1).subscribe(resp =>{
-      this.creditosRestantesFabela=resp;
-  });
-  this.facturaService.consultaCreditos(2).subscribe(resp =>{
-    this.creditosRestantesJemkal=resp;
-});
+    this.facturaService.consultaCreditos(razonSocialId).subscribe(resp => {
+      this.creditosTotales = resp;
+      this.hayTimbresDisponibles = this.creditosTotales > 0;
+    });
+  }
 
+  onRazonSocialSeleccionada() {
+    this.consultaCreditos(this.nIdDatoFacturaSeleccionado);
+    if (this.mostrarDialogoSolicitudesPendientes) {
+      this.consultarSolicitudesPendientes();
+    }
   }
 
 
@@ -200,6 +268,12 @@ export class FacturacionComponent implements OnInit {
     this.idVenta = tvVentasFactura.nId;
     this.totalVenta = tvVentasFactura.nTotalVenta;
 
+    const nIdDatoFactura = tvVentasFactura.tcCliente?.nIdDatoFactura;
+    if (nIdDatoFactura) {
+      this.nIdDatoFacturaSeleccionado = nIdDatoFactura;
+      this.consultaCreditos(nIdDatoFactura);
+    }
+
     if (
       this.tvVentasFactura.nTipoPago === 1 ||
       this.ListaTrVentaCobro.length > 1 ||
@@ -226,8 +300,10 @@ export class FacturacionComponent implements OnInit {
   }
 
   generarFactura(){
-    //console.log(this.cfdiSeleccionado);
-    // console.log(this.idVenta);
+    if (!this.hayTimbresDisponibles) {
+        this.messageService.add({ severity: 'warn', summary: 'Sin Créditos', detail: 'No hay timbres disponibles para facturar.', life: 4000 });
+        return;
+    }
 
     this.facturaService.facturarVenta(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
       this.formFactura=false;
@@ -241,8 +317,10 @@ export class FacturacionComponent implements OnInit {
   }
 
   generarComplemento(){
-   // console.log(this.cfdiSeleccionado);
-   // console.log(this.idVenta);
+    if (!this.hayTimbresDisponibles) {
+        this.messageService.add({ severity: 'warn', summary: 'Sin Créditos', detail: 'No hay timbres disponibles para generar el complemento.', life: 4000 });
+        return;
+    }
 
     this.facturaService.facturarComplemento(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
       this.formFactura=false;
@@ -250,6 +328,119 @@ export class FacturacionComponent implements OnInit {
       this.messageService.add({ severity: 'success', summary: 'Complemento generado', detail: 'El complemento se generó correctamente.', life: 4000 });
     });
 
+  }
+
+  abrirDialogoCancelacion(venta: TvVentasFactura) {
+    this.ventaCancelar = venta;
+    this.motivoCancelacion = '02';
+    this.folioFiscalSustitucion = '';
+    this.mostrarDialogoCancelacion = true;
+  }
+
+  cerrarDialogoCancelacion() {
+    this.mostrarDialogoCancelacion = false;
+    this.ventaCancelar = undefined;
+    this.motivoCancelacion = '';
+    this.folioFiscalSustitucion = '';
+  }
+
+  confirmarCancelacion() {
+    if (!this.ventaCancelar) {
+      return;
+    }
+
+    if (!this.motivoCancelacion) {
+      this.messageService.add({ severity: 'warn', summary: 'Validación', detail: 'Selecciona un motivo de cancelación.', life: 3000 });
+      return;
+    }
+
+    if (this.motivoCancelacion === '01' && !this.folioFiscalSustitucion) {
+      this.messageService.add({ severity: 'warn', summary: 'Validación', detail: 'El folio fiscal de sustitución es obligatorio para el motivo 01.', life: 4000 });
+      return;
+    }
+
+    const payload = new CancelacionFacturaDto();
+    payload.nIdVenta = this.ventaCancelar.nId;
+    payload.motivo = this.motivoCancelacion;
+    payload.folioFiscalSustitucion = this.folioFiscalSustitucion || null;
+
+    this.facturaService.cancelarFactura(payload).subscribe(() => {
+      this.messageService.add({ severity: 'success', summary: 'Factura cancelada', detail: 'La solicitud de cancelación se procesó correctamente.', life: 4000 });
+      this.cerrarDialogoCancelacion();
+      this.obtenerVentasFacturadas();
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible cancelar la factura.', life: 4000 });
+    });
+  }
+
+  abrirDialogoEstatusSat(venta: TvVentasFactura) {
+    this.estatusSat = new StatusCfdiResponse();
+    this.tvVentasFactura = venta;
+    this.facturaService.consultarEstatusSat(venta.nId).subscribe(resp => {
+      this.estatusSat = resp || new StatusCfdiResponse();
+      this.mostrarDialogoEstatusSat = true;
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible consultar el estatus SAT.', life: 4000 });
+    });
+  }
+
+  abrirDialogoRelacionados(venta: TvVentasFactura) {
+    this.cfdiRelacionados = new CfdiRelacionadosResponse();
+    this.tvVentasFactura = venta;
+    this.facturaService.consultarCfdiRelacionados(venta.nId).subscribe(resp => {
+      this.cfdiRelacionados = resp || new CfdiRelacionadosResponse();
+      if (!this.cfdiRelacionados.relacionados) {
+        this.cfdiRelacionados.relacionados = [];
+      }
+      this.mostrarDialogoRelacionados = true;
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible consultar los CFDI relacionados.', life: 4000 });
+    });
+  }
+
+  abrirDialogoSolicitudesPendientes() {
+    this.listaSolicitudesPendientes = [];
+    this.mostrarDialogoSolicitudesPendientes = true;
+    if (this.nIdDatoFacturaSeleccionado) {
+      this.consultarSolicitudesPendientes();
+    }
+  }
+
+  consultarSolicitudesPendientes() {
+    if (!this.nIdDatoFacturaSeleccionado) {
+      this.messageService.add({ severity: 'warn', summary: 'Validación', detail: 'Selecciona una razón social emisora.', life: 3000 });
+      return;
+    }
+    this.cargandoSolicitudes = true;
+    this.facturaService.consultarSolicitudesPendientes(this.nIdDatoFacturaSeleccionado).subscribe(resp => {
+      this.listaSolicitudesPendientes = resp || [];
+      this.cargandoSolicitudes = false;
+    }, () => {
+      this.cargandoSolicitudes = false;
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible consultar las solicitudes pendientes.', life: 4000 });
+    });
+  }
+
+  procesarSolicitudPendiente(solicitud: SolicitudCancelacionDto, aceptar: boolean) {
+    if (!this.nIdDatoFacturaSeleccionado || !solicitud?.uuid) {
+      return;
+    }
+    const payload = new SolicitudCancelacionAccionDto();
+    payload.nIdDatoFactura = this.nIdDatoFacturaSeleccionado;
+    payload.uuid = solicitud.uuid;
+    const request = aceptar ? this.facturaService.aceptarSolicitudPendiente(payload) : this.facturaService.rechazarSolicitudPendiente(payload);
+    request.subscribe(resp => {
+      const mensaje = resp?.mensajeError ? resp.mensajeError : aceptar ? 'La solicitud se aceptó correctamente.' : 'La solicitud se rechazó correctamente.';
+      this.messageService.add({ severity: resp?.success === false ? 'warn' : 'success', summary: aceptar ? 'Solicitud aceptada' : 'Solicitud rechazada', detail: mensaje, life: 4000 });
+      this.consultarSolicitudesPendientes();
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: aceptar ? 'No fue posible aceptar la solicitud.' : 'No fue posible rechazar la solicitud.', life: 4000 });
+    });
+  }
+
+  obtenerNombreRazonSocialSeleccionada() {
+    const razonSocial = this.listaDatosFactura.find(item => item.nId === this.nIdDatoFacturaSeleccionado);
+    return razonSocial ? razonSocial.sRazonSocial : '';
   }
 
 

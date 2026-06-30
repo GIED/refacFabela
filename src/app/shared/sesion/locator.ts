@@ -12,6 +12,7 @@ static guardarClientes='/guardarCliente';
 static consultaClientesSaldos='/consultaClienteSaldo'
 static consultaRegimenFiscal='/catalogoRegimenFiscal'
 static consultaCatalogoRazonSocial='/catalogosDatoFactura'
+static consultaCatalogoRazonSocialAsignable='/catalogosDatoFacturaAsignables'
 // api para proveedores
 static obtenerProveedores='/obtenerProveedores';
 static guardarProveedores='/guardarProveedores';
@@ -249,8 +250,14 @@ static movimientoExterno='/movimientoExterno';
 static consultaVentaFactura='/facturacion/ventasParaFactura';
 static consultaCreditos='/facturacion/consultaCreditos?';
 static facturarVenta='/facturacion/venta?';
-static facturarComplemento='/facturacion/complemento?'
+static facturarComplemento='/facturacion/complemento?';
+static cancelarFactura='/facturacion/cancelar';
 static consultaFacturas='/facturacion/ventasFacturadas';
+static consultaEstatusSat='/facturacion/estatusSat?';
+static consultaCfdiRelacionados='/facturacion/cfdiRelacionados?';
+static consultaSolicitudesPendientes='/facturacion/solicitudesPendientes?';
+static aceptarSolicitudPendiente='/facturacion/solicitudesPendientes/aceptar';
+static rechazarSolicitudPendiente='/facturacion/solicitudesPendientes/rechazar';
 
 
 //Compras

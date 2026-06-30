@@ -57,4 +57,9 @@ export class ClienteService {
     let url = environment.servicios.apiRefacFabela + locator.consultaCatalogoRazonSocial;
     return this.http.get<DatosFacturaDto[]>(url);
   }
+
+  obtenerCatalogoRazonSocialAsignable(){
+    let url = environment.servicios.apiRefacFabela + locator.consultaCatalogoRazonSocialAsignable;
+    return this.http.get<DatosFacturaDto[]>(url);
+  }
 }
