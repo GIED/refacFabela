@@ -27,6 +27,7 @@ tcTipoVenta?: TcTipoVenta;
 nIdDatoFactura?:number;
 sNombreEmisor?:string;
 sRfcEmisor?:string;
+sEstadoFacturacion?:string;
 
 
 

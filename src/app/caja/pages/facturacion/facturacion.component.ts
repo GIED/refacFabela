@@ -443,6 +443,11 @@ export class FacturacionComponent implements OnInit {
     return razonSocial ? razonSocial.sRazonSocial : '';
   }
 
+  esFacturaCancelada(venta: TvVentasFactura): boolean {
+    const estatus = (venta?.sEstadoFacturacion || '').toUpperCase();
+    return estatus.includes('CANCEL');
+  }
+
 
   descargarFactura(nIdVenta:number){
 
@@ -494,6 +499,24 @@ export class FacturacionComponent implements OnInit {
 
     });
 
+  }
+
+  descargarAcuseCancelacion(nIdVenta:number){
+    this.facturaService.descargarDocumento(nIdVenta, TipoDoc.XML_ACUSE_CANCELACION).subscribe(resp => {
+      const file = new Blob([resp], { type: 'application/xml' });
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'acuse_cancelacion_' + nIdVenta + '.xml';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Acuse de cancelación descargado.', life: 3000 });
+      } else {
+        this.messageService.add({ severity: 'warn', summary: 'Sin acuse', detail: 'No se encontró acuse de cancelación para esta venta.', life: 3500 });
+      }
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el acuse de cancelación.', life: 3500 });
+    });
   }
 
   
