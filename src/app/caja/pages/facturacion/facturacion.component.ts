@@ -241,10 +241,16 @@ export class FacturacionComponent implements OnInit {
   this.ventasService.obtenerCobroParcial(tvVentasFactura.nId).subscribe(data => {
     this.ListaTrVentaCobro = data;
     this.nuevaFormaPago = '';
+    this.efectivoValida = false;
 
     if (this.ListaTrVentaCobro.length > 1) {
-      for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
-        this.nuevaFormaPago += this.ListaTrVentaCobro[index].tcFormapago?.sDescripcion + '/';
+      const resumenCobros = this.construirResumenCobros(this.ListaTrVentaCobro);
+      if (tvVentasFactura.nTipoPago === 1) {
+        this.nuevaFormaPago = `Por definir (PPD). Desglose: ${resumenCobros}`;
+      } else {
+        const cobroMayor = this.obtenerCobroMontoMayor(this.ListaTrVentaCobro);
+        const descripcionFormaPago = cobroMayor?.tcFormapago?.sDescripcion ?? 'Sin definir';
+        this.nuevaFormaPago = `${descripcionFormaPago} (monto mayor para CFDI). Desglose: ${resumenCobros}`;
       }
     } else {
       for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
@@ -276,7 +282,6 @@ export class FacturacionComponent implements OnInit {
 
     if (
       this.tvVentasFactura.nTipoPago === 1 ||
-      this.ListaTrVentaCobro.length > 1 ||
       this.efectivoValida
     ) {
       this.tvVentasFactura.formaPago = 22;
@@ -287,6 +292,39 @@ export class FacturacionComponent implements OnInit {
     }
   });
 }
+
+  private obtenerCobroMontoMayor(cobros: TrVentaCobro[]): TrVentaCobro | undefined {
+    if (!cobros || cobros.length === 0) {
+      return undefined;
+    }
+
+    let cobroMayor = cobros[0];
+    let montoMayor = new Decimal(cobros[0]?.nMonto ?? 0);
+
+    for (let index = 1; index < cobros.length; index++) {
+      const montoActual = new Decimal(cobros[index]?.nMonto ?? 0);
+      if (montoActual.greaterThan(montoMayor)) {
+        montoMayor = montoActual;
+        cobroMayor = cobros[index];
+      }
+    }
+
+    return cobroMayor;
+  }
+
+  private construirResumenCobros(cobros: TrVentaCobro[]): string {
+    if (!cobros || cobros.length === 0) {
+      return 'Sin cobros registrados';
+    }
+
+    return cobros
+      .map(cobro => {
+        const descripcion = cobro?.tcFormapago?.sDescripcion ?? 'Sin definir';
+        const monto = new Decimal(cobro?.nMonto ?? 0).toFixed(2);
+        return `${descripcion}: $${monto}`;
+      })
+      .join(' / ');
+  }
 
   openNew() { 
 
