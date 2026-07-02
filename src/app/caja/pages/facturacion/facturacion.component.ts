@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {  MessageService } from 'primeng/api';
+import {  MenuItem, MessageService } from 'primeng/api';
 import { FacturaService } from '../../../shared/service/factura.service';
 import { TvVentasFactura } from '../../../productos/model/TvVentasFactura';
 import { TcUsoCfdi } from '../../../productos/model/TcUsoCfdi';
@@ -11,11 +11,13 @@ import { VentasService } from '../../../shared/service/ventas.service';
 import { TrVentaCobro } from '../../../productos/model/TrVentaCobro';
 import { SubirFacturaDto } from '../../../productos/model/SubirFacturaDto';
 import { CancelacionFacturaDto } from '../../../productos/model/CancelacionFacturaDto';
+import { ResultadoFacturacionVentaDto } from '../../../productos/model/ResultadoFacturacionVentaDto';
 import { StatusCfdiResponse } from '../../../productos/model/StatusCfdiResponse';
 import { CfdiRelacionadosResponse } from '../../../productos/model/CfdiRelacionadosResponse';
 import { SolicitudCancelacionDto } from '../../../productos/model/SolicitudCancelacionDto';
 import { SolicitudCancelacionAccionDto } from '../../../productos/model/SolicitudCancelacionAccionDto';
 import { DatosFacturaDto } from '../../../productos/model/DatosFacturaDto';
+import { ComplementoPagoHistorialDto } from '../../../productos/model/ComplementoPagoHistorialDto';
 import Decimal from 'decimal.js';
 
 @Component({
@@ -24,6 +26,8 @@ import Decimal from 'decimal.js';
   styleUrls: ['./facturacion.component.scss']
 })
 export class FacturacionComponent implements OnInit {
+
+  private readonly usoCfdiComplemento = 'CP01';
 
     listaVentas:TvVentasFactura[];
     listaUsoCfdi:TcUsoCfdi[];
@@ -54,6 +58,8 @@ export class FacturacionComponent implements OnInit {
     mostrarDialogoEstatusSat:boolean;
     mostrarDialogoRelacionados:boolean;
     mostrarDialogoSolicitudesPendientes:boolean;
+    mostrarDialogoComplementos:boolean;
+    mostrarDialogoAccionesVenta:boolean;
     estatusSat: StatusCfdiResponse;
     cfdiRelacionados: CfdiRelacionadosResponse;
     listaSolicitudesPendientes: SolicitudCancelacionDto[];
@@ -62,6 +68,23 @@ export class FacturacionComponent implements OnInit {
     cargandoSolicitudes:boolean;
     hayTimbresDisponibles:boolean;
     creditosTotales:number;
+    mostrarSoloFacturadas:boolean;
+    historialComplementos: ComplementoPagoHistorialDto[];
+    cargandoComplementos:boolean;
+    filtroEstadoHistorialComplemento:string;
+    filtroParcialidadHistorialComplemento?: number;
+    mostrarDialogoVistaPreviaComplemento:boolean;
+    tituloVistaPreviaComplemento:string;
+    urlVistaPreviaComplemento:string | null;
+    vistaFacturadas:boolean;
+    vistaSeleccionada:string;
+
+    readonly filtrosEstadoHistorialComplemento = [
+      { label: 'Todos', value: 'TODOS' },
+      { label: 'Timbrados', value: 'TIMBRADOS' },
+      { label: 'Fallidos', value: 'FALLIDOS' },
+      { label: 'Reemplazados', value: 'REEMPLAZADOS' }
+    ];
 
     readonly motivosCancelacion = [
       { label: '01 - Comprobante emitido con errores con relación', value: '01' },
@@ -89,6 +112,8 @@ export class FacturacionComponent implements OnInit {
           this.mostrarDialogoEstatusSat = false;
           this.mostrarDialogoRelacionados = false;
           this.mostrarDialogoSolicitudesPendientes = false;
+          this.mostrarDialogoComplementos = false;
+          this.mostrarDialogoAccionesVenta = false;
           this.estatusSat = new StatusCfdiResponse();
           this.cfdiRelacionados = new CfdiRelacionadosResponse();
           this.listaSolicitudesPendientes = [];
@@ -96,6 +121,15 @@ export class FacturacionComponent implements OnInit {
           this.cargandoSolicitudes = false;
           this.hayTimbresDisponibles = false;
           this.creditosTotales = 0;
+          this.mostrarSoloFacturadas = false;
+          this.historialComplementos = [];
+          this.cargandoComplementos = false;
+          this.filtroEstadoHistorialComplemento = 'TODOS';
+          this.mostrarDialogoVistaPreviaComplemento = false;
+          this.tituloVistaPreviaComplemento = '';
+          this.urlVistaPreviaComplemento = null;
+          this.vistaFacturadas = false;
+          this.vistaSeleccionada = 'pendientes';
      }
 
   ngOnInit(){
@@ -197,6 +231,10 @@ export class FacturacionComponent implements OnInit {
 
   obtenerFacruras(){
 
+    this.mostrarSoloFacturadas = false;
+    this.vistaFacturadas = false;
+    this.vistaSeleccionada = 'pendientes';
+
     this.facturaService.obtenerVentaFactura().subscribe(resp =>{
       this.listaVentas=resp;
 
@@ -206,6 +244,10 @@ export class FacturacionComponent implements OnInit {
 
   }
   obtenerVentasFacturadas(){
+
+    this.mostrarSoloFacturadas = true;
+    this.vistaFacturadas = true;
+    this.vistaSeleccionada = 'facturadas';
 
     this.facturaService.obtenerFacturas().subscribe(resp =>{
       this.listaVentas=resp;
@@ -235,33 +277,39 @@ export class FacturacionComponent implements OnInit {
     }
   }
 
+  cambiarVistaFacturacion(vista: string) {
+    if (vista === 'facturadas') {
+      this.obtenerVentasFacturadas();
+      return;
+    }
+
+    this.obtenerFacruras();
+  }
+
 
 
   openDialog(tvVentasFactura: TvVentasFactura) {
+  if (tvVentasFactura?.idFactura && this.vistaFacturadas) {
+    this.abrirDialogoComplementos(tvVentasFactura);
+    return;
+  }
   this.ventasService.obtenerCobroParcial(tvVentasFactura.nId).subscribe(data => {
-    this.ListaTrVentaCobro = data;
+    this.ListaTrVentaCobro = data || [];
     this.nuevaFormaPago = '';
-    this.efectivoValida = false;
+    const resumenCobros = this.construirResumenCobros(this.ListaTrVentaCobro);
+    const requierePpdCon99 = tvVentasFactura.nTipoPago === 1 || this.ListaTrVentaCobro.length > 1;
 
     if (this.ListaTrVentaCobro.length > 1) {
-      const resumenCobros = this.construirResumenCobros(this.ListaTrVentaCobro);
       if (tvVentasFactura.nTipoPago === 1) {
-        this.nuevaFormaPago = `Por definir (PPD). Desglose: ${resumenCobros}`;
+        this.nuevaFormaPago = `PPD con forma 99 (por definir). Desglose de cobros: ${resumenCobros}`;
       } else {
-        const cobroMayor = this.obtenerCobroMontoMayor(this.ListaTrVentaCobro);
-        const descripcionFormaPago = cobroMayor?.tcFormapago?.sDescripcion ?? 'Sin definir';
-        this.nuevaFormaPago = `${descripcionFormaPago} (monto mayor para CFDI). Desglose: ${resumenCobros}`;
+        this.nuevaFormaPago = `PPD con forma 99 para facturar y REP inmediato. Desglose de cobros: ${resumenCobros}`;
       }
+    } else if (tvVentasFactura.nTipoPago === 1) {
+      this.nuevaFormaPago = `PPD con forma 99 (por definir). Cobro registrado: ${resumenCobros}`;
     } else {
       for (let index = 0; index < this.ListaTrVentaCobro.length; index++) {
         this.nuevaFormaPago = this.ListaTrVentaCobro[index].tcFormapago?.sDescripcion ?? '';
-
-        const monto = new Decimal(this.ListaTrVentaCobro[index].nMonto ?? 0); // ✅ conversión segura
-        if (monto.greaterThanOrEqualTo(2000) && this.ListaTrVentaCobro[index].tcFormapago?.nId === 1) {
-          this.efectivoValida = true;
-        } else {
-          this.efectivoValida = false;
-        }
       }
     }
 
@@ -273,6 +321,7 @@ export class FacturacionComponent implements OnInit {
     this.formFactura = true;
     this.idVenta = tvVentasFactura.nId;
     this.totalVenta = tvVentasFactura.nTotalVenta;
+    this.cargarHistorialComplementos(tvVentasFactura.nId);
 
     const nIdDatoFactura = tvVentasFactura.tcCliente?.nIdDatoFactura;
     if (nIdDatoFactura) {
@@ -280,10 +329,7 @@ export class FacturacionComponent implements OnInit {
       this.consultaCreditos(nIdDatoFactura);
     }
 
-    if (
-      this.tvVentasFactura.nTipoPago === 1 ||
-      this.efectivoValida
-    ) {
+    if (requierePpdCon99) {
       this.tvVentasFactura.formaPago = 22;
       this.tvVentasFactura.tcFormapago.nId = 22;
       this.tvVentasFactura.tcFormapago.sClave = '99';
@@ -292,25 +338,6 @@ export class FacturacionComponent implements OnInit {
     }
   });
 }
-
-  private obtenerCobroMontoMayor(cobros: TrVentaCobro[]): TrVentaCobro | undefined {
-    if (!cobros || cobros.length === 0) {
-      return undefined;
-    }
-
-    let cobroMayor = cobros[0];
-    let montoMayor = new Decimal(cobros[0]?.nMonto ?? 0);
-
-    for (let index = 1; index < cobros.length; index++) {
-      const montoActual = new Decimal(cobros[index]?.nMonto ?? 0);
-      if (montoActual.greaterThan(montoMayor)) {
-        montoMayor = montoActual;
-        cobroMayor = cobros[index];
-      }
-    }
-
-    return cobroMayor;
-  }
 
   private construirResumenCobros(cobros: TrVentaCobro[]): string {
     if (!cobros || cobros.length === 0) {
@@ -345,9 +372,22 @@ export class FacturacionComponent implements OnInit {
 
     this.facturaService.facturarVenta(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
       this.formFactura=false;
-      this.obtenerFacruras();
-        this.messageService.add({ severity: 'success', summary: 'Factura generada', detail: 'La factura se generó correctamente.', life: 4000 });
-        if (resp && resp.avisoCorreo) {
+      this.refrescarListadoActual();
+        const resultado = resp as ResultadoFacturacionVentaDto;
+        const detalle = resultado?.mensajeError
+          ? `${resultado?.mensaje || 'Factura procesada'} ${resultado.mensajeError}`
+          : (resultado?.mensaje || 'La factura se generó correctamente.');
+        this.messageService.add({ severity: resultado?.success === false ? 'warn' : 'success', summary: 'Factura generada', detail: detalle, life: 5000 });
+        if (resultado?.clasificacionFiscal) {
+          this.messageService.add({ severity: 'info', summary: 'Clasificación fiscal', detail: `${resultado.clasificacionFiscal} | Método: ${resultado.metodoPagoFiscal || 'N/D'} | Forma: ${resultado.formaPagoFiscal || 'N/D'}`, life: 7000 });
+        }
+        if (resultado?.estadoComplemento === 'FACTURADA_CON_COMPLEMENTO_PAGO' && resultado?.uuidComplementoPago) {
+          this.messageService.add({ severity: 'success', summary: 'Complemento de pago', detail: `Se generó el complemento de pago ${resultado.uuidComplementoPago}.`, life: 7000 });
+        }
+        if (resultado?.estadoComplemento === 'PENDIENTE_COMPLEMENTO_PAGO') {
+          this.messageService.add({ severity: 'warn', summary: 'Complemento pendiente', detail: 'La factura se generó, pero el complemento de pago quedó pendiente de timbrar.', life: 7000 });
+        }
+        if (resultado && resultado.avisoCorreo) {
           this.messageService.add({ severity: 'warn', summary: 'Correo no enviado', detail: resp.avisoCorreo, life: 6000 });
         }
     });
@@ -360,12 +400,83 @@ export class FacturacionComponent implements OnInit {
         return;
     }
 
-    this.facturaService.facturarComplemento(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
+    this.facturaService.facturarComplemento(this.idVenta,this.usoCfdiComplemento).subscribe(resp =>{
       this.formFactura=false;
-      this.obtenerFacruras();
-      this.messageService.add({ severity: 'success', summary: 'Complemento generado', detail: 'El complemento se generó correctamente.', life: 4000 });
+      this.refrescarListadoActual();
+      const resultado = resp as ResultadoFacturacionVentaDto;
+      const detalle = resultado?.mensajeError
+        ? `${resultado?.mensaje || 'Complemento procesado'} ${resultado.mensajeError}`
+        : (resultado?.mensaje || 'El complemento se generó correctamente.');
+      this.messageService.add({ severity: resultado?.success === false ? 'warn' : 'success', summary: 'Complemento generado', detail: detalle, life: 5000 });
     });
 
+  }
+
+  reintentarComplementoHistorial(complemento: ComplementoPagoHistorialDto) {
+    if (!complemento?.nId) {
+      return;
+    }
+
+    if (!this.hayTimbresDisponibles) {
+      this.messageService.add({ severity: 'warn', summary: 'Sin Créditos', detail: 'No hay timbres disponibles para reintentar el complemento.', life: 4000 });
+      return;
+    }
+
+    this.facturaService.reintentarComplemento(complemento.nId).subscribe(resp => {
+      const resultado = resp as ResultadoFacturacionVentaDto;
+      const detalle = resultado?.mensajeError
+        ? `${resultado?.mensaje || 'Reintento procesado'} ${resultado.mensajeError}`
+        : (resultado?.mensaje || 'El complemento se reintentó correctamente.');
+      this.messageService.add({ severity: resultado?.success === false ? 'warn' : 'success', summary: 'Reintento REP', detail: detalle, life: 5000 });
+      if (this.idVenta) {
+        this.cargarHistorialComplementos(this.idVenta);
+      }
+      this.refrescarListadoActual();
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible reintentar el complemento.', life: 3500 });
+    });
+  }
+
+  reintentarComplemento(venta: TvVentasFactura) {
+    this.tvVentasFactura = venta;
+    this.idVenta = venta.nId;
+    this.cargarHistorialComplementos(venta.nId);
+    this.generarComplemento();
+  }
+
+  abrirDialogoComplementos(venta: TvVentasFactura) {
+    this.tvVentasFactura = venta;
+    this.idVenta = venta.nId;
+    this.cargarHistorialComplementos(venta.nId);
+    this.mostrarDialogoComplementos = true;
+  }
+
+  cerrarDialogoComplementos() {
+    this.mostrarDialogoComplementos = false;
+  }
+
+  abrirDialogoAccionesVenta(venta: TvVentasFactura) {
+    this.tvVentasFactura = venta;
+    this.idVenta = venta.nId;
+    this.mostrarDialogoAccionesVenta = true;
+  }
+
+  cerrarDialogoAccionesVenta() {
+    this.mostrarDialogoAccionesVenta = false;
+  }
+
+  cargarHistorialComplementos(nIdVenta:number) {
+    this.cargandoComplementos = true;
+    this.historialComplementos = [];
+    this.filtroEstadoHistorialComplemento = 'TODOS';
+    this.filtroParcialidadHistorialComplemento = undefined;
+    this.facturaService.consultarComplementos(nIdVenta).subscribe(resp => {
+      this.historialComplementos = resp || [];
+      this.cargandoComplementos = false;
+    }, () => {
+      this.cargandoComplementos = false;
+      this.historialComplementos = [];
+    });
   }
 
   abrirDialogoCancelacion(venta: TvVentasFactura) {
@@ -484,6 +595,517 @@ export class FacturacionComponent implements OnInit {
   esFacturaCancelada(venta: TvVentasFactura): boolean {
     const estatus = (venta?.sEstadoFacturacion || '').toUpperCase();
     return estatus.includes('CANCEL');
+  }
+
+  mostrarBotonComplemento(venta: TvVentasFactura): boolean {
+    if (!venta || venta.idFactura == null || venta.idFactura === 0 || this.esFacturaCancelada(venta)) {
+      return false;
+    }
+
+    const clasificacion = (venta.sClasificacionFiscal || '').toUpperCase();
+    const estadoComplemento = (venta.sEstadoComplemento || '').toUpperCase();
+
+    if (clasificacion === 'PPD_PAGO_MIXTO_COMPLEMENTO_INMEDIATO') {
+      return !estadoComplemento || estadoComplemento === 'PENDIENTE_COMPLEMENTO_PAGO';
+    }
+
+    return clasificacion === 'PPD_CREDITO_SIN_COMPLEMENTO' && estadoComplemento !== 'FACTURADA_CON_COMPLEMENTO_PAGO';
+  }
+
+  obtenerDescripcionTipoVenta(venta: TvVentasFactura): string {
+    return venta?.nTipoPago === 1 ? 'Crédito' : 'Contado';
+  }
+
+  obtenerDescripcionClasificacion(venta: TvVentasFactura): string {
+    const clasificacion = (venta?.sClasificacionFiscal || '').toUpperCase();
+
+    if (clasificacion === 'PUE_UNA_FORMA') {
+      return 'Contado una sola forma';
+    }
+
+    if (clasificacion === 'PPD_PAGO_MIXTO_COMPLEMENTO_INMEDIATO') {
+      return 'Contado mixto con REP';
+    }
+
+    if (clasificacion === 'PPD_CREDITO_SIN_COMPLEMENTO') {
+      return 'Crédito PPD';
+    }
+
+    return 'Pendiente';
+  }
+
+  obtenerEstadoFacturaVisible(venta: TvVentasFactura): string {
+    if (!venta?.idFactura || venta.idFactura === 0) {
+      return 'No facturada';
+    }
+
+    if (this.esFacturaCancelada(venta)) {
+      return 'Cancelada';
+    }
+
+    return 'Facturada';
+  }
+
+  obtenerClaseEstadoFacturaVisible(venta: TvVentasFactura): string {
+    if (!venta?.idFactura || venta.idFactura === 0) {
+      return 'facturacion-status-badge-pending';
+    }
+
+    if (this.esFacturaCancelada(venta)) {
+      return 'facturacion-status-badge-cancelled';
+    }
+
+    return 'facturacion-status-badge-confirmed';
+  }
+
+  obtenerPistaComplemento(venta: TvVentasFactura): string {
+    if (!venta?.idFactura || venta.idFactura === 0 || this.esFacturaCancelada(venta)) {
+      return '';
+    }
+
+    if (this.tieneComplementosTimbrados(venta)) {
+      return 'Con complemento de pago';
+    }
+
+    if (this.mostrarBotonComplemento(venta)) {
+      return 'Complemento disponible';
+    }
+
+    return '';
+  }
+
+  obtenerDescripcionEstadoComplemento(venta: TvVentasFactura): string {
+    const estado = (venta?.sEstadoComplemento || '').toUpperCase();
+
+    if (!estado || estado === 'NO_REQUIERE_COMPLEMENTO') {
+      return 'No requiere';
+    }
+
+    if (estado === 'FACTURADA_CON_COMPLEMENTO_PAGO') {
+      return 'Timbrado';
+    }
+
+    if (estado === 'PENDIENTE_COMPLEMENTO_PAGO') {
+      return 'Pendiente';
+    }
+
+    return venta?.sEstadoComplemento || 'Pendiente';
+  }
+
+  obtenerDescripcionEstadoHistorial(complemento: ComplementoPagoHistorialDto): string {
+    const estado = (complemento?.estado || '').toUpperCase();
+    if (this.esComplementoReemplazado(complemento)) {
+      return 'Fallido reemplazado';
+    }
+    if (!estado && complemento?.estatus === 1) {
+      return 'Timbrado';
+    }
+    if (!estado && complemento?.estatus === 0) {
+      return 'Fallido';
+    }
+    if (estado.includes('TIMBR')) {
+      return 'Timbrado';
+    }
+    if (complemento?.estatus === 0) {
+      return 'Fallido';
+    }
+    return complemento?.estado || 'Pendiente';
+  }
+
+  esComplementoFallido(complemento: ComplementoPagoHistorialDto): boolean {
+    return complemento?.estatus === 0;
+  }
+
+  esComplementoReemplazado(complemento: ComplementoPagoHistorialDto): boolean {
+    if (!this.esComplementoFallido(complemento)) {
+      return false;
+    }
+
+    return this.historialComplementos.some(item =>
+      item?.nId !== complemento?.nId &&
+      item?.estatus === 1 &&
+      item?.origenPago === complemento?.origenPago &&
+      item?.nIdPagoOrigen === complemento?.nIdPagoOrigen
+    );
+  }
+
+  puedeReintentarComplemento(complemento: ComplementoPagoHistorialDto): boolean {
+    return this.esComplementoFallido(complemento) && !this.esComplementoReemplazado(complemento);
+  }
+
+  puedeDescargarComplementoXml(complemento: ComplementoPagoHistorialDto): boolean {
+    return complemento?.estatus === 1;
+  }
+
+  puedeDescargarComplementoPdf(complemento: ComplementoPagoHistorialDto): boolean {
+    return complemento?.estatus === 1;
+  }
+
+  tieneComplementosTimbrados(venta: TvVentasFactura): boolean {
+    return (venta?.sEstadoComplemento || '').toUpperCase() === 'FACTURADA_CON_COMPLEMENTO_PAGO';
+  }
+
+  obtenerConteoComplementosTimbrados(venta: TvVentasFactura): number {
+    if (!venta || !this.tvVentasFactura || this.tvVentasFactura.nId !== venta.nId) {
+      return 0;
+    }
+    return (this.historialComplementos || []).filter(item => item?.estatus === 1).length;
+  }
+
+  obtenerEtiquetaAccionPrincipal(venta: TvVentasFactura): string {
+    if (venta?.idFactura == null || venta.idFactura === 0) {
+      return 'Facturar';
+    }
+    if (this.esFacturaCancelada(venta)) {
+      return 'Acuse';
+    }
+    if (this.tieneComplementosTimbrados(venta)) {
+      return 'Complementos';
+    }
+    if (this.mostrarBotonComplemento(venta)) {
+      return 'REP';
+    }
+    return 'Documentos';
+  }
+
+  obtenerIconoAccionPrincipal(venta: TvVentasFactura): string {
+    if (venta?.idFactura == null || venta.idFactura === 0) {
+      return 'pi pi-file';
+    }
+    if (this.esFacturaCancelada(venta)) {
+      return 'pi pi-download';
+    }
+    if (this.tieneComplementosTimbrados(venta)) {
+      return 'pi pi-images';
+    }
+    if (this.mostrarBotonComplemento(venta)) {
+      return 'pi pi-refresh';
+    }
+    return 'pi pi-folder-open';
+  }
+
+  ejecutarAccionPrincipal(venta: TvVentasFactura) {
+    if (!venta) {
+      return;
+    }
+
+    if (venta.tcCliente?.nDatosValidados === true && (!venta.idFactura || venta.idFactura === 0)) {
+      this.openDialog(venta);
+      return;
+    }
+
+    if (venta.idFactura && this.esFacturaCancelada(venta)) {
+      this.descargarAcuseCancelacion(venta.nId);
+      return;
+    }
+
+    if (venta.idFactura && this.tieneComplementosTimbrados(venta)) {
+      this.abrirDialogoComplementos(venta);
+      return;
+    }
+
+    if (venta.idFactura && this.mostrarBotonComplemento(venta)) {
+      this.reintentarComplemento(venta);
+      return;
+    }
+
+    this.abrirDialogoAccionesVenta(venta);
+  }
+
+  obtenerSiguientePaso(venta: TvVentasFactura): string {
+    if (!venta) {
+      return 'Revisar venta';
+    }
+
+    if (venta.tcCliente?.nDatosValidados !== true && (!venta.idFactura || venta.idFactura === 0)) {
+      return 'Validar datos fiscales';
+    }
+
+    if (!venta.idFactura || venta.idFactura === 0) {
+      return 'Timbrar CFDI';
+    }
+
+    if (this.esFacturaCancelada(venta)) {
+      return 'Descargar acuse';
+    }
+
+    if (this.mostrarBotonComplemento(venta)) {
+      return 'Generar REP';
+    }
+
+    if (this.tieneComplementosTimbrados(venta)) {
+      return 'Revisar REP';
+    }
+
+    return 'Consultar documentos';
+  }
+
+  obtenerClaseSiguientePaso(venta: TvVentasFactura): string {
+    if (!venta) {
+      return 'facturacion-next-step-neutral';
+    }
+
+    if (venta.tcCliente?.nDatosValidados !== true && (!venta.idFactura || venta.idFactura === 0)) {
+      return 'facturacion-next-step-warning';
+    }
+
+    if (!venta.idFactura || venta.idFactura === 0 || this.mostrarBotonComplemento(venta)) {
+      return 'facturacion-next-step-alert';
+    }
+
+    if (this.esFacturaCancelada(venta)) {
+      return 'facturacion-next-step-neutral';
+    }
+
+    return 'facturacion-next-step-success';
+  }
+
+  obtenerAccionesVenta(venta: TvVentasFactura): MenuItem[] {
+    const acciones: MenuItem[] = [];
+
+    if (venta?.tcCliente?.nDatosValidados === true && (!venta.idFactura || venta.idFactura === 0)) {
+      acciones.push({
+        label: 'Cargar factura manual',
+        icon: 'pi pi-paperclip',
+        command: () => this.mostrarformularioFactura(venta.nId)
+      });
+    }
+
+    if (venta?.idFactura && !this.esFacturaCancelada(venta)) {
+      acciones.push({
+        label: 'Descargar PDF factura',
+        icon: 'pi pi-file-pdf',
+        command: () => this.descargarFactura(venta.nId)
+      });
+      acciones.push({
+        label: 'Descargar XML factura',
+        icon: 'pi pi-book',
+        command: () => this.descargarXML(venta.nId)
+      });
+    }
+
+    if (venta?.idFactura && this.tieneComplementosTimbrados(venta)) {
+      acciones.push({
+        label: 'Abrir complementos de pago',
+        icon: 'pi pi-images',
+        command: () => this.abrirDialogoComplementos(venta)
+      });
+    }
+
+    if (venta?.idFactura && this.mostrarBotonComplemento(venta)) {
+      acciones.push({
+        label: 'Generar o reintentar REP',
+        icon: 'pi pi-refresh',
+        command: () => this.reintentarComplemento(venta)
+      });
+    }
+
+    if (venta?.idFactura && !this.esFacturaCancelada(venta)) {
+      acciones.push({
+        label: 'Cancelar CFDI',
+        icon: 'pi pi-times',
+        command: () => this.abrirDialogoCancelacion(venta)
+      });
+    }
+
+    if (venta?.idFactura && this.esFacturaCancelada(venta)) {
+      acciones.push({
+        label: 'Descargar acuse de cancelación',
+        icon: 'pi pi-download',
+        command: () => this.descargarAcuseCancelacion(venta.nId)
+      });
+    }
+
+    if (venta?.idFactura) {
+      acciones.push({
+        label: 'Consultar estatus SAT',
+        icon: 'pi pi-search',
+        command: () => this.abrirDialogoEstatusSat(venta)
+      });
+      acciones.push({
+        label: 'Consultar CFDI relacionados',
+        icon: 'pi pi-sitemap',
+        command: () => this.abrirDialogoRelacionados(venta)
+      });
+    }
+
+    return acciones;
+  }
+
+  get totalVentasListado(): number {
+    return (this.listaVentas || []).length;
+  }
+
+  get totalVentasConFactura(): number {
+    return (this.listaVentas || []).filter(item => item?.idFactura != null && item.idFactura !== 0).length;
+  }
+
+  get totalRepTimbrados(): number {
+    return (this.listaVentas || []).filter(item => (item?.sEstadoComplemento || '').toUpperCase() === 'FACTURADA_CON_COMPLEMENTO_PAGO').length;
+  }
+
+  get totalRepPendientes(): number {
+    return (this.listaVentas || []).filter(item => (item?.sEstadoComplemento || '').toUpperCase() === 'PENDIENTE_COMPLEMENTO_PAGO').length;
+  }
+
+  get totalFacturasCanceladas(): number {
+    return (this.listaVentas || []).filter(item => this.esFacturaCancelada(item)).length;
+  }
+
+  get historialComplementosFiltrados(): ComplementoPagoHistorialDto[] {
+    let historial = this.historialComplementos || [];
+
+    if (this.filtroParcialidadHistorialComplemento != null) {
+      historial = historial.filter(item => item?.parcialidad === this.filtroParcialidadHistorialComplemento);
+    }
+
+    if (this.filtroEstadoHistorialComplemento === 'TIMBRADOS') {
+      return historial.filter(item => item?.estatus === 1);
+    }
+
+    if (this.filtroEstadoHistorialComplemento === 'FALLIDOS') {
+      return historial.filter(item => this.esComplementoFallido(item));
+    }
+
+    if (this.filtroEstadoHistorialComplemento === 'REEMPLAZADOS') {
+      return historial.filter(item => this.esComplementoReemplazado(item));
+    }
+
+    return historial;
+  }
+
+  get complementosPagoExitosos(): ComplementoPagoHistorialDto[] {
+    let historial = this.historialComplementos || [];
+
+    if (this.filtroParcialidadHistorialComplemento != null) {
+      historial = historial.filter(item => item?.parcialidad === this.filtroParcialidadHistorialComplemento);
+    }
+
+    return historial.filter(item => item?.estatus === 1);
+  }
+
+  get complementosPagoFallidosLog(): ComplementoPagoHistorialDto[] {
+    let historial = this.historialComplementos || [];
+
+    if (this.filtroParcialidadHistorialComplemento != null) {
+      historial = historial.filter(item => item?.parcialidad === this.filtroParcialidadHistorialComplemento);
+    }
+
+    return historial.filter(item => this.esComplementoFallido(item));
+  }
+
+  descargarZipComplementos(nIdVenta:number) {
+    this.facturaService.descargarDocumento(nIdVenta, TipoDoc.ZIP_COMPLEMENTOS_PAGO).subscribe(resp => {
+      const file = new Blob([resp], { type: 'application/zip' });
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'complementos_pago_' + nIdVenta + '.zip';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'ZIP de complementos descargado.', life: 3000 });
+      } else {
+        this.messageService.add({ severity: 'warn', summary: 'Sin archivos', detail: 'No se encontraron archivos de complementos para esta factura.', life: 3500 });
+      }
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el ZIP de complementos.', life: 3500 });
+    });
+  }
+
+  obtenerDescripcionOrigenPago(origenPago?: string): string {
+    if ((origenPago || '').toUpperCase() === 'TR_VENTA_COBRO') {
+      return 'Cobro de venta';
+    }
+
+    if ((origenPago || '').toUpperCase() === 'TW_ABONO') {
+      return 'Abono de crédito';
+    }
+
+    return origenPago || 'N/D';
+  }
+
+  descargarComplementoPdf(complemento: ComplementoPagoHistorialDto) {
+    if (!complemento?.nId || !this.puedeDescargarComplementoPdf(complemento)) {
+      return;
+    }
+
+    this.facturaService.descargarDocumentoComplemento(complemento.nId, TipoDoc.PDF_COMPLEMENTO_PAGO).subscribe(resp => {
+      const file = new Blob([resp], { type: 'application/pdf' });
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'complemento_pago_' + (complemento.parcialidad || complemento.nId) + '.pdf';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'PDF del complemento descargado.', life: 3000 });
+      } else {
+        this.messageService.add({ severity: 'warn', summary: 'Sin PDF', detail: 'No se encontró PDF para este complemento.', life: 3500 });
+      }
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el PDF del complemento.', life: 3500 });
+    });
+  }
+
+  verComplementoPdf(complemento: ComplementoPagoHistorialDto) {
+    if (!complemento?.nId || !this.puedeDescargarComplementoPdf(complemento)) {
+      return;
+    }
+
+    this.facturaService.descargarDocumentoComplemento(complemento.nId, TipoDoc.PDF_COMPLEMENTO_PAGO).subscribe(resp => {
+      const file = new Blob([resp], { type: 'application/pdf' });
+      if (file != null && file.size > 0) {
+        if (this.urlVistaPreviaComplemento) {
+          window.URL.revokeObjectURL(this.urlVistaPreviaComplemento);
+        }
+        this.urlVistaPreviaComplemento = window.URL.createObjectURL(file);
+        this.tituloVistaPreviaComplemento = 'Complemento de pago ' + (complemento.parcialidad || complemento.nId);
+        this.mostrarDialogoVistaPreviaComplemento = true;
+      } else {
+        this.messageService.add({ severity: 'warn', summary: 'Sin PDF', detail: 'No se encontró PDF para este complemento.', life: 3500 });
+      }
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible abrir el PDF del complemento.', life: 3500 });
+    });
+  }
+
+  cerrarVistaPreviaComplemento() {
+    this.mostrarDialogoVistaPreviaComplemento = false;
+    this.tituloVistaPreviaComplemento = '';
+    if (this.urlVistaPreviaComplemento) {
+      window.URL.revokeObjectURL(this.urlVistaPreviaComplemento);
+    }
+    this.urlVistaPreviaComplemento = null;
+  }
+
+  descargarComplementoXml(complemento: ComplementoPagoHistorialDto) {
+    if (!complemento?.nId || !this.puedeDescargarComplementoXml(complemento)) {
+      return;
+    }
+
+    this.facturaService.descargarDocumentoComplemento(complemento.nId, TipoDoc.XML_COMPLEMENTO_PAGO).subscribe(resp => {
+      const file = new Blob([resp], { type: 'application/xml' });
+      if (file != null && file.size > 0) {
+        const fileURL = window.URL.createObjectURL(file);
+        const anchor = document.createElement('a');
+        anchor.download = 'complemento_pago_' + (complemento.parcialidad || complemento.nId) + '.xml';
+        anchor.href = fileURL;
+        anchor.click();
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'XML del complemento descargado.', life: 3000 });
+      } else {
+        this.messageService.add({ severity: 'warn', summary: 'Sin XML', detail: 'No se encontró XML para este complemento.', life: 3500 });
+      }
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el XML del complemento.', life: 3500 });
+    });
+  }
+
+  private refrescarListadoActual() {
+    if (this.mostrarSoloFacturadas) {
+      this.obtenerVentasFacturadas();
+      return;
+    }
+
+    this.obtenerFacruras();
   }
 
 

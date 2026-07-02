@@ -28,6 +28,9 @@ nIdDatoFactura?:number;
 sNombreEmisor?:string;
 sRfcEmisor?:string;
 sEstadoFacturacion?:string;
+sEstadoComplemento?:string;
+sClasificacionFiscal?:string;
+sUuidComplementoPago?:string;
 
 
 

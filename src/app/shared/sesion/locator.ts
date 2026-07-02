@@ -251,13 +251,16 @@ static consultaVentaFactura='/facturacion/ventasParaFactura';
 static consultaCreditos='/facturacion/consultaCreditos?';
 static facturarVenta='/facturacion/venta?';
 static facturarComplemento='/facturacion/complemento?';
+static reintentarComplemento='/facturacion/complementos/reintentar?';
 static cancelarFactura='/facturacion/cancelar';
 static consultaFacturas='/facturacion/ventasFacturadas';
+static consultaComplementos='/facturacion/complementos?';
 static consultaEstatusSat='/facturacion/estatusSat?';
 static consultaCfdiRelacionados='/facturacion/cfdiRelacionados?';
 static consultaSolicitudesPendientes='/facturacion/solicitudesPendientes?';
 static aceptarSolicitudPendiente='/facturacion/solicitudesPendientes/aceptar';
 static rechazarSolicitudPendiente='/facturacion/solicitudesPendientes/rechazar';
+static descargarDocumentoComplemento='/facturacion/getDocumentoComplemento?';
 
 
 //Compras

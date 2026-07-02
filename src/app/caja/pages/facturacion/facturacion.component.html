@@ -1,18 +1,56 @@
 <div class="p-grid">
     <div class="p-col-12">
         <p-toast></p-toast>
-        <div class="card">
-            <div class="p-text-center">
-                <h3>Módulo de Facturación</h3>
+        <div class="card facturacion-shell">
+            <div class="facturacion-hero">
+                <div>
+                    <div class="facturacion-eyebrow">Control fiscal operativo</div>
+                    <h3>Módulo de Facturación</h3>
+                    <p class="facturacion-subtitle">Administra CFDI, complementos de pago, cancelaciones y seguimiento SAT desde un solo flujo.</p>
+                </div>
+                <div class="facturacion-credit-card">
+                    <span>Créditos disponibles</span>
+                    <strong>{{creditosTotales}}</strong>
+                </div>
             </div>
-            <div class="p-text-right">
-                <h5>Créditos disponibles: {{creditosTotales}} </h5>
+
+            <div class="facturacion-toolbar">
+                <div class="facturacion-toolbar-group">
+                    <p-selectButton [options]="[{label: 'Pendientes', value: 'pendientes'}, {label: 'Facturadas', value: 'facturadas'}]" optionLabel="label" optionValue="value" [(ngModel)]="vistaSeleccionada" (ngModelChange)="cambiarVistaFacturacion($event)"></p-selectButton>
+                </div>
+                <div class="facturacion-toolbar-group">
+                    <button pButton pRipple type="button" label="Solicitudes pendientes" icon="pi pi-inbox" class="p-button-help" (click)="abrirDialogoSolicitudesPendientes()"></button>
+                </div>
             </div>
-           
-           
-            <button pButton pRipple type="button" label="Para Facturar" class="p-button-danger" (click)="obtenerFacruras()"></button>
-            <button pButton pRipple pRipple type="button" label="Ventas Facturadas" class="p-button-success" (click)="obtenerVentasFacturadas()"></button>
-            <button pButton pRipple type="button" label="Solicitudes Pendientes" class="p-button-help p-ml-2" (click)="abrirDialogoSolicitudesPendientes()"></button>
+
+            <div class="facturacion-summary-strip" *ngIf="vistaFacturadas">
+                <div class="facturacion-pill facturacion-pill-neutral">Vista enfocada en ventas ya facturadas</div>
+                <div class="facturacion-pill facturacion-pill-info">Complementos visibles desde la acción principal</div>
+                <div class="facturacion-pill facturacion-pill-accent">Historial REP limitado a la factura ligada</div>
+            </div>
+
+            <div class="facturacion-metrics-grid">
+                <div class="facturacion-metric-card">
+                    <span>Ventas en vista</span>
+                    <strong>{{totalVentasListado}}</strong>
+                </div>
+                <div class="facturacion-metric-card">
+                    <span>Con CFDI</span>
+                    <strong>{{totalVentasConFactura}}</strong>
+                </div>
+                <div class="facturacion-metric-card">
+                    <span>REP timbrados</span>
+                    <strong>{{totalRepTimbrados}}</strong>
+                </div>
+                <div class="facturacion-metric-card">
+                    <span>REP pendientes</span>
+                    <strong>{{totalRepPendientes}}</strong>
+                </div>
+                <div class="facturacion-metric-card">
+                    <span>CFDI cancelados</span>
+                    <strong>{{totalFacturasCanceladas}}</strong>
+                </div>
+            </div>
 
             <p-table #dt [value]="listaVentas" [rows]="10" [paginator]="true"
             [globalFilterFields]="['nId','tcCliente.sRfc', 'tcCliente.sRazonSocial']" 
@@ -20,8 +58,11 @@
             currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
             [showCurrentPageReport]="true">
             <ng-template pTemplate="caption">
-                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">                   
-                        <h5 class="p-m-0">Ventas cobradas por facturar</h5>                 
+                <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header facturacion-table-caption">                   
+                        <div>
+                            <h5 class="p-m-0">{{ vistaFacturadas ? 'Ventas facturadas y REP' : 'Ventas cobradas por facturar' }}</h5>
+                            <small>{{ vistaFacturadas ? 'Consulta documentos, complementos y estatus de cumplimiento' : 'Genera CFDI y complementos desde las ventas listas para procesar' }}</small>
+                        </div>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
@@ -33,77 +74,46 @@
                     <tr>
                         <th pSortableColumn="nId">No. Venta 
                             <p-sortIcon field="nId"></p-sortIcon>    </th>
-                        <th pSortableColumn="tcCliente.sRfc">RFC
-                            <p-sortIcon field="tcCliente.sRfc"></p-sortIcon></th>  
-                            <th pSortableColumn="tcCliente.sRazonSocial">Razón Social
-                                <p-sortIcon field="tcCliente.sRazonSocial"></p-sortIcon></th>                            
-                       
-                        <th>Vendedor</th>
-                        <th>Estatus</th>
-                        <th>Estatus CFDI</th>
+                        <th pSortableColumn="tcCliente.sRazonSocial">Cliente fiscal
+                            <p-sortIcon field="tcCliente.sRazonSocial"></p-sortIcon></th>
+                        <th>Contexto comercial</th>
                         <th>Total</th>
                         <th>Tipo Venta</th>
+                        <th>Estado factura</th>
+                        <th>Gestión</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-venta>
                     <tr>
-                        <td><span class="p-column-title">No. Venta</span> {{venta.nId}}
+                        <td><span class="p-column-title">No. Venta</span>
+                            <div class="facturacion-cell-main">#{{venta.nId}}</div>
                         </td>
-                        <td><span class="p-column-title">RFC</span> {{venta.tcCliente.sRfc}}
+                        <td><span class="p-column-title">Cliente fiscal</span>
+                            <div class="facturacion-cell-main">{{venta.tcCliente.sRazonSocial}}</div>
+                            <div class="facturacion-cell-sub">{{venta.tcCliente.sRfc}}</div>
                         </td>
-                        <td><span class="p-column-title">Razón Social</span> {{venta.tcCliente.sRazonSocial}}
-                        </td>
-                        <td><span class="p-column-title">Vendedor</span> {{venta.tcUsuario.sNombreUsuario}}
-                        </td>
-                        <td><span class="p-column-title">Estatus</span> {{venta.tcEstatusVenta.sDescripcion}}
-                        </td>
-                        <td><span class="p-column-title">Estatus CFDI</span> {{venta.sEstadoFacturacion || 'PENDIENTE'}}
+                        <td><span class="p-column-title">Contexto comercial</span>
+                            <div class="facturacion-cell-main">{{venta.tcUsuario.sNombreUsuario}}</div>
+                            <div class="facturacion-cell-sub">{{venta.tcEstatusVenta.sDescripcion}}</div>
                         </td>
                         <td><span class="p-column-title">Total</span> {{venta.nTotalVenta | currency:'USD'}}
                         </td>
-                        <td *ngIf="venta.nTipoPago==1"><span class="p-column-title">Tipo Venta</span>CRÉDITO  </td>
-                        
-                            <td *ngIf="venta.nTipoPago==0"><span class="p-column-title">Tipo Venta</span>CONTADO  </td>
+                        <td><span class="p-column-title">Tipo Venta</span>
+                            <span class="facturacion-status-badge facturacion-status-badge-sale">{{obtenerDescripcionTipoVenta(venta)}}</span>
+                        </td>
                         <td>
-                            <tr>
-                                <td *ngIf="venta.tcCliente.nDatosValidados==true && venta.idFactura==0 ">
-                                    <button pButton pRipple icon="pi pi-file-o" pTooltip="Generar Factura" class="p-button-rounded p-button-warning p-button-outlined" (click)="openDialog(venta)"></button>
-                                </td>
-
-                                <td *ngIf="venta.tcCliente.nDatosValidados==true && venta.idFactura==0 ">
-                                    <button pButton pRipple icon="pi pi-paperclip" pTooltip="Cargar Factura" class="p-button-rounded p-button-success p-button-outlined" (click)="mostrarformularioFactura(venta.nId)"></button>
-                                </td>
-
-
-                                
-                                <td *ngIf="venta.tcCliente.nDatosValidados==false">
-                                   <p class="p-text-center" style="color: red;">Sin validar datos de facturación</p>
-                                </td>
-
-                                <td *ngIf="venta.idFactura!=0 && !esFacturaCancelada(venta)">
-                                    <button pButton pRipple icon="pi pi-file-pdf" pTooltip="Descargar Factura" class="p-button-rounded p-button-danger p-mr-2 p-button-outlined" (click)="descargarFactura(venta.nId)"></button>
-                                </td>
-
-                                <td *ngIf="venta.idFactura!=0 && !esFacturaCancelada(venta)">
-                                    <button pButton pRipple icon="pi pi-book" pTooltip="Descargar xml" class="p-button-rounded p-button-info p-mr-2 p-button-outlined" (click)="descargarXML(venta.nId)"></button>
-                                </td>
-
-                                <td *ngIf="venta.idFactura!=0 && !esFacturaCancelada(venta)">
-                                    <button pButton pRipple icon="pi pi-times" pTooltip="Cancelar CFDI" class="p-button-rounded p-button-secondary p-mr-2 p-button-outlined" (click)="abrirDialogoCancelacion(venta)"></button>
-                                </td>
-
-                                <td *ngIf="venta.idFactura!=0 && esFacturaCancelada(venta)">
-                                    <button pButton pRipple icon="pi pi-download" pTooltip="Descargar acuse de cancelación" class="p-button-rounded p-button-success p-mr-2 p-button-outlined" (click)="descargarAcuseCancelacion(venta.nId)"></button>
-                                </td>
-
-                                <td *ngIf="venta.idFactura!=0">
-                                    <button pButton pRipple icon="pi pi-search" pTooltip="Consultar estatus SAT" class="p-button-rounded p-button-help p-mr-2 p-button-outlined" (click)="abrirDialogoEstatusSat(venta)"></button>
-                                </td>
-
-                                <td *ngIf="venta.idFactura!=0">
-                                    <button pButton pRipple icon="pi pi-sitemap" pTooltip="Consultar CFDI relacionados" class="p-button-rounded p-button-info p-mr-2 p-button-outlined" (click)="abrirDialogoRelacionados(venta)"></button>
-                                </td>
-                            </tr>
+                            <span class="p-column-title">Estado factura</span>
+                            <div class="facturacion-fiscal-stack">
+                                <span class="facturacion-status-badge" [ngClass]="obtenerClaseEstadoFacturaVisible(venta)">{{obtenerEstadoFacturaVisible(venta)}}</span>
+                                <small *ngIf="obtenerPistaComplemento(venta)" class="facturacion-status-hint">{{obtenerPistaComplemento(venta)}}</small>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="facturacion-gestion-cell">
+                                <span class="facturacion-next-step" [ngClass]="obtenerClaseSiguientePaso(venta)">{{obtenerSiguientePaso(venta)}}</span>
+                                <p-splitButton *ngIf="venta.tcCliente.nDatosValidados==true || venta.idFactura!=0" [label]="obtenerEtiquetaAccionPrincipal(venta)" [icon]="obtenerIconoAccionPrincipal(venta)" [model]="obtenerAccionesVenta(venta)" styleClass="p-button-sm facturacion-split-button" (onClick)="ejecutarAccionPrincipal(venta)"></p-splitButton>
+                            </div>
+                            <span *ngIf="venta.tcCliente.nDatosValidados==false && (!venta.idFactura || venta.idFactura===0)" class="facturacion-inline-warning">Sin validar datos</span>
                         </td>
                        
                     </tr>
@@ -171,6 +181,68 @@
                                     <label for="float-input"><strong> Forma de pago: </strong> {{this.nuevaFormaPago}}</label>
                                 </span>
                             </div>
+                            <div class="p-field p-col-12 p-md-12" *ngIf="tvVentasFactura?.sClasificacionFiscal">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong> Clasificación fiscal: </strong> {{obtenerDescripcionClasificacion(tvVentasFactura)}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12" *ngIf="tvVentasFactura?.idFactura">
+                                <span class="p-float-label">
+                                    <label for="float-input"><strong> Estado REP: </strong> {{obtenerDescripcionEstadoComplemento(tvVentasFactura)}}</label>
+                                </span>
+                            </div>
+                            <div class="p-field p-col-12 p-md-12" *ngIf="tvVentasFactura?.idFactura">
+                                <p-card header="Historial de complementos de pago">
+                                    <div class="p-col-12 p-text-right p-mb-2" *ngIf="historialComplementos?.length">
+                                        <p-dropdown [options]="filtrosEstadoHistorialComplemento" optionLabel="label" optionValue="value" [(ngModel)]="filtroEstadoHistorialComplemento" placeholder="Filtrar estado" styleClass="p-mr-2"></p-dropdown>
+                                        <input pInputText type="number" [(ngModel)]="filtroParcialidadHistorialComplemento" placeholder="Parcialidad" class="p-mr-2" style="width: 120px;" />
+                                        <button pButton pRipple type="button" label="Descargar ZIP" icon="pi pi-download" class="p-button-help p-button-sm" (click)="descargarZipComplementos(tvVentasFactura.nId)"></button>
+                                    </div>
+                                    <div class="p-col-12" *ngIf="cargandoComplementos">
+                                        <p-progressSpinner styleClass="custom-spinner" strokeWidth="4"></p-progressSpinner>
+                                    </div>
+                                    <p-table *ngIf="!cargandoComplementos" [value]="historialComplementosFiltrados" responsiveLayout="scroll">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th>Parcialidad</th>
+                                                <th>Origen</th>
+                                                <th>Forma pago</th>
+                                                <th>Monto</th>
+                                                <th>Saldo anterior</th>
+                                                <th>Saldo insoluto</th>
+                                                <th>Estado</th>
+                                                <th>Error</th>
+                                                <th>UUID REP</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-complemento>
+                                            <tr>
+                                                <td>{{complemento.parcialidad || 'N/D'}}</td>
+                                                <td>{{obtenerDescripcionOrigenPago(complemento.origenPago)}}</td>
+                                                <td>{{complemento.descripcionFormaPago || complemento.formaPagoSat || 'N/D'}}</td>
+                                                <td>{{complemento.montoPagado | currency:'USD'}}</td>
+                                                <td>{{complemento.saldoAnterior | currency:'USD'}}</td>
+                                                <td>{{complemento.saldoInsoluto | currency:'USD'}}</td>
+                                                <td>{{obtenerDescripcionEstadoHistorial(complemento)}}</td>
+                                                <td>{{complemento.errorPac || complemento.codigoError || 'Sin error'}}</td>
+                                                <td>{{complemento.uuidComplementoPago || 'Sin UUID'}}</td>
+                                                <td>
+                                                    <button *ngIf="puedeDescargarComplementoPdf(complemento)" pButton pRipple icon="pi pi-eye" pTooltip="Ver PDF complemento" class="p-button-rounded p-button-secondary p-mr-2 p-button-outlined" (click)="verComplementoPdf(complemento)"></button>
+                                                    <button *ngIf="puedeDescargarComplementoPdf(complemento)" pButton pRipple icon="pi pi-file-pdf" pTooltip="Descargar PDF complemento" class="p-button-rounded p-button-danger p-mr-2 p-button-outlined" (click)="descargarComplementoPdf(complemento)"></button>
+                                                    <button *ngIf="puedeDescargarComplementoXml(complemento)" pButton pRipple icon="pi pi-book" pTooltip="Descargar XML complemento" class="p-button-rounded p-button-info p-button-outlined" (click)="descargarComplementoXml(complemento)"></button>
+                                                    <button *ngIf="puedeReintentarComplemento(complemento)" pButton pRipple icon="pi pi-refresh" pTooltip="Reintentar este complemento" class="p-button-rounded p-button-warning p-ml-2 p-button-outlined" (click)="reintentarComplementoHistorial(complemento)"></button>
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="10">No hay complementos registrados para esta factura.</td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+                                </p-card>
+                            </div>
                             <div class="p-field p-col-12 p-md-12">
                                 <span class="p-float-label">
                                     <label for="float-input"><strong> Rfc emisor </strong> {{tvVentasFactura.sRfcEmisor}}</label>
@@ -204,7 +276,167 @@
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger" (click)="hideDialog()"></button>
         <button pButton pRipple label="Facturar" icon="pi pi-check" class="p-button-success" (click)="generarFactura()"></button>
-        <button pButton pRipple label="Complemento" icon="pi pi-check" class="p-button-text" (click)="generarComplemento()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarDialogoAccionesVenta" [style]="{width: '720px'}" header="Opciones de la venta" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="facturacion-complemento-header facturacion-actions-header">
+            <div>
+                <h4 class="p-m-0">Venta {{tvVentasFactura?.nId}}</h4>
+                <small>{{tvVentasFactura?.tcCliente?.sRazonSocial}} | {{tvVentasFactura?.tcCliente?.sRfc}}</small>
+            </div>
+            <div class="facturacion-complemento-badges">
+                <span class="facturacion-pill facturacion-pill-neutral">{{obtenerEstadoFacturaVisible(tvVentasFactura)}}</span>
+                <span *ngIf="obtenerPistaComplemento(tvVentasFactura)" class="facturacion-pill facturacion-pill-info">{{obtenerPistaComplemento(tvVentasFactura)}}</span>
+            </div>
+        </div>
+
+        <div class="facturacion-actions-grid">
+            <div class="facturacion-actions-panel">
+                <h5>Documentos</h5>
+                <div class="facturacion-actions-panel-body">
+                    <button *ngIf="tvVentasFactura?.idFactura!=0 && !esFacturaCancelada(tvVentasFactura)" pButton pRipple icon="pi pi-file-pdf" label="Descargar PDF" class="p-button-danger p-button-outlined" (click)="descargarFactura(tvVentasFactura.nId)"></button>
+                    <button *ngIf="tvVentasFactura?.idFactura!=0 && !esFacturaCancelada(tvVentasFactura)" pButton pRipple icon="pi pi-book" label="Descargar XML" class="p-button-info p-button-outlined" (click)="descargarXML(tvVentasFactura.nId)"></button>
+                    <button *ngIf="tvVentasFactura?.idFactura!=0 && tieneComplementosTimbrados(tvVentasFactura)" pButton pRipple icon="pi pi-images" label="Abrir complementos" class="p-button-help p-button-outlined" (click)="cerrarDialogoAccionesVenta(); abrirDialogoComplementos(tvVentasFactura)"></button>
+                    <button *ngIf="tvVentasFactura?.idFactura!=0 && esFacturaCancelada(tvVentasFactura)" pButton pRipple icon="pi pi-download" label="Acuse de cancelación" class="p-button-success p-button-outlined" (click)="descargarAcuseCancelacion(tvVentasFactura.nId)"></button>
+                </div>
+            </div>
+
+            <div class="facturacion-actions-panel">
+                <h5>Seguimiento fiscal</h5>
+                <div class="facturacion-actions-panel-body">
+                    <button *ngIf="tvVentasFactura?.idFactura!=0" pButton pRipple icon="pi pi-search" label="Estatus SAT" class="p-button-help p-button-outlined" (click)="abrirDialogoEstatusSat(tvVentasFactura)"></button>
+                    <button *ngIf="tvVentasFactura?.idFactura!=0" pButton pRipple icon="pi pi-sitemap" label="CFDI relacionados" class="p-button-info p-button-outlined" (click)="abrirDialogoRelacionados(tvVentasFactura)"></button>
+                    <button *ngIf="tvVentasFactura?.idFactura!=0 && !esFacturaCancelada(tvVentasFactura)" pButton pRipple icon="pi pi-times" label="Cancelar CFDI" class="p-button-secondary p-button-outlined" (click)="abrirDialogoCancelacion(tvVentasFactura)"></button>
+                </div>
+            </div>
+
+            <div class="facturacion-actions-panel">
+                <h5>REP y cobranza</h5>
+                <div class="facturacion-actions-panel-body">
+                    <button *ngIf="mostrarBotonComplemento(tvVentasFactura)" pButton pRipple icon="pi pi-refresh" label="Generar o reintentar REP" class="p-button-warning p-button-outlined" (click)="reintentarComplemento(tvVentasFactura)"></button>
+                    <div class="facturacion-actions-note" *ngIf="!mostrarBotonComplemento(tvVentasFactura)">
+                        No hay acciones REP pendientes para esta venta.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="cerrarDialogoAccionesVenta()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarDialogoComplementos" [style]="{width: '92vw'}" header="Complementos de pago" [modal]="true" styleClass="p-fluid facturacion-complementos-dialog">
+    <ng-template pTemplate="content">
+        <div class="facturacion-complemento-header">
+            <div>
+                <h4 class="p-m-0">Venta {{tvVentasFactura?.nId}}</h4>
+                <small>{{tvVentasFactura?.tcCliente?.sRazonSocial}} | {{tvVentasFactura?.tcCliente?.sRfc}}</small>
+            </div>
+            <div class="facturacion-complemento-badges">
+                <span class="facturacion-pill facturacion-pill-neutral">{{obtenerEstadoFacturaVisible(tvVentasFactura)}}</span>
+                <span *ngIf="obtenerPistaComplemento(tvVentasFactura)" class="facturacion-pill facturacion-pill-info">{{obtenerPistaComplemento(tvVentasFactura)}}</span>
+            </div>
+        </div>
+
+        <div class="facturacion-complemento-toolbar" *ngIf="historialComplementos?.length">
+            <div class="facturacion-toolbar-group">
+                <input pInputText type="number" [(ngModel)]="filtroParcialidadHistorialComplemento" placeholder="Parcialidad" style="width: 120px;" />
+            </div>
+            <div class="facturacion-toolbar-group">
+                <button pButton pRipple type="button" label="Descargar ZIP" icon="pi pi-download" class="p-button-help" (click)="descargarZipComplementos(tvVentasFactura.nId)"></button>
+            </div>
+        </div>
+            <div *ngIf="!cargandoComplementos" class="facturacion-complemento-section">
+                <div class="facturacion-complemento-section-header">
+                    <div>
+                        <h5 class="p-m-0">Complementos timbrados</h5>
+                        <small>Solo se muestran documentos válidos para consulta y descarga.</small>
+                    </div>
+                    <span class="facturacion-pill facturacion-pill-success" *ngIf="complementosPagoExitosos.length">{{complementosPagoExitosos.length}} disponibles</span>
+                </div>
+
+                <div class="facturacion-complemento-grid" *ngIf="complementosPagoExitosos?.length; else sinComplementosExitosos">
+                    <div class="facturacion-complemento-card" *ngFor="let complemento of complementosPagoExitosos">
+                        <div class="facturacion-complemento-card-header">
+                            <div>
+                                <strong>Parcialidad {{complemento.parcialidad || 'N/D'}}</strong>
+                                <small>{{obtenerDescripcionOrigenPago(complemento.origenPago)}}</small>
+                            </div>
+                            <span class="facturacion-pill facturacion-pill-success">
+                                {{obtenerDescripcionEstadoHistorial(complemento)}}
+                            </span>
+                        </div>
+                        <div class="facturacion-complemento-metrics">
+                            <div><span>Monto</span><strong>{{complemento.montoPagado | currency:'USD'}}</strong></div>
+                            <div><span>Saldo anterior</span><strong>{{complemento.saldoAnterior | currency:'USD'}}</strong></div>
+                            <div><span>Saldo insoluto</span><strong>{{complemento.saldoInsoluto | currency:'USD'}}</strong></div>
+                            <div><span>Forma</span><strong>{{complemento.descripcionFormaPago || complemento.formaPagoSat || 'N/D'}}</strong></div>
+                        </div>
+                        <div class="facturacion-complemento-meta">
+                            <div><strong>UUID REP:</strong> {{complemento.uuidComplementoPago || 'Sin UUID'}}</div>
+                            <div><strong>Error:</strong> {{complemento.errorPac || complemento.codigoError || 'Sin error'}}</div>
+                        </div>
+                        <div class="facturacion-complemento-actions">
+                            <button *ngIf="puedeDescargarComplementoPdf(complemento)" pButton pRipple icon="pi pi-eye" label="Ver PDF" class="p-button-sm p-button-secondary" (click)="verComplementoPdf(complemento)"></button>
+                            <button *ngIf="puedeDescargarComplementoPdf(complemento)" pButton pRipple icon="pi pi-file-pdf" label="PDF" class="p-button-sm p-button-danger" (click)="descargarComplementoPdf(complemento)"></button>
+                            <button *ngIf="puedeDescargarComplementoXml(complemento)" pButton pRipple icon="pi pi-book" label="XML" class="p-button-sm p-button-info" (click)="descargarComplementoXml(complemento)"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <ng-template #sinComplementosExitosos>
+                    <div class="pac-result pac-result-neutral">
+                        No hay complementos timbrados para esta factura.
+                    </div>
+                </ng-template>
+            </div>
+
+            <div *ngIf="!cargandoComplementos && complementosPagoFallidosLog.length" class="facturacion-failed-log">
+                <div class="facturacion-complemento-section-header">
+                    <div>
+                        <h5 class="p-m-0">Bitácora de intentos fallidos</h5>
+                        <small>Estos registros son solo para revisar el problema; no forman parte de los documentos descargables.</small>
+                    </div>
+                    <span class="facturacion-pill facturacion-pill-warning">{{complementosPagoFallidosLog.length}} con error</span>
+                </div>
+
+                <div class="facturacion-failed-log-list">
+                    <div class="facturacion-failed-log-item" *ngFor="let complemento of complementosPagoFallidosLog">
+                        <div class="facturacion-failed-log-main">
+                            <strong>Parcialidad {{complemento.parcialidad || 'N/D'}} · {{obtenerDescripcionOrigenPago(complemento.origenPago)}}</strong>
+                            <small>{{complemento.descripcionFormaPago || complemento.formaPagoSat || 'N/D'}} · {{complemento.montoPagado | currency:'USD'}}</small>
+                        </div>
+                        <div class="facturacion-failed-log-meta">
+                            <span class="facturacion-pill" [ngClass]="{ 'facturacion-pill-warning': !esComplementoReemplazado(complemento), 'facturacion-pill-neutral': esComplementoReemplazado(complemento) }">{{obtenerDescripcionEstadoHistorial(complemento)}}</span>
+                            <small>{{complemento.errorPac || complemento.codigoError || 'Sin detalle de error'}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="p-col-12" *ngIf="cargandoComplementos">
+            <p-progressSpinner styleClass="custom-spinner" strokeWidth="4"></p-progressSpinner>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="cerrarDialogoComplementos()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="mostrarDialogoVistaPreviaComplemento" [style]="{width: '90vw', height: '90vh'}" [modal]="true" [header]="tituloVistaPreviaComplemento || 'Vista previa complemento'" styleClass="p-fluid" (onHide)="cerrarVistaPreviaComplemento()">
+    <ng-template pTemplate="content">
+        <div class="complemento-preview-wrapper" *ngIf="urlVistaPreviaComplemento; else sinPreviewComplemento">
+            <iframe class="complemento-preview-frame" [src]="urlVistaPreviaComplemento"></iframe>
+        </div>
+        <ng-template #sinPreviewComplemento>
+            <div class="pac-result pac-result-neutral">No hay vista previa disponible para este complemento.</div>
+        </ng-template>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="cerrarVistaPreviaComplemento()"></button>
     </ng-template>
 </p-dialog>
 

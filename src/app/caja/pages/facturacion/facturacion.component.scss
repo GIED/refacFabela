@@ -20,7 +20,550 @@
 	padding-left: 18px;
 }
 
+.facturacion-shell {
+	padding: 0;
+	border: 0;
+	box-shadow: none;
+}
+
+.facturacion-hero {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 24px;
+	padding: 24px;
+	border-radius: 20px;
+	background: linear-gradient(135deg, #fff8ef 0%, #f5fbff 100%);
+	border: 1px solid #fde6c8;
+	margin-bottom: 16px;
+}
+
+.facturacion-eyebrow {
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: #9a3412;
+	margin-bottom: 8px;
+}
+
+.facturacion-subtitle {
+	margin: 8px 0 0;
+	color: #475569;
+	max-width: 700px;
+}
+
+.facturacion-credit-card {
+	min-width: 180px;
+	padding: 18px 20px;
+	border-radius: 18px;
+	background: #0f172a;
+	color: #f8fafc;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+}
+
+.facturacion-credit-card span {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	opacity: 0.8;
+}
+
+.facturacion-credit-card strong {
+	font-size: 30px;
+	line-height: 1;
+}
+
+.facturacion-toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 16px;
+	flex-wrap: wrap;
+}
+
+.facturacion-toolbar-group {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+:host ::ng-deep .facturacion-toolbar .p-selectbutton .p-button {
+	min-width: 150px;
+	font-weight: 600;
+}
+
+.facturacion-summary-strip {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
+}
+
+.facturacion-metrics-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 12px;
+	margin-bottom: 18px;
+}
+
+.facturacion-metric-card {
+	padding: 16px 18px;
+	border-radius: 16px;
+	background: white;
+	border: 1px solid #e2e8f0;
+	box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.facturacion-metric-card span {
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: #64748b;
+}
+
+.facturacion-metric-card strong {
+	font-size: 28px;
+	line-height: 1;
+	color: #0f172a;
+}
+
+.facturacion-pill {
+	display: inline-flex;
+	align-items: center;
+	padding: 8px 12px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	border: 1px solid transparent;
+}
+
+.facturacion-pill-neutral {
+	background: #f1f5f9;
+	color: #334155;
+	border-color: #dbeafe;
+}
+
+.facturacion-pill-info {
+	background: #eff6ff;
+	color: #1d4ed8;
+	border-color: #bfdbfe;
+}
+
+.facturacion-pill-accent {
+	background: #fff7ed;
+	color: #c2410c;
+	border-color: #fdba74;
+}
+
+.facturacion-pill-success {
+	background: #ecfdf5;
+	color: #047857;
+	border-color: #a7f3d0;
+}
+
+.facturacion-pill-warning {
+	background: #fff7ed;
+	color: #b45309;
+	border-color: #fdba74;
+}
+
+.facturacion-table-caption small {
+	color: #64748b;
+	display: block;
+	margin-top: 4px;
+}
+
+.facturacion-inline-warning {
+	display: inline-flex;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: #fef2f2;
+	color: #b91c1c;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.facturacion-gestion-cell {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8px;
+}
+
+.facturacion-next-step {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 10px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	border: 1px solid transparent;
+}
+
+.facturacion-next-step-alert {
+	background: #fff1f2;
+	color: #be123c;
+	border-color: #fecdd3;
+}
+
+.facturacion-next-step-warning {
+	background: #fff7ed;
+	color: #c2410c;
+	border-color: #fdba74;
+}
+
+.facturacion-next-step-success {
+	background: #ecfdf5;
+	color: #047857;
+	border-color: #a7f3d0;
+}
+
+.facturacion-next-step-neutral {
+	background: #f8fafc;
+	color: #475569;
+	border-color: #cbd5e1;
+}
+
+.facturacion-action-stack {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	flex-wrap: wrap;
+}
+
+.facturacion-status-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 6px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.facturacion-status-badge-cfdi {
+	background: #eef2ff;
+	color: #4338ca;
+}
+
+.facturacion-status-badge-pending {
+	background: #fff7ed;
+	color: #c2410c;
+}
+
+.facturacion-status-badge-confirmed {
+	background: #ecfdf5;
+	color: #047857;
+}
+
+.facturacion-status-badge-cancelled {
+	background: #fef2f2;
+	color: #b91c1c;
+}
+
+.facturacion-status-badge-fiscal {
+	background: #fef3c7;
+	color: #92400e;
+}
+
+.facturacion-status-badge-rep {
+	background: #ecfeff;
+	color: #0f766e;
+}
+
+.facturacion-status-badge-sale {
+	background: #f1f5f9;
+	color: #1e293b;
+}
+
+.facturacion-cell-main {
+	font-weight: 600;
+	color: #0f172a;
+}
+
+.facturacion-cell-sub {
+	font-size: 12px;
+	color: #64748b;
+	margin-top: 4px;
+}
+
+.facturacion-fiscal-stack {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.facturacion-status-hint {
+	font-size: 12px;
+	color: #0f766e;
+	font-weight: 600;
+}
+
+:host ::ng-deep .facturacion-split-button .p-splitbutton-defaultbutton,
+:host ::ng-deep .facturacion-split-button .p-splitbutton-menubutton {
+	background: #0f172a;
+	border-color: #0f172a;
+}
+
+:host ::ng-deep .facturacion-split-button.p-button-warning .p-splitbutton-defaultbutton,
+:host ::ng-deep .facturacion-split-button.p-button-warning .p-splitbutton-menubutton {
+	background: #d97706;
+	border-color: #d97706;
+}
+
+.facturacion-complementos-dialog :host {
+	width: 100%;
+}
+
+.facturacion-complemento-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 16px;
+	padding: 16px 18px;
+	background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+	border: 1px solid #dbeafe;
+	border-radius: 16px;
+}
+
+.facturacion-complemento-badges {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.facturacion-complemento-toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 16px;
+	flex-wrap: wrap;
+}
+
+.facturacion-complemento-section {
+	display: grid;
+	gap: 16px;
+	margin-bottom: 20px;
+}
+
+.facturacion-complemento-section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 12px;
+	margin-bottom: 4px;
+}
+
+.facturacion-complemento-section-header small {
+	display: block;
+	margin-top: 4px;
+	color: #64748b;
+}
+
+.facturacion-complemento-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 16px;
+}
+
+.facturacion-complemento-card {
+	padding: 18px;
+	border-radius: 18px;
+	border: 1px solid #e5e7eb;
+	background: white;
+	box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.facturacion-complemento-card-header {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	align-items: flex-start;
+}
+
+.facturacion-complemento-card-header small {
+	display: block;
+	color: #64748b;
+	margin-top: 4px;
+}
+
+.facturacion-complemento-metrics {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+}
+
+.facturacion-complemento-metrics div,
+.facturacion-complemento-meta div {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.facturacion-complemento-metrics span {
+	font-size: 12px;
+	color: #64748b;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.facturacion-complemento-meta {
+	display: grid;
+	gap: 10px;
+	font-size: 13px;
+	color: #334155;
+}
+
+.facturacion-complemento-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-top: auto;
+}
+
+.facturacion-failed-log {
+	padding: 18px;
+	border-radius: 18px;
+	background: #fffaf5;
+	border: 1px solid #fed7aa;
+	display: grid;
+	gap: 14px;
+}
+
+.facturacion-failed-log-list {
+	display: grid;
+	gap: 10px;
+}
+
+.facturacion-failed-log-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 12px 14px;
+	border-radius: 14px;
+	background: rgba(255, 255, 255, 0.86);
+	border: 1px solid #ffedd5;
+}
+
+.facturacion-failed-log-main,
+.facturacion-failed-log-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.facturacion-failed-log-main small,
+.facturacion-failed-log-meta small {
+	color: #64748b;
+	font-size: 12px;
+}
+
+.facturacion-failed-log-meta {
+	align-items: flex-end;
+	text-align: right;
+}
+
+.facturacion-actions-header {
+	margin-bottom: 20px;
+}
+
+.facturacion-actions-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 16px;
+}
+
+.facturacion-actions-panel {
+	padding: 18px;
+	border-radius: 18px;
+	background: white;
+	border: 1px solid #e5e7eb;
+	box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.facturacion-actions-panel h5 {
+	margin: 0 0 14px;
+	color: #0f172a;
+}
+
+.facturacion-actions-panel-body {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.facturacion-actions-note {
+	padding: 12px 14px;
+	border-radius: 12px;
+	background: #f8fafc;
+	color: #64748b;
+	font-size: 13px;
+}
+
 .custom-spinner {
 	display: flex;
 	justify-content: center;
+}
+
+.complemento-preview-wrapper {
+	width: 100%;
+	height: 75vh;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	overflow: hidden;
+	background: #f8fafc;
+}
+
+.complemento-preview-frame {
+	width: 100%;
+	height: 100%;
+	border: 0;
+	background: white;
+}
+
+@media screen and (max-width: 768px) {
+	.facturacion-hero,
+	.facturacion-complemento-header,
+	.facturacion-toolbar,
+	.facturacion-complemento-toolbar {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.facturacion-credit-card {
+		min-width: auto;
+	}
+
+	.facturacion-complemento-metrics {
+		grid-template-columns: 1fr;
+	}
+
+	.facturacion-complemento-section-header,
+	.facturacion-failed-log-item {
+		flex-direction: column;
+	}
+
+	.facturacion-failed-log-meta {
+		align-items: flex-start;
+		text-align: left;
+	}
 }

@@ -4,11 +4,13 @@ import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 import { TvVentasFactura } from '../../productos/model/TvVentasFactura';
 import { CancelacionFacturaDto } from '../../productos/model/CancelacionFacturaDto';
+import { ResultadoFacturacionVentaDto } from '../../productos/model/ResultadoFacturacionVentaDto';
 import { StatusCfdiResponse } from '../../productos/model/StatusCfdiResponse';
 import { CfdiRelacionadosResponse } from '../../productos/model/CfdiRelacionadosResponse';
 import { SolicitudCancelacionDto } from '../../productos/model/SolicitudCancelacionDto';
 import { SolicitudCancelacionAccionDto } from '../../productos/model/SolicitudCancelacionAccionDto';
 import { CancelacionResponse } from '../../productos/model/CancelacionResponse';
+import { ComplementoPagoHistorialDto } from '../../productos/model/ComplementoPagoHistorialDto';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
@@ -34,11 +36,16 @@ export class FacturaService {
 
   facturarVenta(idVenta:number, cveCfdi:string){
     let url = environment.servicios.apiRefacFabela + locator.facturarVenta+ 'nIdVenta='+idVenta + '&cveCfdi='+cveCfdi;
-    return this.http.get<any>(url);
+    return this.http.get<ResultadoFacturacionVentaDto>(url);
   }
   facturarComplemento(idVenta:number, cveCfdi:string){
     let url = environment.servicios.apiRefacFabela + locator.facturarComplemento+ 'nIdVenta='+idVenta + '&cveCfdi='+cveCfdi;
-    return this.http.get<any>(url);
+    return this.http.get<ResultadoFacturacionVentaDto>(url);
+  }
+
+  reintentarComplemento(nIdComplemento:number){
+    let url = environment.servicios.apiRefacFabela + locator.reintentarComplemento + 'nIdComplemento=' + nIdComplemento;
+    return this.http.post<ResultadoFacturacionVentaDto>(url, {});
   }
 
   cancelarFactura(payload: CancelacionFacturaDto){
@@ -54,6 +61,11 @@ export class FacturaService {
   consultarCfdiRelacionados(nIdVenta:number){
     let url = environment.servicios.apiRefacFabela + locator.consultaCfdiRelacionados + 'nIdVenta=' + nIdVenta;
     return this.http.get<CfdiRelacionadosResponse>(url);
+  }
+
+  consultarComplementos(nIdVenta:number){
+    let url = environment.servicios.apiRefacFabela + locator.consultaComplementos + 'nIdVenta=' + nIdVenta;
+    return this.http.get<ComplementoPagoHistorialDto[]>(url);
   }
 
   consultarSolicitudesPendientes(nIdDatoFactura:number){
@@ -82,6 +94,18 @@ export class FacturaService {
       })
     );
 
+  }
+
+  descargarDocumentoComplemento(nIdComplemento: number, tipoDoc:string){
+    const httpOptions = {
+      responseType: 'arraybuffer' as 'json'
+    };
+    return this.http.get<any>(environment.servicios.apiRefacFabela + locator.descargarDocumentoComplemento + 'nIdComplemento=' + nIdComplemento+'&TipoDoc='+tipoDoc, httpOptions).pipe(
+      catchError(e => {
+        console.error(e);
+        return throwError(e);
+      })
+    );
   }
 
   subirDocumento(formData: FormData) {
