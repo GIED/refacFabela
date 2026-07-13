@@ -306,7 +306,7 @@
 						<ng-template pTemplate="header">
 							<tr>
 								<th style="width: 3rem">
-									<p-tableHeaderCheckbox [disabled]="montoRestanteManualPagoCanonico <= 0 && selectedFacturas?.length === 0"></p-tableHeaderCheckbox>
+									<p-tableHeaderCheckbox [disabled]="((montoRestanteManualPagoCanonico <= 0 && selectedFacturas?.length === 0) || totalFacturasElegiblesPagoCanonico === 0)"></p-tableHeaderCheckbox>
 								</th>
 								<th>No. Venta</th>
 								<th>Fecha</th>
@@ -314,13 +314,14 @@
 								<th>Abonado Prev.</th>
 								<th>Saldo Restante</th>
 								<th>Parcialidad</th>
+								<th>Estado fiscal</th>
 								<th>Monto que tomará</th>
 							</tr>
 						</ng-template>
 						<ng-template pTemplate="body" let-factura>
 							<tr>
 								<td>
-									<p-tableCheckbox [value]="factura" [disabled]="(!selectedFacturas?.includes(factura) && montoRestanteManualPagoCanonico <= 0) || !tieneMontoDisponibleParaAsignacion"></p-tableCheckbox>
+									<p-tableCheckbox [value]="factura" [disabled]="(!selectedFacturas?.includes(factura) && montoRestanteManualPagoCanonico <= 0) || !tieneMontoDisponibleParaAsignacion || !esFacturaElegibleParaAplicacionGlobal(factura)"></p-tableCheckbox>
 								</td>
 								<td>{{factura.nIdVenta}}</td>
 								<td>{{factura.fechaVenta | date:'short'}}</td>
@@ -328,6 +329,9 @@
 								<td>{{(factura.totalAplicado || 0) | currency:'MXN'}}</td>
 								<td><strong>{{(factura.saldoPendiente || 0) | currency:'MXN'}}</strong></td>
 								<td>{{factura.parcialidadActual || 0}}</td>
+								<td>
+									<p-tag [severity]="obtenerSeverityEstadoFiscalFactura(factura)" [value]="obtenerEtiquetaEstadoFiscalFactura(factura)"></p-tag>
+								</td>
 								<td>
 									<span *ngIf="factura.montoAplicarSeleccionado > 0" style="color:#2196F3; font-weight: bold">
 										{{ factura.montoAplicarSeleccionado | currency:'MXN'}}
@@ -340,10 +344,13 @@
 						</ng-template>
 						<ng-template pTemplate="emptymessage">
 							<tr>
-								<td colspan="8">No hay notas pendientes. Puedes guardar el pago global como saldo a favor nada más.</td>
+								<td colspan="9">No hay notas pendientes. Puedes guardar el pago global como saldo a favor nada más.</td>
 							</tr>
 						</ng-template>
 					</p-table>
+					<small class="p-d-block p-mt-2" style="color:#6c757d;">
+						Solo se pueden relacionar ventas facturadas en PPD/99 y vigentes para aplicar pagos globales y generar complemento de pago.
+					</small>
 				</div>
 			</div>
 

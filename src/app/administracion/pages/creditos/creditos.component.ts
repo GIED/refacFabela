@@ -623,6 +623,15 @@ export class CreditosComponent implements OnInit {
     controlCuenta.updateValueAndValidity({ emitEvent: false });
   }
 
+  private formatearFechaLocalSinZona(fecha: any): string {
+    const source = fecha ? new Date(fecha) : new Date();
+    const fechaValida = isNaN(source.getTime()) ? new Date() : source;
+    const pad = (value: number) => `${value}`.padStart(2, '0');
+
+    return `${fechaValida.getFullYear()}-${pad(fechaValida.getMonth() + 1)}-${pad(fechaValida.getDate())}`
+      + `T${pad(fechaValida.getHours())}:${pad(fechaValida.getMinutes())}:${pad(fechaValida.getSeconds())}`;
+  }
+
   registrarPagoCanonico() {
     if (this.formularioPagoCanonico.invalid) {
       Object.values(this.formularioPagoCanonico.controls).forEach(control => control.markAsTouched());
@@ -641,7 +650,7 @@ export class CreditosComponent implements OnInit {
     const payload = new PagoClienteRegistroDto();
     payload.nIdCliente = nIdCliente;
     payload.nIdDatoFactura = nIdDatoFactura;
-    payload.fechaPago = this.formularioPagoCanonico.get('fechaPago').value;
+    payload.fechaPago = this.formatearFechaLocalSinZona(this.formularioPagoCanonico.get('fechaPago').value);
     payload.importeTotal = this.formularioPagoCanonico.get('importeTotal').value;
     payload.moneda = 'MXN';
     payload.nIdFormaPago = formaPago.nId;
@@ -1118,7 +1127,9 @@ export class CreditosComponent implements OnInit {
   private redistribuirMontosSeleccionados(): void {
     let restante = this.obtenerMontoDisponibleParaAsignacion();
     const seleccionadasIds = new Set((this.selectedFacturas || []).map(item => item?.nIdVenta));
-    const seleccionadas = (this.listaFacturasPendientesPagoCanonico || []).filter(item => seleccionadasIds.has(item?.nIdVenta));
+    const seleccionadas = (this.listaFacturasPendientesPagoCanonico || [])
+      .filter(item => seleccionadasIds.has(item?.nIdVenta))
+      .filter(item => this.esFacturaElegibleParaAplicacionGlobal(item));
     this.selectedFacturas = seleccionadas;
 
     (this.listaFacturasPendientesPagoCanonico || []).forEach(factura => {
@@ -1216,9 +1227,11 @@ export class CreditosComponent implements OnInit {
 
     this.procesandoPagoCanonico = true;
     this.pagoClienteService.aplicarAutomatico(this.pagoCanonicoSeleccionado.nId, payload).subscribe(() => {
-      this.procesandoPagoCanonico = false;
       this.messageService.add({ severity: 'success', summary: 'Asignación automática', detail: 'El saldo del pago global se asignó automáticamente a las notas elegibles.', life: 4000 });
-      this.recargarContextoPagoCanonico();
+      this.ejecutarComplementoPagoGlobalDespuesDeAplicar(this.pagoCanonicoSeleccionado.nId, () => {
+        this.procesandoPagoCanonico = false;
+        this.recargarContextoPagoCanonico();
+      });
     }, (error) => {
       this.procesandoPagoCanonico = false;
       this.messageService.add({ severity: 'error', summary: 'Error', detail: error?.error || 'No fue posible asignar el pago global automáticamente.', life: 5000 });
@@ -1235,6 +1248,7 @@ export class CreditosComponent implements OnInit {
     }
 
     const lineas: PagoAplicacionManualLineaDto[] = (this.listaFacturasPendientesPagoCanonico || [])
+      .filter(factura => this.esFacturaElegibleParaAplicacionGlobal(factura))
       .filter(factura => Number(factura?.montoAplicarSeleccionado || 0) > 0)
       .map(factura => {
         const linea = new PagoAplicacionManualLineaDto();
@@ -1261,9 +1275,11 @@ export class CreditosComponent implements OnInit {
     this.procesandoPagoCanonico = true;
     this.spinner.show();
     this.pagoClienteService.aplicarManual(this.pagoCanonicoSeleccionado.nId, payload).subscribe(() => {
-      this.finalizarTransaccionGuardadoPago();
       this.messageService.add({ severity: 'success', summary: 'Asignación guardada', detail: 'El saldo del pago global se asignó a las notas seleccionadas.', life: 4000 });
-      this.recargarContextoPagoCanonico();
+      this.ejecutarComplementoPagoGlobalDespuesDeAplicar(this.pagoCanonicoSeleccionado.nId, () => {
+        this.finalizarTransaccionGuardadoPago();
+        this.recargarContextoPagoCanonico();
+      });
     }, (error) => {
       this.finalizarTransaccionGuardadoPago();
       this.messageService.add({ severity: 'error', summary: 'Error', detail: error?.error || 'No fue posible guardar la asignación del pago global.', life: 5000 });
@@ -1357,9 +1373,116 @@ export class CreditosComponent implements OnInit {
     this.redistribuirMontosSeleccionados();
   }
 
+  esFacturaElegibleParaAplicacionGlobal(factura: FacturaCreditoPendienteDto): boolean {
+    if (!factura) {
+      return false;
+    }
+
+    if (factura.requiereFacturacion || factura.facturada === false) {
+      return false;
+    }
+
+    const estado = (factura.estadoFiscal || '').toUpperCase();
+    if (estado.includes('CANCEL')) {
+      return false;
+    }
+
+    return estado.includes('PPD_99');
+  }
+
+  obtenerEtiquetaEstadoFiscalFactura(factura: FacturaCreditoPendienteDto): string {
+    if (!factura) {
+      return 'Sin estado';
+    }
+    if (factura.requiereFacturacion || factura.facturada === false) {
+      return 'No facturada';
+    }
+
+    const estado = (factura.estadoFiscal || '').toUpperCase();
+    if (estado.includes('PPD_99')) {
+      return 'Facturada PPD/99';
+    }
+    if (estado.includes('FACTURA_EMITIDA')) {
+      return 'Facturada sin PPD/99';
+    }
+    if (estado.includes('CANCEL')) {
+      return 'Factura cancelada';
+    }
+    return 'Facturada';
+  }
+
+  obtenerSeverityEstadoFiscalFactura(factura: FacturaCreditoPendienteDto): string {
+    if (!factura) {
+      return 'secondary';
+    }
+    if (factura.requiereFacturacion || factura.facturada === false) {
+      return 'warning';
+    }
+
+    const estado = (factura.estadoFiscal || '').toUpperCase();
+    if (estado.includes('CANCEL')) {
+      return 'danger';
+    }
+    if (estado.includes('PPD_99')) {
+      return 'success';
+    }
+    if (estado.includes('FACTURA_EMITIDA')) {
+      return 'warning';
+    }
+    return 'secondary';
+  }
+
+  get totalFacturasElegiblesPagoCanonico(): number {
+    return (this.listaFacturasPendientesPagoCanonico || []).filter(item => this.esFacturaElegibleParaAplicacionGlobal(item)).length;
+  }
+
   onFacturasSelectionChange(selection: FacturaCreditoPendienteDto[]) {
-    this.selectedFacturas = selection || [];
+    const elegibles = (selection || []).filter(item => this.esFacturaElegibleParaAplicacionGlobal(item));
+    if ((selection || []).length !== elegibles.length) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Ventas no elegibles',
+        detail: 'Solo se pueden relacionar ventas facturadas en PPD/99 y vigentes para aplicar un pago global.',
+        life: 4500
+      });
+    }
+    this.selectedFacturas = elegibles;
     this.redistribuirMontosSeleccionados();
+  }
+
+  private ejecutarComplementoPagoGlobalDespuesDeAplicar(nIdPagoCliente: number, onFinalize: () => void): void {
+    if (!nIdPagoCliente) {
+      onFinalize();
+      return;
+    }
+
+    this.facturaService.facturarComplementoPagoCliente(nIdPagoCliente).subscribe(resultado => {
+      if (resultado?.success) {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Complemento generado',
+          detail: resultado?.mensaje || 'Se generó el complemento de pago para las ventas relacionadas.',
+          life: 5000
+        });
+      } else {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Complemento pendiente',
+          detail: resultado?.mensajeError || resultado?.mensaje
+            || 'La aplicación se guardó, pero el complemento de pago quedó pendiente.',
+          life: 5500
+        });
+      }
+      onFinalize();
+    }, () => {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Complemento pendiente',
+        detail: 'La aplicación se guardó, pero ocurrió un problema al generar el complemento de pago.',
+        life: 5500
+      });
+      onFinalize();
+    });
   }
 
   guardarOperacionPagoGlobal() {
@@ -1425,7 +1548,7 @@ export class CreditosComponent implements OnInit {
     const payloadPago = new PagoClienteRegistroDto();
     payloadPago.nIdCliente = nIdCliente;
     payloadPago.nIdDatoFactura = nIdDatoFactura;
-    payloadPago.fechaPago = valPago.fechaPago;
+    payloadPago.fechaPago = this.formatearFechaLocalSinZona(valPago.fechaPago);
     payloadPago.importeTotal = importePago;
     payloadPago.moneda = 'MXN';
     payloadPago.nIdFormaPago = formaPago.nId;
@@ -1460,7 +1583,7 @@ export class CreditosComponent implements OnInit {
              let restante = importePago;
              const lineas: PagoAplicacionManualLineaDto[] = [];
              
-               for(const f of (this.selectedFacturas || [])) {
+               for(const f of (this.selectedFacturas || []).filter(item => this.esFacturaElegibleParaAplicacionGlobal(item))) {
                  if (restante <= 0) break;
                  const montoAplicar = Math.min(restante, f.saldoPendiente || 0);
                  const linea = new PagoAplicacionManualLineaDto();
@@ -1480,11 +1603,13 @@ export class CreditosComponent implements OnInit {
                  return;
                }
              
-             this.pagoClienteService.aplicarManual(nuevoPagoId, manualPayload).subscribe(resAsig => {
-                  this.finalizarTransaccionGuardadoPago();
+               this.pagoClienteService.aplicarManual(nuevoPagoId, manualPayload).subscribe(resAsig => {
                   this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'Pago registrado y asignado correctamente.', life: 4000 });
+                this.ejecutarComplementoPagoGlobalDespuesDeAplicar(nuevoPagoId, () => {
+                 this.finalizarTransaccionGuardadoPago();
                  this.activarRegistroNuevoPago();
-                  this.recargarContextoPagoCanonico();
+                 this.recargarContextoPagoCanonico();
+                });
              }, err => {
                   this.finalizarTransaccionGuardadoPago();
                   this.messageService.add({ severity: 'error', summary: 'Atención', detail: 'Se registró el pago pero falló la asignación. ' + (err?.error || ''), life: 5000 });

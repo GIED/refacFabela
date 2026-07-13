@@ -24,12 +24,6 @@
                 </div>
             </div>
 
-            <div class="facturacion-summary-strip">
-                <div class="facturacion-pill facturacion-pill-warning">CFDI individual: 1 venta = 1 factura</div>
-                <div class="facturacion-pill facturacion-pill-neutral">Un pago global puede cubrir varias ventas</div>
-                <div class="facturacion-pill facturacion-pill-info">Factura consolidada disponible para ventas del mismo cliente y misma razón social</div>
-            </div>
-
             <div class="facturacion-summary-strip" *ngIf="clienteFiltroCanonicoId">
                 <div class="facturacion-pill facturacion-pill-info">Filtro desde Créditos: {{clienteFiltroCanonicoNombre || ('Cliente ' + clienteFiltroCanonicoId)}}</div>
                 <div class="facturacion-pill facturacion-pill-neutral">Solo se muestran ventas de ese cliente</div>
@@ -41,10 +35,38 @@
                 <div class="facturacion-pill facturacion-pill-info">Estas ventas ya tienen Pago Global aplicado y son la prioridad natural para timbrar</div>
             </div>
 
-            <div class="facturacion-summary-strip" *ngIf="vistaFacturadas">
-                <div class="facturacion-pill facturacion-pill-neutral">Vista enfocada en ventas ya facturadas</div>
-                <div class="facturacion-pill facturacion-pill-info">Complementos visibles desde la acción principal</div>
-                <div class="facturacion-pill facturacion-pill-accent">CFDI consolidados detectados: {{totalCfdiConsolidados}}</div>
+            <div class="facturacion-filter-panel" *ngIf="vistaFacturadas">
+                <div class="facturacion-filter-group facturacion-filter-group-periodo">
+                    <span class="facturacion-filter-label">Ventana de consulta</span>
+                    <p-selectButton [options]="periodosFacturadas" optionLabel="label" optionValue="value" [(ngModel)]="periodoFacturadas" (ngModelChange)="onPeriodoFacturadasChange()"></p-selectButton>
+                    <small class="facturacion-filter-hint">Al abrir esta vista se consultan solo los últimos 60 días.</small>
+                </div>
+
+                <div class="facturacion-filter-group" *ngIf="periodoFacturadas === 'CUSTOM'">
+                    <span class="facturacion-filter-label">Rango personalizado</span>
+                    <div class="facturacion-filter-range">
+                        <p-calendar [(ngModel)]="fechaInicioFacturadas" dateFormat="yy-mm-dd" [showIcon]="true" appendTo="body" placeholder="Fecha inicial"></p-calendar>
+                        <p-calendar [(ngModel)]="fechaFinFacturadas" dateFormat="yy-mm-dd" [showIcon]="true" appendTo="body" placeholder="Fecha final"></p-calendar>
+                    </div>
+                </div>
+
+                <div class="facturacion-filter-group">
+                    <span class="facturacion-filter-label">Estatus</span>
+                    <p-dropdown [options]="filtrosEstadoFacturadas" optionLabel="label" optionValue="value" [(ngModel)]="estatusFacturadas" placeholder="Todos" (onChange)="onEstadoFacturadasChange()"></p-dropdown>
+                </div>
+
+                <div class="facturacion-filter-group facturacion-filter-group-search">
+                    <span class="facturacion-filter-label">Buscar venta o factura</span>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" [(ngModel)]="busquedaFacturadas" (keydown.enter)="aplicarFiltrosFacturadas()" placeholder="Número de venta, factura o folio" />
+                    </span>
+                </div>
+
+                <div class="facturacion-filter-actions">
+                    <button pButton pRipple type="button" [label]="cargandoFacturadas ? 'Consultando...' : 'Aplicar filtros'" icon="pi pi-filter" class="p-button-sm" [disabled]="cargandoFacturadas" (click)="aplicarFiltrosFacturadas()"></button>
+                    <button pButton pRipple type="button" label="Restablecer" icon="pi pi-refresh" class="p-button-secondary p-button-sm p-button-outlined" [disabled]="cargandoFacturadas" (click)="restablecerFiltrosFacturadas()"></button>
+                </div>
             </div>
 
             <div class="facturacion-metrics-grid">
@@ -79,7 +101,7 @@
             </div>
 
             <p-table #dt [value]="listaVentas" [rows]="10" [paginator]="true"
-            [globalFilterFields]="['nId','tcCliente.sRfc', 'tcCliente.sRazonSocial']" 
+            [globalFilterFields]="['nId','idFactura','sFolioVenta','tcCliente.sRfc', 'tcCliente.sRazonSocial']" 
             [(selection)]="ventasSeleccionadas" [rowHover]="true" dataKey="nId" styleClass="p-datatable-customers"
             currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
             [showCurrentPageReport]="true">
@@ -92,7 +114,7 @@
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-                            placeholder="Buscar Cliente" />
+                            [placeholder]="vistaFacturadas ? 'Filtrar cliente o RFC en resultados' : 'Buscar cliente'" />
                     </span>
                 </div>
             </ng-template>               
@@ -117,6 +139,7 @@
                         </td>
                         <td><span class="p-column-title">No. Venta</span>
                             <div class="facturacion-cell-main">#{{venta.nId}}</div>
+                            <div *ngIf="venta.idFactura" class="facturacion-cell-sub">Factura #{{venta.idFactura}}</div>
                             <div *ngIf="requiereFacturacionDesdeAnticipo(venta)" class="facturacion-cell-tag facturacion-cell-tag-anticip">Anticipo aplicado</div>
                             <button *ngIf="esFacturaConsolidada(venta)" type="button" class="facturacion-cell-tag facturacion-cell-tag-button" (click)="abrirDialogoFacturaConsolidada(venta)">{{obtenerEtiquetaFacturaConsolidada(venta)}}</button>
                         </td>

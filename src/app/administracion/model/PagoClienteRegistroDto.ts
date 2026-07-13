@@ -1,7 +1,7 @@
 export class PagoClienteRegistroDto {
   nIdCliente?: number;
   nIdDatoFactura?: number;
-  fechaPago?: Date;
+  fechaPago?: Date | string;
   importeTotal?: number;
   moneda?: string;
   nIdFormaPago?: number;

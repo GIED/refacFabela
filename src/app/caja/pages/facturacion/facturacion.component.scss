@@ -93,9 +93,74 @@
 	flex-wrap: wrap;
 }
 
+.facturacion-filter-panel {
+	display: flex;
+	align-items: flex-end;
+	gap: 16px;
+	flex-wrap: wrap;
+	padding: 18px 20px;
+	margin-bottom: 18px;
+	border-radius: 18px;
+	background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+	border: 1px solid #dbeafe;
+}
+
+.facturacion-filter-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 180px;
+	flex: 1 1 180px;
+}
+
+.facturacion-filter-group-periodo {
+	flex: 1 1 360px;
+}
+
+.facturacion-filter-group-search {
+	flex: 1 1 260px;
+}
+
+.facturacion-filter-label {
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: #475569;
+}
+
+.facturacion-filter-hint {
+	font-size: 12px;
+	color: #64748b;
+}
+
+.facturacion-filter-range {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.facturacion-filter-actions {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
 :host ::ng-deep .facturacion-toolbar .p-selectbutton .p-button {
 	min-width: 150px;
 	font-weight: 600;
+}
+
+:host ::ng-deep .facturacion-filter-panel .p-selectbutton .p-button {
+	min-width: 110px;
+	font-weight: 600;
+}
+
+:host ::ng-deep .facturacion-filter-group .p-dropdown,
+:host ::ng-deep .facturacion-filter-group .p-calendar,
+:host ::ng-deep .facturacion-filter-group .p-inputtext {
+	width: 100%;
 }
 
 .facturacion-summary-strip {
@@ -599,7 +664,8 @@
 	.facturacion-hero,
 	.facturacion-complemento-header,
 	.facturacion-toolbar,
-	.facturacion-complemento-toolbar {
+	.facturacion-complemento-toolbar,
+	.facturacion-filter-panel {
 		flex-direction: column;
 		align-items: stretch;
 	}
@@ -610,6 +676,11 @@
 
 	.facturacion-complemento-metrics {
 		grid-template-columns: 1fr;
+	}
+
+	.facturacion-filter-actions,
+	.facturacion-filter-range {
+		flex-direction: column;
 	}
 
 	.facturacion-complemento-section-header,

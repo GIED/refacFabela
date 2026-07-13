@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { locator } from '../sesion/locator';
 import { TvVentasFactura } from '../../productos/model/TvVentasFactura';
@@ -29,9 +29,27 @@ export class FacturaService {
     let url = environment.servicios.apiRefacFabela + locator.consultaCreditos+'nDatoFactura='+nId;
     return this.http.get<number>(url);
   }
-  obtenerFacturas(){
+  obtenerFacturas(filtros?: { periodo?: string; fechaInicio?: string; fechaFin?: string; estatus?: string; buscar?: string; }){
     let url = environment.servicios.apiRefacFabela + locator.consultaFacturas;
-    return this.http.get<TvVentasFactura[]>(url);
+    let params = new HttpParams();
+
+    if (filtros?.periodo) {
+      params = params.set('periodo', filtros.periodo);
+    }
+    if (filtros?.fechaInicio) {
+      params = params.set('fechaInicio', filtros.fechaInicio);
+    }
+    if (filtros?.fechaFin) {
+      params = params.set('fechaFin', filtros.fechaFin);
+    }
+    if (filtros?.estatus) {
+      params = params.set('estatus', filtros.estatus);
+    }
+    if (filtros?.buscar) {
+      params = params.set('buscar', filtros.buscar);
+    }
+
+    return this.http.get<TvVentasFactura[]>(url, { params });
   }
 
   facturarVenta(idVenta:number, cveCfdi:string){
