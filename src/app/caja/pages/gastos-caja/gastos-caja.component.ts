@@ -32,6 +32,7 @@ export class GastosCajaComponent implements OnInit {
   ) { 
     this.mostrarFormGasto=false;
     this.listaGastosCaja=[];
+    this.cajaActiva={};
     this.nGastosDia=0;
   }
 
@@ -40,19 +41,34 @@ export class GastosCajaComponent implements OnInit {
   }
 
   obtenerGastosCaja(){
+    this.nGastosDia = 0;
+    this.listaGastosCaja = [];
+
     this.catalogo.obtenerCajaActiva().subscribe(data=>{
-      this.cajaActiva=data;
+      this.cajaActiva=data || {};
+      if (!this.cajaActiva?.nId) {
+        this.messageService.add({severity: 'warn', summary: 'Caja no disponible', detail: 'No hay una caja activa para consultar gastos.', life: 4000});
+        return;
+      }
+
       this.catalogo.obtenerGastosCaja(this.cajaActiva.nId).subscribe(data=>{
-          this.listaGastosCaja=data;
+          this.listaGastosCaja=data || [];
 
         for (let index = 0; index <  this.listaGastosCaja.length; index++) {
           this.nGastosDia=this.nGastosDia + this.listaGastosCaja[index].nMonto;
-          
-          
         }
 
-      })
-  })
+      }, () => {
+        this.listaGastosCaja = [];
+        this.nGastosDia = 0;
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No fue posible consultar los gastos de la caja activa.', life: 4000});
+      });
+  }, () => {
+    this.cajaActiva = {};
+    this.listaGastosCaja = [];
+    this.nGastosDia = 0;
+    this.messageService.add({severity: 'error', summary: 'Error', detail: 'No fue posible consultar la caja activa.', life: 4000});
+  });
   }
 
   abrirFormulularioGasto(){

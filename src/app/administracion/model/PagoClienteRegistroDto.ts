@@ -1,0 +1,31 @@
+export class PagoClienteRegistroDto {
+  nIdCliente?: number;
+  nIdDatoFactura?: number;
+  fechaPago?: Date;
+  importeTotal?: number;
+  moneda?: string;
+  nIdFormaPago?: number;
+  formaPagoSat?: string;
+  descripcionFormaPago?: string;
+  referencia?: string;
+  numeroAutorizacion?: string;
+  folioOperacion?: string;
+  claveRastreo?: string;
+  bancoOrigen?: string;
+  cuentaOrigen?: string;
+  ultimos4CuentaOrigen?: string;
+  bancoDestino?: string;
+  cuentaDestino?: string;
+  ultimos4CuentaDestino?: string;
+  titularCuenta?: string;
+  terminal?: string;
+  numeroVoucher?: string;
+  ultimos4Tarjeta?: string;
+  tipoTarjeta?: string;
+  redTarjeta?: string;
+  comprobanteUrl?: string;
+  observaciones?: string;
+  nIdUsuarioRegistro?: number;
+  nIdCaja?: number;
+  nIdCorteCaja?: number;
+}

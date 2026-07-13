@@ -56,6 +56,7 @@ static consultaFormaPagoId='/catalogoFormaPagoId?';
 static consultaGastosCaja='/gastosCaja?';
 static consultaMonedas='/catalogoMoneda';
 static consultaCuentasBancariasRazon='/getCuentasBanciariasRazon?';
+static consultaCuentasBancarias='/getCuentasBanciarias';
 static getTipoProveedor='/getTipoProveedor';
 
 static obtenerCatalogoGastos='/catalogoGasto';
@@ -250,7 +251,9 @@ static movimientoExterno='/movimientoExterno';
 static consultaVentaFactura='/facturacion/ventasParaFactura';
 static consultaCreditos='/facturacion/consultaCreditos?';
 static facturarVenta='/facturacion/venta?';
+static facturarVentasConsolidadas='/facturacion/ventas/consolidada';
 static facturarComplemento='/facturacion/complemento?';
+static facturarComplementoPagoCliente='/facturacion/complemento/pago-cliente?';
 static reintentarComplemento='/facturacion/complementos/reintentar?';
 static cancelarFactura='/facturacion/cancelar';
 static consultaFacturas='/facturacion/ventasFacturadas';
@@ -261,6 +264,11 @@ static consultaSolicitudesPendientes='/facturacion/solicitudesPendientes?';
 static aceptarSolicitudPendiente='/facturacion/solicitudesPendientes/aceptar';
 static rechazarSolicitudPendiente='/facturacion/solicitudesPendientes/rechazar';
 static descargarDocumentoComplemento='/facturacion/getDocumentoComplemento?';
+static consultarPagosClienteCanonico='/creditos/pagos?';
+static consultarAplicacionesVentaCanonico='/creditos/pagos/aplicaciones-venta?';
+static registrarPagoClienteCanonico='/creditos/pagos/registrar';
+static consultarFacturasPendientesPagoCanonico='/creditos/pagos/facturas-pendientes?';
+static aplicarPagoClienteCanonicoBase='/creditos/pagos/';
 
 
 //Compras

@@ -34,5 +34,9 @@ nSaldoFavor?:number;
 nIdVentaUtilizado?:number;
 nSaldo?:boolean;
 nVencido?:boolean;
+nIdPagoClienteCanonico?: number;
+sEstadoPagoCanonico?: string;
+sEstadoRepCanonico?: string;
+sUuidRepCanonico?: string;
     
 }

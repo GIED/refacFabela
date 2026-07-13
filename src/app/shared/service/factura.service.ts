@@ -38,9 +38,22 @@ export class FacturaService {
     let url = environment.servicios.apiRefacFabela + locator.facturarVenta+ 'nIdVenta='+idVenta + '&cveCfdi='+cveCfdi;
     return this.http.get<ResultadoFacturacionVentaDto>(url);
   }
+
+  facturarVentasConsolidadas(nIdsVenta:number[], cveCfdi:string){
+    const url = environment.servicios.apiRefacFabela + locator.facturarVentasConsolidadas;
+    return this.http.post<ResultadoFacturacionVentaDto>(url, {
+      nIdsVenta,
+      cveCfdi
+    });
+  }
   facturarComplemento(idVenta:number, cveCfdi:string){
     let url = environment.servicios.apiRefacFabela + locator.facturarComplemento+ 'nIdVenta='+idVenta + '&cveCfdi='+cveCfdi;
     return this.http.get<ResultadoFacturacionVentaDto>(url);
+  }
+
+  facturarComplementoPagoCliente(nIdPagoCliente:number){
+    let url = environment.servicios.apiRefacFabela + locator.facturarComplementoPagoCliente + 'nIdPagoCliente=' + nIdPagoCliente;
+    return this.http.post<ResultadoFacturacionVentaDto>(url, {});
   }
 
   reintentarComplemento(nIdComplemento:number){

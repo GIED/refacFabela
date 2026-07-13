@@ -1,8 +1,48 @@
 
- <div><h3>Venta a crédito: VC-{{tvVentasDetalle.nId }}</h3></div>
- <div><h3>El monto total para cubrir la venta es de: {{tvVentasDetalle?.nSaldoTotal?.toString()}}</h3></div>
- <button type="button" pButton pRipple icon="pi pi-dollar" label="Nuevo Abono"
- class="p-button-success p-mb-2"    (click)="hideDialog2()"></button>
+ <div><h3>Nota de crédito: VC-{{tvVentasDetalle.nId }}</h3></div>
+ <div><h3>Saldo pendiente: {{tvVentasDetalle?.nSaldoTotal?.toString()}}</h3></div>
+ <div class="detalle-abono-note detalle-abono-note-info">
+     <strong>Proceso:</strong> registra el pago global del cliente y después asigna parte de ese saldo a esta nota.
+ </div>
+ <div class="detalle-abono-note detalle-abono-note-info" *ngIf="listaAplicacionesCanonicasVenta?.length">
+    <strong>Aplicaciones registradas:</strong> cada fila indica qué monto del pago global ya fue asignado a esta nota.
+ </div>
+ <button type="button" pButton pRipple icon="pi pi-credit-card" label="Registrar o aplicar pago global"
+ class="p-button-success p-mb-3"    (click)="abrirFlujoPagoGlobal()"></button>
+
+ <p-table *ngIf="listaAplicacionesCanonicasVenta?.length" [value]="listaAplicacionesCanonicasVenta" responsiveLayout="scroll" [rows]="5" [paginator]="true" styleClass="p-datatable-customers p-mb-4"
+ currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} aplicaciones" [showCurrentPageReport]="true">
+
+ <ng-template pTemplate="header">
+     <tr>
+         <th>Pago global</th>
+         <th>Monto aplicado</th>
+         <th>Fecha aplicación</th>
+         <th>Forma de pago</th>
+         <th>Parcialidad</th>
+         <th>Estado</th>
+         <th>Origen</th>
+     </tr>
+ </ng-template>
+ <ng-template pTemplate="body" let-aplicacion>
+     <tr>
+         <td>
+            <div>{{obtenerEtiquetaRelacionPagoGlobal(aplicacion)}}</div>
+            <small *ngIf="aplicacion.referenciaPago">Ref: {{aplicacion.referenciaPago}}</small>
+         </td>
+         <td>{{aplicacion.montoAplicado | currency:'MXN'}}</td>
+         <td>{{aplicacion.fechaAplicacion | date:'short'}}</td>
+         <td>{{aplicacion.descripcionFormaPago || aplicacion.formaPagoSat || 'N/D'}}</td>
+         <td>{{aplicacion.parcialidad || 'N/D'}}</td>
+         <td>{{aplicacion.estatus || 'APLICADA'}}</td>
+         <td>{{obtenerDescripcionOrigenCanonico(aplicacion)}}</td>
+     </tr>
+ </ng-template>
+ </p-table>
+
+ <div class="detalle-abono-note detalle-abono-note-info" *ngIf="!listaAplicacionesCanonicasVenta?.length">
+     <strong>Sin asignaciones:</strong> esta nota todavía no tiene monto aplicado desde un pago global.
+ </div>
  <p-table #dt [value]="listaAbonosVenta" responsiveLayout="scroll"  [rows]="5" [paginator]="true" [globalFilterFields]="['sFolioVenta']"  [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
  currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
 
@@ -15,6 +55,7 @@
          <th>Fecha Abono</th>
          <th>Forma de pago</th>
          <th>Nombre Usuario</th> 
+         <th>Pago global asociado</th>
                
      </tr>
  </ng-template>
@@ -32,6 +73,8 @@
          </td>
          <td><span class="p-column-title">Nombre Usuario</span> {{abono.tcUsuario.sNombreUsuario}}
          </td>
+         <td><span class="p-column-title">Pago global asociado</span> {{abono.nIdPagoClienteCanonico ? ('#' + abono.nIdPagoClienteCanonico) : 'Sin referencia guardada'}}
+         </td>
          
         
      </tr>
@@ -39,60 +82,4 @@
 
 
 </p-table>
-
-<ng-template pTemplate="footer">
-<!-- <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-     (click)="hideDialog2()"></button>-->
- 
-</ng-template>
-
-<p-dialog [(visible)]="abrirformulario" [style]="{width: '800px'}" header="Nuevo Abono" [modal]="true" styleClass="p-fluid">
-
-    <form [formGroup]="formulario" autocomplete="off">
-       
-        <div class="p-grid">
-            <div class="p-field p-col-6">
-                <label for="name">Monto del abono</label>
-                <p-inputNumber 
-    formControlName="abono"
-    [minFractionDigits]="2"
-    [maxFractionDigits]="2"
-    [class.is-invalid]="validaAbono">
-</p-inputNumber>
-                <small class="p-error" *ngIf="validaAbono">*Se requiere un número.</small>
-            </div>         
-           
-            <div class="p-field p-col-6">
-                <label for="marca">Forma de pago</label>
-                <p-dropdown [options]="listaFormaPago" formControlName="idFormaPago" optionLabel="sDescripcion" optionValue="nId"  [class.is-invalid]="validaFormaPago" placeholder="Seleccine una forma de pago"
-                    [showClear]="true"></p-dropdown>
-                <small class="p-error" *ngIf="validaFormaPago">Se requiere una forma de pago.</small>
-            </div>
-           
-        </div>
-    </form>
-   
-   
-   
-   
-    <div class="p-grid p-jc-end">
-        <div class="p-col-8">
-            <div class="box"></div>
-        </div>
-        <div class="p-col-2">
-            <div class="box">
-                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-danger" (click)="cerrarModal()"></button>
-            </div>
-        </div>
-        <div class="p-col-2">
-            <div class="box">
-                <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success" (click)="guardarAbono()"></button>
-            </div>
-        </div>
-    </div>
-
-
-			
-</p-dialog>
-
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

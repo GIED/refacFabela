@@ -1,0 +1,298 @@
+.creditos-canonico-note {
+	padding: 12px 16px;
+	border-radius: 8px;
+	border: 1px solid transparent;
+	line-height: 1.5;
+}
+
+.creditos-canonico-note-info {
+	background: #eff6ff;
+	border-color: #bfdbfe;
+	color: #1e3a8a;
+}
+
+.creditos-canonico-note-warning {
+	background: #fffbeb;
+	border-color: #fde68a;
+	color: #92400e;
+}
+
+.creditos-canonico-note-action {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.creditos-process-strip {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 12px;
+}
+
+.creditos-process-step {
+	display: flex;
+	gap: 12px;
+	padding: 14px 16px;
+	border-radius: 10px;
+	border: 1px solid #dbeafe;
+	background: #f8fbff;
+	align-items: flex-start;
+}
+
+.creditos-process-step small {
+	display: block;
+	margin-top: 4px;
+	color: #475569;
+}
+
+.creditos-process-index {
+	min-width: 28px;
+	height: 28px;
+	border-radius: 999px;
+	background: #1d4ed8;
+	color: #ffffff;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+}
+
+:host ::ng-deep .creditos-row-focus {
+	background: #eff6ff;
+	box-shadow: inset 4px 0 0 #2563eb;
+}
+
+:host ::ng-deep .p-progressbar {
+	height: 0.95rem;
+}
+
+:host ::ng-deep .p-progressbar .p-progressbar-value {
+	background: linear-gradient(90deg, #0ea5e9 0%, #16a34a 100%);
+}
+
+.creditos-avance-col {
+	min-width: 220px;
+	vertical-align: middle;
+}
+
+.creditos-avance-wrap {
+	width: 100%;
+	min-width: 180px;
+	padding-top: 6px;
+}
+
+:host ::ng-deep .creditos-avance-wrap .p-progressbar {
+	width: 100%;
+	height: 1rem;
+	min-width: 180px;
+}
+
+.creditos-avance-meta {
+	margin-top: 6px;
+	font-size: 0.85rem;
+	font-weight: 700;
+	color: #1f2937;
+	text-align: center;
+}
+
+.creditos-acciones-col {
+	min-width: 230px;
+}
+
+.creditos-acciones-wrap {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+}
+
+:host ::ng-deep .creditos-split-button .p-splitbutton-defaultbutton,
+:host ::ng-deep .creditos-split-button .p-splitbutton-menubutton {
+	background: #0f766e;
+	border-color: #0f766e;
+}
+
+@media screen and (max-width: 960px) {
+	.creditos-avance-col,
+	.creditos-acciones-col {
+		min-width: 0;
+	}
+
+	.creditos-avance-wrap {
+		min-width: 0;
+	}
+
+	.creditos-acciones-wrap {
+		width: 100%;
+		align-items: stretch;
+	}
+
+	:host ::ng-deep .creditos-split-button {
+		width: 100%;
+	}
+
+	:host ::ng-deep .creditos-split-button .p-splitbutton-defaultbutton {
+		width: calc(100% - 2.6rem);
+		justify-content: center;
+	}
+
+	:host ::ng-deep .creditos-split-button .p-splitbutton-menubutton {
+		width: 2.6rem;
+	}
+}
+
+.creditos-selected-payment {
+	padding: 14px 16px;
+	border: 1px solid #cbd5e1;
+	border-radius: 10px;
+	background: #f8fafc;
+}
+
+.creditos-selected-payment-title {
+	font-weight: 700;
+	color: #0f172a;
+	margin-bottom: 6px;
+}
+
+.creditos-selected-payment-metrics {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px 18px;
+	font-size: 0.92rem;
+	color: #334155;
+}
+
+.creditos-control-pagos-card {
+	border: 1px solid #dbeafe;
+	background: #f8fbff;
+}
+
+.creditos-modo-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 8px;
+}
+
+.creditos-modo-hint {
+	display: block;
+	color: #475569;
+	font-size: 0.85rem;
+}
+
+.creditos-selector-pago {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	padding: 12px;
+}
+
+.creditos-selector-grid {
+	align-items: stretch;
+}
+
+.creditos-pago-resumen-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+	height: 100%;
+}
+
+.creditos-pago-resumen-item {
+	font-size: 0.86rem;
+	color: #1f2937;
+	padding: 8px 10px;
+	border-radius: 8px;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+.creditos-pago-resumen-item small {
+	color: #64748b;
+	font-size: 0.74rem;
+}
+
+.creditos-pago-resumen-item strong {
+	font-size: 0.95rem;
+	line-height: 1.2;
+}
+
+.creditos-pago-resumen-wide {
+	grid-column: 1 / -1;
+}
+
+.creditos-control-pagos-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 12px;
+}
+
+.creditos-control-pagos-header h5 {
+	margin: 0;
+	color: #0f172a;
+}
+
+.creditos-control-pagos-tags {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.creditos-ventas-ligadas-list {
+	font-size: 0.8rem;
+	color: #334155;
+	display: grid;
+	gap: 2px;
+}
+
+.creditos-ventas-ligadas-card {
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	padding: 10px 12px;
+}
+
+.creditos-ventas-ligadas-title {
+	font-size: 0.83rem;
+	font-weight: 700;
+	color: #334155;
+	margin-bottom: 8px;
+}
+
+.creditos-ventas-ligadas-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.creditos-venta-chip {
+	font-size: 0.78rem;
+	color: #1e3a8a;
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	padding: 3px 8px;
+	border-radius: 999px;
+	white-space: nowrap;
+}
+
+@media screen and (max-width: 960px) {
+	.creditos-modo-actions {
+		flex-direction: column;
+	}
+
+	.creditos-modo-actions .p-button {
+		width: 100%;
+	}
+
+	.creditos-pago-resumen-grid {
+		grid-template-columns: 1fr;
+	}
+}

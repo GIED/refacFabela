@@ -31,6 +31,10 @@ sEstadoFacturacion?:string;
 sEstadoComplemento?:string;
 sClasificacionFiscal?:string;
 sUuidComplementoPago?:string;
+nIdPagoClienteCanonico?: number;
+sEstadoPagoCanonico?: string;
+sEstadoRepCanonico?: string;
+sUuidRepCanonico?: string;
 
 
 

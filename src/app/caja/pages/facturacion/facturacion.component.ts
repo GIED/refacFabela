@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {  MenuItem, MessageService } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FacturaService } from '../../../shared/service/factura.service';
 import { TvVentasFactura } from '../../../productos/model/TvVentasFactura';
 import { TcUsoCfdi } from '../../../productos/model/TcUsoCfdi';
@@ -30,6 +31,8 @@ export class FacturacionComponent implements OnInit {
   private readonly usoCfdiComplemento = 'CP01';
 
     listaVentas:TvVentasFactura[];
+    ventasSeleccionadas:TvVentasFactura[];
+    ventasConsolidadasActuales:TvVentasFactura[];
     listaUsoCfdi:TcUsoCfdi[];
     formFactura:boolean;
     idVenta:number;
@@ -60,6 +63,7 @@ export class FacturacionComponent implements OnInit {
     mostrarDialogoSolicitudesPendientes:boolean;
     mostrarDialogoComplementos:boolean;
     mostrarDialogoAccionesVenta:boolean;
+    mostrarDialogoFacturaConsolidada:boolean;
     estatusSat: StatusCfdiResponse;
     cfdiRelacionados: CfdiRelacionadosResponse;
     listaSolicitudesPendientes: SolicitudCancelacionDto[];
@@ -78,6 +82,12 @@ export class FacturacionComponent implements OnInit {
     urlVistaPreviaComplemento:string | null;
     vistaFacturadas:boolean;
     vistaSeleccionada:string;
+    modoFacturacionConsolidada:boolean;
+    ventasFacturaConsolidadaActual: TvVentasFactura[];
+    clienteFiltroCanonicoId?: number;
+    clienteFiltroCanonicoNombre:string;
+    focoAnticipoCanonico:boolean;
+    autoAperturaContextoCanonicoRealizada:boolean;
 
     readonly filtrosEstadoHistorialComplemento = [
       { label: 'Todos', value: 'TODOS' },
@@ -95,8 +105,10 @@ export class FacturacionComponent implements OnInit {
 
     
 
-  constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService, private ventasService: VentasService) {
+  constructor(private facturaService: FacturaService, private catalogoService:CatalogoService, private messageService: MessageService, private ventasService: VentasService, private route: ActivatedRoute, private router: Router) {
         this.listaVentas=[];
+        this.ventasSeleccionadas=[];
+        this.ventasConsolidadasActuales=[];
         this.listaUsoCfdi=[];
         this.formFactura=false;
         this.tvVentasFactura= new TvVentasFactura();
@@ -114,6 +126,7 @@ export class FacturacionComponent implements OnInit {
           this.mostrarDialogoSolicitudesPendientes = false;
           this.mostrarDialogoComplementos = false;
           this.mostrarDialogoAccionesVenta = false;
+          this.mostrarDialogoFacturaConsolidada = false;
           this.estatusSat = new StatusCfdiResponse();
           this.cfdiRelacionados = new CfdiRelacionadosResponse();
           this.listaSolicitudesPendientes = [];
@@ -130,10 +143,22 @@ export class FacturacionComponent implements OnInit {
           this.urlVistaPreviaComplemento = null;
           this.vistaFacturadas = false;
           this.vistaSeleccionada = 'pendientes';
+          this.modoFacturacionConsolidada = false;
+          this.ventasFacturaConsolidadaActual = [];
+          this.clienteFiltroCanonicoNombre = '';
+          this.focoAnticipoCanonico = false;
+          this.autoAperturaContextoCanonicoRealizada = false;
      }
 
   ngOnInit(){
-   this.obtenerFacruras();
+           this.route.queryParams.subscribe(params => {
+            const clienteId = params?.nIdCliente != null && params?.nIdCliente !== '' ? Number(params.nIdCliente) : undefined;
+            this.clienteFiltroCanonicoId = clienteId != null && !Number.isNaN(clienteId) ? clienteId : undefined;
+            this.clienteFiltroCanonicoNombre = params?.cliente ? String(params.cliente) : '';
+            this.focoAnticipoCanonico = params?.focoAnticipo === '1' || params?.focoAnticipo === 1;
+            this.autoAperturaContextoCanonicoRealizada = false;
+            this.refrescarListadoActual();
+           });
    this.obtenerUsocfdi();
     this.obtenerCatalogoRazonSocial();
 
@@ -236,7 +261,9 @@ export class FacturacionComponent implements OnInit {
     this.vistaSeleccionada = 'pendientes';
 
     this.facturaService.obtenerVentaFactura().subscribe(resp =>{
-      this.listaVentas=resp;
+      this.listaVentas=this.aplicarFiltroClienteContexto(resp || []);
+      this.ventasSeleccionadas=[];
+      this.intentarAutoAbrirVentaContextoCanonico();
 
       //console.log(this.listaVentas);
   });
@@ -250,7 +277,8 @@ export class FacturacionComponent implements OnInit {
     this.vistaSeleccionada = 'facturadas';
 
     this.facturaService.obtenerFacturas().subscribe(resp =>{
-      this.listaVentas=resp;
+      this.listaVentas=this.aplicarFiltroClienteContexto(resp || []);
+      this.ventasSeleccionadas=[];
 
       //console.log(this.listaVentas);
   });
@@ -286,9 +314,31 @@ export class FacturacionComponent implements OnInit {
     this.obtenerFacruras();
   }
 
+  private aplicarFiltroClienteContexto(ventas: TvVentasFactura[]): TvVentasFactura[] {
+    if (!this.clienteFiltroCanonicoId) {
+      return ventas || [];
+    }
+
+    const ventasFiltradas = (ventas || []).filter(item => Number(item?.nIdCliente || 0) === Number(this.clienteFiltroCanonicoId));
+    return this.ordenarVentasContextoCanonico(ventasFiltradas);
+  }
+
+  private ordenarVentasContextoCanonico(ventas: TvVentasFactura[]): TvVentasFactura[] {
+    return [...(ventas || [])].sort((left, right) => {
+      const prioridadLeft = this.requiereFacturacionDesdeAnticipo(left) ? 0 : 1;
+      const prioridadRight = this.requiereFacturacionDesdeAnticipo(right) ? 0 : 1;
+      if (prioridadLeft !== prioridadRight) {
+        return prioridadLeft - prioridadRight;
+      }
+      return Number(right?.nId || 0) - Number(left?.nId || 0);
+    });
+  }
+
 
 
   openDialog(tvVentasFactura: TvVentasFactura) {
+  this.modoFacturacionConsolidada = false;
+  this.ventasConsolidadasActuales = [];
   if (tvVentasFactura?.idFactura && this.vistaFacturadas) {
     this.abrirDialogoComplementos(tvVentasFactura);
     return;
@@ -298,6 +348,7 @@ export class FacturacionComponent implements OnInit {
     this.nuevaFormaPago = '';
     const resumenCobros = this.construirResumenCobros(this.ListaTrVentaCobro);
     const requierePpdCon99 = tvVentasFactura.nTipoPago === 1 || this.ListaTrVentaCobro.length > 1;
+    const tieneAnticipoCanonico = this.requiereFacturacionDesdeAnticipo(tvVentasFactura);
 
     if (this.ListaTrVentaCobro.length > 1) {
       if (tvVentasFactura.nTipoPago === 1) {
@@ -305,6 +356,8 @@ export class FacturacionComponent implements OnInit {
       } else {
         this.nuevaFormaPago = `PPD con forma 99 para facturar y REP inmediato. Desglose de cobros: ${resumenCobros}`;
       }
+    } else if (tvVentasFactura.nTipoPago === 1 && tieneAnticipoCanonico) {
+      this.nuevaFormaPago = `PPD con forma 99 (por definir). Anticipo aplicado desde pago global.`;
     } else if (tvVentasFactura.nTipoPago === 1) {
       this.nuevaFormaPago = `PPD con forma 99 (por definir). Cobro registrado: ${resumenCobros}`;
     } else {
@@ -362,12 +415,34 @@ export class FacturacionComponent implements OnInit {
 
   hideDialog(){
     this.formFactura=false;
+    this.modoFacturacionConsolidada = false;
+    this.ventasConsolidadasActuales = [];
   }
 
   generarFactura(){
     if (!this.hayTimbresDisponibles) {
         this.messageService.add({ severity: 'warn', summary: 'Sin Créditos', detail: 'No hay timbres disponibles para facturar.', life: 4000 });
         return;
+    }
+
+    if (this.modoFacturacionConsolidada) {
+      const idsVenta = (this.ventasConsolidadasActuales || []).map(item => item?.nId).filter(item => !!item);
+      this.facturaService.facturarVentasConsolidadas(idsVenta, this.cfdiSeleccionado).subscribe(resp => {
+        this.formFactura = false;
+        this.ventasSeleccionadas = [];
+        this.ventasConsolidadasActuales = [];
+        this.modoFacturacionConsolidada = false;
+        this.refrescarListadoActual();
+        const resultado = resp as ResultadoFacturacionVentaDto;
+        const detalle = resultado?.mensajeError
+          ? `${resultado?.mensaje || 'Factura consolidada procesada'} ${resultado.mensajeError}`
+          : (resultado?.mensaje || 'La factura consolidada se generó correctamente.');
+        this.messageService.add({ severity: resultado?.success === false ? 'warn' : 'success', summary: 'Factura consolidada', detail: detalle, life: 6000 });
+        if (resultado?.clasificacionFiscal) {
+          this.messageService.add({ severity: 'info', summary: 'Clasificación fiscal', detail: `${resultado.clasificacionFiscal} | Método: ${resultado.metodoPagoFiscal || 'N/D'} | Forma: ${resultado.formaPagoFiscal || 'N/D'}`, life: 7000 });
+        }
+      });
+      return;
     }
 
     this.facturaService.facturarVenta(this.idVenta,this.cfdiSeleccionado).subscribe(resp =>{
@@ -394,10 +469,95 @@ export class FacturacionComponent implements OnInit {
 
   }
 
+  abrirDialogoFacturacionConsolidada() {
+    if (!this.ventasSeleccionadas || this.ventasSeleccionadas.length < 2) {
+      this.messageService.add({ severity: 'warn', summary: 'Selección insuficiente', detail: 'Selecciona al menos dos ventas para una factura consolidada.', life: 4000 });
+      return;
+    }
+
+    const ventas = this.ventasSeleccionadas.filter(item => !!item);
+    const clienteBase = ventas[0]?.nIdCliente;
+    const datoFacturaBase = ventas[0]?.tcCliente?.nIdDatoFactura;
+    const hayClienteDistinto = ventas.some(item => item?.nIdCliente !== clienteBase);
+    const hayDatoFacturaDistinto = ventas.some(item => item?.tcCliente?.nIdDatoFactura !== datoFacturaBase);
+    const hayNoValidadas = ventas.some(item => item?.tcCliente?.nDatosValidados !== true);
+    const hayFacturadas = ventas.some(item => item?.idFactura && item.idFactura !== 0);
+
+    if (hayClienteDistinto) {
+      this.messageService.add({ severity: 'warn', summary: 'Clientes distintos', detail: 'La factura consolidada solo puede agrupar ventas del mismo cliente.', life: 4500 });
+      return;
+    }
+
+    if (hayDatoFacturaDistinto) {
+      this.messageService.add({ severity: 'warn', summary: 'Razón social distinta', detail: 'La factura consolidada requiere la misma razón social emisora en todas las ventas.', life: 4500 });
+      return;
+    }
+
+    if (hayNoValidadas) {
+      this.messageService.add({ severity: 'warn', summary: 'Datos fiscales pendientes', detail: 'Todas las ventas seleccionadas deben tener datos fiscales validados.', life: 4500 });
+      return;
+    }
+
+    if (hayFacturadas) {
+      this.messageService.add({ severity: 'warn', summary: 'Venta ya facturada', detail: 'La selección incluye ventas que ya tienen CFDI.', life: 4500 });
+      return;
+    }
+
+    this.modoFacturacionConsolidada = true;
+    this.ventasConsolidadasActuales = [...ventas];
+    this.tvVentasFactura = ventas[0];
+    this.idVenta = ventas[0].nId;
+    this.totalVenta = ventas.reduce((total, item) => total + Number(item?.nTotalVenta || 0), 0);
+    this.cfdiSeleccionado = null;
+    this.formFactura = true;
+
+    const nIdDatoFactura = ventas[0]?.tcCliente?.nIdDatoFactura;
+    if (nIdDatoFactura) {
+      this.nIdDatoFacturaSeleccionado = nIdDatoFactura;
+      this.consultaCreditos(nIdDatoFactura);
+    }
+  }
+
+  puedeSeleccionarVentaConsolidada(venta: TvVentasFactura): boolean {
+    return !!venta && !venta?.idFactura && venta?.tcCliente?.nDatosValidados === true;
+  }
+
+  limpiarFiltroClienteContexto() {
+    this.router.navigate(['/caja/facturacion']);
+  }
+
+  private intentarAutoAbrirVentaContextoCanonico() {
+    if (this.autoAperturaContextoCanonicoRealizada || !this.focoAnticipoCanonico || this.vistaFacturadas || this.formFactura) {
+      return;
+    }
+
+    const ventasPriorizadas = (this.listaVentas || []).filter(item => this.requiereFacturacionDesdeAnticipo(item));
+    if (ventasPriorizadas.length !== 1) {
+      this.autoAperturaContextoCanonicoRealizada = true;
+      return;
+    }
+
+    this.autoAperturaContextoCanonicoRealizada = true;
+    this.openDialog(ventasPriorizadas[0]);
+  }
+
+  get totalSeleccionadasConsolidacion(): number {
+    return (this.ventasSeleccionadas || []).length;
+  }
+
+  get resumenVentasConsolidadas(): string {
+    return (this.ventasConsolidadasActuales || []).map(item => `#${item.nId}`).join(', ');
+  }
+
   generarComplemento(){
     if (!this.hayTimbresDisponibles) {
         this.messageService.add({ severity: 'warn', summary: 'Sin Créditos', detail: 'No hay timbres disponibles para generar el complemento.', life: 4000 });
         return;
+    }
+
+    if (this.esFacturaConsolidada(this.tvVentasFactura)) {
+      this.messageService.add({ severity: 'warn', summary: 'REP desde pago global', detail: 'La factura es consolidada. El REP debe generarse desde pagos canónicos/globales, no desde una venta individual.', life: 5000 });
+      return;
     }
 
     this.facturaService.facturarComplemento(this.idVenta,this.usoCfdiComplemento).subscribe(resp =>{
@@ -438,6 +598,11 @@ export class FacturacionComponent implements OnInit {
   }
 
   reintentarComplemento(venta: TvVentasFactura) {
+    if (this.esFacturaConsolidada(venta)) {
+      this.messageService.add({ severity: 'warn', summary: 'REP desde pago global', detail: 'La factura es consolidada. El REP debe generarse desde pagos canónicos/globales, no desde una venta individual.', life: 5000 });
+      return;
+    }
+
     this.tvVentasFactura = venta;
     this.idVenta = venta.nId;
     this.cargarHistorialComplementos(venta.nId);
@@ -463,6 +628,28 @@ export class FacturacionComponent implements OnInit {
 
   cerrarDialogoAccionesVenta() {
     this.mostrarDialogoAccionesVenta = false;
+  }
+
+  abrirDialogoFacturaConsolidada(venta: TvVentasFactura) {
+    if (!this.esFacturaConsolidada(venta)) {
+      return;
+    }
+
+    this.tvVentasFactura = venta;
+    this.idVenta = venta.nId;
+    this.ventasFacturaConsolidadaActual = this.obtenerVentasRelacionadasFactura(venta)
+      .sort((left, right) => Number(left?.nId || 0) - Number(right?.nId || 0));
+    this.mostrarDialogoFacturaConsolidada = true;
+  }
+
+  cerrarDialogoFacturaConsolidada() {
+    this.mostrarDialogoFacturaConsolidada = false;
+    this.ventasFacturaConsolidadaActual = [];
+  }
+
+  abrirAccionesDesdeFacturaConsolidada(venta: TvVentasFactura) {
+    this.cerrarDialogoFacturaConsolidada();
+    this.abrirDialogoAccionesVenta(venta);
   }
 
   cargarHistorialComplementos(nIdVenta:number) {
@@ -602,6 +789,10 @@ export class FacturacionComponent implements OnInit {
       return false;
     }
 
+    if (this.esFacturaConsolidada(venta)) {
+      return false;
+    }
+
     const clasificacion = (venta.sClasificacionFiscal || '').toUpperCase();
     const estadoComplemento = (venta.sEstadoComplemento || '').toUpperCase();
 
@@ -614,6 +805,23 @@ export class FacturacionComponent implements OnInit {
 
   obtenerDescripcionTipoVenta(venta: TvVentasFactura): string {
     return venta?.nTipoPago === 1 ? 'Crédito' : 'Contado';
+  }
+
+  tieneAnticipoCanonico(venta: TvVentasFactura): boolean {
+    return !!venta?.nIdPagoClienteCanonico;
+  }
+
+  obtenerDescripcionAnticipoCanonico(venta: TvVentasFactura): string {
+    if (!this.tieneAnticipoCanonico(venta)) {
+      return '';
+    }
+
+    const pagoId = venta?.nIdPagoClienteCanonico ? `#${venta.nIdPagoClienteCanonico}` : 'sin identificador';
+    return `Pago global ${pagoId} aplicado como anticipo. Al facturar esta venta, la aplicación canónica quedará ligada al CFDI para continuar el REP desde el pago global.`;
+  }
+
+  requiereFacturacionDesdeAnticipo(venta: TvVentasFactura): boolean {
+    return this.tieneAnticipoCanonico(venta) && (venta?.sEstadoRepCanonico || '').toUpperCase() === 'PENDIENTE_FACTURACION';
   }
 
   obtenerDescripcionClasificacion(venta: TvVentasFactura): string {
@@ -660,7 +868,14 @@ export class FacturacionComponent implements OnInit {
 
   obtenerPistaComplemento(venta: TvVentasFactura): string {
     if (!venta?.idFactura || venta.idFactura === 0 || this.esFacturaCancelada(venta)) {
+      if (this.requiereFacturacionDesdeAnticipo(venta)) {
+        return 'Anticipo aplicado';
+      }
       return '';
+    }
+
+    if (this.esFacturaConsolidada(venta)) {
+      return 'REP por pago canónico/global';
     }
 
     if (this.tieneComplementosTimbrados(venta)) {
@@ -675,6 +890,10 @@ export class FacturacionComponent implements OnInit {
   }
 
   obtenerDescripcionEstadoComplemento(venta: TvVentasFactura): string {
+    if (this.esFacturaConsolidada(venta)) {
+      return 'Gestionar desde pago global';
+    }
+
     const estado = (venta?.sEstadoComplemento || '').toUpperCase();
 
     if (!estado || estado === 'NO_REQUIERE_COMPLEMENTO') {
@@ -730,7 +949,18 @@ export class FacturacionComponent implements OnInit {
   }
 
   puedeReintentarComplemento(complemento: ComplementoPagoHistorialDto): boolean {
+    if (this.esComplementoPagoGlobal(complemento)) {
+      return false;
+    }
     return this.esComplementoFallido(complemento) && !this.esComplementoReemplazado(complemento);
+  }
+
+  esFacturaConsolidada(venta: TvVentasFactura): boolean {
+    if (!venta?.idFactura || !this.listaVentas || this.listaVentas.length === 0) {
+      return false;
+    }
+
+    return this.listaVentas.filter(item => item?.idFactura === venta.idFactura).length > 1;
   }
 
   puedeDescargarComplementoXml(complemento: ComplementoPagoHistorialDto): boolean {
@@ -754,6 +984,9 @@ export class FacturacionComponent implements OnInit {
 
   obtenerEtiquetaAccionPrincipal(venta: TvVentasFactura): string {
     if (venta?.idFactura == null || venta.idFactura === 0) {
+      if (this.requiereFacturacionDesdeAnticipo(venta)) {
+        return 'Facturar anticipo';
+      }
       return 'Facturar';
     }
     if (this.esFacturaCancelada(venta)) {
@@ -770,6 +1003,9 @@ export class FacturacionComponent implements OnInit {
 
   obtenerIconoAccionPrincipal(venta: TvVentasFactura): string {
     if (venta?.idFactura == null || venta.idFactura === 0) {
+      if (this.requiereFacturacionDesdeAnticipo(venta)) {
+        return 'pi pi-credit-card';
+      }
       return 'pi pi-file';
     }
     if (this.esFacturaCancelada(venta)) {
@@ -821,12 +1057,20 @@ export class FacturacionComponent implements OnInit {
       return 'Validar datos fiscales';
     }
 
+    if (this.requiereFacturacionDesdeAnticipo(venta)) {
+      return 'Facturar con anticipo';
+    }
+
     if (!venta.idFactura || venta.idFactura === 0) {
       return 'Timbrar CFDI';
     }
 
     if (this.esFacturaCancelada(venta)) {
       return 'Descargar acuse';
+    }
+
+    if (this.esFacturaConsolidada(venta)) {
+      return this.tieneComplementosTimbrados(venta) ? 'Revisar REP global' : 'Gestionar REP global';
     }
 
     if (this.mostrarBotonComplemento(venta)) {
@@ -846,6 +1090,14 @@ export class FacturacionComponent implements OnInit {
     }
 
     if (venta.tcCliente?.nDatosValidados !== true && (!venta.idFactura || venta.idFactura === 0)) {
+      return 'facturacion-next-step-warning';
+    }
+
+    if (this.requiereFacturacionDesdeAnticipo(venta)) {
+      return 'facturacion-next-step-warning';
+    }
+
+    if (this.esFacturaConsolidada(venta)) {
       return 'facturacion-next-step-warning';
     }
 
@@ -881,6 +1133,14 @@ export class FacturacionComponent implements OnInit {
         label: 'Descargar XML factura',
         icon: 'pi pi-book',
         command: () => this.descargarXML(venta.nId)
+      });
+    }
+
+    if (venta?.idFactura && this.esFacturaConsolidada(venta)) {
+      acciones.push({
+        label: 'Ver ventas del CFDI consolidado',
+        icon: 'pi pi-clone',
+        command: () => this.abrirDialogoFacturaConsolidada(venta)
       });
     }
 
@@ -940,6 +1200,21 @@ export class FacturacionComponent implements OnInit {
     return (this.listaVentas || []).filter(item => item?.idFactura != null && item.idFactura !== 0).length;
   }
 
+  get totalVentasConAnticipoCanonico(): number {
+    return (this.listaVentas || []).filter(item => this.requiereFacturacionDesdeAnticipo(item)).length;
+  }
+
+  get mostrarResumenAnticipoCanonico(): boolean {
+    return !!this.clienteFiltroCanonicoId && !this.vistaFacturadas && this.totalVentasConAnticipoCanonico > 0;
+  }
+
+  obtenerClaseFilaVenta(venta: TvVentasFactura): string {
+    if (this.requiereFacturacionDesdeAnticipo(venta)) {
+      return 'facturacion-row-canonico';
+    }
+    return '';
+  }
+
   get totalRepTimbrados(): number {
     return (this.listaVentas || []).filter(item => (item?.sEstadoComplemento || '').toUpperCase() === 'FACTURADA_CON_COMPLEMENTO_PAGO').length;
   }
@@ -950,6 +1225,48 @@ export class FacturacionComponent implements OnInit {
 
   get totalFacturasCanceladas(): number {
     return (this.listaVentas || []).filter(item => this.esFacturaCancelada(item)).length;
+  }
+
+  get totalCfdiConsolidados(): number {
+    const ids = new Set<number>();
+    (this.listaVentas || []).forEach(item => {
+      if (this.esFacturaConsolidada(item) && item?.idFactura) {
+        ids.add(item.idFactura);
+      }
+    });
+    return ids.size;
+  }
+
+  get totalVentasEnCfdiConsolidado(): number {
+    return (this.listaVentas || []).filter(item => this.esFacturaConsolidada(item)).length;
+  }
+
+  obtenerEtiquetaFacturaConsolidada(venta: TvVentasFactura): string {
+    const totalVentas = this.obtenerTotalVentasMismaFactura(venta);
+    if (!this.esFacturaConsolidada(venta) || !venta?.idFactura) {
+      return '';
+    }
+    return `CFDI consolidado #${venta.idFactura} | ${totalVentas} ventas`;
+  }
+
+  obtenerTotalVentasMismaFactura(venta: TvVentasFactura): number {
+    if (!venta?.idFactura || !this.listaVentas || this.listaVentas.length === 0) {
+      return 0;
+    }
+
+    return this.listaVentas.filter(item => item?.idFactura === venta.idFactura).length;
+  }
+
+  obtenerVentasRelacionadasFactura(venta: TvVentasFactura): TvVentasFactura[] {
+    if (!venta?.idFactura || !this.listaVentas || this.listaVentas.length === 0) {
+      return [];
+    }
+
+    return this.listaVentas.filter(item => item?.idFactura === venta.idFactura);
+  }
+
+  get totalMontoFacturaConsolidadaActual(): number {
+    return (this.ventasFacturaConsolidadaActual || []).reduce((total, item) => total + Number(item?.nTotalVenta || 0), 0);
   }
 
   get historialComplementosFiltrados(): ComplementoPagoHistorialDto[] {
@@ -1021,7 +1338,15 @@ export class FacturacionComponent implements OnInit {
       return 'Abono de crédito';
     }
 
+    if ((origenPago || '').toUpperCase() === 'TW_PAGO_CLIENTE_APLICACION') {
+      return 'Pago global aplicado';
+    }
+
     return origenPago || 'N/D';
+  }
+
+  esComplementoPagoGlobal(complemento: ComplementoPagoHistorialDto): boolean {
+    return (complemento?.origenPago || '').toUpperCase() === 'TW_PAGO_CLIENTE_APLICACION';
   }
 
   descargarComplementoPdf(complemento: ComplementoPagoHistorialDto) {

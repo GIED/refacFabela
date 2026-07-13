@@ -7,6 +7,7 @@ export class TwAbono{
 
     nId?: number;
     nIdVenta?:number
+    nIdPagoClienteCanonico?: number;
     dFecha?: Date;
     nAbono?:Decimal
     nEstatus?:number;

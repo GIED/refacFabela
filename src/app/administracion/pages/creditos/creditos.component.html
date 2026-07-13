@@ -2,7 +2,7 @@
 	<div class="p-col-12">
 		<p-toast></p-toast>	
 		<div class="card">			
-			<div class="p-text-center"><h2>Créditos y abonos</h2></div>
+			<div class="p-text-center"><h2>Créditos y pagos globales</h2></div>
 			<div class="p-grid p-fluid">
 				<div class="p-col-12 p-lg-6">	
 					<div class="card">
@@ -66,7 +66,7 @@
 					</div>
 				</div>
 			</div>
-			<p-table #dt [value]="listaClientesCredito" [columns]="cols" [rows]="10" [paginator]="true"
+			<p-table #dt [value]="listaClientesCredito" [columns]="cols" [rows]="10" [paginator]="true" responsiveLayout="scroll"
 				[globalFilterFields]="['tcCliente.sRfc','tcCliente.sRazonSocial','nLimiteCredito','nSaldoTotal', 'nCreditoDisponible','nAbonos','nTotalVenta','sEstatus','nAvanceCredito']"
 				 [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
 				currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} registros"
@@ -101,7 +101,7 @@
 						</th>
 						<th pSortableColumn="nAbonos">Abonos <p-sortIcon field="nAbonos"></p-sortIcon>
 						</th>
-						<th pSortableColumn="nAvanceCredito">Avance crédito <p-sortIcon field="nAvanceCredito"></p-sortIcon>
+						<th pSortableColumn="nAvanceCredito" style="min-width: 220px;">Avance crédito <p-sortIcon field="nAvanceCredito"></p-sortIcon>
 						</th>						
 						<th pSortableColumn="sEstatus">Estatus General <p-sortIcon field="sEstatus"></p-sortIcon>
 						</th>	
@@ -137,10 +137,11 @@
 							{{cliente.nAbonos | number}}
 						</td>
 						
-						<td> <span class="p-colum-title">Avance crédito</span>
-							<div class="p-col">
-                                <p-progressBar [value]="cliente.nAvanceCredito" [showValue]="true" ></p-progressBar>
-                            </div></td>
+						<td class="creditos-avance-col"> <span class="p-colum-title">Avance crédito</span>
+							<div class="creditos-avance-wrap">
+								<p-progressBar [value]="cliente.nAvanceCredito || 0" [showValue]="false"></p-progressBar>
+								<div class="creditos-avance-meta">{{ (cliente.nAvanceCredito || 0) | number:'1.0-0' }}%</div>
+							</div></td>
 					
 						<td class="p-text-center"><span class="p-column-title">Estatus General</span>
 							<div *ngIf="cliente.sEstatus==='VENCIDO'">
@@ -150,11 +151,10 @@
 							<p-tag styleClass="p-mr-2" severity="success">{{cliente.sEstatus}}</p-tag>
 						  </div>
 						</td>
-						<td>
-							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-button-outlined p-mr-2"
-								(click)="consultaVentaDetalleId(cliente)"></button> 
-								<button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded  p-button-danger p-button-outlined p-mr-2"
-									(click)="genenerHistorialAbonoVentaPDF(cliente)"></button>
+						<td class="creditos-acciones-col">
+							<div class="creditos-acciones-wrap">
+								<p-splitButton label="Registrar pago" icon="pi pi-credit-card" [model]="obtenerAccionesClienteCredito(cliente)" styleClass="p-button-sm creditos-split-button" (onClick)="abrirDialogoUnificado(cliente)"></p-splitButton>
+							</div>
 						</td>
 					</tr>
 				</ng-template>
@@ -165,90 +165,192 @@
 				</ng-template>
 			</p-table>
 		</div>
-		<p-dialog [(visible)]="productDialog" [style]="{width: '80%'}" header="Notas de crédito del cliente" [modal]="true"
-			styleClass="p-fluid">
-            <p-table #dt2 [value]="listaVentasDetalleCliente" responsiveLayout="scroll" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['nId','sFolioVenta','nTotalVenta','nTotalAbono','nSaldoTotal','dFechaTerminoCredito','sEstatus','nAvancePago']" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
-                currentPageReportTemplate="Mostrar {first} al {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
-                <ng-template pTemplate="caption">
-                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
-                       
-                        <span class="p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="dt2.filterGlobal($event.target.value, 'contains')"
-                                placeholder="Buscar Venta de Crédicto..." />
-                        </span>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                    <tr>
-                       
-						<th pSortableColumn="nId">No. Venta<p-sortIcon field="nId"></p-sortIcon> </th>
-						<th pSortableColumn="nTotalVenta">Saldo Inicial<p-sortIcon field="nTotalVenta"></p-sortIcon> </th>
-						<th pSortableColumn="nTotalAbono">Total Abono<p-sortIcon field="nTotalAbono"></p-sortIcon> </th>
-						<th pSortableColumn="descuento">Descuento<p-sortIcon field="descuento"></p-sortIcon> </th>
-						<th pSortableColumn="nSaldoTotal">Saldo Final<p-sortIcon field="nSaldoTotal"></p-sortIcon> </th>
-						<th pSortableColumn="nAvancePago">Avance<p-sortIcon field="nAvancePago"></p-sortIcon> </th>
-						<th pSortableColumn="dFechaTerminoCredito">Fecha Vencimiento<p-sortIcon field="dFechaTerminoCredito"></p-sortIcon> </th>
-						<th pSortableColumn="sEstatus">Estatus<p-sortIcon field="sEstatus"></p-sortIcon> </th>
+		<!-- SINGLE UNIFIED DIALOG FOR REGISTERING AND ASSIGNING PAYMENTS -->
+		<p-dialog [(visible)]="displayUnifiedPaymentDialog" [style]="{width: '90%', maxWidth: '1200px'}" [header]="'Registro y Asignación de Pago Global'" [modal]="true" class="p-fluid">
+			
+			<div class="p-grid" *ngIf="displayUnifiedPaymentDialog">
+				<div class="p-col-12">
+					<div class="card creditos-control-pagos-card p-mb-2">
+						<div class="creditos-control-pagos-header">
+							<h5>¿Qué deseas hacer?</h5>
+							<div class="creditos-control-pagos-tags">
+								<p-tag styleClass="p-mr-2" severity="info" value="Pagos registrados: {{(listaPagosCanonicosCliente || []).length}}"></p-tag>
+								<p-tag styleClass="p-mr-2" severity="success" value="Con saldo: {{totalPagosConSaldoDisponible}}"></p-tag>
+								<p-tag severity="warning" value="Saldo total disponible: {{totalDisponiblePagosCanonicos | currency:'MXN'}}"></p-tag>
+							</div>
+						</div>
 
-						<th>Acción</th>
-					
-                       
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-venta let-expanded="expanded">
-                    <tr *ngIf="venta.nSaldoTotal>0">
-						<td><span class="p-column-title">No. Venta</span> {{venta.nId}}
-                        </td>
-                        <td><span class="p-column-title">Saldo Inicial</span> {{venta.nTotalVenta.toFixed(2)| currency:'MXN'}}
-                        </td>
-                        <td><span class="p-column-title">Total Abono</span> {{venta.nTotalAbono.toFixed(2)| currency:'MXN'}}
-                        </td>
-						<td><span class="p-column-title">Descuento</span> {{venta.descuento.toFixed(2)| currency:'MXN'}}
-                        </td>
-                        <td><span class="p-column-title">Saldo Final</span>{{venta.nSaldoTotal .toFixed(2)| currency:'MXN'}}
-                        </td>
-						<td> <span class="p-colum-title"></span>
-							<div class="p-col">
-                                <p-progressBar [value]="venta.nAvancePago" [showValue]="true" ></p-progressBar>
-                            </div></td>
-						
-                        <td><span class="p-column-title">Fecha Vencimiento</span> {{venta.dFechaTerminoCredito | date}}
-                        </td>
-						
-                    
-                       
-							<td class="p-text-center"><span class="p-column-title">Estatus</span>
-								<div *ngIf="venta.sEstatus==='VENCIDO'">
-								<p-tag styleClass="p-mr-2" severity="danger">{{venta.sEstatus}}</p-tag>
-							  </div>
-							  <div *ngIf="venta.sEstatus==='REGULAR'">
-								<p-tag styleClass="p-mr-2" severity="success">{{venta.sEstatus}}</p-tag>
-							  </div>
+						<div class="creditos-modo-actions">
+							<button pButton pRipple type="button" label="1) Registrar nuevo pago" icon="pi pi-plus-circle" class="p-button-sm"
+								[ngClass]="!usandoPagoGlobalExistente ? 'p-button-success' : 'p-button-outlined p-button-secondary'"
+								(click)="activarRegistroNuevoPago()"></button>
+							<button pButton pRipple type="button" label="2) Usar saldo existente" icon="pi pi-wallet" class="p-button-sm"
+								[ngClass]="usandoPagoGlobalExistente ? 'p-button-success' : 'p-button-outlined p-button-secondary'"
+								(click)="activarUsoSaldoExistente()"></button>
+						</div>
 
-							  
-                        <td>
-							<button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-info p-button-outlined p-mr-2"(click)="obtenerAbonosVentaId(venta)"></button>
-                         <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded  p-button-danger p-button-outlined p-mr-2"
-							(click)="genenerAbonoVentaPDF(venta)"></button>
-                        </td>
-					
-                    </tr>
-                </ng-template>
-              
-               
-            </p-table>
-		
-			<ng-template pTemplate="footer">
-				<button pButton pRipple label="Cancelar" icon="pi pi-times" class=" p-button-danger" (click)="hideDialog()"></button>
+						<small class="creditos-modo-hint">Elige el origen del saldo y después marca las notas a cubrir.</small>
+
+						<div *ngIf="usandoPagoGlobalExistente" class="creditos-selector-pago card p-mt-3">
+							<div class="p-grid p-fluid creditos-selector-grid">
+								<div class="p-col-12 p-lg-8">
+									<label>Pago global con saldo disponible</label>
+									<p-dropdown [options]="listaPagosConSaldoDisponibleParaControl" optionValue="nId"
+										[ngModel]="pagoCanonicoSeleccionado?.nId" [ngModelOptions]="{standalone:true}"
+										placeholder="Selecciona un pago global"
+										(onChange)="seleccionarPagoGlobalExistentePorId($event.value)">
+										<ng-template let-pago pTemplate="item">
+											{{obtenerEtiquetaPagoDisponible(pago)}}
+										</ng-template>
+										<ng-template let-pago pTemplate="selectedItem">
+											{{pago ? obtenerEtiquetaPagoDisponible(pago) : 'Selecciona un pago global'}}
+										</ng-template>
+									</p-dropdown>
+
+									<div class="creditos-ventas-ligadas-card p-mt-2">
+										<div class="creditos-ventas-ligadas-title">Ventas ya cubiertas con este pago</div>
+										<div *ngIf="(pagoCanonicoSeleccionado?.aplicaciones || []).length; else sinAplicacionesPagoSeleccionado" class="creditos-ventas-ligadas-chips">
+											<span class="creditos-venta-chip" *ngFor="let app of (pagoCanonicoSeleccionado?.aplicaciones || []) | slice:0:8">
+												V{{app.nIdVenta}} · {{(app.montoAplicado || 0) | currency:'MXN'}}
+											</span>
+										</div>
+										<ng-template #sinAplicacionesPagoSeleccionado>
+											<small>Este pago global aún no tiene ventas ligadas.</small>
+										</ng-template>
+										<small *ngIf="(pagoCanonicoSeleccionado?.aplicaciones || []).length > 8" class="p-d-block p-mt-1">
+											+{{(pagoCanonicoSeleccionado?.aplicaciones || []).length - 8}} más
+										</small>
+									</div>
+								</div>
+								<div class="p-col-12 p-lg-4" *ngIf="pagoCanonicoSeleccionado?.nId">
+									<div class="creditos-pago-resumen-grid">
+										<div class="creditos-pago-resumen-item">
+											<small>Disponible</small>
+											<strong>{{(pagoCanonicoSeleccionado?.importeDisponible || 0) | currency:'MXN'}}</strong>
+										</div>
+										<div class="creditos-pago-resumen-item">
+											<small>Aplicado</small>
+											<strong>{{(pagoCanonicoSeleccionado?.importeAplicado || 0) | currency:'MXN'}}</strong>
+										</div>
+										<div class="creditos-pago-resumen-item creditos-pago-resumen-wide">
+											<small>Referencia</small>
+											<strong>{{pagoCanonicoSeleccionado?.referencia || 'N/D'}}</strong>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				
+				<!-- TOP SECTION: REGISTRATION FORM -->
+				<div class="p-col-12" *ngIf="!usandoPagoGlobalExistente">
+					<div class="card p-mb-1" style="background: #f8f9fa;">
+						<h5>Datos del Pago Recibido</h5>
+						<div [formGroup]="formularioPagoCanonico" class="p-grid">
+							<div class="p-col-12 p-md-3">
+								<label>Importe Recibido (*)</label>
+								<p-inputNumber formControlName="importeTotal" mode="currency" currency="MXN" locale="en-US" class="p-inputtext-lg p-d-block"></p-inputNumber>
+							</div>
+							<div class="p-col-12 p-md-3">
+								<label>Fecha de pago (*)</label>
+								<p-calendar formControlName="fechaPago" [showTime]="true" hourFormat="24" dateFormat="dd/mm/yy"></p-calendar>
+							</div>
+							<div class="p-col-12 p-md-3">
+								<label>Forma de pago (*)</label>
+								<p-dropdown [options]="listaFormaPagoCanonico" optionValue="nId" optionLabel="sDescripcion" formControlName="idFormaPago" placeholder="Forma..."></p-dropdown>
+							</div>
+							<div class="p-col-12 p-md-3">
+								<label>Referencia</label>
+								<input pInputText type="text" formControlName="referencia" />
+							</div>
+							<div class="p-col-12 p-md-6" *ngIf="listaCuentasDestinoCanonico?.length">
+								<label>Cuenta bancaria de depósito</label>
+								<p-dropdown [options]="listaCuentasDestinoCanonico" optionValue="nId" formControlName="idCuentaDestino" placeholder="Selecciona tu cuenta">
+									<ng-template let-cuenta pTemplate="item">
+										{{obtenerEtiquetaCuentaDestino(cuenta)}}
+									</ng-template>
+									<ng-template let-cuenta pTemplate="selectedItem">
+										{{cuenta ? obtenerEtiquetaCuentaDestino(cuenta) : 'Selecciona cuenta destino'}}
+									</ng-template>
+								</p-dropdown>
+							</div>
+							<div class="p-col-12 p-md-6">
+								<label>Observaciones Múltiples</label>
+								<input pInputText type="text" formControlName="observaciones" placeholder="Ej: Transferencia del viernes"/>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- METRICS BAR -->
+				<div class="p-col-12">
+					<div class="p-d-flex p-jc-between p-ai-center p-p-3" style="background: #eef2f8; border-radius: 8px; border-left: 5px solid #2196F3;">
+						<div>
+							<span style="font-size: 1.1rem">{{usandoPagoGlobalExistente ? ('Pago global seleccionado #' + (pagoCanonicoSeleccionado?.nId || 'N/D')) : 'Monto Depositado'}}: <strong>{{ montoDisponibleParaAsignacionActual | currency:'MXN' }}</strong></span>
+						</div>
+						<div>
+							<span style="font-size: 1.1rem; color: #d32f2f">Monto Seleccionado: <strong>{{ totalMontoManualSeleccionadoPagoCanonico | currency:'MXN' }}</strong></span>
+						</div>
+						<div>
+							<span style="font-size: 1.2rem; color: #388e3c">Saldo a Favor Restante: <strong>{{ montoRestanteManualPagoCanonico | currency:'MXN' }}</strong></span>
+						</div>
+					</div>
+				</div>
+
+				<!-- BOTTOM SECTION: INVOICES DATA TABLE WITH CHECKBOXES -->
+				<div class="p-col-12">
+					<h5>Notas por cubrir</h5>
+					<p-table [value]="listaFacturasPendientesPagoCanonico" responsiveLayout="scroll" [rowHover]="true" dataKey="nIdVenta"
+						[(selection)]="selectedFacturas" (selectionChange)="onFacturasSelectionChange($event)" (onRowSelect)="onFacturaSelect($event)" (onRowUnselect)="onFacturaUnselect($event)">
+						<ng-template pTemplate="header">
+							<tr>
+								<th style="width: 3rem">
+									<p-tableHeaderCheckbox [disabled]="montoRestanteManualPagoCanonico <= 0 && selectedFacturas?.length === 0"></p-tableHeaderCheckbox>
+								</th>
+								<th>No. Venta</th>
+								<th>Fecha</th>
+								<th>Deuda Original</th>
+								<th>Abonado Prev.</th>
+								<th>Saldo Restante</th>
+								<th>Parcialidad</th>
+								<th>Monto que tomará</th>
+							</tr>
+						</ng-template>
+						<ng-template pTemplate="body" let-factura>
+							<tr>
+								<td>
+									<p-tableCheckbox [value]="factura" [disabled]="(!selectedFacturas?.includes(factura) && montoRestanteManualPagoCanonico <= 0) || !tieneMontoDisponibleParaAsignacion"></p-tableCheckbox>
+								</td>
+								<td>{{factura.nIdVenta}}</td>
+								<td>{{factura.fechaVenta | date:'short'}}</td>
+								<td>{{(factura.totalVenta || 0) | currency:'MXN'}}</td>
+								<td>{{(factura.totalAplicado || 0) | currency:'MXN'}}</td>
+								<td><strong>{{(factura.saldoPendiente || 0) | currency:'MXN'}}</strong></td>
+								<td>{{factura.parcialidadActual || 0}}</td>
+								<td>
+									<span *ngIf="factura.montoAplicarSeleccionado > 0" style="color:#2196F3; font-weight: bold">
+										{{ factura.montoAplicarSeleccionado | currency:'MXN'}}
+									</span>
+									<span *ngIf="!factura.montoAplicarSeleccionado" style="color:#9e9e9e;">
+										$0.00
+									</span>
+								</td>
+							</tr>
+						</ng-template>
+						<ng-template pTemplate="emptymessage">
+							<tr>
+								<td colspan="8">No hay notas pendientes. Puedes guardar el pago global como saldo a favor nada más.</td>
+							</tr>
+						</ng-template>
+					</p-table>
+				</div>
+			</div>
+
+			<ng-template pTemplate="footer">
+				<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text p-button-danger" (click)="displayUnifiedPaymentDialog = false"></button>
+				<button pButton pRipple [label]="usandoPagoGlobalExistente ? 'Aplicar saldo' : 'Guardar Pago'" [icon]="usandoPagoGlobalExistente ? 'pi pi-link' : 'pi pi-check'" class="p-button-success" (click)="guardarOperacionPagoGlobal()" [loading]="procesandoPagoCanonico" [disabled]="!puedeGuardarOperacionPagoGlobal"></button>
 			</ng-template>
 		</p-dialog>
-		<p-dialog [(visible)]="productDialog2" [style]="{width: '800px'}"  header="Abonos de la nota de crédito" [modal]="true"
-			styleClass="p-fluid">
-
-			<app-detalle-abonos-credito [listaAbonosVenta]="listaAbonosVenta" [tvVentasDetalle]="tvVentasDetalle" (refrescarSaldosCliete)="refrescar($event)" ></app-detalle-abonos-credito>
-		</p-dialog>
-           
 	</div>
 </div>

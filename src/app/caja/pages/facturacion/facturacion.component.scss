@@ -192,6 +192,61 @@
 	font-weight: 600;
 }
 
+.facturacion-inline-note {
+	display: inline-flex;
+	padding: 6px 10px;
+	border-radius: 999px;
+	background: #ecfeff;
+	color: #155e75;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.facturacion-canonico-note {
+	padding: 12px 16px;
+	border-radius: 8px;
+	background: #ecfeff;
+	border: 1px solid #a5f3fc;
+	color: #155e75;
+	line-height: 1.5;
+}
+
+:host ::ng-deep .p-datatable .facturacion-row-canonico {
+	background: #f0fdfa;
+	box-shadow: inset 4px 0 0 #14b8a6;
+}
+
+.facturacion-cell-tag {
+	display: inline-flex;
+	margin-top: 6px;
+	padding: 5px 9px;
+	border-radius: 999px;
+	background: #eef2ff;
+	color: #4338ca;
+	border: 1px solid #c7d2fe;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.facturacion-cell-tag-button {
+	appearance: none;
+	cursor: pointer;
+	font-family: inherit;
+	box-shadow: none;
+	outline: none;
+}
+
+.facturacion-cell-tag-button:hover {
+	background: #e0e7ff;
+}
+
+.facturacion-cell-tag-anticip {
+	background: #ecfeff;
+	color: #155e75;
+	border-color: #a5f3fc;
+}
+
 .facturacion-gestion-cell {
 	display: flex;
 	flex-direction: column;

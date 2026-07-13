@@ -126,6 +126,11 @@ export class CatalogoService {
     return this.http.get<TcCuentaBancaria[]>(url);
   }
 
+  getCuentasBanciariasActivas(){
+    let url= environment.servicios.apiRefacFabela + locator.consultaCuentasBancarias;
+    return this.http.get<TcCuentaBancaria[]>(url);
+  }
+
   getTipoProveedor(){
     let url= environment.servicios.apiRefacFabela + locator.getTipoProveedor ;
     return this.http.get<TcTipoProveedor[]>(url);
