@@ -74,11 +74,15 @@
 				<ng-template pTemplate="caption">
 					<div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
 						<h5 class="p-m-0">Listado de créditos</h5>
-						<span class="p-input-icon-left">
-							<i class="pi pi-search"></i>
-							<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
-								placeholder="Buscar cliente" />
-						</span>
+						<div class="creditos-caption-actions">
+							<button pButton pRipple type="button" icon="pi pi-receipt" label="Consultar pagos SAT"
+								class="p-button-help p-button-outlined p-button-sm" (click)="abrirDialogoConsultaPagosSat()"></button>
+							<span class="p-input-icon-left">
+								<i class="pi pi-search"></i>
+								<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+									placeholder="Buscar cliente" />
+							</span>
+						</div>
 					</div>
 				</ng-template>
 				<ng-template pTemplate="header">
@@ -166,7 +170,10 @@
 			</p-table>
 		</div>
 		<!-- SINGLE UNIFIED DIALOG FOR REGISTERING AND ASSIGNING PAYMENTS -->
-		<p-dialog [(visible)]="displayUnifiedPaymentDialog" [style]="{width: '90%', maxWidth: '1200px'}" [header]="'Registro y Asignación de Pago Global'" [modal]="true" class="p-fluid">
+		<p-dialog [(visible)]="displayUnifiedPaymentDialog" [style]="{width: '96vw', maxWidth: 'none'}"
+			[contentStyle]="{'max-height': 'calc(100vh - 7rem)', 'overflow': 'auto'}"
+			[header]="'Registro y Asignación de Pago Global'" [modal]="true" [maximizable]="true"
+			[draggable]="false" [resizable]="false" class="p-fluid">
 			
 			<div class="p-grid" *ngIf="displayUnifiedPaymentDialog">
 				<div class="p-col-12">
@@ -300,13 +307,57 @@
 
 				<!-- BOTTOM SECTION: INVOICES DATA TABLE WITH CHECKBOXES -->
 				<div class="p-col-12">
-					<h5>Notas por cubrir</h5>
-					<p-table [value]="listaFacturasPendientesPagoCanonico" responsiveLayout="scroll" [rowHover]="true" dataKey="nIdVenta"
+					<div class="creditos-facturas-header">
+						<h5>Notas por cubrir</h5>
+						<div class="creditos-facturas-tabs" role="tablist" aria-label="Filtros de notas por cubrir">
+							<button pRipple type="button" class="creditos-folder-tab creditos-folder-tab-relacionables"
+								[class.creditos-folder-tab-active]="esFiltroFacturasPagoCanonicoActivo('relacionables')"
+								[attr.aria-selected]="esFiltroFacturasPagoCanonicoActivo('relacionables')"
+								(click)="seleccionarFiltroFacturasPagoCanonico('relacionables')">
+								<span class="creditos-folder-tab-label">Relacionables</span>
+								<span class="creditos-folder-tab-counter">{{totalFacturasRelacionablesPagoCanonico}}</span>
+							</button>
+							<button pRipple type="button" class="creditos-folder-tab"
+								[class.creditos-folder-tab-active]="esFiltroFacturasPagoCanonicoActivo('facturadas')"
+								[attr.aria-selected]="esFiltroFacturasPagoCanonicoActivo('facturadas')"
+								(click)="seleccionarFiltroFacturasPagoCanonico('facturadas')">
+								<span class="creditos-folder-tab-label">Con factura</span>
+								<span class="creditos-folder-tab-counter">{{totalFacturasConFacturaPagoCanonico}}</span>
+							</button>
+							<button pRipple type="button" class="creditos-folder-tab"
+								[class.creditos-folder-tab-active]="esFiltroFacturasPagoCanonicoActivo('sin-factura')"
+								[attr.aria-selected]="esFiltroFacturasPagoCanonicoActivo('sin-factura')"
+								(click)="seleccionarFiltroFacturasPagoCanonico('sin-factura')">
+								<span class="creditos-folder-tab-label">Sin factura</span>
+								<span class="creditos-folder-tab-counter">{{totalFacturasSinFacturaPagoCanonico}}</span>
+							</button>
+						</div>
+					</div>
+					<div class="creditos-facturas-toolbar">
+						<div class="creditos-facturas-toolbar-search p-input-icon-left">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" [ngModel]="filtroBusquedaFacturasPagoCanonico"
+								[ngModelOptions]="{standalone:true}" (ngModelChange)="onFiltroBusquedaFacturasPagoCanonicoChange($event)"
+								placeholder="Buscar por venta, fecha, monto o estado" />
+						</div>
+						<div class="creditos-facturas-toolbar-actions">
+							<p-dropdown [options]="opcionesFiltroEstadoFacturasPagoCanonico" optionLabel="label" optionValue="value"
+								[ngModel]="filtroEstadoFacturasPagoCanonico" [ngModelOptions]="{standalone:true}" appendTo="body"
+								placeholder="Estado fiscal" (onChange)="onFiltroEstadoFacturasPagoCanonicoChange($event.value)"></p-dropdown>
+							<button pButton pRipple type="button" icon="pi pi-filter-slash" label="Limpiar"
+								class="p-button-text p-button-sm" [disabled]="!tieneFiltrosTablaFacturasPagoCanonicoActivos"
+								(click)="limpiarFiltrosFacturasPagoCanonico()"></button>
+						</div>
+					</div>
+					<small class="creditos-facturas-toolbar-meta">
+						Mostrando {{(listaFacturasPendientesPagoCanonicoVisible || []).length}} de {{totalFacturasPestanaActivaPagoCanonico}} notas en esta pestaña.
+					</small>
+					<p-table [value]="listaFacturasPendientesPagoCanonicoVisible" responsiveLayout="scroll" [rowHover]="true" dataKey="nIdVenta"
 						[(selection)]="selectedFacturas" (selectionChange)="onFacturasSelectionChange($event)" (onRowSelect)="onFacturaSelect($event)" (onRowUnselect)="onFacturaUnselect($event)">
 						<ng-template pTemplate="header">
 							<tr>
 								<th style="width: 3rem">
-									<p-tableHeaderCheckbox [disabled]="((montoRestanteManualPagoCanonico <= 0 && selectedFacturas?.length === 0) || totalFacturasElegiblesPagoCanonico === 0)"></p-tableHeaderCheckbox>
+									<p-tableHeaderCheckbox [disabled]="((montoRestanteManualPagoCanonico <= 0 && selectedFacturas?.length === 0) || totalFacturasElegiblesPagoCanonicoVisible === 0)"></p-tableHeaderCheckbox>
 								</th>
 								<th>No. Venta</th>
 								<th>Fecha</th>
@@ -344,7 +395,7 @@
 						</ng-template>
 						<ng-template pTemplate="emptymessage">
 							<tr>
-								<td colspan="9">No hay notas pendientes. Puedes guardar el pago global como saldo a favor nada más.</td>
+								<td colspan="9">{{mensajeVacioFacturasPagoCanonico}}</td>
 							</tr>
 						</ng-template>
 					</p-table>
@@ -357,6 +408,202 @@
 			<ng-template pTemplate="footer">
 				<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text p-button-danger" (click)="displayUnifiedPaymentDialog = false"></button>
 				<button pButton pRipple [label]="usandoPagoGlobalExistente ? 'Aplicar saldo' : 'Guardar Pago'" [icon]="usandoPagoGlobalExistente ? 'pi pi-link' : 'pi pi-check'" class="p-button-success" (click)="guardarOperacionPagoGlobal()" [loading]="procesandoPagoCanonico" [disabled]="!puedeGuardarOperacionPagoGlobal"></button>
+			</ng-template>
+		</p-dialog>
+
+		<p-dialog [(visible)]="displayConsultaPagosSatDialog" [style]="{width: '96vw', maxWidth: 'none'}"
+			[contentStyle]="{'max-height': 'calc(100vh - 7rem)', 'overflow': 'auto'}"
+			header="Consulta SAT de pagos globales" [modal]="true" [maximizable]="true"
+			[draggable]="false" [resizable]="false" class="p-fluid">
+			<div class="p-grid">
+				<div class="p-col-12">
+					<div class="card creditos-sat-card">
+						<div class="creditos-sat-toolbar">
+							<div class="creditos-sat-toolbar-main">
+								<label>Cliente</label>
+								<p-dropdown [options]="listaClientesCredito" [ngModel]="clienteConsultaPagosSatSeleccionado"
+									[ngModelOptions]="{standalone:true}" placeholder="Selecciona un cliente"
+									[filter]="true" filterBy="tcCliente.sRfc,tcCliente.sRazonSocial" appendTo="body"
+									(onChange)="seleccionarClienteConsultaPagosSat($event.value)">
+									<ng-template let-cliente pTemplate="item">
+										<div class="creditos-sat-client-item">
+											<strong>{{cliente?.tcCliente?.sRfc || 'RFC'}}</strong>
+											<small>{{cliente?.tcCliente?.sRazonSocial || 'Sin razon social'}}</small>
+										</div>
+									</ng-template>
+									<ng-template let-cliente pTemplate="selectedItem">
+										{{obtenerEtiquetaClienteCredito(cliente)}}
+									</ng-template>
+								</p-dropdown>
+							</div>
+							<div class="creditos-sat-toolbar-stats" *ngIf="clienteConsultaPagosSatSeleccionado">
+								<div class="creditos-sat-stat">
+									<small>Pagos encontrados</small>
+									<strong>{{(listaPagosConsultaSatCliente || []).length}}</strong>
+								</div>
+								<div class="creditos-sat-stat">
+									<small>Timbrados</small>
+									<strong>{{totalPagosConsultaSatTimbrados}}</strong>
+								</div>
+								<div class="creditos-sat-stat">
+									<small>Facturas ligadas</small>
+									<strong>{{totalFacturasPagoSatSeleccionado}}</strong>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-col-12 p-xl-5">
+					<div class="card creditos-sat-card">
+						<div class="creditos-sat-section-title">Pagos realizados</div>
+						<p-table [value]="listaPagosConsultaSatCliente" responsiveLayout="scroll" [rowHover]="true"
+							dataKey="nId" selectionMode="single" [(selection)]="pagoConsultaSatSeleccionado"
+							[loading]="cargandoConsultaPagosSat">
+							<ng-template pTemplate="header">
+								<tr>
+									<th>Pago</th>
+									<th>Fecha</th>
+									<th>Forma</th>
+									<th>Total</th>
+									<th>Aplicado</th>
+									<th>SAT</th>
+									<th>Acciones</th>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="body" let-pago>
+								<tr [pSelectableRow]="pago">
+									<td>
+										<div><strong>#{{pago.nId}}</strong></div>
+										<small>{{pago.referencia || 'Sin referencia'}}</small>
+									</td>
+									<td>{{pago.fechaPago | date:'short'}}</td>
+									<td>{{pago.descripcionFormaPago || pago.formaPagoSat || 'N/D'}}</td>
+									<td>{{(pago.importeTotal || 0) | currency:'MXN'}}</td>
+									<td>{{(pago.importeAplicado || 0) | currency:'MXN'}}</td>
+									<td>
+										<p-tag [severity]="obtenerSeverityRepCanonico(pago.estadoRepCanonico)" [value]="obtenerEtiquetaRepCanonico(pago.estadoRepCanonico)"></p-tag>
+									</td>
+									<td>
+										<button pButton pRipple type="button" icon="pi pi-eye" class="p-button-rounded p-button-text"
+											(click)="seleccionarPagoConsultaSat(pago)" pTooltip="Ver facturas vinculadas"></button>
+										<button pButton pRipple type="button" icon="pi pi-file-pdf" class="p-button-rounded p-button-text p-button-danger"
+											[disabled]="!puedeDescargarComprobantePagoSat(pago)" (click)="descargarComprobantePagoSatPdf(pago)"
+											pTooltip="Descargar PDF SAT"></button>
+										<button pButton pRipple type="button" icon="pi pi-book" class="p-button-rounded p-button-text p-button-info"
+											[disabled]="!puedeDescargarComprobantePagoSat(pago)" (click)="descargarComprobantePagoSatXml(pago)"
+											pTooltip="Descargar XML SAT"></button>
+									</td>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="emptymessage">
+								<tr>
+									<td colspan="7">Selecciona un cliente para consultar pagos globales y su comprobante SAT.</td>
+								</tr>
+							</ng-template>
+						</p-table>
+					</div>
+				</div>
+
+				<div class="p-col-12 p-xl-7">
+					<div class="card creditos-sat-card">
+						<div *ngIf="pagoConsultaSatSeleccionado?.nId; else sinPagoSatSeleccionado">
+							<div class="creditos-sat-detail-header">
+								<div>
+									<div class="creditos-sat-section-title">Pago #{{pagoConsultaSatSeleccionado.nId}}</div>
+									<div class="creditos-sat-detail-subtitle">
+										UUID REP: {{pagoConsultaSatSeleccionado.uuidRepCanonico || 'Sin timbrar'}}
+									</div>
+								</div>
+								<div class="creditos-sat-download-actions">
+									<button pButton pRipple type="button" icon="pi pi-file-pdf" label="PDF SAT"
+										class="p-button-danger p-button-sm" [disabled]="!puedeDescargarComprobantePagoSat(pagoConsultaSatSeleccionado)"
+										(click)="descargarComprobantePagoSatPdf(pagoConsultaSatSeleccionado)"></button>
+									<button pButton pRipple type="button" icon="pi pi-book" label="XML SAT"
+										class="p-button-info p-button-sm" [disabled]="!puedeDescargarComprobantePagoSat(pagoConsultaSatSeleccionado)"
+										(click)="descargarComprobantePagoSatXml(pagoConsultaSatSeleccionado)"></button>
+								</div>
+							</div>
+
+							<div class="creditos-sat-summary-grid">
+								<div class="creditos-sat-stat">
+									<small>Importe total</small>
+									<strong>{{(pagoConsultaSatSeleccionado.importeTotal || 0) | currency:'MXN'}}</strong>
+								</div>
+								<div class="creditos-sat-stat">
+									<small>Importe aplicado</small>
+									<strong>{{(pagoConsultaSatSeleccionado.importeAplicado || 0) | currency:'MXN'}}</strong>
+								</div>
+								<div class="creditos-sat-stat">
+									<small>Disponible</small>
+									<strong>{{(pagoConsultaSatSeleccionado.importeDisponible || 0) | currency:'MXN'}}</strong>
+								</div>
+								<div class="creditos-sat-stat">
+									<small>Facturas vinculadas</small>
+									<strong>{{totalFacturasPagoSatSeleccionado}}</strong>
+								</div>
+							</div>
+
+							<div class="creditos-sat-inline-note" *ngIf="puedeDescargarComprobantePagoSat(pagoConsultaSatSeleccionado)">
+								El comprobante SAT de este pago incluye las facturas vinculadas listadas abajo.
+							</div>
+
+							<p-table [value]="aplicacionesPagoSatSeleccionado" responsiveLayout="scroll" [rowHover]="true" dataKey="nId">
+								<ng-template pTemplate="header">
+									<tr>
+										<th>Venta</th>
+										<th>Folio</th>
+										<th>Fecha</th>
+										<th>UUID factura</th>
+										<th>Monto aplicado</th>
+										<th>Parcialidad</th>
+										<th>Saldo insoluto</th>
+										<th>Fiscal</th>
+										<th>Facturas</th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-aplicacion>
+									<tr>
+										<td>#{{aplicacion.nIdVenta}}</td>
+										<td>{{aplicacion.folioVenta || 'Sin folio'}}</td>
+										<td>{{aplicacion.fechaVenta | date:'short'}}</td>
+										<td class="creditos-sat-uuid-cell">{{aplicacion.uuidFactura || 'Pendiente'}}</td>
+										<td>{{(aplicacion.montoAplicado || 0) | currency:'MXN'}}</td>
+										<td>{{aplicacion.parcialidad || 0}}</td>
+										<td>{{(aplicacion.saldoInsoluto || 0) | currency:'MXN'}}</td>
+										<td>
+											<p-tag [severity]="obtenerSeverityFacturaSat(aplicacion)" [value]="obtenerEtiquetaFacturaSat(aplicacion)"></p-tag>
+										</td>
+										<td>
+											<button pButton pRipple type="button" icon="pi pi-file-pdf" class="p-button-rounded p-button-text p-button-danger"
+												[disabled]="!puedeDescargarFacturaSat(aplicacion)" (click)="descargarFacturaSatPdf(aplicacion)"
+												pTooltip="Descargar PDF factura"></button>
+											<button pButton pRipple type="button" icon="pi pi-book" class="p-button-rounded p-button-text p-button-info"
+												[disabled]="!puedeDescargarFacturaSat(aplicacion)" (click)="descargarFacturaSatXml(aplicacion)"
+												pTooltip="Descargar XML factura"></button>
+										</td>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="emptymessage">
+									<tr>
+										<td colspan="9">El pago seleccionado todavia no tiene facturas vinculadas.</td>
+									</tr>
+								</ng-template>
+							</p-table>
+						</div>
+
+						<ng-template #sinPagoSatSeleccionado>
+							<div class="creditos-sat-empty">
+								Selecciona un pago para revisar las facturas vinculadas y descargar el comprobante SAT.
+							</div>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+
+			<ng-template pTemplate="footer">
+				<button pButton pRipple type="button" label="Cerrar" icon="pi pi-times" class="p-button-text"
+					(click)="displayConsultaPagosSatDialog = false"></button>
 			</ng-template>
 		</p-dialog>
 	</div>

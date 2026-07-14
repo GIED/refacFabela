@@ -12,6 +12,13 @@ export class PagoAplicacionLineaDto {
   origenRegistro?: string;
   fechaPago?: Date;
   fechaAplicacion?: Date;
+  folioVenta?: string;
+  fechaVenta?: Date;
+  uuidFactura?: string;
+  estadoFactura?: string;
+  metodoPagoFiscal?: string;
+  formaPagoFiscal?: string;
+  estadoComplemento?: string;
   formaPagoSat?: string;
   descripcionFormaPago?: string;
   referenciaPago?: string;

@@ -37,6 +37,7 @@ export class PagoClienteDetalleDto {
   estatus?: string;
   estadoRepCanonico?: string;
   uuidRepCanonico?: string;
+  nIdComplementoRepCanonico?: number;
   conciliado?: boolean;
   fechaConciliacion?: Date;
   aplicaciones?: PagoAplicacionLineaDto[];
