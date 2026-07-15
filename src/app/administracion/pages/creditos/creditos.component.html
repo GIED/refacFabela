@@ -157,7 +157,8 @@
 						</td>
 						<td class="creditos-acciones-col">
 							<div class="creditos-acciones-wrap">
-								<p-splitButton label="Registrar pago" icon="pi pi-credit-card" [model]="obtenerAccionesClienteCredito(cliente)" styleClass="p-button-sm creditos-split-button" (onClick)="abrirDialogoUnificado(cliente)"></p-splitButton>
+								
+								<p-splitButton label="Registrar pago" icon="pi pi-credit-card" [model]="obtenerAccionesClienteCredito(cliente)" [appendTo]="'body'" styleClass="p-button-sm creditos-split-button" (onClick)="abrirDialogoUnificado(cliente)"></p-splitButton>
 							</div>
 						</td>
 					</tr>
@@ -264,6 +265,11 @@
 								<p-calendar formControlName="fechaPago" [showTime]="true" hourFormat="24" dateFormat="dd/mm/yy"></p-calendar>
 							</div>
 							<div class="p-col-12 p-md-3">
+								<label>¿Se facturará el pago? (*)</label>
+								<p-dropdown [options]="opcionesFacturacionPagoCanonico" optionLabel="label" optionValue="value"
+									formControlName="facturarPago" placeholder="Selecciona una opción"></p-dropdown>
+							</div>
+							<div class="p-col-12 p-md-3">
 								<label>Forma de pago (*)</label>
 								<p-dropdown [options]="listaFormaPagoCanonico" optionValue="nId" optionLabel="sDescripcion" formControlName="idFormaPago" placeholder="Forma..."></p-dropdown>
 							</div>
@@ -287,6 +293,11 @@
 								<input pInputText type="text" formControlName="observaciones" placeholder="Ej: Transferencia del viernes"/>
 							</div>
 						</div>
+						<small class="p-d-block p-mt-2" style="color:#64748b;">
+							{{ debeFacturarsePagoGlobalActual()
+								? 'Modo facturable: solo se podrán relacionar ventas facturadas en PPD/99 para generar complemento de pago.'
+								: 'Modo sin factura: solo se podrán relacionar ventas no facturadas. Se registrará el pago global y los abonos sin timbrar el pago en SAT.' }}
+						</small>
 					</div>
 				</div>
 
@@ -357,7 +368,7 @@
 						<ng-template pTemplate="header">
 							<tr>
 								<th style="width: 3rem">
-									<p-tableHeaderCheckbox [disabled]="((montoRestanteManualPagoCanonico <= 0 && selectedFacturas?.length === 0) || totalFacturasElegiblesPagoCanonicoVisible === 0)"></p-tableHeaderCheckbox>
+									<p-tableHeaderCheckbox [disabled]="((montoRestanteManualPagoCanonico <= 0 && selectedFacturas?.length === 0) || totalFacturasAplicablesPagoCanonicoVisible === 0)"></p-tableHeaderCheckbox>
 								</th>
 								<th>No. Venta</th>
 								<th>Fecha</th>
@@ -372,7 +383,7 @@
 						<ng-template pTemplate="body" let-factura>
 							<tr>
 								<td>
-									<p-tableCheckbox [value]="factura" [disabled]="(!selectedFacturas?.includes(factura) && montoRestanteManualPagoCanonico <= 0) || !tieneMontoDisponibleParaAsignacion || !esFacturaElegibleParaAplicacionGlobal(factura)"></p-tableCheckbox>
+									<p-tableCheckbox [value]="factura" [disabled]="(!selectedFacturas?.includes(factura) && montoRestanteManualPagoCanonico <= 0) || !tieneMontoDisponibleParaAsignacion || !esFacturaAplicableParaRegistroPagoGlobal(factura)"></p-tableCheckbox>
 								</td>
 								<td>{{factura.nIdVenta}}</td>
 								<td>{{factura.fechaVenta | date:'short'}}</td>
@@ -400,7 +411,9 @@
 						</ng-template>
 					</p-table>
 					<small class="p-d-block p-mt-2" style="color:#6c757d;">
-						Solo se pueden relacionar ventas facturadas en PPD/99 y vigentes para aplicar pagos globales y generar complemento de pago.
+						{{ debeFacturarsePagoGlobalActual()
+							? 'Este pago está marcado para facturarse: solo puedes elegir ventas facturadas en PPD/99 para generar complemento de pago.'
+							: 'Este pago está marcado como no facturable: solo puedes elegir ventas sin factura y registrar el abono sin timbrar el pago en SAT.' }}
 					</small>
 				</div>
 			</div>
@@ -604,6 +617,153 @@
 			<ng-template pTemplate="footer">
 				<button pButton pRipple type="button" label="Cerrar" icon="pi pi-times" class="p-button-text"
 					(click)="displayConsultaPagosSatDialog = false"></button>
+			</ng-template>
+		</p-dialog>
+
+		<p-dialog [(visible)]="displayComprobantePagoDialog" [style]="{width: '760px', maxWidth: '96vw'}"
+			header="Comprobante del pago global" [modal]="true" [draggable]="false" [resizable]="false" class="p-fluid">
+			<div class="creditos-comprobante-dialog" *ngIf="pagoComprobanteGenerado?.nId">
+				<div class="creditos-comprobante-summary">
+					<div class="creditos-comprobante-stat">
+						<small>Pago global</small>
+						<strong>#{{pagoComprobanteGenerado.nId}}</strong>
+					</div>
+					<div class="creditos-comprobante-stat">
+						<small>Importe aplicado</small>
+						<strong>{{(pagoComprobanteGenerado.importeAplicado || 0) | currency:'MXN'}}</strong>
+					</div>
+					<div class="creditos-comprobante-stat">
+						<small>Modo</small>
+						<strong>{{pagoComprobanteGenerado.facturarPago === false ? 'Sin SAT' : 'Con SAT'}}</strong>
+					</div>
+				</div>
+
+				<div class="creditos-comprobante-note">
+					El paquete del comprobante se descarga automáticamente e incluye el resumen del pago y los documentos disponibles de las ventas relacionadas.
+				</div>
+
+				<div class="creditos-comprobante-actions">
+					<button pButton pRipple type="button" icon="pi pi-download" label="Descargar paquete ZIP"
+						class="p-button-help" (click)="descargarPaqueteComprobantePagoGlobal()"></button>
+					<button pButton pRipple type="button" icon="pi pi-file-pdf" label="PDF SAT"
+						class="p-button-danger p-button-outlined" [disabled]="!puedeDescargarComprobantePagoSat(pagoComprobanteGenerado)"
+						(click)="descargarComprobantePagoSatPdf(pagoComprobanteGenerado)"></button>
+					<button pButton pRipple type="button" icon="pi pi-book" label="XML SAT"
+						class="p-button-info p-button-outlined" [disabled]="!puedeDescargarComprobantePagoSat(pagoComprobanteGenerado)"
+						(click)="descargarComprobantePagoSatXml(pagoComprobanteGenerado)"></button>
+				</div>
+
+				<div class="creditos-comprobante-mail card p-mt-3">
+					<div class="creditos-comprobante-mail-head">
+						<div>
+							<div class="creditos-sat-section-title">Enviar por correo</div>
+							<small *ngIf="correoClientePagoComprobante; else sinCorreoClienteComprobante">
+								Se enviará a {{correoClientePagoComprobante}}
+							</small>
+							<ng-template #sinCorreoClienteComprobante>
+								<small>El cliente no tiene correo registrado.</small>
+							</ng-template>
+						</div>
+						<button pButton pRipple type="button" icon="pi pi-envelope" label="Enviar comprobante"
+							class="p-button-success" [loading]="enviandoCorreoComprobantePago"
+							[disabled]="!puedeEnviarCorreoComprobantePago" (click)="enviarComprobantePagoGlobalPorCorreo()"></button>
+					</div>
+					<small *ngIf="correoClienteBloqueadoPagoComprobante" style="color:#b45309;">
+						El correo del cliente está bloqueado para envíos automáticos.
+					</small>
+					<small *ngIf="resultadoCorreoComprobantePago?.detalle" class="p-d-block p-mt-2" style="color:#475569;">
+						{{resultadoCorreoComprobantePago.detalle}}
+					</small>
+				</div>
+			</div>
+
+			<ng-template pTemplate="footer">
+				<button pButton pRipple type="button" label="Cerrar" icon="pi pi-times" class="p-button-text"
+					(click)="displayComprobantePagoDialog = false"></button>
+			</ng-template>
+		</p-dialog>
+
+		<p-dialog [(visible)]="displayEstadoCuentaDialog" [style]="{width: '96vw', maxWidth: 'none'}"
+			header="Estado de cuenta del cliente" [modal]="true" [draggable]="false" [resizable]="false" class="p-fluid"
+			[contentStyle]="{'max-height': 'calc(100vh - 8rem)', 'overflow': 'auto'}">
+			<div class="p-grid" *ngIf="displayEstadoCuentaDialog">
+				<div class="p-col-12 p-lg-4">
+					<div class="card">
+						<div class="creditos-sat-section-title">Cliente</div>
+						<div>{{auxSaldoGeneralCliente?.tcCliente?.sRazonSocial || 'Sin razón social'}}</div>
+						<small>{{auxSaldoGeneralCliente?.tcCliente?.sRfc || 'Sin RFC'}}</small>
+					</div>
+				</div>
+				<div class="p-col-12 p-sm-6 p-lg-2">
+					<div class="card">
+						<small>Ventas con saldo</small>
+						<h3 class="p-m-0">{{totalVentasConSaldoEstadoCuentaCliente}}</h3>
+					</div>
+				</div>
+				<div class="p-col-12 p-sm-6 p-lg-3">
+					<div class="card">
+						<small>Total pagado</small>
+						<h3 class="p-m-0">{{totalPagadoEstadoCuentaCliente | currency:'MXN'}}</h3>
+					</div>
+				</div>
+				<div class="p-col-12 p-sm-6 p-lg-3">
+					<div class="card">
+						<small>Total pendiente</small>
+						<h3 class="p-m-0">{{totalPendienteEstadoCuentaCliente | currency:'MXN'}}</h3>
+					</div>
+				</div>
+			</div>
+
+			<div class="p-d-flex p-jc-between p-ai-center p-mb-2" *ngIf="displayEstadoCuentaDialog">
+				<span class="p-input-icon-left" style="max-width: 380px; width: 100%;">
+					<i class="pi pi-search"></i>
+					<input pInputText type="text" [(ngModel)]="filtroEstadoCuenta" placeholder="Buscar por folio, id o estatus" />
+				</span>
+				<button pButton pRipple type="button" icon="pi pi-file-excel" label="Exportar reporte"
+					class="p-button-help p-button-sm" (click)="dtEstadoCuenta.exportCSV()"></button>
+			</div>
+
+			<p-table #dtEstadoCuenta [value]="estadoCuentaClienteVisible" [loading]="cargandoEstadoCuenta" [rows]="10"
+				[paginator]="(estadoCuentaClienteVisible || []).length > 10" [showCurrentPageReport]="true"
+				currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} ventas"
+				responsiveLayout="scroll" dataKey="nId" styleClass="p-datatable-sm p-datatable-striped">
+				<ng-template pTemplate="header">
+					<tr>
+						<th pSortableColumn="nId">Venta <p-sortIcon field="nId"></p-sortIcon></th>
+						<th pSortableColumn="sFolioVenta">Folio <p-sortIcon field="sFolioVenta"></p-sortIcon></th>
+						<th pSortableColumn="dFechaVenta">Fecha <p-sortIcon field="dFechaVenta"></p-sortIcon></th>
+						<th pSortableColumn="nTotalVenta">Total <p-sortIcon field="nTotalVenta"></p-sortIcon></th>
+						<th pSortableColumn="nTotalAbono">Abonos <p-sortIcon field="nTotalAbono"></p-sortIcon></th>
+						<th pSortableColumn="nSaldoTotal">Saldo pendiente <p-sortIcon field="nSaldoTotal"></p-sortIcon></th>
+						<th pSortableColumn="nAvancePago">Avance pago <p-sortIcon field="nAvancePago"></p-sortIcon></th>
+						<th>Estatus</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-venta>
+					<tr>
+						<td>#{{venta.nId}}</td>
+						<td>{{venta.sFolioVenta || 'Sin folio'}}</td>
+						<td>{{venta.dFechaVenta | date:'dd/MM/yyyy'}}</td>
+						<td>{{(venta.nTotalVenta || 0) | currency:'MXN'}}</td>
+						<td>{{(venta.nTotalAbono || 0) | currency:'MXN'}}</td>
+						<td>{{(venta.nSaldoTotal || 0) | currency:'MXN'}}</td>
+						<td style="min-width: 170px;">
+							<p-progressBar [value]="venta.nAvancePago || 0" [showValue]="false"></p-progressBar>
+							<small>{{(venta.nAvancePago || 0) | number:'1.0-0'}}%</small>
+						</td>
+						<td>{{venta.sEstatus || 'N/D'}}</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">No se encontraron ventas para el estado de cuenta con el filtro actual.</td>
+					</tr>
+				</ng-template>
+			</p-table>
+
+			<ng-template pTemplate="footer">
+				<button pButton pRipple type="button" label="Cerrar" icon="pi pi-times" class="p-button-text"
+					(click)="displayEstadoCuentaDialog = false"></button>
 			</ng-template>
 		</p-dialog>
 	</div>

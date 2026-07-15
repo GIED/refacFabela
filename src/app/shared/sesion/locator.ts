@@ -269,6 +269,8 @@ static consultarAplicacionesVentaCanonico='/creditos/pagos/aplicaciones-venta?';
 static registrarPagoClienteCanonico='/creditos/pagos/registrar';
 static consultarFacturasPendientesPagoCanonico='/creditos/pagos/facturas-pendientes?';
 static aplicarPagoClienteCanonicoBase='/creditos/pagos/';
+static descargarPaqueteComprobantePagoClienteCanonico='/creditos/pagos/';
+static enviarCorreoComprobantePagoClienteCanonico='/creditos/pagos/';
 
 
 //Compras

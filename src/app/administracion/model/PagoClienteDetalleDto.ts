@@ -35,6 +35,7 @@ export class PagoClienteDetalleDto {
   nIdCaja?: number;
   nIdCorteCaja?: number;
   estatus?: string;
+  facturarPago?: boolean;
   estadoRepCanonico?: string;
   uuidRepCanonico?: string;
   nIdComplementoRepCanonico?: number;

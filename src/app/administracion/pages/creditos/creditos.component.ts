@@ -31,6 +31,7 @@ import { PagoAplicacionAutomaticaRequestDto } from '../../model/PagoAplicacionAu
 import { PagoAplicacionLineaDto } from '../../model/PagoAplicacionLineaDto';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TipoDoc } from 'src/app/shared/utils/TipoDoc.enum';
+import { PagoComprobanteCorreoResponseDto } from '../../model/PagoComprobanteCorreoResponseDto';
 
 @Component({
   selector: 'app-creditos',
@@ -72,20 +73,31 @@ export class CreditosComponent implements OnInit {
   listaClientesCredito: SaldoGeneralCliente;
   listaAbonosVenta:TwAbono[];
   listaVentasDetalleCliente: TvVentasDetalle[];
+  listaVentasEstadoCuentaCliente: TvVentasDetalle[];
+  listaVentasPendientesEstadoCuentaCliente: TvVentasDetalle[];
+  displayEstadoCuentaDialog: boolean = false;
+  filtroEstadoCuenta: string = '';
+  cargandoEstadoCuenta: boolean = false;
   listaPagosCanonicosCliente: PagoClienteDetalleDto[];
   listaAplicacionesCanonicasVenta: PagoAplicacionLineaDto[];
   listaFacturasPendientesPagoCanonico: FacturaCreditoPendienteDto[];
   listaFormaPagoCanonico: TcFormaPago[];
   listaCuentasDestinoCanonico: TcCuentaBancaria[];
+  opcionesFacturacionPagoCanonico = [
+    { label: 'Sí, generar complemento SAT', value: true },
+    { label: 'No, solo registrar abono', value: false }
+  ];
   totalesCreditos: totalesGeneralesCreditos ;
   pieData: any;
   pieOptions: any;
   car:any
   displayUnifiedPaymentDialog: boolean = false;
   displayConsultaPagosSatDialog: boolean = false;
+  displayComprobantePagoDialog: boolean = false;
   selectedFacturas: FacturaCreditoPendienteDto[] = [];
   usandoPagoGlobalExistente: boolean = false;
   cargandoConsultaPagosSat: boolean = false;
+  enviandoCorreoComprobantePago: boolean = false;
   filtroFacturasPagoCanonico: 'relacionables' | 'facturadas' | 'sin-factura' = 'relacionables';
   filtroBusquedaFacturasPagoCanonico: string = '';
   filtroEstadoFacturasPagoCanonico: 'todos' | 'relacionable' | 'facturada_no_ppd' | 'no_facturada' | 'cancelada' = 'todos';
@@ -110,6 +122,8 @@ export class CreditosComponent implements OnInit {
   cajaActivaCanonico: TwCaja;
   pagoCanonicoSeleccionado: PagoClienteDetalleDto;
   pagoConsultaSatSeleccionado: PagoClienteDetalleDto;
+  pagoComprobanteGenerado: PagoClienteDetalleDto;
+  resultadoCorreoComprobantePago: PagoComprobanteCorreoResponseDto;
   notaConsolidacionPendiente: string;
   nIdVentaObjetivoPagoCanonico?: number;
   clienteConsultaPagosSatSeleccionado: SaldoGeneralCliente;
@@ -137,6 +151,8 @@ export class CreditosComponent implements OnInit {
                 this.listaAplicacionesCanonicasVenta = [];
                 this.listaPagosCanonicosCliente = [];
                 this.listaFacturasPendientesPagoCanonico = [];
+                this.listaVentasEstadoCuentaCliente = [];
+                this.listaVentasPendientesEstadoCuentaCliente = [];
                 this.listaFormaPagoCanonico = [];
                 this.listaCuentasDestinoCanonico = [];
                 this.displayUnifiedPaymentDialog = false;
@@ -158,8 +174,9 @@ export class CreditosComponent implements OnInit {
                 this.cajaActivaCanonico = {};
                 this.pagoCanonicoSeleccionado = {};
                 this.pagoConsultaSatSeleccionado = {};
+                this.pagoComprobanteGenerado = {};
+                this.resultadoCorreoComprobantePago = {};
                 this.notaConsolidacionPendiente = 'Los pagos canÃ³nicos sÃ­ pueden aplicarse a varias ventas y la factura consolidada ya estÃ¡ disponible en Caja > FacturaciÃ³n. Selecciona ventas del mismo cliente y misma razÃ³n social y usa Facturar seleccionadas.';
-                this.nIdVentaObjetivoPagoCanonico = null;
                 this.clienteConsultaPagosSatSeleccionado = null;
                 this.listaPagosConsultaSatCliente = [];
 
@@ -258,6 +275,7 @@ export class CreditosComponent implements OnInit {
     this.formularioPagoCanonico = this.fb.group({
       fechaPago: [new Date(), [Validators.required]],
       importeTotal: [null, [Validators.required]],
+      facturarPago: [true, [Validators.required]],
       idFormaPago: [null, [Validators.required]],
       idCuentaDestino: [null, [Validators.required]],
       referencia: [''],
@@ -267,6 +285,12 @@ export class CreditosComponent implements OnInit {
     this.formularioPagoCanonico.get('importeTotal').valueChanges.subscribe(() => {
       if (this.displayUnifiedPaymentDialog) {
         this.redistribuirMontosSeleccionados();
+      }
+    });
+
+    this.formularioPagoCanonico.get('facturarPago').valueChanges.subscribe(() => {
+      if (this.displayUnifiedPaymentDialog && !this.usandoPagoGlobalExistente) {
+        this.sincronizarSeleccionFacturasPagoCanonicoVisible();
       }
     });
   }
@@ -424,6 +448,7 @@ export class CreditosComponent implements OnInit {
     this.formularioPagoCanonico.reset({
       fechaPago: new Date(),
       importeTotal: null,
+      facturarPago: true,
       idFormaPago: null,
       idCuentaDestino: null,
       referencia: '',
@@ -534,6 +559,80 @@ export class CreditosComponent implements OnInit {
     }
 
     this.clienteConsultaPagosSatSeleccionado = null;
+  }
+
+  abrirEstadoCuentaCliente(cliente: SaldoGeneralCliente) {
+    if (!cliente?.tcCliente?.nId && !cliente?.nIdCliente) {
+      this.messageService.add({ severity: 'warn', summary: 'Cliente no disponible', detail: 'No fue posible identificar el cliente para consultar su estado de cuenta.', life: 4000 });
+      return;
+    }
+
+    const nIdCliente = Number(cliente?.tcCliente?.nId || cliente?.nIdCliente || 0);
+    if (!nIdCliente) {
+      this.messageService.add({ severity: 'warn', summary: 'Cliente no disponible', detail: 'No fue posible identificar el cliente para consultar su estado de cuenta.', life: 4000 });
+      return;
+    }
+
+    this.auxSaldoGeneralCliente = cliente;
+    this.displayEstadoCuentaDialog = true;
+    this.cargandoEstadoCuenta = true;
+    this.filtroEstadoCuenta = '';
+    this.listaVentasEstadoCuentaCliente = [];
+    this.listaVentasPendientesEstadoCuentaCliente = [];
+
+    forkJoin([
+      this.ventasService.obtenerHistorialVentasCliente(nIdCliente, 24),
+      this.ventasService.obtenerVentasPendientesCliente(nIdCliente)
+    ]).subscribe(([historial, pendientes]) => {
+      this.cargandoEstadoCuenta = false;
+      this.listaVentasEstadoCuentaCliente = (historial || []).map(v => this.normalizarVentaEstadoCuenta(v));
+      this.listaVentasPendientesEstadoCuentaCliente = (pendientes || []).map(v => this.normalizarVentaEstadoCuenta(v));
+    }, () => {
+      this.cargandoEstadoCuenta = false;
+      this.listaVentasEstadoCuentaCliente = [];
+      this.listaVentasPendientesEstadoCuentaCliente = [];
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible consultar el estado de cuenta del cliente.', life: 4500 });
+    });
+  }
+
+  private normalizarVentaEstadoCuenta(venta: TvVentasDetalle): TvVentasDetalle {
+    const clone = { ...(venta || {}) } as TvVentasDetalle;
+    const total = Number(clone?.nTotalVenta || 0);
+    const saldo = Number(clone?.nSaldoTotal || 0);
+    const pagado = Math.max(total - saldo, 0);
+    const avance = total > 0 ? Math.min(Math.round((pagado / total) * 100), 100) : 0;
+    clone.nAvancePago = avance;
+    return clone;
+  }
+
+  get estadoCuentaClienteVisible(): TvVentasDetalle[] {
+    const base = this.listaVentasEstadoCuentaCliente || [];
+    const texto = (this.filtroEstadoCuenta || '').toLowerCase().trim();
+    if (!texto) {
+      return base;
+    }
+    return base.filter(v => {
+      const folio = `${v?.sFolioVenta || ''}`.toLowerCase();
+      const id = `${v?.nId || ''}`.toLowerCase();
+      const estatus = `${v?.sEstatus || ''}`.toLowerCase();
+      return folio.includes(texto) || id.includes(texto) || estatus.includes(texto);
+    });
+  }
+
+  get totalPendienteEstadoCuentaCliente(): number {
+    return (this.listaVentasPendientesEstadoCuentaCliente || []).reduce((acc, v) => acc + Number(v?.nSaldoTotal || 0), 0);
+  }
+
+  get totalPagadoEstadoCuentaCliente(): number {
+    return (this.listaVentasEstadoCuentaCliente || []).reduce((acc, v) => {
+      const total = Number(v?.nTotalVenta || 0);
+      const saldo = Number(v?.nSaldoTotal || 0);
+      return acc + Math.max(total - saldo, 0);
+    }, 0);
+  }
+
+  get totalVentasConSaldoEstadoCuentaCliente(): number {
+    return (this.listaVentasEstadoCuentaCliente || []).filter(v => Number(v?.nSaldoTotal || 0) > 0).length;
   }
 
   seleccionarClienteConsultaPagosSat(cliente: SaldoGeneralCliente) {
@@ -708,7 +807,7 @@ export class CreditosComponent implements OnInit {
     return 'info';
   }
 
-  private descargarArchivoBuffer(resp: any, mimeType: string, fileName: string, successDetail: string, emptyDetail: string) {
+  private descargarArchivoBuffer(resp: any, mimeType: string, fileName: string, successDetail: string, emptyDetail: string, silencioso: boolean = false) {
     const file = new Blob([resp], { type: mimeType });
     if (file != null && file.size > 0) {
       const fileURL = window.URL.createObjectURL(file);
@@ -716,11 +815,15 @@ export class CreditosComponent implements OnInit {
       anchor.download = fileName;
       anchor.href = fileURL;
       anchor.click();
-      this.messageService.add({ severity: 'success', summary: 'Correcto', detail: successDetail, life: 3000 });
+      if (!silencioso && successDetail) {
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: successDetail, life: 3000 });
+      }
       return;
     }
 
-    this.messageService.add({ severity: 'warn', summary: 'Sin archivo', detail: emptyDetail, life: 3500 });
+    if (!silencioso) {
+      this.messageService.add({ severity: 'warn', summary: 'Sin archivo', detail: emptyDetail, life: 3500 });
+    }
   }
 
   activarRegistroNuevoPago() {
@@ -764,6 +867,7 @@ export class CreditosComponent implements OnInit {
     this.formularioPagoCanonico.reset({
       fechaPago: new Date(),
       importeTotal: null,
+      facturarPago: true,
       idFormaPago: null,
       idCuentaDestino: null,
       referencia: '',
@@ -891,6 +995,7 @@ export class CreditosComponent implements OnInit {
     payload.ultimos4CuentaDestino = cuentaDestino.sTerminacion;
     payload.referencia = this.formularioPagoCanonico.get('referencia').value;
     payload.observaciones = this.formularioPagoCanonico.get('observaciones').value;
+    payload.facturarPago = this.debeFacturarsePagoGlobalActual();
     payload.nIdUsuarioRegistro = this.tokenService.getIdUser();
     payload.nIdCaja = this.cajaActivaCanonico?.nId;
     payload.nIdCorteCaja = this.cajaActivaCanonico?.nId;
@@ -1260,11 +1365,17 @@ export class CreditosComponent implements OnInit {
   }
 
   puedeTimbrarRepPagoCanonico(pago: PagoClienteDetalleDto): boolean {
+    if (pago?.facturarPago === false) {
+      return false;
+    }
     const estadoRep = (pago?.estadoRepCanonico || '').toUpperCase();
     return !!pago?.nId && (estadoRep === 'PENDIENTE' || estadoRep === 'FALLIDO');
   }
 
   requiereFacturacionPagoCanonico(pago: PagoClienteDetalleDto): boolean {
+    if (pago?.facturarPago === false) {
+      return false;
+    }
     const estadoRep = (pago?.estadoRepCanonico || '').toUpperCase();
     return !!pago?.nId && estadoRep === 'PENDIENTE_FACTURACION';
   }
@@ -1531,7 +1642,7 @@ export class CreditosComponent implements OnInit {
     const seleccionadasIds = new Set((this.selectedFacturas || []).map(item => item?.nIdVenta));
     const seleccionadas = (this.listaFacturasPendientesPagoCanonico || [])
       .filter(item => seleccionadasIds.has(item?.nIdVenta))
-      .filter(item => this.esFacturaElegibleParaAplicacionGlobal(item));
+      .filter(item => this.esFacturaAplicableParaRegistroPagoGlobal(item));
     this.selectedFacturas = seleccionadas;
 
     (this.listaFacturasPendientesPagoCanonico || []).forEach(factura => {
@@ -1544,6 +1655,29 @@ export class CreditosComponent implements OnInit {
       factura.montoAplicarSeleccionado = montoAplicar > 0 ? montoAplicar : 0;
       restante = Math.max(restante - montoAplicar, 0);
     });
+  }
+
+  debeFacturarsePagoGlobalActual(): boolean {
+    if (this.usandoPagoGlobalExistente) {
+      return this.pagoCanonicoSeleccionado?.facturarPago !== false;
+    }
+    return this.formularioPagoCanonico?.get('facturarPago')?.value !== false;
+  }
+
+  get correoClientePagoComprobante(): string {
+	  return this.auxSaldoGeneralCliente?.tcCliente?.sCorreo || '';
+  }
+
+  get correoClienteBloqueadoPagoComprobante(): boolean {
+	  return this.auxSaldoGeneralCliente?.tcCliente?.nCorreoBloqueado === true;
+  }
+
+  get puedeEnviarCorreoComprobantePago(): boolean {
+	  return !!this.pagoComprobanteGenerado?.nId && !!this.correoClientePagoComprobante && !this.correoClienteBloqueadoPagoComprobante;
+  }
+
+  get tieneFacturasRelacionablesPendientesPagoCanonico(): boolean {
+    return this.totalFacturasRelacionablesPagoCanonico > 0;
   }
 
   get puedeGuardarAplicacionManual(): boolean {
@@ -1623,16 +1757,18 @@ export class CreditosComponent implements OnInit {
     if (!this.pagoCanonicoSeleccionado?.nId) {
       return;
     }
+    const nIdPago = this.pagoCanonicoSeleccionado.nId;
     const payload = new PagoAplicacionAutomaticaRequestDto();
     payload.nIdUsuario = this.tokenService.getIdUser();
     payload.origenRegistro = 'UI_CREDITOS_AUTOMATICA';
 
     this.procesandoPagoCanonico = true;
-    this.pagoClienteService.aplicarAutomatico(this.pagoCanonicoSeleccionado.nId, payload).subscribe(() => {
+    this.pagoClienteService.aplicarAutomatico(nIdPago, payload).subscribe(() => {
       this.messageService.add({ severity: 'success', summary: 'AsignaciÃ³n automÃ¡tica', detail: 'El saldo del pago global se asignÃ³ automÃ¡ticamente a las notas elegibles.', life: 4000 });
-      this.ejecutarComplementoPagoGlobalDespuesDeAplicar(this.pagoCanonicoSeleccionado.nId, () => {
+      this.ejecutarComplementoPagoGlobalDespuesDeAplicar(nIdPago, true, () => {
         this.procesandoPagoCanonico = false;
         this.recargarContextoPagoCanonico();
+        this.abrirDialogoComprobantePagoGenerado(nIdPago, true);
       });
     }, (error) => {
       this.procesandoPagoCanonico = false;
@@ -1648,9 +1784,10 @@ export class CreditosComponent implements OnInit {
     if (!this.pagoCanonicoSeleccionado?.nId) {
       return;
     }
+    const nIdPago = this.pagoCanonicoSeleccionado.nId;
 
     const lineas: PagoAplicacionManualLineaDto[] = (this.listaFacturasPendientesPagoCanonico || [])
-      .filter(factura => this.esFacturaElegibleParaAplicacionGlobal(factura))
+      .filter(factura => this.esFacturaAplicableParaRegistroPagoGlobal(factura))
       .filter(factura => Number(factura?.montoAplicarSeleccionado || 0) > 0)
       .map(factura => {
         const linea = new PagoAplicacionManualLineaDto();
@@ -1676,11 +1813,16 @@ export class CreditosComponent implements OnInit {
 
     this.procesandoPagoCanonico = true;
     this.spinner.show();
-    this.pagoClienteService.aplicarManual(this.pagoCanonicoSeleccionado.nId, payload).subscribe(() => {
+    this.pagoClienteService.aplicarManual(nIdPago, payload).subscribe(() => {
       this.messageService.add({ severity: 'success', summary: 'AsignaciÃ³n guardada', detail: 'El saldo del pago global se asignÃ³ a las notas seleccionadas.', life: 4000 });
-      this.ejecutarComplementoPagoGlobalDespuesDeAplicar(this.pagoCanonicoSeleccionado.nId, () => {
+      this.ejecutarComplementoPagoGlobalDespuesDeAplicar(
+        nIdPago,
+        this.debeIntentarTimbradoPagoGlobal(this.selectedFacturas || [], this.pagoCanonicoSeleccionado?.facturarPago !== false),
+        () => {
         this.finalizarTransaccionGuardadoPago();
+        this.cerrarYLimpiarDialogoPagoGlobal();
         this.recargarContextoPagoCanonico();
+        this.abrirDialogoComprobantePagoGenerado(nIdPago, true);
       });
     }, (error) => {
       this.finalizarTransaccionGuardadoPago();
@@ -1775,6 +1917,24 @@ export class CreditosComponent implements OnInit {
     this.redistribuirMontosSeleccionados();
   }
 
+  esFacturaAplicableParaRegistroPagoGlobal(factura: FacturaCreditoPendienteDto): boolean {
+    if (!factura) {
+      return false;
+    }
+
+    const estado = (factura.estadoFiscal || '').toUpperCase();
+    if (estado.includes('CANCEL')) {
+      return false;
+    }
+
+    if (this.debeFacturarsePagoGlobalActual()) {
+      return this.esFacturaElegibleParaAplicacionGlobal(factura);
+    }
+
+    return (factura.requiereFacturacion || factura.facturada === false)
+		&& Number(factura.saldoPendiente || 0) > 0;
+  }
+
   esFacturaElegibleParaAplicacionGlobal(factura: FacturaCreditoPendienteDto): boolean {
     if (!factura) {
       return false;
@@ -1838,22 +1998,119 @@ export class CreditosComponent implements OnInit {
     return (this.listaFacturasPendientesPagoCanonico || []).filter(item => this.esFacturaElegibleParaAplicacionGlobal(item)).length;
   }
 
+  get totalFacturasAplicablesPagoCanonicoVisible(): number {
+    return (this.listaFacturasPendientesPagoCanonicoVisible || []).filter(item => this.esFacturaAplicableParaRegistroPagoGlobal(item)).length;
+  }
+
   onFacturasSelectionChange(selection: FacturaCreditoPendienteDto[]) {
-    const elegibles = (selection || []).filter(item => this.esFacturaElegibleParaAplicacionGlobal(item));
-    if ((selection || []).length !== elegibles.length) {
+    const aplicables = (selection || []).filter(item => this.esFacturaAplicableParaRegistroPagoGlobal(item));
+    if ((selection || []).length !== aplicables.length) {
       this.messageService.add({
         severity: 'warn',
-        summary: 'Ventas no elegibles',
-        detail: 'Solo se pueden relacionar ventas facturadas en PPD/99 y vigentes para aplicar un pago global.',
+        summary: 'Ventas no aplicables',
+        detail: this.debeFacturarsePagoGlobalActual()
+          ? 'Si el pago se facturará, solo puedes elegir ventas facturadas en PPD/99 y vigentes.'
+          : 'Si el pago no se facturará, solo puedes elegir ventas sin factura. Las canceladas tampoco pueden recibir aplicación.',
         life: 4500
       });
     }
-    this.selectedFacturas = elegibles;
+    this.selectedFacturas = aplicables;
     this.redistribuirMontosSeleccionados();
   }
 
-  private ejecutarComplementoPagoGlobalDespuesDeAplicar(nIdPagoCliente: number, onFinalize: () => void): void {
+  private debeIntentarTimbradoPagoGlobal(facturas: FacturaCreditoPendienteDto[], facturarPago?: boolean): boolean {
+    if (facturarPago === false) {
+      return false;
+    }
+    return (facturas || []).some(item => Number(item?.montoAplicarSeleccionado || 0) > 0 && this.esFacturaElegibleParaAplicacionGlobal(item));
+  }
+
+  private cerrarYLimpiarDialogoPagoGlobal(): void {
+    this.displayUnifiedPaymentDialog = false;
+    this.activarRegistroNuevoPago();
+    this.formularioPagoCanonico.reset({
+      fechaPago: new Date(),
+      importeTotal: null,
+      facturarPago: true,
+      idFormaPago: null,
+      idCuentaDestino: null,
+      referencia: '',
+      observaciones: ''
+    });
+    this.nIdVentaObjetivoPagoCanonico = null;
+  }
+
+  private abrirDialogoComprobantePagoGenerado(nIdPagoCliente: number, autoDescargar: boolean = true): void {
     if (!nIdPagoCliente) {
+      return;
+    }
+
+    this.resultadoCorreoComprobantePago = {};
+    this.pagoClienteService.consultarPago(nIdPagoCliente).subscribe(pago => {
+      this.pagoComprobanteGenerado = pago || { nId: nIdPagoCliente };
+      this.displayComprobantePagoDialog = true;
+      if (autoDescargar) {
+        this.descargarPaqueteComprobantePagoGlobal(this.pagoComprobanteGenerado.nId, true);
+      }
+    }, () => {
+      this.pagoComprobanteGenerado = { nId: nIdPagoCliente };
+      this.displayComprobantePagoDialog = true;
+      if (autoDescargar) {
+        this.descargarPaqueteComprobantePagoGlobal(nIdPagoCliente, true);
+      }
+    });
+  }
+
+  descargarPaqueteComprobantePagoGlobal(nIdPagoCliente?: number, silencioso: boolean = false): void {
+    const nIdPago = nIdPagoCliente || this.pagoComprobanteGenerado?.nId;
+    if (!nIdPago) {
+      return;
+    }
+
+    this.pagoClienteService.descargarPaqueteComprobante(nIdPago).subscribe(resp => {
+      this.descargarArchivoBuffer(resp, 'application/zip', `comprobante_pago_global_${nIdPago}.zip`,
+        silencioso ? '' : 'Paquete del comprobante descargado.',
+        'No se encontró información para generar el paquete del comprobante.',
+        silencioso);
+    }, () => {
+      if (!silencioso) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el paquete del comprobante de pago.', life: 4000 });
+      }
+    });
+  }
+
+  enviarComprobantePagoGlobalPorCorreo(): void {
+    const nIdPago = this.pagoComprobanteGenerado?.nId;
+    if (!nIdPago || !this.puedeEnviarCorreoComprobantePago) {
+      return;
+    }
+
+    this.enviandoCorreoComprobantePago = true;
+    this.pagoClienteService.enviarComprobanteCorreo(nIdPago).subscribe(resp => {
+      this.enviandoCorreoComprobantePago = false;
+      this.resultadoCorreoComprobantePago = resp || {};
+      this.messageService.add({
+        severity: resp?.enviado ? 'success' : 'warn',
+        summary: resp?.enviado ? 'Correo enviado' : 'Correo no enviado',
+        detail: resp?.detalle || 'Se procesó el envío del comprobante.',
+        life: 5000
+      });
+    }, (error) => {
+      this.enviandoCorreoComprobantePago = false;
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error?.error || 'No fue posible enviar el comprobante al correo del cliente.', life: 5000 });
+    });
+  }
+
+  private ejecutarComplementoPagoGlobalDespuesDeAplicar(nIdPagoCliente: number, intentarTimbrado: boolean, onFinalize: () => void): void {
+    if (!nIdPagoCliente || !intentarTimbrado) {
+      if (!intentarTimbrado) {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Abono registrado sin timbrado',
+          detail: 'La aplicaciÃ³n se guardÃ³. El REP se generarÃ¡ cuando las ventas aplicadas tengan factura PPD/99.',
+          life: 5500
+        });
+      }
       onFinalize();
       return;
     }
@@ -1961,6 +2218,7 @@ export class CreditosComponent implements OnInit {
     payloadPago.ultimos4CuentaDestino = cuentaDestino?.sTerminacion;
     payloadPago.referencia = valPago.referencia;
     payloadPago.observaciones = valPago.observaciones;
+    payloadPago.facturarPago = this.debeFacturarsePagoGlobalActual();
     payloadPago.nIdUsuarioRegistro = this.tokenService.getIdUser();
     payloadPago.nIdCaja = this.cajaActivaCanonico?.nId;
     payloadPago.nIdCorteCaja = this.cajaActivaCanonico?.nId;
@@ -1985,7 +2243,7 @@ export class CreditosComponent implements OnInit {
              let restante = importePago;
              const lineas: PagoAplicacionManualLineaDto[] = [];
              
-               for(const f of (this.selectedFacturas || []).filter(item => this.esFacturaElegibleParaAplicacionGlobal(item))) {
+               for(const f of (this.selectedFacturas || []).filter(item => this.esFacturaAplicableParaRegistroPagoGlobal(item))) {
                  if (restante <= 0) break;
                  const montoAplicar = Math.min(restante, f.saldoPendiente || 0);
                  const linea = new PagoAplicacionManualLineaDto();
@@ -2000,17 +2258,22 @@ export class CreditosComponent implements OnInit {
                if (!lineas.length) {
                  this.finalizarTransaccionGuardadoPago();
                  this.messageService.add({ severity: 'success', summary: 'Pago registrado', detail: 'El pago global se guardÃ³ con saldo disponible para asignar despuÃ©s.', life: 4500 });
-                 this.activarRegistroNuevoPago();
+                 this.cerrarYLimpiarDialogoPagoGlobal();
                  this.recargarContextoPagoCanonico();
+                 this.abrirDialogoComprobantePagoGenerado(nuevoPagoId, true);
                  return;
                }
              
                this.pagoClienteService.aplicarManual(nuevoPagoId, manualPayload).subscribe(resAsig => {
                   this.messageService.add({ severity: 'success', summary: 'Ã‰xito', detail: 'Pago registrado y asignado correctamente.', life: 4000 });
-                this.ejecutarComplementoPagoGlobalDespuesDeAplicar(nuevoPagoId, () => {
+                this.ejecutarComplementoPagoGlobalDespuesDeAplicar(
+                  nuevoPagoId,
+                  this.debeIntentarTimbradoPagoGlobal(this.selectedFacturas || [], payloadPago.facturarPago !== false),
+                  () => {
                  this.finalizarTransaccionGuardadoPago();
-                 this.activarRegistroNuevoPago();
+                 this.cerrarYLimpiarDialogoPagoGlobal();
                  this.recargarContextoPagoCanonico();
+                 this.abrirDialogoComprobantePagoGenerado(nuevoPagoId, true);
                 });
              }, err => {
                   this.finalizarTransaccionGuardadoPago();
@@ -2021,7 +2284,7 @@ export class CreditosComponent implements OnInit {
             // Si el backend no retorna el ID, podrÃ­amos recargar la vista pero no podemos asignar autÃ³maticamente en seco.
             this.finalizarTransaccionGuardadoPago();
             this.messageService.add({ severity: 'success', summary: 'Pago registrado', detail: 'Pago creado. Por favor asigne manualmente.', life: 4000 });
-          this.activarRegistroNuevoPago();
+          this.cerrarYLimpiarDialogoPagoGlobal();
             this.recargarContextoPagoCanonico();
         }
     }, err => {
@@ -2032,6 +2295,11 @@ export class CreditosComponent implements OnInit {
 
   obtenerAccionesClienteCredito(cliente: SaldoGeneralCliente): MenuItem[] {
     return [
+      {
+        label: 'Estado de cuenta',
+        icon: 'pi pi-book',
+        command: () => this.abrirEstadoCuentaCliente(cliente)
+      },
       {
         label: 'Pagos SAT',
         icon: 'pi pi-receipt',

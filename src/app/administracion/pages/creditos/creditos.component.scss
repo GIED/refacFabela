@@ -108,6 +108,11 @@
 	gap: 8px;
 }
 
+:host ::ng-deep .creditos-acciones-wrap .p-button.p-button-rounded {
+	width: 2rem;
+	height: 2rem;
+}
+
 :host ::ng-deep .creditos-split-button .p-splitbutton-defaultbutton,
 :host ::ng-deep .creditos-split-button .p-splitbutton-menubutton {
 	background: #0f766e;
@@ -120,7 +125,9 @@
 		min-width: 0;
 	}
 
-	.creditos-avance-wrap {
+	.creditos-acciones-col {
+		justify-content: flex-start;
+		flex-wrap: wrap;
 		min-width: 0;
 	}
 
@@ -493,6 +500,66 @@
 	font-size: 0.9rem;
 }
 
+.creditos-comprobante-dialog {
+	display: grid;
+	gap: 14px;
+}
+
+.creditos-comprobante-summary {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 10px;
+}
+
+.creditos-comprobante-stat {
+	padding: 12px 14px;
+	border-radius: 10px;
+	border: 1px solid #dbeafe;
+	background: #f8fbff;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.creditos-comprobante-stat small {
+	color: #64748b;
+	font-size: 0.76rem;
+}
+
+.creditos-comprobante-stat strong {
+	color: #0f172a;
+	font-size: 1rem;
+}
+
+.creditos-comprobante-note {
+	padding: 12px 14px;
+	border-radius: 8px;
+	background: #eff6ff;
+	border: 1px solid #bfdbfe;
+	color: #1d4ed8;
+	font-size: 0.9rem;
+}
+
+.creditos-comprobante-actions {
+	display: flex;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.creditos-comprobante-mail {
+	border: 1px solid #e2e8f0;
+	background: #ffffff;
+	padding: 14px;
+}
+
+.creditos-comprobante-mail-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
 .creditos-sat-empty {
 	padding: 28px 16px;
 	text-align: center;
@@ -554,8 +621,15 @@
 		width: 100%;
 	}
 
+	.creditos-comprobante-actions,
+	.creditos-comprobante-mail-head {
+		width: 100%;
+	}
+
 	:host ::ng-deep .creditos-caption-actions .p-button,
-	:host ::ng-deep .creditos-sat-download-actions .p-button {
+	:host ::ng-deep .creditos-sat-download-actions .p-button,
+	:host ::ng-deep .creditos-comprobante-actions .p-button,
+	:host ::ng-deep .creditos-comprobante-mail-head .p-button {
 		width: 100%;
 	}
 }

@@ -25,6 +25,7 @@ export class PagoClienteRegistroDto {
   redTarjeta?: string;
   comprobanteUrl?: string;
   observaciones?: string;
+  facturarPago?: boolean;
   nIdUsuarioRegistro?: number;
   nIdCaja?: number;
   nIdCorteCaja?: number;
