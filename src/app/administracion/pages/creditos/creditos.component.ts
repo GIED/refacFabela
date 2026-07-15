@@ -209,52 +209,50 @@ export class CreditosComponent implements OnInit {
   }
 
   genenerAbonoVentaPDF(tvVentasDetalle:TvVentasDetalle){
- 
-    this.ventasService.generarAbonoVentaPdf(tvVentasDetalle.nId).subscribe(resp => {
+    this.descargarComprobanteAbonoVenta(tvVentasDetalle?.nId, tvVentasDetalle?.nIdCliente);
+  }
 
-    
-      const file = new Blob([resp], { type: 'application/pdf' });
-      //console.log('file: ' + file.size);
-      if (file != null && file.size > 0) {
-        const fileURL = window.URL.createObjectURL(file);
-        const anchor = document.createElement('a');
-        anchor.download = 'abono_'+tvVentasDetalle.nId+'_'+tvVentasDetalle.nIdCliente+'.pdf';
-        anchor.href = fileURL;
-        anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Se realizÃ³ con Ã©xito', detail: 'comprobante de abono Generado', life: 3000});
-        //una vez generado el reporte limpia el formulario para una nueva venta o cotizaciÃ³n 
-       
-      } else {
-        this.messageService.add({severity: 'error', summary: 'Se realizÃ³ con Ã©xito', detail: 'Error al generar el comprobante de abono', life: 3000});
-      }
+  descargarComprobanteAbonoAplicacion(aplicacion: PagoAplicacionLineaDto) {
+    this.descargarComprobanteAbonoVenta(aplicacion?.nIdVenta, this.auxSaldoGeneralCliente?.tcCliente?.nId || this.auxSaldoGeneralCliente?.nIdCliente);
+  }
 
-  });
+  private descargarComprobanteAbonoVenta(nIdVenta?: number, nIdCliente?: number): void {
+    if (!nIdVenta) {
+      this.messageService.add({ severity: 'warn', summary: 'Sin venta', detail: 'No fue posible identificar la venta para descargar el comprobante de abono.', life: 3500 });
+      return;
+    }
 
+    this.ventasService.generarAbonoVentaPdf(nIdVenta).subscribe(resp => {
+      this.descargarArchivoBuffer(
+        resp,
+        'application/pdf',
+        `abono_${nIdVenta}_${nIdCliente || 'cliente'}.pdf`,
+        'Comprobante de abono generado.',
+        'No fue posible generar el comprobante de abono.'
+      );
+    }, () => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de abono.', life: 3500 });
+    });
   }
 
   genenerHistorialAbonoVentaPDF(saldoGeneralCliente: SaldoGeneralCliente){
+	const nIdCliente = this.resolverIdClienteCredito(saldoGeneralCliente);
+	if (!nIdCliente) {
+	  this.messageService.add({severity: 'warn', summary: 'Cliente no identificado', detail: 'No fue posible identificar el cliente para generar el historial de abonos.', life: 3500});
+	  return;
+	}
 
-    //console.log("este es el el id del cliente"+saldoGeneralCliente.nIdCliente);
- 
-    this.ventasService.generarHistorialAbonoVentaPdf(saldoGeneralCliente.nIdCliente).subscribe(resp => {
-
-    
-      const file = new Blob([resp], { type: 'application/pdf' });
-      //console.log('file: ' + file.size);
-      if (file != null && file.size > 0) {
-        const fileURL = window.URL.createObjectURL(file);
-        const anchor = document.createElement('a');
-        anchor.download = 'historial_abono_'+saldoGeneralCliente.nIdCliente+'.pdf';
-        anchor.href = fileURL;
-        anchor.click();
-        this.messageService.add({severity: 'success', summary: 'Se realizÃ³ con Ã©xito', detail: 'historial de crÃ©ditos del cliente generado', life: 3000});
-        //una vez generado el reporte limpia el formulario para una nueva venta o cotizaciÃ³n 
-       
-      } else {
-        this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el historial de crÃ©ditos del cliente generado', life: 3000});
-      }
-
-  });
+	this.ventasService.generarHistorialAbonoVentaPdf(nIdCliente).subscribe(resp => {
+	  this.descargarArchivoBuffer(
+		resp,
+		'application/pdf',
+		`historial_abono_${nIdCliente}.pdf`,
+		'historial de créditos del cliente generado',
+		'Error al generar el historial de créditos del cliente'
+	  );
+	}, () => {
+	  this.messageService.add({severity: 'error', summary: 'Error', detail: 'Error al generar el historial de créditos del cliente', life: 3000});
+	});
 
   }
 
@@ -376,6 +374,38 @@ export class CreditosComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible consultar la relaciÃ³n entre abonos y pagos globales de la venta.', life: 4500 });
       });      
 
+  }
+
+  obtenerAbonosFacturaPendiente(factura: FacturaCreditoPendienteDto) {
+    if (!factura?.nIdVenta) {
+      this.messageService.add({ severity: 'warn', summary: 'Venta no disponible', detail: 'No fue posible identificar la venta para consultar sus abonos.', life: 3500 });
+      return;
+    }
+
+    const venta = {
+      nId: factura.nIdVenta,
+      nIdCliente: this.auxSaldoGeneralCliente?.tcCliente?.nId || this.auxSaldoGeneralCliente?.nIdCliente,
+      sFolioVenta: factura.folioVenta,
+      dFechaVenta: factura.fechaVenta
+    } as TvVentasDetalle;
+
+    this.obtenerAbonosVentaId(venta);
+  }
+
+  get totalAbonosTwAbonoDetalle(): number {
+	  return (this.listaAbonosVenta || []).reduce((acc, item) => acc + Number(item?.nAbono || 0), 0);
+  }
+
+  get totalAplicacionesCanonicasDetalle(): number {
+	  return (this.listaAplicacionesCanonicasVenta || []).reduce((acc, item) => acc + Number(item?.montoAplicado || 0), 0);
+  }
+
+  get totalAbonosVistaDetalle(): number {
+	  return Number(this.tvVentasDetalle?.nTotalAbono || 0);
+  }
+
+  get diferenciaAbonosVistaVsTwDetalle(): number {
+	  return Number((this.totalAbonosVistaDetalle - this.totalAbonosTwAbonoDetalle).toFixed(2));
   }
 
   abrirPagosGlobalesDesdeDetalle() {
@@ -716,6 +746,18 @@ export class CreditosComponent implements OnInit {
 
   get totalMontoFacturasPagoSatSeleccionado(): number {
     return (this.aplicacionesPagoSatSeleccionado || []).reduce((total, item) => total + Number(item?.montoAplicado || 0), 0);
+  }
+
+  get aplicacionesPagoComprobanteGenerado(): PagoAplicacionLineaDto[] {
+    const aplicaciones = this.pagoComprobanteGenerado?.aplicaciones || [];
+    return [...aplicaciones].sort((left, right) => {
+      const ordenLeft = Number(left?.ordenAplicacion || 0);
+      const ordenRight = Number(right?.ordenAplicacion || 0);
+      if (ordenLeft !== ordenRight) {
+        return ordenLeft - ordenRight;
+      }
+      return Number(left?.nIdVenta || 0) - Number(right?.nIdVenta || 0);
+    });
   }
 
   puedeDescargarComprobantePagoSat(pago: PagoClienteDetalleDto): boolean {

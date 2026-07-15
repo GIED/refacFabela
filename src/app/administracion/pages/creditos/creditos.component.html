@@ -377,6 +377,7 @@
 								<th>Saldo Restante</th>
 								<th>Parcialidad</th>
 								<th>Estado fiscal</th>
+								<th>Abonos</th>
 								<th>Monto que tomará</th>
 							</tr>
 						</ng-template>
@@ -395,6 +396,10 @@
 									<p-tag [severity]="obtenerSeverityEstadoFiscalFactura(factura)" [value]="obtenerEtiquetaEstadoFiscalFactura(factura)"></p-tag>
 								</td>
 								<td>
+									<button pButton pRipple type="button" icon="pi pi-list" class="p-button-rounded p-button-text p-button-help"
+										(click)="obtenerAbonosFacturaPendiente(factura)" pTooltip="Ver historial de abonos"></button>
+								</td>
+								<td>
 									<span *ngIf="factura.montoAplicarSeleccionado > 0" style="color:#2196F3; font-weight: bold">
 										{{ factura.montoAplicarSeleccionado | currency:'MXN'}}
 									</span>
@@ -406,10 +411,13 @@
 						</ng-template>
 						<ng-template pTemplate="emptymessage">
 							<tr>
-								<td colspan="9">{{mensajeVacioFacturasPagoCanonico}}</td>
+								<td colspan="10">{{mensajeVacioFacturasPagoCanonico}}</td>
 							</tr>
 						</ng-template>
 					</p-table>
+					<small class="p-d-block p-mt-2" style="color:#64748b;">
+						En la columna Abonos puedes consultar el historial completo guardado en tw_abonos por cada nota, incluyendo parcialidades.
+					</small>
 					<small class="p-d-block p-mt-2" style="color:#6c757d;">
 						{{ debeFacturarsePagoGlobalActual()
 							? 'Este pago está marcado para facturarse: solo puedes elegir ventas facturadas en PPD/99 para generar complemento de pago.'
@@ -421,6 +429,116 @@
 			<ng-template pTemplate="footer">
 				<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text p-button-danger" (click)="displayUnifiedPaymentDialog = false"></button>
 				<button pButton pRipple [label]="usandoPagoGlobalExistente ? 'Aplicar saldo' : 'Guardar Pago'" [icon]="usandoPagoGlobalExistente ? 'pi pi-link' : 'pi pi-check'" class="p-button-success" (click)="guardarOperacionPagoGlobal()" [loading]="procesandoPagoCanonico" [disabled]="!puedeGuardarOperacionPagoGlobal"></button>
+			</ng-template>
+		</p-dialog>
+
+		<p-dialog [(visible)]="productDialog2" [style]="{width: '920px', maxWidth: '96vw'}" header="Historial de abonos"
+			[modal]="true" [draggable]="false" [resizable]="false" class="p-fluid">
+			<div class="p-grid">
+				<div class="p-col-12 p-md-4">
+					<div class="card">
+						<small>Venta</small>
+						<h3 class="p-m-0">#{{tvVentasDetalle?.nId}}</h3>
+						<small>{{tvVentasDetalle?.sFolioVenta || 'Sin folio'}}</small>
+					</div>
+				</div>
+				<div class="p-col-12 p-md-4">
+					<div class="card">
+						<small>Abonos registrados (tw_abono)</small>
+						<h3 class="p-m-0">{{(listaAbonosVenta || []).length}}</h3>
+					</div>
+				</div>
+				<div class="p-col-12 p-md-4">
+					<div class="card">
+						<small>Aplicaciones canónicas</small>
+						<h3 class="p-m-0">{{(listaAplicacionesCanonicasVenta || []).length}}</h3>
+					</div>
+				</div>
+				<div class="p-col-12">
+					<div class="card" style="background:#f8fafc;border:1px solid #e2e8f0;">
+						<div class="creditos-sat-section-title p-mb-2">Comparativo de montos (auditoría rápida)</div>
+						<div class="p-grid">
+							<div class="p-col-12 p-md-3">
+								<small>Vista nTotalAbono</small>
+								<h4 class="p-m-0">{{totalAbonosVistaDetalle | currency:'MXN'}}</h4>
+							</div>
+							<div class="p-col-12 p-md-3">
+								<small>Suma tw_abonos</small>
+								<h4 class="p-m-0">{{totalAbonosTwAbonoDetalle | currency:'MXN'}}</h4>
+							</div>
+							<div class="p-col-12 p-md-3">
+								<small>Suma canónica</small>
+								<h4 class="p-m-0">{{totalAplicacionesCanonicasDetalle | currency:'MXN'}}</h4>
+							</div>
+							<div class="p-col-12 p-md-3">
+								<small>Diferencia vista - tw_abonos</small>
+								<h4 class="p-m-0" [style.color]="diferenciaAbonosVistaVsTwDetalle === 0 ? '#15803d' : '#b45309'">
+									{{diferenciaAbonosVistaVsTwDetalle | currency:'MXN'}}
+								</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="p-grid">
+				<div class="p-col-12 p-xl-6">
+					<div class="card">
+						<div class="creditos-sat-section-title p-mb-2">Abonos guardados (tw_abono)</div>
+						<p-table [value]="listaAbonosVenta" responsiveLayout="scroll" [rowHover]="true" dataKey="nId">
+							<ng-template pTemplate="header">
+								<tr>
+									<th>ID</th>
+									<th>Fecha</th>
+									<th>Monto</th>
+									<th>Forma</th>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="body" let-abono>
+								<tr>
+									<td>#{{abono.nId}}</td>
+									<td>{{abono.dFecha | date:'short'}}</td>
+									<td>{{(abono.nAbono || 0) | currency:'MXN'}}</td>
+									<td>{{abono?.tcFormapago?.sDescripcion || 'N/D'}}</td>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="emptymessage">
+								<tr><td colspan="4">No hay abonos registrados en tw_abono para esta venta.</td></tr>
+							</ng-template>
+						</p-table>
+					</div>
+				</div>
+				<div class="p-col-12 p-xl-6">
+					<div class="card">
+						<div class="creditos-sat-section-title p-mb-2">Aplicaciones de pago global</div>
+						<p-table [value]="listaAplicacionesCanonicasVenta" responsiveLayout="scroll" [rowHover]="true" dataKey="nId">
+							<ng-template pTemplate="header">
+								<tr>
+									<th>Pago</th>
+									<th>Monto</th>
+									<th>Parcialidad</th>
+									<th>Saldo insoluto</th>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="body" let-app>
+								<tr>
+									<td>#{{app.nIdPagoCliente}}</td>
+									<td>{{(app.montoAplicado || 0) | currency:'MXN'}}</td>
+									<td>{{app.parcialidad || 0}}</td>
+									<td>{{(app.saldoInsoluto || 0) | currency:'MXN'}}</td>
+								</tr>
+							</ng-template>
+							<ng-template pTemplate="emptymessage">
+								<tr><td colspan="4">No hay aplicaciones canónicas para esta venta.</td></tr>
+							</ng-template>
+						</p-table>
+					</div>
+				</div>
+			</div>
+
+			<ng-template pTemplate="footer">
+				<button pButton pRipple type="button" label="Cerrar" icon="pi pi-times" class="p-button-text"
+					(click)="productDialog2 = false"></button>
 			</ng-template>
 		</p-dialog>
 
@@ -572,7 +690,7 @@
 										<th>Parcialidad</th>
 										<th>Saldo insoluto</th>
 										<th>Fiscal</th>
-										<th>Facturas</th>
+										<th>Comprobantes</th>
 									</tr>
 								</ng-template>
 								<ng-template pTemplate="body" let-aplicacion>
@@ -594,6 +712,9 @@
 											<button pButton pRipple type="button" icon="pi pi-book" class="p-button-rounded p-button-text p-button-info"
 												[disabled]="!puedeDescargarFacturaSat(aplicacion)" (click)="descargarFacturaSatXml(aplicacion)"
 												pTooltip="Descargar XML factura"></button>
+											<button pButton pRipple type="button" icon="pi pi-file" class="p-button-rounded p-button-text p-button-help"
+												(click)="descargarComprobanteAbonoAplicacion(aplicacion)"
+												pTooltip="Descargar comprobante de abono"></button>
 										</td>
 									</tr>
 								</ng-template>
@@ -674,6 +795,38 @@
 					<small *ngIf="resultadoCorreoComprobantePago?.detalle" class="p-d-block p-mt-2" style="color:#475569;">
 						{{resultadoCorreoComprobantePago.detalle}}
 					</small>
+				</div>
+
+				<div class="card p-mt-3">
+					<div class="creditos-sat-section-title p-mb-2">Comprobantes de abono por venta aplicada</div>
+					<p-table [value]="aplicacionesPagoComprobanteGenerado" responsiveLayout="scroll" [rowHover]="true" dataKey="nId" [rows]="8" [paginator]="(aplicacionesPagoComprobanteGenerado || []).length > 8">
+						<ng-template pTemplate="header">
+							<tr>
+								<th>Venta</th>
+								<th>Folio</th>
+								<th>Monto aplicado</th>
+								<th>Saldo insoluto</th>
+								<th>Abono</th>
+							</tr>
+						</ng-template>
+						<ng-template pTemplate="body" let-aplicacion>
+							<tr>
+								<td>#{{aplicacion.nIdVenta}}</td>
+								<td>{{aplicacion.folioVenta || 'Sin folio'}}</td>
+								<td>{{(aplicacion.montoAplicado || 0) | currency:'MXN'}}</td>
+								<td>{{(aplicacion.saldoInsoluto || 0) | currency:'MXN'}}</td>
+								<td>
+									<button pButton pRipple type="button" icon="pi pi-file" class="p-button-rounded p-button-text p-button-help"
+										(click)="descargarComprobanteAbonoAplicacion(aplicacion)" pTooltip="Descargar comprobante de abono"></button>
+								</td>
+							</tr>
+						</ng-template>
+						<ng-template pTemplate="emptymessage">
+							<tr>
+								<td colspan="5">Este pago aún no tiene ventas aplicadas para descargar comprobantes de abono.</td>
+							</tr>
+						</ng-template>
+					</p-table>
 				</div>
 			</div>
 

@@ -103,14 +103,14 @@ export class FacturacionComponent implements OnInit {
     ];
 
     readonly motivosCancelacion = [
-      { label: '01 - Comprobante emitido con errores con relaciÃ³n', value: '01' },
-      { label: '02 - Comprobante emitido con errores sin relaciÃ³n', value: '02' },
-      { label: '03 - No se llevÃ³ a cabo la operaciÃ³n', value: '03' },
-      { label: '04 - OperaciÃ³n nominativa relacionada en factura global', value: '04' }
+      { label: '01 - Comprobante emitido con errores con relación', value: '01' },
+      { label: '02 - Comprobante emitido con errores sin relación', value: '02' },
+      { label: '03 - No se llevó a cabo la operación', value: '03' },
+      { label: '04 - Operación nominativa relacionada en factura global', value: '04' }
     ];
 
     readonly periodosFacturadas = [
-      { label: '60 dÃ­as', value: '60D' },
+      { label: '60 días', value: '60D' },
       { label: '3 meses', value: '3M' },
       { label: '6 meses', value: '6M' },
       { label: 'Rango', value: 'CUSTOM' }
@@ -372,7 +372,7 @@ export class FacturacionComponent implements OnInit {
 
   aplicarFiltrosFacturadas() {
     if (this.periodoFacturadas === 'CUSTOM' && (!this.fechaInicioFacturadas || !this.fechaFinFacturadas)) {
-      this.messageService.add({ severity: 'warn', summary: 'ValidaciÃ³n', detail: 'Selecciona fecha inicial y final para el rango personalizado.', life: 3500 });
+      this.messageService.add({ severity: 'warn', summary: 'Validación', detail: 'Selecciona fecha inicial y final para el rango personalizado.', life: 3500 });
       return;
     }
 
@@ -527,7 +527,7 @@ export class FacturacionComponent implements OnInit {
 
   generarFactura(){
     if (!this.hayTimbresDisponibles) {
-        this.messageService.add({ severity: 'warn', summary: 'Sin CrÃ©ditos', detail: 'No hay timbres disponibles para facturar.', life: 4000 });
+        this.messageService.add({ severity: 'warn', summary: 'Sin Créditos', detail: 'No hay timbres disponibles para facturar.', life: 4000 });
         return;
     }
 
@@ -542,10 +542,10 @@ export class FacturacionComponent implements OnInit {
         const resultado = resp as ResultadoFacturacionVentaDto;
         const detalle = resultado?.mensajeError
           ? `${resultado?.mensaje || 'Factura consolidada procesada'} ${resultado.mensajeError}`
-          : (resultado?.mensaje || 'La factura consolidada se generÃ³ correctamente.');
+          : (resultado?.mensaje || 'La factura consolidada se generó correctamente.');
         this.messageService.add({ severity: resultado?.success === false ? 'warn' : 'success', summary: 'Factura consolidada', detail: detalle, life: 6000 });
         if (resultado?.clasificacionFiscal) {
-          this.messageService.add({ severity: 'info', summary: 'ClasificaciÃ³n fiscal', detail: `${resultado.clasificacionFiscal} | MÃ©todo: ${resultado.metodoPagoFiscal || 'N/D'} | Forma: ${resultado.formaPagoFiscal || 'N/D'}`, life: 7000 });
+          this.messageService.add({ severity: 'info', summary: 'Clasificación fiscal', detail: `${resultado.clasificacionFiscal} | Método: ${resultado.metodoPagoFiscal || 'N/D'} | Forma: ${resultado.formaPagoFiscal || 'N/D'}`, life: 7000 });
         }
       });
       return;
@@ -557,16 +557,16 @@ export class FacturacionComponent implements OnInit {
         const resultado = resp as ResultadoFacturacionVentaDto;
         const detalle = resultado?.mensajeError
           ? `${resultado?.mensaje || 'Factura procesada'} ${resultado.mensajeError}`
-          : (resultado?.mensaje || 'La factura se generÃ³ correctamente.');
+          : (resultado?.mensaje || 'La factura se generó correctamente.');
         this.messageService.add({ severity: resultado?.success === false ? 'warn' : 'success', summary: 'Factura generada', detail: detalle, life: 5000 });
         if (resultado?.clasificacionFiscal) {
-          this.messageService.add({ severity: 'info', summary: 'ClasificaciÃ³n fiscal', detail: `${resultado.clasificacionFiscal} | MÃ©todo: ${resultado.metodoPagoFiscal || 'N/D'} | Forma: ${resultado.formaPagoFiscal || 'N/D'}`, life: 7000 });
+          this.messageService.add({ severity: 'info', summary: 'Clasificación fiscal', detail: `${resultado.clasificacionFiscal} | Método: ${resultado.metodoPagoFiscal || 'N/D'} | Forma: ${resultado.formaPagoFiscal || 'N/D'}`, life: 7000 });
         }
         if (resultado?.estadoComplemento === 'FACTURADA_CON_COMPLEMENTO_PAGO' && resultado?.uuidComplementoPago) {
-          this.messageService.add({ severity: 'success', summary: 'Complemento de pago', detail: `Se generÃ³ el complemento de pago ${resultado.uuidComplementoPago}.`, life: 7000 });
+          this.messageService.add({ severity: 'success', summary: 'Complemento de pago', detail: `Se generó el complemento de pago ${resultado.uuidComplementoPago}.`, life: 7000 });
         }
         if (resultado?.estadoComplemento === 'PENDIENTE_COMPLEMENTO_PAGO') {
-          this.messageService.add({ severity: 'warn', summary: 'Complemento pendiente', detail: 'La factura se generÃ³, pero el complemento de pago quedÃ³ pendiente de timbrar.', life: 7000 });
+          this.messageService.add({ severity: 'warn', summary: 'Complemento pendiente', detail: 'La factura se generó, pero el complemento de pago quedó pendiente de timbrar.', life: 7000 });
         }
         if (resultado && resultado.avisoCorreo) {
           this.messageService.add({ severity: 'warn', summary: 'Correo no enviado', detail: resp.avisoCorreo, life: 6000 });
@@ -577,7 +577,7 @@ export class FacturacionComponent implements OnInit {
 
   abrirDialogoFacturacionConsolidada() {
     if (!this.ventasSeleccionadas || this.ventasSeleccionadas.length < 2) {
-      this.messageService.add({ severity: 'warn', summary: 'SelecciÃ³n insuficiente', detail: 'Selecciona al menos dos ventas para una factura consolidada.', life: 4000 });
+      this.messageService.add({ severity: 'warn', summary: 'Selección insuficiente', detail: 'Selecciona al menos dos ventas para una factura consolidada.', life: 4000 });
       return;
     }
 
@@ -597,12 +597,12 @@ export class FacturacionComponent implements OnInit {
     }
 
     if (hayTipoVentaDistinto) {
-      this.messageService.add({ severity: 'warn', summary: 'Tipos de venta distintos', detail: 'La factura consolidada solo admite ventas del mismo tipo (ej. solo Contado o solo CrÃ©dito). No mezclar.', life: 5500 });
+      this.messageService.add({ severity: 'warn', summary: 'Tipos de venta distintos', detail: 'La factura consolidada solo admite ventas del mismo tipo (ej. solo Contado o solo Crédito). No mezclar.', life: 5500 });
       return;
     }
 
     if (hayDatoFacturaDistinto) {
-      this.messageService.add({ severity: 'warn', summary: 'RazÃ³n social distinta', detail: 'La factura consolidada requiere la misma razÃ³n social emisora en todas las ventas.', life: 4500 });
+      this.messageService.add({ severity: 'warn', summary: 'Razón social distinta', detail: 'La factura consolidada requiere la misma razón social emisora en todas las ventas.', life: 4500 });
       return;
     }
 
@@ -612,7 +612,7 @@ export class FacturacionComponent implements OnInit {
     }
 
     if (hayFacturadas) {
-      this.messageService.add({ severity: 'warn', summary: 'Venta ya facturada', detail: 'La selecciÃ³n incluye ventas que ya tienen CFDI.', life: 4500 });
+      this.messageService.add({ severity: 'warn', summary: 'Venta ya facturada', detail: 'La selección incluye ventas que ya tienen CFDI.', life: 4500 });
       return;
     }
 
@@ -664,12 +664,12 @@ export class FacturacionComponent implements OnInit {
 
   generarComplemento(){
     if (!this.hayTimbresDisponibles) {
-        this.messageService.add({ severity: 'warn', summary: 'Sin CrÃ©ditos', detail: 'No hay timbres disponibles para generar el complemento.', life: 4000 });
+        this.messageService.add({ severity: 'warn', summary: 'Sin Créditos', detail: 'No hay timbres disponibles para generar el complemento.', life: 4000 });
         return;
     }
 
     if (this.esFacturaConsolidada(this.tvVentasFactura)) {
-      this.messageService.add({ severity: 'warn', summary: 'REP desde pago global', detail: 'La factura es consolidada. El REP debe generarse desde pagos canÃ³nicos/globales, no desde una venta individual.', life: 5000 });
+      this.messageService.add({ severity: 'warn', summary: 'REP desde pago global', detail: 'La factura es consolidada. El REP debe generarse desde pagos canónicos/globales, no desde una venta individual.', life: 5000 });
       return;
     }
 
@@ -679,7 +679,7 @@ export class FacturacionComponent implements OnInit {
       const resultado = resp as ResultadoFacturacionVentaDto;
       const detalle = resultado?.mensajeError
         ? `${resultado?.mensaje || 'Complemento procesado'} ${resultado.mensajeError}`
-        : (resultado?.mensaje || 'El complemento se generÃ³ correctamente.');
+        : (resultado?.mensaje || 'El complemento se generó correctamente.');
       this.messageService.add({ severity: resultado?.success === false ? 'warn' : 'success', summary: 'Complemento generado', detail: detalle, life: 5000 });
     });
 
@@ -691,7 +691,7 @@ export class FacturacionComponent implements OnInit {
     }
 
     if (!this.hayTimbresDisponibles) {
-      this.messageService.add({ severity: 'warn', summary: 'Sin CrÃ©ditos', detail: 'No hay timbres disponibles para reintentar el complemento.', life: 4000 });
+      this.messageService.add({ severity: 'warn', summary: 'Sin Créditos', detail: 'No hay timbres disponibles para reintentar el complemento.', life: 4000 });
       return;
     }
 
@@ -699,7 +699,7 @@ export class FacturacionComponent implements OnInit {
       const resultado = resp as ResultadoFacturacionVentaDto;
       const detalle = resultado?.mensajeError
         ? `${resultado?.mensaje || 'Reintento procesado'} ${resultado.mensajeError}`
-        : (resultado?.mensaje || 'El complemento se reintentÃ³ correctamente.');
+        : (resultado?.mensaje || 'El complemento se reintentó correctamente.');
       this.messageService.add({ severity: resultado?.success === false ? 'warn' : 'success', summary: 'Reintento REP', detail: detalle, life: 5000 });
       if (this.idVenta) {
         this.cargarHistorialComplementos(this.idVenta);
@@ -712,7 +712,7 @@ export class FacturacionComponent implements OnInit {
 
   reintentarComplemento(venta: TvVentasFactura) {
     if (this.esFacturaConsolidada(venta)) {
-      this.messageService.add({ severity: 'warn', summary: 'REP desde pago global', detail: 'La factura es consolidada. El REP debe generarse desde pagos canÃ³nicos/globales, no desde una venta individual.', life: 5000 });
+      this.messageService.add({ severity: 'warn', summary: 'REP desde pago global', detail: 'La factura es consolidada. El REP debe generarse desde pagos canónicos/globales, no desde una venta individual.', life: 5000 });
       return;
     }
 
@@ -799,12 +799,12 @@ export class FacturacionComponent implements OnInit {
     }
 
     if (!this.motivoCancelacion) {
-      this.messageService.add({ severity: 'warn', summary: 'ValidaciÃ³n', detail: 'Selecciona un motivo de cancelaciÃ³n.', life: 3000 });
+      this.messageService.add({ severity: 'warn', summary: 'Validación', detail: 'Selecciona un motivo de cancelación.', life: 3000 });
       return;
     }
 
     if (this.motivoCancelacion === '01' && !this.folioFiscalSustitucion) {
-      this.messageService.add({ severity: 'warn', summary: 'ValidaciÃ³n', detail: 'El folio fiscal de sustituciÃ³n es obligatorio para el motivo 01.', life: 4000 });
+      this.messageService.add({ severity: 'warn', summary: 'Validación', detail: 'El folio fiscal de sustitución es obligatorio para el motivo 01.', life: 4000 });
       return;
     }
 
@@ -814,7 +814,7 @@ export class FacturacionComponent implements OnInit {
     payload.folioFiscalSustitucion = this.folioFiscalSustitucion || null;
 
     this.facturaService.cancelarFactura(payload).subscribe(() => {
-      this.messageService.add({ severity: 'success', summary: 'Factura cancelada', detail: 'La solicitud de cancelaciÃ³n se procesÃ³ correctamente.', life: 4000 });
+      this.messageService.add({ severity: 'success', summary: 'Factura cancelada', detail: 'La solicitud de cancelación se procesó correctamente.', life: 4000 });
       this.cerrarDialogoCancelacion();
       this.obtenerVentasFacturadas();
     }, () => {
@@ -857,7 +857,7 @@ export class FacturacionComponent implements OnInit {
 
   consultarSolicitudesPendientes() {
     if (!this.nIdDatoFacturaSeleccionado) {
-      this.messageService.add({ severity: 'warn', summary: 'ValidaciÃ³n', detail: 'Selecciona una razÃ³n social emisora.', life: 3000 });
+      this.messageService.add({ severity: 'warn', summary: 'Validación', detail: 'Selecciona una razón social emisora.', life: 3000 });
       return;
     }
     this.cargandoSolicitudes = true;
@@ -879,7 +879,7 @@ export class FacturacionComponent implements OnInit {
     payload.uuid = solicitud.uuid;
     const request = aceptar ? this.facturaService.aceptarSolicitudPendiente(payload) : this.facturaService.rechazarSolicitudPendiente(payload);
     request.subscribe(resp => {
-      const mensaje = resp?.mensajeError ? resp.mensajeError : aceptar ? 'La solicitud se aceptÃ³ correctamente.' : 'La solicitud se rechazÃ³ correctamente.';
+      const mensaje = resp?.mensajeError ? resp.mensajeError : aceptar ? 'La solicitud se aceptó correctamente.' : 'La solicitud se rechazó correctamente.';
       this.messageService.add({ severity: resp?.success === false ? 'warn' : 'success', summary: aceptar ? 'Solicitud aceptada' : 'Solicitud rechazada', detail: mensaje, life: 4000 });
       this.consultarSolicitudesPendientes();
     }, () => {
@@ -917,7 +917,7 @@ export class FacturacionComponent implements OnInit {
   }
 
   obtenerDescripcionTipoVenta(venta: TvVentasFactura): string {
-    return venta?.nTipoPago === 1 ? 'CrÃ©dito' : 'Contado';
+    return venta?.nTipoPago === 1 ? 'Crédito' : 'Contado';
   }
 
   tieneAnticipoCanonico(venta: TvVentasFactura): boolean {
@@ -930,7 +930,7 @@ export class FacturacionComponent implements OnInit {
     }
 
     const pagoId = venta?.nIdPagoClienteCanonico ? `#${venta.nIdPagoClienteCanonico}` : 'sin identificador';
-    return `Pago global ${pagoId} aplicado como anticipo. Al facturar esta venta, la aplicaciÃ³n canÃ³nica quedarÃ¡ ligada al CFDI para continuar el REP desde el pago global.`;
+    return `Pago global ${pagoId} aplicado como anticipo. Al facturar esta venta, la aplicación canónica quedará ligada al CFDI para continuar el REP desde el pago global.`;
   }
 
   requiereFacturacionDesdeAnticipo(venta: TvVentasFactura): boolean {
@@ -949,7 +949,7 @@ export class FacturacionComponent implements OnInit {
     }
 
     if (clasificacion === 'PPD_CREDITO_SIN_COMPLEMENTO') {
-      return 'CrÃ©dito PPD';
+      return 'Crédito PPD';
     }
 
     return 'Pendiente';
@@ -988,7 +988,7 @@ export class FacturacionComponent implements OnInit {
     }
 
     if (this.esFacturaConsolidada(venta)) {
-      return 'REP por pago canÃ³nico/global';
+      return 'REP por pago canónico/global';
     }
 
     if (this.tieneComplementosTimbrados(venta)) {
@@ -1283,7 +1283,7 @@ export class FacturacionComponent implements OnInit {
 
     if (venta?.idFactura && this.esFacturaCancelada(venta)) {
       acciones.push({
-        label: 'Descargar acuse de cancelaciÃ³n',
+        label: 'Descargar acuse de cancelación',
         icon: 'pi pi-download',
         command: () => this.descargarAcuseCancelacion(venta.nId)
       });
@@ -1448,7 +1448,7 @@ export class FacturacionComponent implements OnInit {
     }
 
     if ((origenPago || '').toUpperCase() === 'TW_ABONO') {
-      return 'Abono de crÃ©dito';
+      return 'Abono de crédito';
     }
 
     if ((origenPago || '').toUpperCase() === 'TW_PAGO_CLIENTE_APLICACION') {
@@ -1477,7 +1477,7 @@ export class FacturacionComponent implements OnInit {
         anchor.click();
         this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'PDF del complemento descargado.', life: 3000 });
       } else {
-        this.messageService.add({ severity: 'warn', summary: 'Sin PDF', detail: 'No se encontrÃ³ PDF para este complemento.', life: 3500 });
+        this.messageService.add({ severity: 'warn', summary: 'Sin PDF', detail: 'No se encontró PDF para este complemento.', life: 3500 });
       }
     }, () => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el PDF del complemento.', life: 3500 });
@@ -1499,7 +1499,7 @@ export class FacturacionComponent implements OnInit {
         this.tituloVistaPreviaComplemento = 'Complemento de pago ' + (complemento.parcialidad || complemento.nId);
         this.mostrarDialogoVistaPreviaComplemento = true;
       } else {
-        this.messageService.add({ severity: 'warn', summary: 'Sin PDF', detail: 'No se encontrÃ³ PDF para este complemento.', life: 3500 });
+        this.messageService.add({ severity: 'warn', summary: 'Sin PDF', detail: 'No se encontró PDF para este complemento.', life: 3500 });
       }
     }, () => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible abrir el PDF del complemento.', life: 3500 });
@@ -1530,7 +1530,7 @@ export class FacturacionComponent implements OnInit {
         anchor.click();
         this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'XML del complemento descargado.', life: 3000 });
       } else {
-        this.messageService.add({ severity: 'warn', summary: 'Sin XML', detail: 'No se encontrÃ³ XML para este complemento.', life: 3500 });
+        this.messageService.add({ severity: 'warn', summary: 'Sin XML', detail: 'No se encontró XML para este complemento.', life: 3500 });
       }
     }, () => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el XML del complemento.', life: 3500 });
@@ -1563,7 +1563,7 @@ export class FacturacionComponent implements OnInit {
         anchor.href = fileURL;
         anchor.click();
         this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'comprobante de factura Generado', life: 3000 });
-        //una vez generado el reporte limpia el formulario para una nueva venta o cotizaciÃ³n 
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
 
       } else {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de factura', life: 3000 });
@@ -1589,7 +1589,7 @@ export class FacturacionComponent implements OnInit {
         anchor.href = fileURL;
         anchor.click();
         this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'comprobante de factura Generado', life: 3000 });
-        //una vez generado el reporte limpia el formulario para una nueva venta o cotizaciÃ³n 
+        //una vez generado el reporte limpia el formulario para una nueva venta o cotización 
 
       } else {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al generar el comprobante de factura', life: 3000 });
@@ -1608,16 +1608,17 @@ export class FacturacionComponent implements OnInit {
         anchor.download = 'acuse_cancelacion_' + nIdVenta + '.xml';
         anchor.href = fileURL;
         anchor.click();
-        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Acuse de cancelaciÃ³n descargado.', life: 3000 });
+        this.messageService.add({ severity: 'success', summary: 'Correcto', detail: 'Acuse de cancelación descargado.', life: 3000 });
       } else {
-        this.messageService.add({ severity: 'warn', summary: 'Sin acuse', detail: 'No se encontrÃ³ acuse de cancelaciÃ³n para esta venta.', life: 3500 });
+        this.messageService.add({ severity: 'warn', summary: 'Sin acuse', detail: 'No se encontró acuse de cancelación para esta venta.', life: 3500 });
       }
     }, () => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el acuse de cancelaciÃ³n.', life: 3500 });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No fue posible descargar el acuse de cancelación.', life: 3500 });
     });
   }
 
   
 
 }
+
 
