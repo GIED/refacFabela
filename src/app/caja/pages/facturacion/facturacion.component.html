@@ -20,7 +20,6 @@
                 </div>
                 <div class="facturacion-toolbar-group">
                     <button *ngIf="!vistaFacturadas" pButton pRipple type="button" label="Facturar seleccionadas" icon="pi pi-clone" class="p-button-warning" [disabled]="totalSeleccionadasConsolidacion < 2" (click)="abrirDialogoFacturacionConsolidada()"></button>
-                    <button pButton pRipple type="button" label="Solicitudes pendientes" icon="pi pi-inbox" class="p-button-help" (click)="abrirDialogoSolicitudesPendientes()"></button>
                 </div>
             </div>
 
@@ -380,8 +379,6 @@
             <div class="facturacion-actions-panel">
                 <h5>Seguimiento fiscal</h5>
                 <div class="facturacion-actions-panel-body">
-                    <button *ngIf="tvVentasFactura?.idFactura!=0" pButton pRipple icon="pi pi-search" label="Estatus SAT" class="p-button-help p-button-outlined" (click)="abrirDialogoEstatusSat(tvVentasFactura)"></button>
-                    <button *ngIf="tvVentasFactura?.idFactura!=0" pButton pRipple icon="pi pi-sitemap" label="CFDI relacionados" class="p-button-info p-button-outlined" (click)="abrirDialogoRelacionados(tvVentasFactura)"></button>
                     <button *ngIf="tvVentasFactura?.idFactura!=0 && !esFacturaCancelada(tvVentasFactura)" pButton pRipple icon="pi pi-times" label="Cancelar CFDI" class="p-button-secondary p-button-outlined" (click)="abrirDialogoCancelacion(tvVentasFactura)"></button>
                 </div>
             </div>
@@ -571,117 +568,6 @@
     </ng-template>
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="cerrarVistaPreviaComplemento()"></button>
-    </ng-template>
-</p-dialog>
-
-<p-dialog [(visible)]="mostrarDialogoEstatusSat" [style]="{width: '650px'}" header="Estatus SAT" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="p-field p-col-12 p-md-12">
-            <label><strong>Venta:</strong> {{tvVentasFactura?.nId}}</label>
-        </div>
-        <div class="p-field p-col-12 p-md-12">
-            <label><strong>UUID:</strong> {{estatusSat?.uuid || 'Sin información'}}</label>
-        </div>
-        <div class="p-field p-col-12 p-md-12">
-            <label><strong>Estatus SAT:</strong> {{estatusSat?.estatusSat || 'Sin información'}}</label>
-        </div>
-        <div class="p-field p-col-12 p-md-12">
-            <label><strong>Estatus cancelación:</strong> {{estatusSat?.estatusCancelacion || 'Sin información'}}</label>
-        </div>
-        <div class="p-field p-col-12 p-md-12" *ngIf="estatusSat?.codigoError || estatusSat?.mensajeError">
-            <div class="pac-result pac-result-warn">
-                <strong>Código:</strong> {{estatusSat?.codigoError || 'N/D'}}
-                <div><strong>Mensaje:</strong> {{estatusSat?.mensajeError || 'Sin detalle'}}</div>
-            </div>
-        </div>
-    </ng-template>
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="mostrarDialogoEstatusSat=false"></button>
-    </ng-template>
-</p-dialog>
-
-<p-dialog [(visible)]="mostrarDialogoRelacionados" [style]="{width: '650px'}" header="CFDI Relacionados" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="p-field p-col-12 p-md-12">
-            <label><strong>Venta:</strong> {{tvVentasFactura?.nId}}</label>
-        </div>
-        <div class="p-field p-col-12 p-md-12">
-            <label><strong>UUID base:</strong> {{cfdiRelacionados?.uuid || 'Sin información'}}</label>
-        </div>
-        <div class="p-field p-col-12 p-md-12" *ngIf="cfdiRelacionados?.relacionados?.length; else sinRelacionados">
-            <ul class="pac-list">
-                <li *ngFor="let relacionado of cfdiRelacionados.relacionados">{{relacionado}}</li>
-            </ul>
-        </div>
-        <ng-template #sinRelacionados>
-            <div class="pac-result pac-result-neutral">No se encontraron CFDI relacionados.</div>
-        </ng-template>
-        <div class="p-field p-col-12 p-md-12" *ngIf="cfdiRelacionados?.codigoError || cfdiRelacionados?.mensajeError">
-            <div class="pac-result pac-result-warn">
-                <strong>Código:</strong> {{cfdiRelacionados?.codigoError || 'N/D'}}
-                <div><strong>Mensaje:</strong> {{cfdiRelacionados?.mensajeError || 'Sin detalle'}}</div>
-            </div>
-        </div>
-    </ng-template>
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="mostrarDialogoRelacionados=false"></button>
-    </ng-template>
-</p-dialog>
-
-<p-dialog [(visible)]="mostrarDialogoSolicitudesPendientes" [style]="{width: '900px'}" header="Solicitudes Pendientes de Cancelación" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="p-grid">
-            <div class="p-field p-col-12 p-md-8">
-                <label for="razonSocialSolicitud">Razón social emisora</label>
-                <p-dropdown id="razonSocialSolicitud" [options]="listaDatosFactura" optionLabel="sRazonSocial" optionValue="nId" [(ngModel)]="nIdDatoFacturaSeleccionado" (onChange)="onRazonSocialSeleccionada()" placeholder="Selecciona una razón social"></p-dropdown>
-            </div>
-            <div class="p-field p-col-12 p-md-4 p-d-flex p-ai-end">
-                <button pButton pRipple type="button" label="Consultar" icon="pi pi-search" class="p-button-help p-mt-3" (click)="consultarSolicitudesPendientes()"></button>
-            </div>
-            <div class="p-col-12" *ngIf="obtenerNombreRazonSocialSeleccionada()">
-                <div class="pac-result pac-result-neutral">
-                    Consultando solicitudes para: <strong>{{obtenerNombreRazonSocialSeleccionada()}}</strong>
-                </div>
-            </div>
-            <div class="p-col-12" *ngIf="cargandoSolicitudes">
-                <p-progressSpinner styleClass="custom-spinner" strokeWidth="4"></p-progressSpinner>
-            </div>
-            <div class="p-col-12" *ngIf="!cargandoSolicitudes">
-                <p-table [value]="listaSolicitudesPendientes" [rows]="5" [paginator]="true" responsiveLayout="scroll">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>UUID</th>
-                            <th>RFC Emisor</th>
-                            <th>RFC Receptor</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-solicitud>
-                        <tr>
-                            <td>{{solicitud.uuid}}</td>
-                            <td>{{solicitud.rfcEmisor}}</td>
-                            <td>{{solicitud.rfcReceptor}}</td>
-                            <td>{{solicitud.estado || 'Pendiente'}}</td>
-                            <td>{{solicitud.fechaSolicitud || 'Sin información'}}</td>
-                            <td>
-                                <button pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-success p-button-outlined p-mr-2" pTooltip="Aceptar solicitud" (click)="procesarSolicitudPendiente(solicitud, true)"></button>
-                                <button pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger p-button-outlined" pTooltip="Rechazar solicitud" (click)="procesarSolicitudPendiente(solicitud, false)"></button>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td colspan="6">No hay solicitudes pendientes para la razón social seleccionada.</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
-        </div>
-    </ng-template>
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cerrar" icon="pi pi-times" class="p-button-secondary" (click)="mostrarDialogoSolicitudesPendientes=false"></button>
     </ng-template>
 </p-dialog>
 

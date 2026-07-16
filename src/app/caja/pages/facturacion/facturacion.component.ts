@@ -337,9 +337,6 @@ export class FacturacionComponent implements OnInit {
 
   onRazonSocialSeleccionada() {
     this.consultaCreditos(this.nIdDatoFacturaSeleccionado);
-    if (this.mostrarDialogoSolicitudesPendientes) {
-      this.consultarSolicitudesPendientes();
-    }
   }
 
   cambiarVistaFacturacion(vista: string) {
@@ -850,9 +847,6 @@ export class FacturacionComponent implements OnInit {
   abrirDialogoSolicitudesPendientes() {
     this.listaSolicitudesPendientes = [];
     this.mostrarDialogoSolicitudesPendientes = true;
-    if (this.nIdDatoFacturaSeleccionado) {
-      this.consultarSolicitudesPendientes();
-    }
   }
 
   consultarSolicitudesPendientes() {
@@ -881,7 +875,6 @@ export class FacturacionComponent implements OnInit {
     request.subscribe(resp => {
       const mensaje = resp?.mensajeError ? resp.mensajeError : aceptar ? 'La solicitud se aceptó correctamente.' : 'La solicitud se rechazó correctamente.';
       this.messageService.add({ severity: resp?.success === false ? 'warn' : 'success', summary: aceptar ? 'Solicitud aceptada' : 'Solicitud rechazada', detail: mensaje, life: 4000 });
-      this.consultarSolicitudesPendientes();
     }, () => {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: aceptar ? 'No fue posible aceptar la solicitud.' : 'No fue posible rechazar la solicitud.', life: 4000 });
     });
@@ -1286,19 +1279,6 @@ export class FacturacionComponent implements OnInit {
         label: 'Descargar acuse de cancelación',
         icon: 'pi pi-download',
         command: () => this.descargarAcuseCancelacion(venta.nId)
-      });
-    }
-
-    if (venta?.idFactura) {
-      acciones.push({
-        label: 'Consultar estatus SAT',
-        icon: 'pi pi-search',
-        command: () => this.abrirDialogoEstatusSat(venta)
-      });
-      acciones.push({
-        label: 'Consultar CFDI relacionados',
-        icon: 'pi pi-sitemap',
-        command: () => this.abrirDialogoRelacionados(venta)
       });
     }
 
